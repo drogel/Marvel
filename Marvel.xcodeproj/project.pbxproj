@@ -18,6 +18,8 @@
 		05DAC33C27973AC40062CC6F /* CharacterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC33B27973AC40062CC6F /* CharacterCell.swift */; };
 		05DAC34027973C1A0062CC6F /* CharactersDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC33F27973C1A0062CC6F /* CharactersDataSource.swift */; };
 		05DAC34327973E590062CC6F /* CharactersLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34227973E590062CC6F /* CharactersLayout.swift */; };
+		05DAC34627974AFB0062CC6F /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34527974AFB0062CC6F /* Coordinator.swift */; };
+		05DAC34827974C690062CC6F /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34727974C690062CC6F /* MainCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +47,8 @@
 		05DAC33B27973AC40062CC6F /* CharacterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCell.swift; sourceTree = "<group>"; };
 		05DAC33F27973C1A0062CC6F /* CharactersDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersDataSource.swift; sourceTree = "<group>"; };
 		05DAC34227973E590062CC6F /* CharactersLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersLayout.swift; sourceTree = "<group>"; };
+		05DAC34527974AFB0062CC6F /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		05DAC34727974C690062CC6F /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +128,7 @@
 		05DAC32E2797398E0062CC6F /* App */ = {
 			isa = PBXGroup;
 			children = (
+				05DAC34427974AE00062CC6F /* Coordinators */,
 				05DAC2FB2797258A0062CC6F /* AppDelegate.swift */,
 				05DAC2FD2797258A0062CC6F /* SceneDelegate.swift */,
 			);
@@ -211,6 +216,15 @@
 				05DAC34227973E590062CC6F /* CharactersLayout.swift */,
 			);
 			path = Layouts;
+			sourceTree = "<group>";
+		};
+		05DAC34427974AE00062CC6F /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				05DAC34527974AFB0062CC6F /* Coordinator.swift */,
+				05DAC34727974C690062CC6F /* MainCoordinator.swift */,
+			);
+			path = Coordinators;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -316,11 +330,13 @@
 				05DAC3002797258A0062CC6F /* CharactersViewController.swift in Sources */,
 				05DAC34027973C1A0062CC6F /* CharactersDataSource.swift in Sources */,
 				05DAC33A27973A750062CC6F /* UICollectionReusableView+Identifiable.swift in Sources */,
+				05DAC34827974C690062CC6F /* MainCoordinator.swift in Sources */,
 				05DAC33727973A2A0062CC6F /* Identifiable.swift in Sources */,
 				05DAC33C27973AC40062CC6F /* CharacterCell.swift in Sources */,
 				05DAC2FC2797258A0062CC6F /* AppDelegate.swift in Sources */,
 				05DAC2FE2797258A0062CC6F /* SceneDelegate.swift in Sources */,
 				05DAC34327973E590062CC6F /* CharactersLayout.swift in Sources */,
+				05DAC34627974AFB0062CC6F /* Coordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
