@@ -15,7 +15,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = ViewController()
+        window?.rootViewController = createWindowRootViewController()
         window?.makeKeyAndVisible()
+    }
+}
+
+private extension SceneDelegate {
+
+    private func createWindowRootViewController() -> UIViewController {
+        // TODO: Move viewController instantiation out of here
+        let viewController = CharactersViewController()
+        viewController.dataSource = CharactersDataSource()
+        viewController.layout = CharactersLayout()
+        return UINavigationController(rootViewController: viewController)
     }
 }
