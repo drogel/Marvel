@@ -20,6 +20,8 @@
 		05DAC34327973E590062CC6F /* CharactersLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34227973E590062CC6F /* CharactersLayout.swift */; };
 		05DAC34627974AFB0062CC6F /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34527974AFB0062CC6F /* Coordinator.swift */; };
 		05DAC34827974C690062CC6F /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34727974C690062CC6F /* MainCoordinator.swift */; };
+		05DAC34C27974CE30062CC6F /* CharacterDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34B27974CE30062CC6F /* CharacterDetailViewController.swift */; };
+		05DAC35027974D8D0062CC6F /* CharactersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34F27974D8D0062CC6F /* CharactersViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		05DAC34227973E590062CC6F /* CharactersLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersLayout.swift; sourceTree = "<group>"; };
 		05DAC34527974AFB0062CC6F /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		05DAC34727974C690062CC6F /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		05DAC34B27974CE30062CC6F /* CharacterDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailViewController.swift; sourceTree = "<group>"; };
+		05DAC34F27974D8D0062CC6F /* CharactersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +142,7 @@
 		05DAC32F279739920062CC6F /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				05DAC34D27974D7C0062CC6F /* Characters */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -145,6 +150,7 @@
 		05DAC330279739950062CC6F /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				05DAC34927974CA10062CC6F /* CharacterDetail */,
 				05DAC33D27973BED0062CC6F /* Characters */,
 			);
 			path = Presentation;
@@ -225,6 +231,38 @@
 				05DAC34727974C690062CC6F /* MainCoordinator.swift */,
 			);
 			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		05DAC34927974CA10062CC6F /* CharacterDetail */ = {
+			isa = PBXGroup;
+			children = (
+				05DAC34A27974CAA0062CC6F /* ViewControllers */,
+			);
+			path = CharacterDetail;
+			sourceTree = "<group>";
+		};
+		05DAC34A27974CAA0062CC6F /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				05DAC34B27974CE30062CC6F /* CharacterDetailViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		05DAC34D27974D7C0062CC6F /* Characters */ = {
+			isa = PBXGroup;
+			children = (
+				05DAC34E27974D800062CC6F /* ViewModels */,
+			);
+			path = Characters;
+			sourceTree = "<group>";
+		};
+		05DAC34E27974D800062CC6F /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				05DAC34F27974D8D0062CC6F /* CharactersViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -327,6 +365,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05DAC35027974D8D0062CC6F /* CharactersViewModel.swift in Sources */,
+				05DAC34C27974CE30062CC6F /* CharacterDetailViewController.swift in Sources */,
 				05DAC3002797258A0062CC6F /* CharactersViewController.swift in Sources */,
 				05DAC34027973C1A0062CC6F /* CharactersDataSource.swift in Sources */,
 				05DAC33A27973A750062CC6F /* UICollectionReusableView+Identifiable.swift in Sources */,

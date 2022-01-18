@@ -16,18 +16,25 @@ class MainCoordinator: Coordinator {
     }
 
     func start() {
-        let charactersViewController = createCharactersViewController()
-        navigationController.pushViewController(charactersViewController, animated: false)
+        showCharactersViewController()
     }
 }
 
 private extension MainCoordinator {
 
+    func showCharactersViewController() {
+        let charactersViewController = createCharactersViewController()
+        navigationController.pushViewController(charactersViewController, animated: false)
+    }
+
     func createCharactersViewController() -> UIViewController {
-        // TODO: Move viewController instantiation to some kind of factory
+        // TODO: Move viewController instantiation and dependency wiring to some kind of factory
         let viewController = CharactersViewController()
-        viewController.dataSource = CharactersDataSource()
+        let viewModel = CharactersViewModel()
+        let charactersDataSource = CharactersDataSource(viewModel: viewModel)
+        viewController.dataSource = charactersDataSource
         viewController.layout = CharactersLayout()
+        viewController.delegate = charactersDataSource
         return viewController
     }
 }

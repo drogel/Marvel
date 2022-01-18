@@ -7,7 +7,13 @@
 
 import UIKit
 
-class CharactersDataSource: NSObject, UICollectionViewDataSource {
+class CharactersDataSource: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
+
+    private let viewModel: CharactersViewModelProtocol
+
+    init(viewModel: CharactersViewModel) {
+        self.viewModel = viewModel
+    }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -22,5 +28,9 @@ class CharactersDataSource: NSObject, UICollectionViewDataSource {
         // TODO: Make cells configurable from view models
         cell.backgroundColor = .red
         return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewModel.select(itemAt: indexPath)
     }
 }

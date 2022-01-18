@@ -10,6 +10,7 @@ import UIKit
 class CharactersViewController: UIViewController {
 
     var dataSource: UICollectionViewDataSource?
+    var delegate: UICollectionViewDelegate?
     var layout: UICollectionViewCompositionalLayout?
 
     private var collectionView: UICollectionView!
@@ -48,6 +49,7 @@ private extension CharactersViewController {
 
     func configureDataSource(of collectionView: UICollectionView) {
         collectionView.dataSource = dataSource
+        collectionView.delegate = delegate
     }
 
     func configureConstraints(of collectionView: UICollectionView) {
