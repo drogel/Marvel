@@ -11,6 +11,15 @@ protocol CharactersViewModelProtocol {
     func select(itemAt indexPath: IndexPath)
 }
 
+protocol CharactersViewModelCoordinatorDelegate: AnyObject {
+    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectItemAt indexPath: IndexPath)
+}
+
 class CharactersViewModel: CharactersViewModelProtocol {
-    func select(itemAt indexPath: IndexPath) { }
+
+    weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
+
+    func select(itemAt indexPath: IndexPath) {
+        coordinatorDelegate?.viewModel(self, didSelectItemAt: indexPath)
+    }
 }

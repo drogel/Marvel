@@ -27,14 +27,31 @@ private extension MainCoordinator {
         navigationController.pushViewController(charactersViewController, animated: false)
     }
 
+    func showCharacterDetailViewController() {
+        let characterDetailViewController = createCharacterDetailViewController()
+        navigationController.present(characterDetailViewController, animated: true)
+    }
+
     func createCharactersViewController() -> UIViewController {
         // TODO: Move viewController instantiation and dependency wiring to some kind of factory
         let viewController = CharactersViewController()
         let viewModel = CharactersViewModel()
+        viewModel.coordinatorDelegate = self
         let charactersDataSource = CharactersDataSource(viewModel: viewModel)
         viewController.dataSource = charactersDataSource
         viewController.layout = CharactersLayout()
         viewController.delegate = charactersDataSource
         return viewController
+    }
+
+    func createCharacterDetailViewController() -> UIViewController {
+        // TODO: Move viewController instantiation and dependency wiring to some kind of factory
+        return CharacterDetailViewController()
+    }
+}
+
+extension MainCoordinator: CharactersViewModelCoordinatorDelegate {
+    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectItemAt indexPath: IndexPath) {
+        showCharacterDetailViewController()
     }
 }
