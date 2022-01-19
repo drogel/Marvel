@@ -8,17 +8,35 @@
 import XCTest
 @testable import Marvel
 
-class CharacterDataTests: XCTestCase, ParsingTester {
+class CharacterDataTests: XCTestCase {
 
     typealias ParseableObjectType = CharacterData
 
-    func test_givenCharacterDataFromJson_parsesExpectedValues() throws {
-        let actual = givenParsedObjectFromJson()
+    func test_givenCharacterDataFromJson_parsesExpectedValues() {
+        runParsingTest()
+    }
+}
+
+extension CharacterDataTests: ParsingTestCaseTemplate {
+
+    func buildExpectedObject() -> CharacterData {
+        let imageData = buildExpectedImageData()
+        return buildExpectedCharacterData(with: imageData)
+    }
+}
+
+private extension CharacterDataTests {
+
+    func buildExpectedImageData() -> ImageData {
         let imageData = ImageData(
             path: "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784",
             imageExtension: "jpg"
         )
-        let expected = CharacterData(
+        return imageData
+    }
+
+    func buildExpectedCharacterData(with imageData: ImageData) -> CharacterData {
+        let characterData = CharacterData(
             id: 1011334,
             name: "3-D Man",
             description: "",
@@ -26,6 +44,6 @@ class CharacterDataTests: XCTestCase, ParsingTester {
             thumbnail: imageData,
             resourceURI: "http://gateway.marvel.com/v1/public/characters/1011334"
         )
-        XCTAssertEqual(actual, expected)
+        return characterData
     }
 }

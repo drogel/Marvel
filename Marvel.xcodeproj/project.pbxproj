@@ -16,6 +16,7 @@
 		057D72FF27986F92005ED888 /* ImageData.json in Resources */ = {isa = PBXBuildFile; fileRef = 057D72FD27986F92005ED888 /* ImageData.json */; };
 		057D730027986F92005ED888 /* CharacterData.json in Resources */ = {isa = PBXBuildFile; fileRef = 057D72FE27986F92005ED888 /* CharacterData.json */; };
 		057D730227986F9D005ED888 /* ImageDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D730127986F9D005ED888 /* ImageDataTests.swift */; };
+		057D730427987160005ED888 /* ParsingTestCaseTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D730327987160005ED888 /* ParsingTestCaseTemplate.swift */; };
 		0585AF9D27975DDB00586ABD /* DataWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0585AF9C27975DDB00586ABD /* DataWrapper.swift */; };
 		0585AFA227975E9100586ABD /* DataWrapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0585AFA127975E9100586ABD /* DataWrapperTests.swift */; };
 		0585AFA927975F5000586ABD /* DataWrapper.json in Resources */ = {isa = PBXBuildFile; fileRef = 0585AFA827975F5000586ABD /* DataWrapper.json */; };
@@ -56,6 +57,7 @@
 		057D72FD27986F92005ED888 /* ImageData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ImageData.json; sourceTree = "<group>"; };
 		057D72FE27986F92005ED888 /* CharacterData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CharacterData.json; sourceTree = "<group>"; };
 		057D730127986F9D005ED888 /* ImageDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDataTests.swift; sourceTree = "<group>"; };
+		057D730327987160005ED888 /* ParsingTestCaseTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsingTestCaseTemplate.swift; sourceTree = "<group>"; };
 		0585AF9C27975DDB00586ABD /* DataWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataWrapper.swift; sourceTree = "<group>"; };
 		0585AFA127975E9100586ABD /* DataWrapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataWrapperTests.swift; sourceTree = "<group>"; };
 		0585AFA827975F5000586ABD /* DataWrapper.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = DataWrapper.json; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				0585AFAB2797625D00586ABD /* ParsingTester.swift */,
+				057D730327987160005ED888 /* ParsingTestCaseTemplate.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -517,6 +520,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				057D730427987160005ED888 /* ParsingTestCaseTemplate.swift in Sources */,
 				057D72F227986BA7005ED888 /* PageInfoTests.swift in Sources */,
 				057D72FA27986D33005ED888 /* CharacterDataTests.swift in Sources */,
 				0585AFA227975E9100586ABD /* DataWrapperTests.swift in Sources */,
