@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0545945027988A1400A634AD /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545944F27988A1400A634AD /* Cancellable.swift */; };
+		0545945327988A4700A634AD /* FetchCharactersUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945227988A4700A634AD /* FetchCharactersUseCase.swift */; };
+		0545945827988C9B00A634AD /* CharactersViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945727988C9B00A634AD /* CharactersViewModelTests.swift */; };
+		0545945B27988CC200A634AD /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945A27988CC200A634AD /* ViewModel.swift */; };
 		057D72F227986BA7005ED888 /* PageInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D72F127986BA7005ED888 /* PageInfoTests.swift */; };
 		057D72F427986BB0005ED888 /* PageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D72F327986BB0005ED888 /* PageInfo.swift */; };
 		057D72F627986C6E005ED888 /* PageInfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 057D72F527986C6E005ED888 /* PageInfo.json */; };
@@ -50,6 +54,10 @@
 /* Begin PBXFileReference section */
 		0545944D2798872700A634AD /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		0545944E2798872D00A634AD /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		0545944F27988A1400A634AD /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
+		0545945227988A4700A634AD /* FetchCharactersUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCharactersUseCase.swift; sourceTree = "<group>"; };
+		0545945727988C9B00A634AD /* CharactersViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersViewModelTests.swift; sourceTree = "<group>"; };
+		0545945A27988CC200A634AD /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		057D72F127986BA7005ED888 /* PageInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageInfoTests.swift; sourceTree = "<group>"; };
 		057D72F327986BB0005ED888 /* PageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageInfo.swift; sourceTree = "<group>"; };
 		057D72F527986C6E005ED888 /* PageInfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PageInfo.json; sourceTree = "<group>"; };
@@ -111,6 +119,46 @@
 			path = Configuration;
 			sourceTree = "<group>";
 		};
+		0545945127988A3500A634AD /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				0545945227988A4700A634AD /* FetchCharactersUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		0545945427988C7F00A634AD /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				0545945527988C8400A634AD /* Characters */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		0545945527988C8400A634AD /* Characters */ = {
+			isa = PBXGroup;
+			children = (
+				0545945627988C8E00A634AD /* ViewModels */,
+			);
+			path = Characters;
+			sourceTree = "<group>";
+		};
+		0545945627988C8E00A634AD /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				0545945727988C9B00A634AD /* CharactersViewModelTests.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		0545945927988CBA00A634AD /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				0545945A27988CC200A634AD /* ViewModel.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 		0585AF9A27975BCF00586ABD /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -133,6 +181,7 @@
 		0585AF9E27975E7B00586ABD /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				0545945427988C7F00A634AD /* Domain */,
 				0585AF9F27975E7E00586ABD /* Data */,
 			);
 			path = Sources;
@@ -281,6 +330,7 @@
 		05DAC32F279739920062CC6F /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				0545945927988CBA00A634AD /* Protocols */,
 				05DAC34D27974D7C0062CC6F /* Characters */,
 			);
 			path = Domain;
@@ -332,6 +382,7 @@
 			isa = PBXGroup;
 			children = (
 				05DAC33627973A2A0062CC6F /* Identifiable.swift */,
+				0545944F27988A1400A634AD /* Cancellable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -391,6 +442,7 @@
 		05DAC34D27974D7C0062CC6F /* Characters */ = {
 			isa = PBXGroup;
 			children = (
+				0545945127988A3500A634AD /* UseCases */,
 				05DAC34E27974D800062CC6F /* ViewModels */,
 			);
 			path = Characters;
@@ -515,11 +567,14 @@
 				05DAC34C27974CE30062CC6F /* CharacterDetailViewController.swift in Sources */,
 				05DAC3002797258A0062CC6F /* CharactersViewController.swift in Sources */,
 				05DAC34027973C1A0062CC6F /* CharactersDataSource.swift in Sources */,
+				0545945027988A1400A634AD /* Cancellable.swift in Sources */,
 				05DAC33A27973A750062CC6F /* UICollectionReusableView+Identifiable.swift in Sources */,
 				057D72FC27986E3D005ED888 /* ImageData.swift in Sources */,
 				05DAC34827974C690062CC6F /* MainCoordinator.swift in Sources */,
 				05DAC33727973A2A0062CC6F /* Identifiable.swift in Sources */,
+				0545945B27988CC200A634AD /* ViewModel.swift in Sources */,
 				05DAC33C27973AC40062CC6F /* CharacterCell.swift in Sources */,
+				0545945327988A4700A634AD /* FetchCharactersUseCase.swift in Sources */,
 				05DAC2FC2797258A0062CC6F /* AppDelegate.swift in Sources */,
 				05DAC2FE2797258A0062CC6F /* SceneDelegate.swift in Sources */,
 				05DAC34327973E590062CC6F /* CharactersLayout.swift in Sources */,
@@ -536,6 +591,7 @@
 				057D72F227986BA7005ED888 /* PageInfoTests.swift in Sources */,
 				057D72FA27986D33005ED888 /* CharacterDataTests.swift in Sources */,
 				0585AFA227975E9100586ABD /* DataWrapperTests.swift in Sources */,
+				0545945827988C9B00A634AD /* CharactersViewModelTests.swift in Sources */,
 				0585AFAC2797625D00586ABD /* ParsingTester.swift in Sources */,
 				057D730227986F9D005ED888 /* ImageDataTests.swift in Sources */,
 			);

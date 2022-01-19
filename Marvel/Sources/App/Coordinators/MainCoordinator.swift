@@ -35,7 +35,8 @@ private extension MainCoordinator {
     func createCharactersViewController() -> UIViewController {
         // TODO: Move viewController instantiation and dependency wiring to some kind of factory
         let viewController = CharactersViewController()
-        let viewModel = CharactersViewModel()
+        let fetchCharactersUseCase = FetchCharactersUseCase()
+        let viewModel = CharactersViewModel(charactersFetcher: fetchCharactersUseCase)
         viewModel.coordinatorDelegate = self
         let charactersDataSource = CharactersDataSource(viewModel: viewModel)
         viewController.dataSource = charactersDataSource
