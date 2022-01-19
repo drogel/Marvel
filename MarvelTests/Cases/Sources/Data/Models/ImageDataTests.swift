@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import Marvel
+@testable import Marvel_Debug
 
 class ImageDataTests: XCTestCase {
 
