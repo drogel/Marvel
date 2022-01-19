@@ -16,6 +16,9 @@
 		0545946E27989A1A00A634AD /* CharactersDebugServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545946D27989A1A00A634AD /* CharactersDebugServiceTests.swift */; };
 		0545947227989DC500A634AD /* JsonDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545947127989DC500A634AD /* JsonDataLoader.swift */; };
 		054594752798A11000A634AD /* XCTestCase+ResultAssertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054594742798A11000A634AD /* XCTestCase+ResultAssertions.swift */; };
+		054594772798A7E000A634AD /* JsonDataLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054594762798A7E000A634AD /* JsonDataLoaderTests.swift */; };
+		054594792798A8E700A634AD /* CharactersResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 054594782798A8E700A634AD /* CharactersResponse.json */; };
+		0545947B2798A94100A634AD /* DebugDataFileName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545947A2798A94100A634AD /* DebugDataFileName.swift */; };
 		057D72F227986BA7005ED888 /* PageInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D72F127986BA7005ED888 /* PageInfoTests.swift */; };
 		057D72F427986BB0005ED888 /* PageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057D72F327986BB0005ED888 /* PageInfo.swift */; };
 		057D72F627986C6E005ED888 /* PageInfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 057D72F527986C6E005ED888 /* PageInfo.json */; };
@@ -68,6 +71,9 @@
 		0545946D27989A1A00A634AD /* CharactersDebugServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersDebugServiceTests.swift; sourceTree = "<group>"; };
 		0545947127989DC500A634AD /* JsonDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDataLoader.swift; sourceTree = "<group>"; };
 		054594742798A11000A634AD /* XCTestCase+ResultAssertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+ResultAssertions.swift"; sourceTree = "<group>"; };
+		054594762798A7E000A634AD /* JsonDataLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDataLoaderTests.swift; sourceTree = "<group>"; };
+		054594782798A8E700A634AD /* CharactersResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CharactersResponse.json; sourceTree = "<group>"; };
+		0545947A2798A94100A634AD /* DebugDataFileName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugDataFileName.swift; sourceTree = "<group>"; };
 		057D72F127986BA7005ED888 /* PageInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageInfoTests.swift; sourceTree = "<group>"; };
 		057D72F327986BB0005ED888 /* PageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageInfo.swift; sourceTree = "<group>"; };
 		057D72F527986C6E005ED888 /* PageInfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PageInfo.json; sourceTree = "<group>"; };
@@ -182,6 +188,7 @@
 			children = (
 				05459469279899EF00A634AD /* CharactersDebugService.swift */,
 				0545947127989DC500A634AD /* JsonDataLoader.swift */,
+				0545947A2798A94100A634AD /* DebugDataFileName.swift */,
 			);
 			path = DebugServices;
 			sourceTree = "<group>";
@@ -197,6 +204,7 @@
 		05459467279899B900A634AD /* Jsons */ = {
 			isa = PBXGroup;
 			children = (
+				054594782798A8E700A634AD /* CharactersResponse.json */,
 			);
 			path = Jsons;
 			sourceTree = "<group>";
@@ -205,6 +213,7 @@
 			isa = PBXGroup;
 			children = (
 				0545946D27989A1A00A634AD /* CharactersDebugServiceTests.swift */,
+				054594762798A7E000A634AD /* JsonDataLoaderTests.swift */,
 			);
 			path = DebugServices;
 			sourceTree = "<group>";
@@ -601,6 +610,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				054594792798A8E700A634AD /* CharactersResponse.json in Resources */,
 				05DAC3082797258C0062CC6F /* LaunchScreen.storyboard in Resources */,
 				05DAC3052797258C0062CC6F /* Assets.xcassets in Resources */,
 			);
@@ -630,6 +640,7 @@
 				05DAC34C27974CE30062CC6F /* CharacterDetailViewController.swift in Sources */,
 				0545947227989DC500A634AD /* JsonDataLoader.swift in Sources */,
 				05DAC3002797258A0062CC6F /* CharactersViewController.swift in Sources */,
+				0545947B2798A94100A634AD /* DebugDataFileName.swift in Sources */,
 				05DAC34027973C1A0062CC6F /* CharactersDataSource.swift in Sources */,
 				0545945027988A1400A634AD /* Cancellable.swift in Sources */,
 				0545946A279899EF00A634AD /* CharactersDebugService.swift in Sources */,
@@ -659,6 +670,7 @@
 				0585AFA227975E9100586ABD /* DataWrapperTests.swift in Sources */,
 				0545945827988C9B00A634AD /* CharactersViewModelTests.swift in Sources */,
 				0545946E27989A1A00A634AD /* CharactersDebugServiceTests.swift in Sources */,
+				054594772798A7E000A634AD /* JsonDataLoaderTests.swift in Sources */,
 				054594752798A11000A634AD /* XCTestCase+ResultAssertions.swift in Sources */,
 				0585AFAC2797625D00586ABD /* ParsingTester.swift in Sources */,
 				057D730227986F9D005ED888 /* ImageDataTests.swift in Sources */,

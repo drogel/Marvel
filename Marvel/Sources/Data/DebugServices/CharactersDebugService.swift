@@ -14,7 +14,7 @@ enum CharactersDebugServiceError: Error {
 class CharactersDebugService: CharactersService {
 
     private let dataLoader: JsonDataLoaderProtocol
-    private let charactersFileName = "CharactersResponse"
+    private let charactersFileName = DebugDataFileName.charactersFileName.rawValue
 
     init(dataLoader: JsonDataLoaderProtocol) {
         self.dataLoader = dataLoader

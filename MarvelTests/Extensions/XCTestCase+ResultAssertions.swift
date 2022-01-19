@@ -9,6 +9,7 @@ import Foundation
 import XCTest
 
 extension XCTestCase {
+    
     /// Asserts whether the provided ``Result`` is of case ``.success``. Additional assertions can be provided via the ``then`` parameter.
     func assertIsSuccess<T, E>(
         _ result: Result<T, E>,
