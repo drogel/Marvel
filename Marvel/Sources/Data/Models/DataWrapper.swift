@@ -11,5 +11,5 @@ struct DataWrapper: Codable, Equatable {
     let code: Int?
     let status: String?
     let copyright: String?
-    // TODO: Add data field. From the Marvel docs: data (CharacterDataContainer, optional) - The results returned by the call.
+    let data: PageInfo?
 }

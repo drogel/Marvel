@@ -20,6 +20,6 @@ class PageInfoTests: XCTestCase {
 extension PageInfoTests: ParsingTestCaseTemplate {
 
     func buildExpectedObject() -> PageInfo {
-        PageInfo(offset: 0, limit: 20, total: 1559, count: 20)
+        PageInfo(offset: 0, limit: 20, total: 1559, count: 20, results: nil)
     }
 }

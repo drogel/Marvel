@@ -20,6 +20,6 @@ class DataWrapperTests: XCTestCase {
 extension DataWrapperTests: ParsingTestCaseTemplate {
 
     func buildExpectedObject() -> DataWrapper {
-        DataWrapper(code: 200, status: "Ok", copyright: "© 2022 MARVEL")
+        DataWrapper(code: 200, status: "Ok", copyright: "© 2022 MARVEL", data: nil)
     }
 }

@@ -12,5 +12,5 @@ struct PageInfo: Codable, Equatable {
     let limit: Int?
     let total: Int?
     let count: Int?
-    // TODO: Add results field. From the Marvel docs: The list of characters returned by the call.
+    let results: [CharacterData]?
 }
