@@ -55,8 +55,8 @@ private extension CharactersDebugServiceTests {
         sut = CharactersDebugService(dataLoader: JsonDataLoaderEmptyStub())
     }
 
-    func whenRetrievingResultFromCharacters() -> Result<DataWrapper, Error> {
-        var completionResult: Result<DataWrapper, Error>!
+    func whenRetrievingResultFromCharacters() -> CharactersServiceResult {
+        var completionResult: CharactersServiceResult!
         let expectation = expectation(description: "JSON file parsing completion")
         let _ = sut.characters(from: 0) { result in
             completionResult = result

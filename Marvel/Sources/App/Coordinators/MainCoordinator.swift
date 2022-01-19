@@ -35,7 +35,9 @@ private extension MainCoordinator {
     func createCharactersViewController() -> UIViewController {
         // TODO: Move viewController instantiation and dependency wiring to some kind of factory
         let viewController = CharactersViewController()
-        let fetchCharactersUseCase = FetchCharactersUseCase()
+        // TODO: Remove this temporary service injection
+        let charactersService = CharactersDebugService(dataLoader: JsonDataLoader())
+        let fetchCharactersUseCase = FetchCharactersUseCase(service: charactersService)
         let viewModel = CharactersViewModel(charactersFetcher: fetchCharactersUseCase)
         viewModel.coordinatorDelegate = self
         let charactersDataSource = CharactersDataSource(viewModel: viewModel)
