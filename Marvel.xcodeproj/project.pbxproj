@@ -48,6 +48,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0545944D2798872700A634AD /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		0545944E2798872D00A634AD /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		057D72F127986BA7005ED888 /* PageInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageInfoTests.swift; sourceTree = "<group>"; };
 		057D72F327986BB0005ED888 /* PageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageInfo.swift; sourceTree = "<group>"; };
 		057D72F527986C6E005ED888 /* PageInfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PageInfo.json; sourceTree = "<group>"; };
@@ -62,7 +64,7 @@
 		0585AFA127975E9100586ABD /* DataWrapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataWrapperTests.swift; sourceTree = "<group>"; };
 		0585AFA827975F5000586ABD /* DataWrapper.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = DataWrapper.json; sourceTree = "<group>"; };
 		0585AFAB2797625D00586ABD /* ParsingTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsingTester.swift; sourceTree = "<group>"; };
-		05DAC2F82797258A0062CC6F /* Marvel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Marvel.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		05DAC2F82797258A0062CC6F /* Marvel Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Marvel Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		05DAC2FB2797258A0062CC6F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		05DAC2FD2797258A0062CC6F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		05DAC2FF2797258A0062CC6F /* CharactersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +101,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0545944C2798871C00A634AD /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				05DAC3092797258C0062CC6F /* Info.plist */,
+				0545944D2798872700A634AD /* Debug.xcconfig */,
+				0545944E2798872D00A634AD /* Release.xcconfig */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
 		0585AF9A27975BCF00586ABD /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -209,7 +221,7 @@
 		05DAC2F92797258A0062CC6F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				05DAC2F82797258A0062CC6F /* Marvel.app */,
+				05DAC2F82797258A0062CC6F /* Marvel Debug.app */,
 				05DAC30E2797258C0062CC6F /* MarvelTests.xctest */,
 			);
 			name = Products;
@@ -218,6 +230,7 @@
 		05DAC2FA2797258A0062CC6F /* Marvel */ = {
 			isa = PBXGroup;
 			children = (
+				0545944C2798871C00A634AD /* Configuration */,
 				05DAC32D2797396C0062CC6F /* Resources */,
 				05DAC32B279739610062CC6F /* Sources */,
 			);
@@ -251,7 +264,6 @@
 			children = (
 				05DAC3042797258C0062CC6F /* Assets.xcassets */,
 				05DAC3062797258C0062CC6F /* LaunchScreen.storyboard */,
-				05DAC3092797258C0062CC6F /* Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -409,7 +421,7 @@
 			);
 			name = Marvel;
 			productName = Marvel;
-			productReference = 05DAC2F82797258A0062CC6F /* Marvel.app */;
+			productReference = 05DAC2F82797258A0062CC6F /* Marvel Debug.app */;
 			productType = "com.apple.product-type.application";
 		};
 		05DAC30D2797258C0062CC6F /* MarvelTests */ = {
@@ -553,6 +565,7 @@
 /* Begin XCBuildConfiguration section */
 		05DAC3202797258C0062CC6F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0545944D2798872700A634AD /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -614,6 +627,7 @@
 		};
 		05DAC3212797258C0062CC6F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0545944E2798872D00A634AD /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -675,7 +689,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Marvel/Resources/Info.plist;
+				INFOPLIST_FILE = Marvel/Configuration/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -686,7 +700,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.drogel.Marvel;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(PRODUCT_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -701,7 +715,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Marvel/Resources/Info.plist;
+				INFOPLIST_FILE = Marvel/Configuration/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -712,7 +726,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.drogel.Marvel;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(PRODUCT_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -741,7 +755,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Marvel.app/Marvel";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Marvel Debug.app/Marvel Debug";
 			};
 			name = Debug;
 		};
@@ -766,7 +780,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Marvel.app/Marvel";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Marvel Debug.app/Marvel Debug";
 			};
 			name = Release;
 		};
