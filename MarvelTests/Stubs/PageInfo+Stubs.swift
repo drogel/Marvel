@@ -10,5 +10,9 @@ import Foundation
 
 extension PageInfo {
 
-    static let empty = PageInfo(offset: 0, limit: 0, total: 0, count: 0, results: [])
+    static let empty = PageInfo.zeroWith(results: [])
+
+    static func zeroWith(results: [CharacterData]) -> PageInfo {
+        PageInfo(offset: 0, limit: 0, total: 0, count: 0, results: results)
+    }
 }

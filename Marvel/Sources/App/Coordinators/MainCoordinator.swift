@@ -40,10 +40,9 @@ private extension MainCoordinator {
         let fetchCharactersUseCase = FetchCharactersUseCase(service: charactersService)
         let viewModel = CharactersViewModel(charactersFetcher: fetchCharactersUseCase)
         viewModel.coordinatorDelegate = self
-        let charactersDataSource = CharactersDataSource(viewModel: viewModel)
-        viewController.dataSource = charactersDataSource
         viewController.layout = CharactersLayout()
-        viewController.delegate = charactersDataSource
+        viewController.viewModel = viewModel
+        viewModel.viewDelegate = viewController
         return viewController
     }
 
