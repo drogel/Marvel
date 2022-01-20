@@ -77,6 +77,23 @@ class CharactersViewModelTests: XCTestCase {
         sut.start()
         XCTAssertEqual(viewDelegateMock.didFinishLoadingCallCount, 1)
     }
+
+    func test_whenRetrievingCellData_returnsNilIfDidNotFetchYet() {
+        XCTAssertNil(sut.cellData(at: IndexPath(item: 0, section: 0)))
+    }
+
+    func test_givenDidStartSuccessfully_whenRetrievingCellDataAtValidIndex_returnsData() throws {
+        givenSutWithSuccessfulFetcher()
+        sut.start()
+        let actual = try XCTUnwrap(sut.cellData(at: IndexPath(item: 0, section: 0)))
+        XCTAssertEqual(actual, CharacterCellData(name: "Aginar", description: ""))
+    }
+
+    func test_givenDidStartSuccessfully_whenRetrievingCellDataAtInvalidIndex_returnsNil() throws {
+        givenSutWithSuccessfulFetcher()
+        sut.start()
+        XCTAssertNil(sut.cellData(at: IndexPath(row: -1, section: 0)))
+    }
 }
 
 private extension CharactersViewModelTests {

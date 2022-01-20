@@ -10,6 +10,7 @@ import Foundation
 protocol CharactersViewModelProtocol: ViewModel {
     var numberOfItems: Int { get }
     func select(itemAt indexPath: IndexPath)
+    func cellData(at indexPath: IndexPath) -> CharacterCellData?
 }
 
 protocol CharactersViewModelCoordinatorDelegate: AnyObject {
@@ -45,6 +46,12 @@ class CharactersViewModel: CharactersViewModelProtocol {
         let query = FetchCharactersQuery(offset: 0)
         // TODO: Cache cancellable
         let _ = charactersFetcher.fetch(query: query, completion: handleFetchCharactersResult)
+    }
+
+    func cellData(at indexPath: IndexPath) -> CharacterCellData? {
+        let row = indexPath.row
+        guard let cells = cells, cells.indices.contains(row) else { return nil }
+        return cells[row]
     }
 
     func select(itemAt indexPath: IndexPath) {
