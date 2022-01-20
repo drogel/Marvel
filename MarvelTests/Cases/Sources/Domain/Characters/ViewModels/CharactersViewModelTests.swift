@@ -123,7 +123,7 @@ private class CharactersCoordinatorDelegateMock: CharactersViewModelCoordinatorD
     }
 }
 
-private class CharactersFetcherMock: FetchCharactersUseCaseProtocol {
+private class CharactersFetcherMock: FetchCharactersUseCase {
 
     var fetchCallCount = 0
 
@@ -133,7 +133,7 @@ private class CharactersFetcherMock: FetchCharactersUseCaseProtocol {
     }
 }
 
-private class CharactersSuccessfulStub: FetchCharactersUseCaseProtocol {
+private class CharactersSuccessfulStub: FetchCharactersUseCase {
 
     static let pageInfoStub = PageInfo.zeroWith(results: [CharacterData.aginar, CharacterData.aginar])
 

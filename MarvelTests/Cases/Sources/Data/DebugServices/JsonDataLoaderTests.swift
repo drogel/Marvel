@@ -10,11 +10,11 @@ import XCTest
 
 class JsonDataLoaderTests: XCTestCase {
 
-    private var sut: JsonDataLoader!
+    private var sut: JsonDecoderDataLoader!
 
     override func setUp() {
         super.setUp()
-        sut = JsonDataLoader()
+        sut = JsonDecoderDataLoader()
     }
 
     override func tearDown() {

@@ -33,10 +33,10 @@ class CharactersViewModel: CharactersViewModelProtocol {
         return cells.count
     }
 
-    private let charactersFetcher: FetchCharactersUseCaseProtocol
+    private let charactersFetcher: FetchCharactersUseCase
     private var cells: [CharacterCellData]?
 
-    init(charactersFetcher: FetchCharactersUseCaseProtocol) {
+    init(charactersFetcher: FetchCharactersUseCase) {
         self.charactersFetcher = charactersFetcher
     }
 

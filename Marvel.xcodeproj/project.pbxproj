@@ -11,14 +11,17 @@
 		053B9D952799C7BC00CCF1C2 /* CharacterCellDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D942799C7BC00CCF1C2 /* CharacterCellDataTests.swift */; };
 		053B9D992799CADD00CCF1C2 /* CharacterData+Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D982799CADD00CCF1C2 /* CharacterData+Stubs.swift */; };
 		053B9D9E2799E38000CCF1C2 /* Configurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D9D2799E38000CCF1C2 /* Configurable.swift */; };
+		053B9DA2279A0BE900CCF1C2 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9DA1279A0BE900CCF1C2 /* Authenticator.swift */; };
+		053B9DA4279A0CD100CCF1C2 /* SecretsRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9DA3279A0CD100CCF1C2 /* SecretsRetriever.swift */; };
+		053B9DA7279A0EA900CCF1C2 /* AuthenticatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9DA6279A0EA900CCF1C2 /* AuthenticatorTests.swift */; };
 		0545945027988A1400A634AD /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545944F27988A1400A634AD /* Cancellable.swift */; };
-		0545945327988A4700A634AD /* FetchCharactersUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945227988A4700A634AD /* FetchCharactersUseCase.swift */; };
+		0545945327988A4700A634AD /* FetchCharactersServiceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945227988A4700A634AD /* FetchCharactersServiceUseCase.swift */; };
 		0545945827988C9B00A634AD /* CharactersViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945727988C9B00A634AD /* CharactersViewModelTests.swift */; };
 		0545945B27988CC200A634AD /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945A27988CC200A634AD /* ViewModel.swift */; };
 		05459464279898A700A634AD /* CharactersService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05459463279898A700A634AD /* CharactersService.swift */; };
 		0545946A279899EF00A634AD /* CharactersDebugService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05459469279899EF00A634AD /* CharactersDebugService.swift */; };
 		0545946E27989A1A00A634AD /* CharactersDebugServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545946D27989A1A00A634AD /* CharactersDebugServiceTests.swift */; };
-		0545947227989DC500A634AD /* JsonDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545947127989DC500A634AD /* JsonDataLoader.swift */; };
+		0545947227989DC500A634AD /* JsonDecoderDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545947127989DC500A634AD /* JsonDecoderDataLoader.swift */; };
 		054594752798A11000A634AD /* XCTestCase+ResultAssertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054594742798A11000A634AD /* XCTestCase+ResultAssertions.swift */; };
 		054594772798A7E000A634AD /* JsonDataLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054594762798A7E000A634AD /* JsonDataLoaderTests.swift */; };
 		054594792798A8E700A634AD /* CharactersResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 054594782798A8E700A634AD /* CharactersResponse.json */; };
@@ -70,16 +73,19 @@
 		053B9D942799C7BC00CCF1C2 /* CharacterCellDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCellDataTests.swift; sourceTree = "<group>"; };
 		053B9D982799CADD00CCF1C2 /* CharacterData+Stubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CharacterData+Stubs.swift"; sourceTree = "<group>"; };
 		053B9D9D2799E38000CCF1C2 /* Configurable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configurable.swift; sourceTree = "<group>"; };
+		053B9DA1279A0BE900CCF1C2 /* Authenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authenticator.swift; sourceTree = "<group>"; };
+		053B9DA3279A0CD100CCF1C2 /* SecretsRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretsRetriever.swift; sourceTree = "<group>"; };
+		053B9DA6279A0EA900CCF1C2 /* AuthenticatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorTests.swift; sourceTree = "<group>"; };
 		0545944D2798872700A634AD /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		0545944E2798872D00A634AD /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		0545944F27988A1400A634AD /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
-		0545945227988A4700A634AD /* FetchCharactersUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCharactersUseCase.swift; sourceTree = "<group>"; };
+		0545945227988A4700A634AD /* FetchCharactersServiceUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCharactersServiceUseCase.swift; sourceTree = "<group>"; };
 		0545945727988C9B00A634AD /* CharactersViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersViewModelTests.swift; sourceTree = "<group>"; };
 		0545945A27988CC200A634AD /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		05459463279898A700A634AD /* CharactersService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersService.swift; sourceTree = "<group>"; };
 		05459469279899EF00A634AD /* CharactersDebugService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersDebugService.swift; sourceTree = "<group>"; };
 		0545946D27989A1A00A634AD /* CharactersDebugServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersDebugServiceTests.swift; sourceTree = "<group>"; };
-		0545947127989DC500A634AD /* JsonDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDataLoader.swift; sourceTree = "<group>"; };
+		0545947127989DC500A634AD /* JsonDecoderDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDecoderDataLoader.swift; sourceTree = "<group>"; };
 		054594742798A11000A634AD /* XCTestCase+ResultAssertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+ResultAssertions.swift"; sourceTree = "<group>"; };
 		054594762798A7E000A634AD /* JsonDataLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDataLoaderTests.swift; sourceTree = "<group>"; };
 		054594782798A8E700A634AD /* CharactersResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CharactersResponse.json; sourceTree = "<group>"; };
@@ -153,6 +159,23 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		053B9DA0279A0BC800CCF1C2 /* APIClient */ = {
+			isa = PBXGroup;
+			children = (
+				053B9DA1279A0BE900CCF1C2 /* Authenticator.swift */,
+				053B9DA3279A0CD100CCF1C2 /* SecretsRetriever.swift */,
+			);
+			path = APIClient;
+			sourceTree = "<group>";
+		};
+		053B9DA5279A0E8E00CCF1C2 /* APIClient */ = {
+			isa = PBXGroup;
+			children = (
+				053B9DA6279A0EA900CCF1C2 /* AuthenticatorTests.swift */,
+			);
+			path = APIClient;
+			sourceTree = "<group>";
+		};
 		0545944C2798871C00A634AD /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
@@ -166,7 +189,7 @@
 		0545945127988A3500A634AD /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
-				0545945227988A4700A634AD /* FetchCharactersUseCase.swift */,
+				0545945227988A4700A634AD /* FetchCharactersServiceUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -217,7 +240,7 @@
 			isa = PBXGroup;
 			children = (
 				05459469279899EF00A634AD /* CharactersDebugService.swift */,
-				0545947127989DC500A634AD /* JsonDataLoader.swift */,
+				0545947127989DC500A634AD /* JsonDecoderDataLoader.swift */,
 				0545947A2798A94100A634AD /* DebugDataFileName.swift */,
 			);
 			path = DebugServices;
@@ -277,6 +300,7 @@
 		0585AF9A27975BCF00586ABD /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				053B9DA0279A0BC800CCF1C2 /* APIClient */,
 				054594652798993B00A634AD /* DebugServices */,
 				054594622798986200A634AD /* Services */,
 				0585AF9B27975DBC00586ABD /* Models */,
@@ -307,6 +331,7 @@
 		0585AF9F27975E7E00586ABD /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				053B9DA5279A0E8E00CCF1C2 /* APIClient */,
 				0545946C27989A0700A634AD /* DebugServices */,
 				0585AFA027975E8000586ABD /* Models */,
 			);
@@ -681,7 +706,7 @@
 				057D72F827986D0D005ED888 /* CharacterData.swift in Sources */,
 				05DAC34C27974CE30062CC6F /* CharacterDetailViewController.swift in Sources */,
 				053B9D932799C76300CCF1C2 /* CharacterCellData.swift in Sources */,
-				0545947227989DC500A634AD /* JsonDataLoader.swift in Sources */,
+				0545947227989DC500A634AD /* JsonDecoderDataLoader.swift in Sources */,
 				053B9D9E2799E38000CCF1C2 /* Configurable.swift in Sources */,
 				05DAC3002797258A0062CC6F /* CharactersViewController.swift in Sources */,
 				0545947B2798A94100A634AD /* DebugDataFileName.swift in Sources */,
@@ -690,10 +715,12 @@
 				05DAC33A27973A750062CC6F /* UICollectionReusableView+Identifiable.swift in Sources */,
 				057D72FC27986E3D005ED888 /* ImageData.swift in Sources */,
 				05DAC34827974C690062CC6F /* MainCoordinator.swift in Sources */,
+				053B9DA4279A0CD100CCF1C2 /* SecretsRetriever.swift in Sources */,
 				05DAC33727973A2A0062CC6F /* Identifiable.swift in Sources */,
+				053B9DA2279A0BE900CCF1C2 /* Authenticator.swift in Sources */,
 				0545945B27988CC200A634AD /* ViewModel.swift in Sources */,
 				05DAC33C27973AC40062CC6F /* CharacterCell.swift in Sources */,
-				0545945327988A4700A634AD /* FetchCharactersUseCase.swift in Sources */,
+				0545945327988A4700A634AD /* FetchCharactersServiceUseCase.swift in Sources */,
 				05DAC2FC2797258A0062CC6F /* AppDelegate.swift in Sources */,
 				05DAC2FE2797258A0062CC6F /* SceneDelegate.swift in Sources */,
 				05DAC34327973E590062CC6F /* CharactersLayout.swift in Sources */,
@@ -708,6 +735,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				057D730427987160005ED888 /* ParsingTestCaseTemplate.swift in Sources */,
+				053B9DA7279A0EA900CCF1C2 /* AuthenticatorTests.swift in Sources */,
 				054594812798B93C00A634AD /* DataWrapper+Stubs.swift in Sources */,
 				053B9D992799CADD00CCF1C2 /* CharacterData+Stubs.swift in Sources */,
 				053B9D952799C7BC00CCF1C2 /* CharacterCellDataTests.swift in Sources */,

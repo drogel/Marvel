@@ -67,14 +67,14 @@ private extension CharactersDebugServiceTests {
     }
 }
 
-private class JsonDataLoaderEmptyStub: JsonDataLoaderProtocol {
+private class JsonDataLoaderEmptyStub: JsonDataLoader {
 
     func load<T>(fromFileNamed fileName: String) -> T? {
         nil
     }
 }
 
-private class JsonDataLoaderStub: JsonDataLoaderProtocol {
+private class JsonDataLoaderStub: JsonDataLoader {
 
     static let codeStub = 200
 

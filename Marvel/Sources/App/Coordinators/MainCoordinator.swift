@@ -36,8 +36,8 @@ private extension MainCoordinator {
         // TODO: Move viewController instantiation and dependency wiring to some kind of factory
         let viewController = CharactersViewController()
         // TODO: Remove this temporary service injection
-        let charactersService = CharactersDebugService(dataLoader: JsonDataLoader())
-        let fetchCharactersUseCase = FetchCharactersUseCase(service: charactersService)
+        let charactersService = CharactersDebugService(dataLoader: JsonDecoderDataLoader())
+        let fetchCharactersUseCase = FetchCharactersServiceUseCase(service: charactersService)
         let viewModel = CharactersViewModel(charactersFetcher: fetchCharactersUseCase)
         viewModel.coordinatorDelegate = self
         viewController.layout = CharactersLayout()
