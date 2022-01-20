@@ -33,9 +33,9 @@ extension CharactersViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cellData = viewModel.cellData(at: indexPath) else { return UICollectionViewCell() }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CharacterCell.identifier, for: indexPath) as! CharacterCell
-        // TODO: Make cells configurable from view models
-        cell.backgroundColor = .red
+        cell.configure(using: cellData)
         return cell
     }
 }

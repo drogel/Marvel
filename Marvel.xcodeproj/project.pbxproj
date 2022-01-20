@@ -10,6 +10,7 @@
 		053B9D932799C76300CCF1C2 /* CharacterCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D922799C76300CCF1C2 /* CharacterCellData.swift */; };
 		053B9D952799C7BC00CCF1C2 /* CharacterCellDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D942799C7BC00CCF1C2 /* CharacterCellDataTests.swift */; };
 		053B9D992799CADD00CCF1C2 /* CharacterData+Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D982799CADD00CCF1C2 /* CharacterData+Stubs.swift */; };
+		053B9D9E2799E38000CCF1C2 /* Configurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D9D2799E38000CCF1C2 /* Configurable.swift */; };
 		0545945027988A1400A634AD /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545944F27988A1400A634AD /* Cancellable.swift */; };
 		0545945327988A4700A634AD /* FetchCharactersUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945227988A4700A634AD /* FetchCharactersUseCase.swift */; };
 		0545945827988C9B00A634AD /* CharactersViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945727988C9B00A634AD /* CharactersViewModelTests.swift */; };
@@ -68,6 +69,7 @@
 		053B9D922799C76300CCF1C2 /* CharacterCellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCellData.swift; sourceTree = "<group>"; };
 		053B9D942799C7BC00CCF1C2 /* CharacterCellDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCellDataTests.swift; sourceTree = "<group>"; };
 		053B9D982799CADD00CCF1C2 /* CharacterData+Stubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CharacterData+Stubs.swift"; sourceTree = "<group>"; };
+		053B9D9D2799E38000CCF1C2 /* Configurable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configurable.swift; sourceTree = "<group>"; };
 		0545944D2798872700A634AD /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		0545944E2798872D00A634AD /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		0545944F27988A1400A634AD /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
@@ -502,6 +504,7 @@
 			children = (
 				05DAC33627973A2A0062CC6F /* Identifiable.swift */,
 				0545944F27988A1400A634AD /* Cancellable.swift */,
+				053B9D9D2799E38000CCF1C2 /* Configurable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -679,6 +682,7 @@
 				05DAC34C27974CE30062CC6F /* CharacterDetailViewController.swift in Sources */,
 				053B9D932799C76300CCF1C2 /* CharacterCellData.swift in Sources */,
 				0545947227989DC500A634AD /* JsonDataLoader.swift in Sources */,
+				053B9D9E2799E38000CCF1C2 /* Configurable.swift in Sources */,
 				05DAC3002797258A0062CC6F /* CharactersViewController.swift in Sources */,
 				0545947B2798A94100A634AD /* DebugDataFileName.swift in Sources */,
 				0545945027988A1400A634AD /* Cancellable.swift in Sources */,
