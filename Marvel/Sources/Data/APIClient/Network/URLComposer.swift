@@ -8,15 +8,15 @@
 import Foundation
 
 protocol URLComposer {
-    func compose(from baseURL: URL, adding requestable: Requestable) -> URL?
+    func compose(from baseURL: URL, adding components: RequestComponents) -> URL?
 }
 
 class URLComponentsBuilder: URLComposer {
 
-    func compose(from baseURL: URL, adding requestable: Requestable) -> URL? {
-        let url = buildFullURL(from: baseURL, and: requestable)
+    func compose(from baseURL: URL, adding components: RequestComponents) -> URL? {
+        let url = buildFullURL(from: baseURL, and: components)
         guard var urlComponents = urlComponents(from: url) else { return nil }
-        urlComponents.queryItems = buildQueryItems(from: requestable)
+        urlComponents.queryItems = buildQueryItems(from: components)
         return urlComponents.url
     }
 }
@@ -27,11 +27,11 @@ private extension URLComponentsBuilder {
         URLComponents(url: url, resolvingAgainstBaseURL: false)
     }
 
-    func buildFullURL(from baseURL: URL, and requestable: Requestable) -> URL {
-        baseURL.appendingPathComponent(requestable.path)
+    func buildFullURL(from baseURL: URL, and components: RequestComponents) -> URL {
+        baseURL.appendingPathComponent(components.path)
     }
 
-    func buildQueryItems(from requestable: Requestable) -> [URLQueryItem] {
-        requestable.queryParameters.map { URLQueryItem(name: $0.key, value: $0.value) }
+    func buildQueryItems(from components: RequestComponents) -> [URLQueryItem] {
+        components.queryParameters.map { URLQueryItem(name: $0.key, value: $0.value) }
     }
 }

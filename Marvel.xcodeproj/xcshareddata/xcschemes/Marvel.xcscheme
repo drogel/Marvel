@@ -61,6 +61,18 @@
             ReferencedContainer = "container:Marvel.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "PRIVATE_KEY"
+            value = "PRIVATE_KEY"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "PUBLIC_KEY"
+            value = "PUBLIC_KEY"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

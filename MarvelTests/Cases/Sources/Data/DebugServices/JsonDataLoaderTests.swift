@@ -14,7 +14,7 @@ class JsonDataLoaderTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        sut = JsonDecoderDataLoader()
+        sut = JsonDecoderDataLoader(parser: JSONDecoderParser())
     }
 
     override func tearDown() {

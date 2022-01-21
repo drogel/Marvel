@@ -44,7 +44,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
         viewDelegate?.viewModelDidStartLoading(self)
         // TODO: Create queries that take into account the offset for pagination
         let query = FetchCharactersQuery(offset: 0)
-        // TODO: Cache cancellable
+        // TODO: Cache cancellable, cancel when view is gone
         let _ = charactersFetcher.fetch(query: query, completion: handleFetchCharactersResult)
     }
 

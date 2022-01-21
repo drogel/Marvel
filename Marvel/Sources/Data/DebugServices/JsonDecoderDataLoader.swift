@@ -13,6 +13,12 @@ protocol JsonDataLoader {
 
 class JsonDecoderDataLoader: JsonDataLoader {
 
+    let parser: JSONParser
+
+    init(parser: JSONParser) {
+        self.parser = parser
+    }
+
     func load<T: Decodable>(fromFileNamed fileName: String) -> T? {
         guard let url = url(for: fileName), let data: T = decode(fromJsonAt: url) else { return nil }
         return data
@@ -26,7 +32,6 @@ private extension JsonDecoderDataLoader {
     }
 
     func decode<T: Decodable>(fromJsonAt url: URL) -> T? {
-        let decoder = JSONDecoder()
-        return try? decoder.decode(T.self, from: Data(contentsOf: url))
+        try? parser.parse(data: Data(contentsOf: url))
     }
 }

@@ -13,17 +13,17 @@ class NetworkServiceTests: XCTestCase {
     private var sut: NetworkSessionService!
     private var baseURLStub: URL!
     private var composerMock: URLComposerMock!
-    private var requestableStub: RequestableStub!
+    private var componentsStub: RequestComponents!
 
     override func setUp() {
         super.setUp()
         composerMock = URLComposerMock()
         baseURLStub = URL(string: "https://test.com")!
-        requestableStub = RequestableStub()
+        componentsStub = RequestComponents(path: "/testPath", queryParameters: [:])
     }
 
     override func tearDown() {
-        requestableStub = nil
+        componentsStub = nil
         composerMock = nil
         baseURLStub = nil
         sut = nil
@@ -74,7 +74,7 @@ private extension NetworkServiceTests {
     func whenRequesting() -> Result<Data?, NetworkError> {
         var result: Result<Data?, NetworkError>!
         let expectation = expectation(description: "Request completed")
-        let _ = sut.request(endpoint: requestableStub) { requestResult in
+        let _ = sut.request(endpoint: componentsStub) { requestResult in
             result = requestResult
             expectation.fulfill()
         }
@@ -87,23 +87,13 @@ private extension NetworkServiceTests {
     }
 }
 
-private class RequestableStub: Requestable {
-    var path: String {
-        "/testPath"
-    }
-
-    var queryParameters: [String : String?] {
-        ["test": "test"]
-    }
-}
-
 private class URLComposerMock: URLComposer {
 
     var composeCallCount = 0
 
-    func compose(from baseURL: URL, adding requestable: Requestable) -> URL? {
+    func compose(from baseURL: URL, adding components: RequestComponents) -> URL? {
         composeCallCount += 1
-        return URL(string: "http://test.com")
+        return URL(string: "https://example.com")
     }
 }
 

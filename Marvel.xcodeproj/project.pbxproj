@@ -48,8 +48,11 @@
 		05932C49279B19A700549D7D /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C48279B19A700549D7D /* NetworkService.swift */; };
 		05932C4C279B1AF000549D7D /* URLSessionDataTask+Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C4B279B1AF000549D7D /* URLSessionDataTask+Cancellable.swift */; };
 		05932C4E279B249A00549D7D /* URLComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C4D279B249A00549D7D /* URLComposer.swift */; };
-		05932C51279B287800549D7D /* Requestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C50279B287800549D7D /* Requestable.swift */; };
+		05932C51279B287800549D7D /* RequestComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C50279B287800549D7D /* RequestComponents.swift */; };
 		05932C57279B540900549D7D /* NetworkServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C56279B540900549D7D /* NetworkServiceTests.swift */; };
+		05932C59279B5A0700549D7D /* CharactersClientService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C58279B5A0700549D7D /* CharactersClientService.swift */; };
+		05932C5E279B5DDD00549D7D /* JSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C5D279B5DDD00549D7D /* JSONParser.swift */; };
+		05932C60279B611700549D7D /* AuthenticatedNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C5F279B611700549D7D /* AuthenticatedNetworkService.swift */; };
 		05DAC2FC2797258A0062CC6F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC2FB2797258A0062CC6F /* AppDelegate.swift */; };
 		05DAC2FE2797258A0062CC6F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC2FD2797258A0062CC6F /* SceneDelegate.swift */; };
 		05DAC3002797258A0062CC6F /* CharactersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC2FF2797258A0062CC6F /* CharactersViewController.swift */; };
@@ -119,8 +122,11 @@
 		05932C48279B19A700549D7D /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		05932C4B279B1AF000549D7D /* URLSessionDataTask+Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionDataTask+Cancellable.swift"; sourceTree = "<group>"; };
 		05932C4D279B249A00549D7D /* URLComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLComposer.swift; sourceTree = "<group>"; };
-		05932C50279B287800549D7D /* Requestable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Requestable.swift; sourceTree = "<group>"; };
+		05932C50279B287800549D7D /* RequestComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestComponents.swift; sourceTree = "<group>"; };
 		05932C56279B540900549D7D /* NetworkServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceTests.swift; sourceTree = "<group>"; };
+		05932C58279B5A0700549D7D /* CharactersClientService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersClientService.swift; sourceTree = "<group>"; };
+		05932C5D279B5DDD00549D7D /* JSONParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONParser.swift; sourceTree = "<group>"; };
+		05932C5F279B611700549D7D /* AuthenticatedNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedNetworkService.swift; sourceTree = "<group>"; };
 		05DAC2F82797258A0062CC6F /* Marvel Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Marvel Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		05DAC2FB2797258A0062CC6F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		05DAC2FD2797258A0062CC6F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -178,7 +184,9 @@
 			children = (
 				05932C43279B18AE00549D7D /* Network */,
 				053B9DA1279A0BE900CCF1C2 /* Authenticator.swift */,
+				05932C5F279B611700549D7D /* AuthenticatedNetworkService.swift */,
 				053B9DA3279A0CD100CCF1C2 /* SecretsRetriever.swift */,
+				05932C58279B5A0700549D7D /* CharactersClientService.swift */,
 			);
 			path = APIClient;
 			sourceTree = "<group>";
@@ -316,6 +324,7 @@
 		0585AF9A27975BCF00586ABD /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				05932C5C279B5DCE00549D7D /* Parsers */,
 				053B9DA0279A0BC800CCF1C2 /* APIClient */,
 				054594652798993B00A634AD /* DebugServices */,
 				054594622798986200A634AD /* Services */,
@@ -423,7 +432,7 @@
 				05932C4A279B1ACB00549D7D /* Extensions */,
 				05932C44279B18BC00549D7D /* NetworkSession.swift */,
 				05932C48279B19A700549D7D /* NetworkService.swift */,
-				05932C50279B287800549D7D /* Requestable.swift */,
+				05932C50279B287800549D7D /* RequestComponents.swift */,
 				05932C4D279B249A00549D7D /* URLComposer.swift */,
 			);
 			path = Network;
@@ -470,6 +479,14 @@
 				0545945927988CBA00A634AD /* Protocols */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		05932C5C279B5DCE00549D7D /* Parsers */ = {
+			isa = PBXGroup;
+			children = (
+				05932C5D279B5DDD00549D7D /* JSONParser.swift */,
+			);
+			path = Parsers;
 			sourceTree = "<group>";
 		};
 		05DAC2EF2797258A0062CC6F = {
@@ -771,7 +788,9 @@
 				05932C4C279B1AF000549D7D /* URLSessionDataTask+Cancellable.swift in Sources */,
 				0545947227989DC500A634AD /* JsonDecoderDataLoader.swift in Sources */,
 				053B9D9E2799E38000CCF1C2 /* Configurable.swift in Sources */,
-				05932C51279B287800549D7D /* Requestable.swift in Sources */,
+				05932C59279B5A0700549D7D /* CharactersClientService.swift in Sources */,
+				05932C5E279B5DDD00549D7D /* JSONParser.swift in Sources */,
+				05932C51279B287800549D7D /* RequestComponents.swift in Sources */,
 				05DAC3002797258A0062CC6F /* CharactersViewController.swift in Sources */,
 				0545947B2798A94100A634AD /* DebugDataFileName.swift in Sources */,
 				0545945027988A1400A634AD /* Cancellable.swift in Sources */,
@@ -783,6 +802,7 @@
 				05DAC33727973A2A0062CC6F /* Identifiable.swift in Sources */,
 				053B9DA2279A0BE900CCF1C2 /* Authenticator.swift in Sources */,
 				0545945B27988CC200A634AD /* ViewModel.swift in Sources */,
+				05932C60279B611700549D7D /* AuthenticatedNetworkService.swift in Sources */,
 				05DAC33C27973AC40062CC6F /* CharacterCell.swift in Sources */,
 				0545945327988A4700A634AD /* FetchCharactersServiceUseCase.swift in Sources */,
 				05932C4E279B249A00549D7D /* URLComposer.swift in Sources */,

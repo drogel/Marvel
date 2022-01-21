@@ -36,7 +36,8 @@ private extension MainCoordinator {
         // TODO: Move viewController instantiation and dependency wiring to some kind of factory
         let viewController = CharactersViewController()
         // TODO: Remove this temporary service injection
-        let charactersService = CharactersDebugService(dataLoader: JsonDecoderDataLoader())
+        // TODO: Add different characters service wiring: one for debug, other for release
+        let charactersService = CharactersClientService(client: AuthenticatedNetworkService(networkService: NetworkSessionService(session: URLSession(configuration: .default), baseURL: URL(string: "https://gateway.marvel.com/v1/public/")!, urlComposer: URLComponentsBuilder()), authenticator: MD5Authenticator(secrets: EnvironmentVariablesRetriever())), parser: JSONDecoderParser())
         let fetchCharactersUseCase = FetchCharactersServiceUseCase(service: charactersService)
         let viewModel = CharactersViewModel(charactersFetcher: fetchCharactersUseCase)
         viewModel.coordinatorDelegate = self

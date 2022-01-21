@@ -26,8 +26,10 @@ class AuthenticatorTests: XCTestCase {
     }
 
     func test_whenAuthenticating_returnsMD5DigestOfTimestampPrivateKeyAndPublicKey() {
-        let result = sut.authenticate(with: 1)
-        XCTAssertEqual(result, "ffd275c5130566a2916217b101f26150")
+        let timestamp: Double = 1
+        let expectedTsParameter = String(Int(timestamp))
+        let result = sut.authenticate(with: timestamp)
+        XCTAssertEqual(result, ["hash": "ffd275c5130566a2916217b101f26150", "apikey": SecretsRetrieverStub.publicKeyStub, "ts": expectedTsParameter])
     }
 
     func test_givenEmptySecrets_whenAuthenticating_returnsNil() {
