@@ -23,7 +23,11 @@ class CharactersDependenciesAdapter: CharactersDependencies {
     }
 }
 
-class CharactersDependencyContainer {
+protocol CharactersContainer {
+    var fetchCharactersUseCase: FetchCharactersUseCase { get }
+}
+
+class CharactersDependencyContainer: CharactersContainer {
 
     private let dependencies: CharactersDependencies
 

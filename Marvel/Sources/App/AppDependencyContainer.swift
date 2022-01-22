@@ -1,5 +1,5 @@
 //
-//  MainDependencyContainer.swift
+//  AppDependencyContainer.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 22/1/22.
@@ -7,12 +7,12 @@
 
 import Foundation
 
-protocol MainDependencyContainer {
+protocol AppDependencyContainer {
     var networkService: NetworkService { get }
     var scheme: AppScheme { get }
 }
 
-class MarvelDependencyContainer: MainDependencyContainer {
+class MarvelDependencyContainer: AppDependencyContainer {
 
     private let configuration: AppConfigurationValues
 

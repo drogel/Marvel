@@ -37,7 +37,6 @@ class CharactersViewModel: CharactersViewModelProtocol {
     private let imageURLBuilder: ImageURLBuilder
     private var cells: [CharacterCellData]?
 
-    // TODO: Inject image URL builder from constructor instead of this default
     init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
         self.charactersFetcher = charactersFetcher
         self.imageURLBuilder = imageURLBuilder
