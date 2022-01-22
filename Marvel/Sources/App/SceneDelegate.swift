@@ -10,11 +10,13 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var coordinator: Coordinator?
+
+    private let appDependencyContainer = MarvelDependencyContainer(configuration: MarvelConfigurationValues())
+    private var coordinator: Coordinator?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        coordinator = MainCoordinator(navigationController: UINavigationController())
+        coordinator = MainCoordinator(navigationController: UINavigationController(), dependencyContainer: appDependencyContainer)
         coordinator?.start()
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene

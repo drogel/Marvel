@@ -1,1 +1,3 @@
 PRODUCT_NAME = $(TARGET_NAME) Debug
+API_BASE_URL = gateway.marvel.com/v1/public/
+SCHEME = DEBUG

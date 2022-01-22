@@ -9,10 +9,16 @@ import UIKit
 
 class CharactersViewController: UIViewController {
 
-    var viewModel: CharactersViewModelProtocol!
-    var layout: UICollectionViewCompositionalLayout?
-
+    private var viewModel: CharactersViewModelProtocol!
+    private var layout: UICollectionViewCompositionalLayout!
     private var collectionView: UICollectionView!
+
+    static func instantiate(viewModel: CharactersViewModelProtocol, layout: UICollectionViewCompositionalLayout) -> CharactersViewController {
+        let viewController = CharactersViewController()
+        viewController.viewModel = viewModel
+        viewController.layout = layout
+        return viewController
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,16 +76,15 @@ private extension CharactersViewController {
     }
 
     func setUpCollectionView() {
-        guard let collectionView = createCollectionView() else { return }
+        let collectionView = createCollectionView()
         setSubview(collectionView)
         configureDataSource(of: collectionView)
         configureConstraints(of: collectionView)
         registerSubviews(in: collectionView)
     }
 
-    func createCollectionView() -> UICollectionView? {
-        guard let layout = layout else { return nil }
-        return UICollectionView(frame: .zero, collectionViewLayout: layout)
+    func createCollectionView() -> UICollectionView {
+        UICollectionView(frame: .zero, collectionViewLayout: layout)
     }
 
     func setSubview(_ collectionView: UICollectionView) {

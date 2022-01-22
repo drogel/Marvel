@@ -11,4 +11,10 @@ struct CharacterCellData: Hashable {
     let name: String
     let description: String
     let imageURL: URL?
+
+    init(name: String, description: String, imageURL: URL? = nil) {
+        self.name = name
+        self.description = description
+        self.imageURL = imageURL
+    }
 }
