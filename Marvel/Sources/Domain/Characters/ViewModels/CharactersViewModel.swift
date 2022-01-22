@@ -34,10 +34,13 @@ class CharactersViewModel: CharactersViewModelProtocol {
     }
 
     private let charactersFetcher: FetchCharactersUseCase
+    private let imageURLBuilder: ImageURLBuilder
     private var cells: [CharacterCellData]?
 
-    init(charactersFetcher: FetchCharactersUseCase) {
+    // TODO: Inject image URL builder from constructor instead of this default
+    init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
         self.charactersFetcher = charactersFetcher
+        self.imageURLBuilder = imageURLBuilder
     }
 
     func start() {
@@ -83,7 +86,13 @@ private extension CharactersViewModel {
     func mapToCells(characterData: [CharacterData]?) -> [CharacterCellData]? {
         characterData?.compactMap{ data in
             guard let name = data.name, let description = data.description else { return nil }
-            return CharacterCellData(name: name, description: description)
+            let imageURL = buildImageURL(from: data)
+            return CharacterCellData(name: name, description: description, imageURL: imageURL)
         }
+    }
+
+    func buildImageURL(from data: CharacterData) -> URL? {
+        guard let imageData = data.thumbnail else { return nil }
+        return imageURLBuilder.buildURL(from: imageData)
     }
 }
