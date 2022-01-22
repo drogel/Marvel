@@ -9,7 +9,8 @@ import Foundation
 
 protocol CharactersViewModelProtocol: ViewModel {
     var numberOfItems: Int { get }
-    func select(itemAt indexPath: IndexPath)
+    func willDisplayCell(at indexPath: IndexPath)
+    func select(at indexPath: IndexPath)
     func cellData(at indexPath: IndexPath) -> CharacterCellData?
 }
 
@@ -29,39 +30,61 @@ class CharactersViewModel: CharactersViewModelProtocol {
     weak var viewDelegate: CharactersViewModelViewDelegate?
 
     var numberOfItems: Int {
-        guard let cells = cells else { return 0 }
         return cells.count
     }
 
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
-    private var cells: [CharacterCellData]?
+    private var cells: [CharacterCellData]
+    private var charactersCancellable: Cancellable?
 
     init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
         self.charactersFetcher = charactersFetcher
         self.imageURLBuilder = imageURLBuilder
+        self.cells = []
     }
 
     func start() {
-        viewDelegate?.viewModelDidStartLoading(self)
-        // TODO: Create queries that take into account the offset for pagination
-        let query = FetchCharactersQuery(offset: 0)
-        // TODO: Cache cancellable, cancel when view is gone
-        let _ = charactersFetcher.fetch(query: query, completion: handleFetchCharactersResult)
+        loadCharacters(with: startingQuery)
     }
 
     func cellData(at indexPath: IndexPath) -> CharacterCellData? {
         let row = indexPath.row
-        guard let cells = cells, cells.indices.contains(row) else { return nil }
+        guard cells.indices.contains(row) else { return nil }
         return cells[row]
     }
 
-    func select(itemAt indexPath: IndexPath) {
+    func select(at indexPath: IndexPath) {
         coordinatorDelegate?.viewModel(self, didSelectItemAt: indexPath)
+    }
+
+    func willDisplayCell(at indexPath: IndexPath) {
+        guard isLastCell(at: indexPath) else { return }
+        loadMore()
     }
 }
 
 private extension CharactersViewModel {
+
+    var startingQuery: FetchCharactersQuery {
+        FetchCharactersQuery(offset: 0)
+    }
+
+    func isLastCell(at indexPath: IndexPath) -> Bool {
+        indexPath.row == numberOfItems - 1
+    }
+
+    func loadMore() {
+        guard cells.hasElements else { return start() }
+        let query = FetchCharactersQuery(offset: cells.count)
+        loadCharacters(with: query)
+    }
+
+    func loadCharacters(with query: FetchCharactersQuery) {
+        viewDelegate?.viewModelDidStartLoading(self)
+        charactersCancellable?.cancel()
+        charactersCancellable = charactersFetcher.fetch(query: query, completion: handleFetchCharactersResult)
+    }
 
     func handleFetchCharactersResult(_ result: Result<PageInfo, Error>) {
         viewDelegate?.viewModelDidFinishLoading(self)
@@ -74,7 +97,8 @@ private extension CharactersViewModel {
     }
 
     func handleSuccess(with pageInfo: PageInfo) {
-        cells = mapToCells(characterData: pageInfo.results)
+        guard let newCells = mapToCells(characterData: pageInfo.results) else { return }
+        cells.append(contentsOf: newCells)
         viewDelegate?.viewModelDidUpdateItems(self)
     }
 
@@ -83,7 +107,7 @@ private extension CharactersViewModel {
     }
 
     func mapToCells(characterData: [CharacterData]?) -> [CharacterCellData]? {
-        characterData?.compactMap{ data in
+        characterData?.compactMap { data in
             guard let name = data.name, let description = data.description else { return nil }
             let imageURL = buildImageURL(from: data)
             return CharacterCellData(name: name, description: description, imageURL: imageURL)

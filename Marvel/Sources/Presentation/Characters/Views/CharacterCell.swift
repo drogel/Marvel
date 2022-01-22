@@ -80,6 +80,10 @@ class CharacterCell: UICollectionViewCell, Configurable {
         setUp()
     }
 
+    override func prepareForReuse() {
+        characterImageView.image = nil
+    }
+
     func configure(using configurator: CharacterCellData) {
         nameLabel.text = configurator.name
         configureDescription(using: configurator)
