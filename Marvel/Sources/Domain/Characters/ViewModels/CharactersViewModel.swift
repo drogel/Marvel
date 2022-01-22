@@ -9,7 +9,8 @@ import Foundation
 
 protocol CharactersViewModelProtocol: ViewModel {
     var numberOfItems: Int { get }
-    func select(itemAt indexPath: IndexPath)
+    func loadMore()
+    func select(at indexPath: IndexPath)
     func cellData(at indexPath: IndexPath) -> CharacterCellData?
 }
 
@@ -36,6 +37,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
     private var cells: [CharacterCellData]?
+    private var charactersCancellable: Cancellable?
 
     init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
         self.charactersFetcher = charactersFetcher
@@ -43,11 +45,8 @@ class CharactersViewModel: CharactersViewModelProtocol {
     }
 
     func start() {
-        viewDelegate?.viewModelDidStartLoading(self)
-        // TODO: Create queries that take into account the offset for pagination
         let query = FetchCharactersQuery(offset: 0)
-        // TODO: Cache cancellable, cancel when view is gone
-        let _ = charactersFetcher.fetch(query: query, completion: handleFetchCharactersResult)
+        loadCharacters(with: query)
     }
 
     func cellData(at indexPath: IndexPath) -> CharacterCellData? {
@@ -56,12 +55,24 @@ class CharactersViewModel: CharactersViewModelProtocol {
         return cells[row]
     }
 
-    func select(itemAt indexPath: IndexPath) {
+    func select(at indexPath: IndexPath) {
         coordinatorDelegate?.viewModel(self, didSelectItemAt: indexPath)
+    }
+
+    func loadMore() {
+        guard let cells = cells else { return start() }
+        let query = FetchCharactersQuery(offset: cells.count)
+        loadCharacters(with: query)
     }
 }
 
 private extension CharactersViewModel {
+
+    func loadCharacters(with query: FetchCharactersQuery) {
+        viewDelegate?.viewModelDidStartLoading(self)
+        charactersCancellable?.cancel()
+        charactersCancellable = charactersFetcher.fetch(query: query, completion: handleFetchCharactersResult)
+    }
 
     func handleFetchCharactersResult(_ result: Result<PageInfo, Error>) {
         viewDelegate?.viewModelDidFinishLoading(self)
