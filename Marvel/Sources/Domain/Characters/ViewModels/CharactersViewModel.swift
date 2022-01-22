@@ -30,18 +30,18 @@ class CharactersViewModel: CharactersViewModelProtocol {
     weak var viewDelegate: CharactersViewModelViewDelegate?
 
     var numberOfItems: Int {
-        guard let cells = cells else { return 0 }
         return cells.count
     }
 
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
-    private var cells: [CharacterCellData]?
+    private var cells: [CharacterCellData]
     private var charactersCancellable: Cancellable?
 
     init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
         self.charactersFetcher = charactersFetcher
         self.imageURLBuilder = imageURLBuilder
+        self.cells = []
     }
 
     func start() {
@@ -51,7 +51,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
 
     func cellData(at indexPath: IndexPath) -> CharacterCellData? {
         let row = indexPath.row
-        guard let cells = cells, cells.indices.contains(row) else { return nil }
+        guard cells.indices.contains(row) else { return nil }
         return cells[row]
     }
 
@@ -60,7 +60,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     }
 
     func loadMore() {
-        guard let cells = cells else { return start() }
+        guard cells.hasElements else { return start() }
         let query = FetchCharactersQuery(offset: cells.count)
         loadCharacters(with: query)
     }
@@ -85,7 +85,8 @@ private extension CharactersViewModel {
     }
 
     func handleSuccess(with pageInfo: PageInfo) {
-        cells = mapToCells(characterData: pageInfo.results)
+        guard let newCells = mapToCells(characterData: pageInfo.results) else { return }
+        cells.append(contentsOf: newCells)
         viewDelegate?.viewModelDidUpdateItems(self)
     }
 
@@ -94,7 +95,7 @@ private extension CharactersViewModel {
     }
 
     func mapToCells(characterData: [CharacterData]?) -> [CharacterCellData]? {
-        characterData?.compactMap{ data in
+        characterData?.compactMap { data in
             guard let name = data.name, let description = data.description else { return nil }
             let imageURL = buildImageURL(from: data)
             return CharacterCellData(name: name, description: description, imageURL: imageURL)

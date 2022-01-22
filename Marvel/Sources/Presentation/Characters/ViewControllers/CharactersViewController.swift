@@ -51,6 +51,11 @@ extension CharactersViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewModel.select(at: indexPath)
     }
+
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard indexPath.row == viewModel.numberOfItems - 1 else { return }
+        viewModel.loadMore()
+    }
 }
 
 extension CharactersViewController: CharactersViewModelViewDelegate {
