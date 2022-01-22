@@ -86,7 +86,8 @@ class CharactersViewModelTests: XCTestCase {
         givenSutWithSuccessfulFetcher()
         sut.start()
         let actual = try XCTUnwrap(sut.cellData(at: IndexPath(item: 0, section: 0)))
-        XCTAssertEqual(actual, CharacterCellData(name: "Aginar", description: ""))
+        XCTAssertEqual(actual.name, "Aginar")
+        XCTAssertEqual(actual.description, "")
     }
 
     func test_givenDidStartSuccessfully_whenRetrievingCellDataAtInvalidIndex_returnsNil() throws {

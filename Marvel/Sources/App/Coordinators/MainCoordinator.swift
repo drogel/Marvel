@@ -8,11 +8,16 @@
 import UIKit
 
 class MainCoordinator: Coordinator {
-    let children: [Coordinator] = []
+
+    var children: [Coordinator]
     let navigationController: UINavigationController
 
-    init(navigationController: UINavigationController) {
+    private let dependencyContainer: MainDependencyContainer
+
+    init(navigationController: UINavigationController, dependencyContainer: MainDependencyContainer) {
         self.navigationController = navigationController
+        self.children = []
+        self.dependencyContainer = dependencyContainer
     }
 
     func start() {
@@ -35,10 +40,9 @@ private extension MainCoordinator {
     func createCharactersViewController() -> UIViewController {
         // TODO: Move viewController instantiation and dependency wiring to some kind of factory
         let viewController = CharactersViewController()
-        // TODO: Remove this temporary service injection
-        // TODO: Add different characters service wiring: one for debug, other for release
-        let charactersService = CharactersClientService(client: AuthenticatedNetworkService(networkService: NetworkSessionService(session: URLSession(configuration: .default), baseURL: URL(string: "https://gateway.marvel.com/v1/public/")!, urlComposer: URLComponentsBuilder()), authenticator: MD5Authenticator(secrets: EnvironmentVariablesRetriever())), parser: JSONDecoderParser())
-        let fetchCharactersUseCase = FetchCharactersServiceUseCase(service: charactersService)
+        // TODO: Move this to a Characters Coordinator
+        let charactersDependencies = CharactersDependenciesAdapter(networkService: dependencyContainer.networkService, scheme: dependencyContainer.scheme)
+        let fetchCharactersUseCase = CharactersDependencyContainer(dependencies: charactersDependencies).fetchCharactersUseCase
         let viewModel = CharactersViewModel(charactersFetcher: fetchCharactersUseCase)
         viewModel.coordinatorDelegate = self
         viewController.layout = CharactersLayout()
@@ -54,6 +58,7 @@ private extension MainCoordinator {
 }
 
 extension MainCoordinator: CharactersViewModelCoordinatorDelegate {
+
     func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectItemAt indexPath: IndexPath) {
         showCharacterDetailViewController()
     }
