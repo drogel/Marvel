@@ -45,6 +45,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     }
 
     func start() {
+        viewDelegate?.viewModelDidStartLoading(self)
         loadCharacters(with: startingQuery)
     }
 
@@ -81,7 +82,6 @@ private extension CharactersViewModel {
     }
 
     func loadCharacters(with query: FetchCharactersQuery) {
-        viewDelegate?.viewModelDidStartLoading(self)
         charactersCancellable?.cancel()
         charactersCancellable = charactersFetcher.fetch(query: query, completion: handleFetchCharactersResult)
     }

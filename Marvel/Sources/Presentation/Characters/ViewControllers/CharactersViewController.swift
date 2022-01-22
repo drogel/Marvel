@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CharactersViewController: UIViewController {
+class CharactersViewController: ViewController {
 
     private var viewModel: CharactersViewModelProtocol!
     private var layout: UICollectionViewCompositionalLayout!
@@ -40,8 +40,7 @@ extension CharactersViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cellData = viewModel.cellData(at: indexPath) else { return UICollectionViewCell() }
-        // TODO: Move this to a util method to avoid jumping between abstraction layers
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CharacterCell.identifier, for: indexPath) as! CharacterCell
+        let cell = collectionView.dequeue(cellOfType: CharacterCell.self, at: indexPath)
         cell.configure(using: cellData)
         return cell
     }
@@ -61,11 +60,11 @@ extension CharactersViewController: UICollectionViewDelegate {
 extension CharactersViewController: CharactersViewModelViewDelegate {
 
     func viewModelDidStartLoading(_ viewModel: CharactersViewModelProtocol) {
-        // TODO: Implement
+        startLoading()
     }
 
     func viewModelDidFinishLoading(_ viewModel: CharactersViewModelProtocol) {
-        // TODO: Implement
+        stopLoading()
     }
 
     func viewModelDidUpdateItems(_ viewModel: CharactersViewModelProtocol) {
