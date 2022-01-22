@@ -7,11 +7,17 @@
 
 import Foundation
 
-protocol JsonDataLoaderProtocol {
+protocol JsonDataLoader {
     func load<T: Decodable>(fromFileNamed fileName: String) -> T?
 }
 
-class JsonDataLoader: JsonDataLoaderProtocol {
+class JsonDecoderDataLoader: JsonDataLoader {
+
+    let parser: JSONParser
+
+    init(parser: JSONParser) {
+        self.parser = parser
+    }
 
     func load<T: Decodable>(fromFileNamed fileName: String) -> T? {
         guard let url = url(for: fileName), let data: T = decode(fromJsonAt: url) else { return nil }
@@ -19,14 +25,13 @@ class JsonDataLoader: JsonDataLoaderProtocol {
     }
 }
 
-private extension JsonDataLoader {
+private extension JsonDecoderDataLoader {
 
     func url(for resource: String) -> URL? {
         Bundle(for: Self.self).url(forResource: resource, withExtension: "json")
     }
 
     func decode<T: Decodable>(fromJsonAt url: URL) -> T? {
-        let decoder = JSONDecoder()
-        return try? decoder.decode(T.self, from: Data(contentsOf: url))
+        try? parser.parse(data: Data(contentsOf: url))
     }
 }

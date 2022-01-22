@@ -10,4 +10,5 @@ import Foundation
 struct CharacterCellData: Hashable {
     let name: String
     let description: String
+    let imageURL: URL?
 }

@@ -33,18 +33,21 @@ class CharactersViewModel: CharactersViewModelProtocol {
         return cells.count
     }
 
-    private let charactersFetcher: FetchCharactersUseCaseProtocol
+    private let charactersFetcher: FetchCharactersUseCase
+    private let imageURLBuilder: ImageURLBuilder
     private var cells: [CharacterCellData]?
 
-    init(charactersFetcher: FetchCharactersUseCaseProtocol) {
+    // TODO: Inject image URL builder from constructor instead of this default
+    init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
         self.charactersFetcher = charactersFetcher
+        self.imageURLBuilder = imageURLBuilder
     }
 
     func start() {
         viewDelegate?.viewModelDidStartLoading(self)
         // TODO: Create queries that take into account the offset for pagination
         let query = FetchCharactersQuery(offset: 0)
-        // TODO: Cache cancellable
+        // TODO: Cache cancellable, cancel when view is gone
         let _ = charactersFetcher.fetch(query: query, completion: handleFetchCharactersResult)
     }
 
@@ -83,7 +86,13 @@ private extension CharactersViewModel {
     func mapToCells(characterData: [CharacterData]?) -> [CharacterCellData]? {
         characterData?.compactMap{ data in
             guard let name = data.name, let description = data.description else { return nil }
-            return CharacterCellData(name: name, description: description)
+            let imageURL = buildImageURL(from: data)
+            return CharacterCellData(name: name, description: description, imageURL: imageURL)
         }
+    }
+
+    func buildImageURL(from data: CharacterData) -> URL? {
+        guard let imageData = data.thumbnail else { return nil }
+        return imageURLBuilder.buildURL(from: imageData)
     }
 }

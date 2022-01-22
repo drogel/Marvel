@@ -9,10 +9,10 @@ import Foundation
 
 class CharactersDebugService: CharactersService {
 
-    private let dataLoader: JsonDataLoaderProtocol
+    private let dataLoader: JsonDataLoader
     private let charactersFileName = DebugDataFileName.charactersFileName.rawValue
 
-    init(dataLoader: JsonDataLoaderProtocol) {
+    init(dataLoader: JsonDataLoader) {
         self.dataLoader = dataLoader
     }
 

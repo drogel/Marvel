@@ -12,25 +12,43 @@ class CharacterCell: UICollectionViewCell, Configurable {
     typealias Item = CharacterCellData
 
     private enum Constants {
-        static let infoStackViewInset: CGFloat = 12
-        static let infoStackViewSpacing: CGFloat = 4
+
         static let nameLabelFontSize: CGFloat = 20
-        static let descriptionLabelFontSize: CGFloat = 12
-        static let descriptionMaxLines = 2
         static let cellCornerRadius: CGFloat = 16
-        static let infoViewHeight: CGFloat = nameLabelFontSize + CGFloat(descriptionMaxLines)*descriptionLabelFontSize + 2*infoStackViewInset + 4*infoStackViewSpacing
+
+        enum Description {
+            static let labelFontSize: CGFloat = 12
+            static let maxLines = 2
+            static let height = CGFloat(maxLines)*labelFontSize
+        }
+
+        enum Info {
+            static let stackViewInset: CGFloat = 12
+            static let stackViewSpacing: CGFloat = 4
+            static let viewAlpha = 0.93
+            static let height: CGFloat = nameLabelFontSize + Description.height + 2*stackViewInset + 4*stackViewSpacing
+        }
     }
+
+    private lazy var characterImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.backgroundColor = .tertiarySystemGroupedBackground
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
 
     private lazy var infoView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
+        view.alpha = Constants.Info.viewAlpha
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
 
     private lazy var infoStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.spacing = Constants.infoStackViewSpacing
+        stackView.spacing = Constants.Info.stackViewSpacing
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
@@ -46,9 +64,9 @@ class CharacterCell: UICollectionViewCell, Configurable {
 
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = .boldSystemFont(ofSize: Constants.descriptionLabelFontSize)
+        label.font = .boldSystemFont(ofSize: Constants.Description.labelFontSize)
         label.textColor = .systemGray
-        label.numberOfLines = Constants.descriptionMaxLines
+        label.numberOfLines = Constants.Description.maxLines
         return label
     }()
 
@@ -64,22 +82,21 @@ class CharacterCell: UICollectionViewCell, Configurable {
 
     func configure(using configurator: CharacterCellData) {
         nameLabel.text = configurator.name
-        descriptionLabel.text = configurator.description
-        descriptionLabel.isHidden = configurator.description.isEmpty
+        configureDescription(using: configurator)
+        characterImageView.loadImage(from: configurator.imageURL)
     }
 }
 
 private extension CharacterCell {
 
     func setUp() {
-        // TODO: Remove contentView backgroundColor assignment. This is just for testing purposes.
-        contentView.backgroundColor = .systemRed
         setUpSubviews()
         setUpConstraints()
         setUpCellStyle()
     }
 
     func setUpSubviews() {
+        contentView.addSubview(characterImageView)
         contentView.addSubview(infoView)
         contentView.addSubview(infoStackView)
         infoStackView.addArrangedSubview(nameLabel)
@@ -87,15 +104,29 @@ private extension CharacterCell {
     }
 
     func setUpConstraints() {
+        setUpInfoConstraints()
+        setUpCharacterImageConstraints()
+    }
+
+    func setUpInfoConstraints() {
         NSLayoutConstraint.activate([
-            infoView.heightAnchor.constraint(equalToConstant: Constants.infoViewHeight),
+            infoView.heightAnchor.constraint(equalToConstant: Constants.Info.height),
             infoView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             infoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             infoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            infoStackView.topAnchor.constraint(equalTo: infoView.topAnchor, constant: Constants.infoStackViewInset),
-            infoStackView.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: Constants.infoStackViewInset),
-            infoStackView.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -Constants.infoStackViewInset),
-            infoStackView.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -Constants.infoStackViewInset)
+            infoStackView.topAnchor.constraint(equalTo: infoView.topAnchor, constant: Constants.Info.stackViewInset),
+            infoStackView.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: Constants.Info.stackViewInset),
+            infoStackView.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -Constants.Info.stackViewInset),
+            infoStackView.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -Constants.Info.stackViewInset)
+        ])
+    }
+
+    func setUpCharacterImageConstraints() {
+        NSLayoutConstraint.activate([
+            characterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            characterImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            characterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            characterImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
 
@@ -117,5 +148,10 @@ private extension CharacterCell {
         layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: Constants.cellCornerRadius).cgPath
         layer.shouldRasterize = true
         layer.rasterizationScale = UIScreen.main.scale
+    }
+
+    func configureDescription(using configurator: CharacterCellData) {
+        descriptionLabel.text = configurator.description
+        descriptionLabel.isHidden = configurator.description.isEmpty
     }
 }
