@@ -9,7 +9,7 @@ import Foundation
 
 protocol CharactersViewModelProtocol: ViewModel {
     var numberOfItems: Int { get }
-    func loadMore()
+    func willDisplayCell(at indexPath: IndexPath)
     func select(at indexPath: IndexPath)
     func cellData(at indexPath: IndexPath) -> CharacterCellData?
 }
@@ -45,8 +45,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     }
 
     func start() {
-        let query = FetchCharactersQuery(offset: 0)
-        loadCharacters(with: query)
+        loadCharacters(with: startingQuery)
     }
 
     func cellData(at indexPath: IndexPath) -> CharacterCellData? {
@@ -59,14 +58,27 @@ class CharactersViewModel: CharactersViewModelProtocol {
         coordinatorDelegate?.viewModel(self, didSelectItemAt: indexPath)
     }
 
+    func willDisplayCell(at indexPath: IndexPath) {
+        guard isLastCell(at: indexPath) else { return }
+        loadMore()
+    }
+}
+
+private extension CharactersViewModel {
+
+    var startingQuery: FetchCharactersQuery {
+        FetchCharactersQuery(offset: 0)
+    }
+
+    func isLastCell(at indexPath: IndexPath) -> Bool {
+        indexPath.row == numberOfItems - 1
+    }
+
     func loadMore() {
         guard cells.hasElements else { return start() }
         let query = FetchCharactersQuery(offset: cells.count)
         loadCharacters(with: query)
     }
-}
-
-private extension CharactersViewModel {
 
     func loadCharacters(with query: FetchCharactersQuery) {
         viewDelegate?.viewModelDidStartLoading(self)

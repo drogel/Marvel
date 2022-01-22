@@ -96,22 +96,23 @@ class CharactersViewModelTests: XCTestCase {
         XCTAssertNil(sut.cellData(at: IndexPath(row: -1, section: 0)))
     }
 
-    func test_whenLoadingMore_fetchesCharactersFromOffsetZero() {
-        let mostRecentQuery = whenLoadingMore()
-        XCTAssertEqual(mostRecentQuery.offset, 0)
+    func test_whenWillDisplayCellFromIndexZero_doesNotFetch() {
+        whenWillDisplayCellIgnoringQuery(atIndex: 0)
+        XCTAssertNil(charactersFetcherMock.mostRecentQuery)
+        XCTAssertEqual(charactersFetcherMock.fetchCallCount, 0)
     }
 
-    func test_givenDidStartSuccessfully_fetchesCharactersFromLoadedCharactersCountOffset() {
+    func test_givenDidStartSuccessfully_whenWillDisplayCell_fetchesCharactersFromLoadedCharactersCountOffset() {
         givenSutWithSuccessfulFetcher()
         sut.start()
-        let mostRecentQuery = whenLoadingMore()
+        let mostRecentQuery = whenWillDisplayCell(atIndex: CharactersSuccessfulStub.resultsStub.count - 1)
         XCTAssertEqual(mostRecentQuery.offset, CharactersSuccessfulStub.resultsStub.count)
     }
 
-    func test_givenStartFailed_fetchesCharactersFromOffsetZero() {
+    func test_givenStartFailed_whenWillDisplayCell_doesNotFetch() {
         givenSutWithFailingFetcher()
         sut.start()
-        let mostRecentQuery = whenLoadingMore()
+        let mostRecentQuery = whenWillDisplayCell(atIndex: 0)
         XCTAssertEqual(mostRecentQuery.offset, 0)
     }
 }
@@ -136,10 +137,14 @@ private extension CharactersViewModelTests {
         sut.coordinatorDelegate = coordinatorDelegateMock
     }
 
-    func whenLoadingMore() -> FetchCharactersQuery {
-        sut.loadMore()
+    func whenWillDisplayCell(atIndex index: Int) -> FetchCharactersQuery {
+        whenWillDisplayCellIgnoringQuery(atIndex: index)
         let mostRecentQuery = try! XCTUnwrap(charactersFetcherMock.mostRecentQuery)
         return mostRecentQuery
+    }
+
+    func whenWillDisplayCellIgnoringQuery(atIndex index: Int) {
+        sut.willDisplayCell(at: IndexPath(row: index, section: 0))
     }
 
     func assert(numberOfItems: Int, line: UInt = #line) {

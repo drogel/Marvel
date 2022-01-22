@@ -40,6 +40,7 @@ extension CharactersViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cellData = viewModel.cellData(at: indexPath) else { return UICollectionViewCell() }
+        // TODO: Move this to a util method to avoid jumping between abstraction layers
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CharacterCell.identifier, for: indexPath) as! CharacterCell
         cell.configure(using: cellData)
         return cell
@@ -53,8 +54,7 @@ extension CharactersViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard indexPath.row == viewModel.numberOfItems - 1 else { return }
-        viewModel.loadMore()
+        viewModel.willDisplayCell(at: indexPath)
     }
 }
 
