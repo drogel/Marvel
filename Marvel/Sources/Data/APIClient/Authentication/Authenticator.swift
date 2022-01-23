@@ -29,7 +29,7 @@ class MD5Authenticator: Authenticator {
 private extension MD5Authenticator {
 
     func authentication(from timestamp: TimeInterval) -> (hash: String, publicKey: String)? {
-        guard let fullKey = retrieveFullAuthenticationKey(using: timestamp), let hash = md5Hash(fullKey), let publicKey = secrets.publicKey else { return nil }
+        guard let fullKey = retrieveFullAuthenticationKey(using: timestamp), let hash = md5Hash(fullKey), let publicKey = secrets.publicKey, !publicKey.isEmpty else { return nil }
         return (hash: hash, publicKey: publicKey)
     }
 

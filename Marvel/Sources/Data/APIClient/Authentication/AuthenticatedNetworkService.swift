@@ -18,7 +18,10 @@ class AuthenticatedNetworkService: NetworkService {
     }
 
     func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Cancellable? {
-        let authenticatedComponents = addAuthentication(to: endpoint)
+        guard let authenticatedComponents = addAuthentication(to: endpoint) else {
+            completion(.failure(.unauthorized))
+            return nil
+        }
         return networkService.request(endpoint: authenticatedComponents, completion: completion)
     }
 }
@@ -29,8 +32,8 @@ private extension AuthenticatedNetworkService {
         Date().timeIntervalSince1970
     }
 
-    func addAuthentication(to components: RequestComponents) -> RequestComponents {
-        guard let authenticationQueryParameters = authenticator.authenticate(with: nowTimestamp) else { return components }
+    func addAuthentication(to components: RequestComponents) -> RequestComponents? {
+        guard let authenticationQueryParameters = authenticator.authenticate(with: nowTimestamp) else { return nil }
         let authenticatedQuery = components.queryParameters.merging(authenticationQueryParameters) { (_, new) in new }
         return RequestComponents(path: components.path, queryParameters: authenticatedQuery)
     }

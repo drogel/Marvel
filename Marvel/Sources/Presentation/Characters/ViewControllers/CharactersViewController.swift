@@ -82,6 +82,10 @@ extension CharactersViewController: CharactersViewModelViewDelegate {
     func viewModelDidUpdateItems(_ viewModel: CharactersViewModelProtocol) {
         collectionView.reloadData()
     }
+
+    func viewModel(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String) {
+        showErrorAlert(message: message, buttonAction: viewModel.start)
+    }
 }
 
 private extension CharactersViewController {
