@@ -66,19 +66,3 @@ private extension CharactersDebugServiceTests {
         return completionResult
     }
 }
-
-private class JsonDataLoaderEmptyStub: JsonDataLoader {
-
-    func load<T>(fromFileNamed fileName: String) -> T? {
-        nil
-    }
-}
-
-private class JsonDataLoaderStub: JsonDataLoader {
-
-    static let codeStub = 200
-
-    func load<T>(fromFileNamed fileName: String) -> T? {
-        DataWrapper(code: Self.codeStub, status: nil, copyright: nil, data: nil) as? T
-    }
-}
