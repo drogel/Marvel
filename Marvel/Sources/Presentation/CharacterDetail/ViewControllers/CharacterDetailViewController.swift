@@ -11,6 +11,19 @@ class CharacterDetailViewController: ViewController {
 
     typealias ViewModel = CharacterDetailViewModelProtocol
 
+    private enum Constants {
+
+        static let imageHeightMultiplier = 0.618
+
+        enum Info {
+            static let spacing: CGFloat = 8
+            static let nameFontSize: CGFloat = 28
+            static let descriptionFontSize: CGFloat = 12
+            static let inset: CGFloat = 20
+            static let viewAlpha = 0.93
+        }
+    }
+
     private var viewModel: ViewModel!
 
     private lazy var scrollView: UIScrollView = {
@@ -22,7 +35,22 @@ class CharacterDetailViewController: ViewController {
     private lazy var mainStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.spacing = 8
+        stackView.axis = .vertical
+        return stackView
+    }()
+
+    private lazy var infoBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemBackground
+        view.alpha = Constants.Info.viewAlpha
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private lazy var infoStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = Constants.Info.spacing
         stackView.axis = .vertical
         return stackView
     }()
@@ -38,13 +66,13 @@ class CharacterDetailViewController: ViewController {
 
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.font = .boldSystemFont(ofSize: 24)
+        label.font = .boldSystemFont(ofSize: Constants.Info.nameFontSize)
         return label
     }()
 
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = .boldSystemFont(ofSize: 12)
+        label.font = .boldSystemFont(ofSize: Constants.Info.descriptionFontSize)
         label.textColor = .systemGray
         label.numberOfLines = 0
         return label
@@ -105,13 +133,16 @@ private extension CharacterDetailViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(mainStackView)
         mainStackView.addArrangedSubview(characterImageView)
-        mainStackView.addArrangedSubview(nameLabel)
-        mainStackView.addArrangedSubview(descriptionLabel)
+        mainStackView.addArrangedSubview(infoBackgroundView)
+        infoBackgroundView.addSubview(infoStackView)
+        infoStackView.addArrangedSubview(nameLabel)
+        infoStackView.addArrangedSubview(descriptionLabel)
     }
 
     func setUpConstraints() {
         setUpScrollViewConstraints()
         setUpMainStackViewViewConstraints()
+        setUpInfoStackViewConstraints()
         setUpCharacterImageViewConstraints()
     }
 
@@ -134,9 +165,18 @@ private extension CharacterDetailViewController {
         ])
     }
 
+    func setUpInfoStackViewConstraints() {
+        NSLayoutConstraint.activate([
+            infoStackView.leadingAnchor.constraint(equalTo: infoBackgroundView.leadingAnchor, constant: Constants.Info.inset),
+            infoStackView.topAnchor.constraint(equalTo: infoBackgroundView.topAnchor, constant: Constants.Info.inset),
+            infoStackView.trailingAnchor.constraint(equalTo: infoBackgroundView.trailingAnchor, constant: -Constants.Info.inset),
+            infoStackView.bottomAnchor.constraint(equalTo: infoBackgroundView.bottomAnchor, constant: -Constants.Info.inset)
+        ])
+    }
+
     func setUpCharacterImageViewConstraints() {
         NSLayoutConstraint.activate([
-            characterImageView.heightAnchor.constraint(equalToConstant: 400)
+            characterImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: Constants.imageHeightMultiplier)
         ])
     }
 }
