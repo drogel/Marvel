@@ -12,6 +12,7 @@ protocol CharacterDetailViewModelProtocol: ViewModel { }
 protocol CharacterDetailViewModelViewDelegate: AnyObject {
     func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol)
     func viewModelDidFinishLoading(_ viewModel: CharacterDetailViewModelProtocol)
+    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didRetrieve characterDetail: CharacterDetailData)
 }
 
 class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
@@ -19,10 +20,13 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
     weak var viewDelegate: CharacterDetailViewModelViewDelegate?
 
     private let characterFetcher: FetchCharacterDetailUseCase
+    private let imageURLBuilder: ImageURLBuilder
     private var characterCancellable: Cancellable?
 
-    init(characterFetcher: FetchCharacterDetailUseCase) {
+    // TODO: Move the image URL builder out of here
+    init(characterFetcher: FetchCharacterDetailUseCase, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
         self.characterFetcher = characterFetcher
+        self.imageURLBuilder = imageURLBuilder
     }
 
     func start() {
@@ -52,10 +56,26 @@ private extension CharacterDetailViewModel {
     }
 
     func handleSuccess(with pageInfo: PageInfo) {
-        // TODO: Implement
+        // TODO: Handle error if character data array is empty
+        guard let characterDetail = mapToCharacterDetail(characterData: pageInfo.results) else { return }
+        viewDelegate?.viewModel(self, didRetrieve: characterDetail)
     }
 
     func handleFailure(with error: Error) {
         // TODO: Implement
+    }
+
+    func mapToCharacterDetail(characterData: [CharacterData]?) -> CharacterDetailData? {
+        guard let firstCharacterData = characterData?.first,
+              let name = firstCharacterData.name,
+              let description = firstCharacterData.description
+        else { return nil }
+        let imageURL = imageURL(for: firstCharacterData)
+        return CharacterDetailData(name: name, description: description, imageURL: imageURL)
+    }
+
+    func imageURL(for characterData: CharacterData) -> URL? {
+        guard let thumbnail = characterData.thumbnail else { return nil }
+        return imageURLBuilder.buildURL(from: thumbnail)
     }
 }

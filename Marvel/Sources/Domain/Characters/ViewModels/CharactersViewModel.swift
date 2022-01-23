@@ -98,6 +98,7 @@ private extension CharactersViewModel {
     }
 
     func handleSuccess(with pageInfo: PageInfo) {
+        // TODO: Handle error when characterData array is empty
         guard let newCells = mapToCells(characterData: pageInfo.results) else { return }
         cells.append(contentsOf: newCells)
         viewDelegate?.viewModelDidUpdateItems(self)

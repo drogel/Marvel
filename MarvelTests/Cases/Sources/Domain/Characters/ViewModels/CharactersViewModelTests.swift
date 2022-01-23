@@ -54,7 +54,7 @@ class CharactersViewModelTests: XCTestCase {
         givenSutWithSuccessfulFetcher()
         assert(numberOfItems: 0)
         sut.start()
-        let expectedNumberOfItems = CharactersSuccessfulStub.resultsStub.count
+        let expectedNumberOfItems = CharactersFetcherSuccessfulStub.resultsStub.count
         assert(numberOfItems: expectedNumberOfItems)
     }
 
@@ -105,8 +105,8 @@ class CharactersViewModelTests: XCTestCase {
     func test_givenDidStartSuccessfully_whenWillDisplayCell_fetchesCharactersFromLoadedCharactersCountOffset() {
         givenSutWithSuccessfulFetcher()
         sut.start()
-        let mostRecentQuery = whenWillDisplayCell(atIndex: CharactersSuccessfulStub.resultsStub.count - 1)
-        XCTAssertEqual(mostRecentQuery.offset, CharactersSuccessfulStub.resultsStub.count)
+        let mostRecentQuery = whenWillDisplayCell(atIndex: CharactersFetcherSuccessfulStub.resultsStub.count - 1)
+        XCTAssertEqual(mostRecentQuery.offset, CharactersFetcherSuccessfulStub.resultsStub.count)
     }
 
     func test_givenStartFailed_whenWillDisplayCell_doesNotFetch() {
@@ -120,12 +120,12 @@ class CharactersViewModelTests: XCTestCase {
 private extension CharactersViewModelTests {
 
     func givenSutWithSuccessfulFetcher() {
-        charactersFetcherMock = CharactersSuccessfulStub()
+        charactersFetcherMock = CharactersFetcherSuccessfulStub()
         sut = CharactersViewModel(charactersFetcher: charactersFetcherMock)
     }
 
     func givenSutWithFailingFetcher() {
-        charactersFetcherMock = CharactersFailingStub()
+        charactersFetcherMock = CharactersFetcherFailingStub()
         sut = CharactersViewModel(charactersFetcher: charactersFetcherMock)
     }
 
@@ -172,7 +172,7 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
     }
 }
 
-private class CharactersSuccessfulStub: CharactersFetcherMock {
+private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
 
     static let resultsStub = [CharacterData.aginar, CharacterData.aginar]
     static let pageInfoStub = PageInfo.zeroWith(results: resultsStub)
@@ -184,7 +184,7 @@ private class CharactersSuccessfulStub: CharactersFetcherMock {
     }
 }
 
-private class CharactersFailingStub: CharactersFetcherMock {
+private class CharactersFetcherFailingStub: CharactersFetcherMock {
 
     override func fetch(query: FetchCharactersQuery, completion: @escaping (Result<PageInfo, Error>) -> Void) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)

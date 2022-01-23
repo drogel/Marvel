@@ -42,12 +42,27 @@ class CharacterDetailViewModelTests: XCTestCase {
         sut.start()
         XCTAssertEqual(characterFetcherMock.fetchCallCount, 1)
     }
+
+    func test_givenSuccessfulCharacterFetcher_whenStartingCompletes_notifiesViewWithData() {
+        givenSutWithSuccessfulFetcher()
+        givenViewDelegate()
+        sut.start()
+        XCTAssertEqual(viewDelegateMock.didRetrieveCharacterCallCount, 1)
+    }
+
+    func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesFinishLoadToViewDelegate() {
+        givenSutWithSuccessfulFetcher()
+        givenViewDelegate()
+        sut.start()
+        XCTAssertEqual(viewDelegateMock.didFinishLoadingCallCount, 1)
+    }
 }
 
 private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModelViewDelegate {
 
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
+    var didRetrieveCharacterCallCount = 0
 
     func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol) {
         didStartLoadingCallCount += 1
@@ -55,6 +70,10 @@ private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModel
 
     func viewModelDidFinishLoading(_ viewModel: CharacterDetailViewModelProtocol) {
         didFinishLoadingCallCount += 1
+    }
+
+    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didRetrieve characterDetail: CharacterDetailData) {
+        didRetrieveCharacterCallCount += 1
     }
 }
 
@@ -68,9 +87,26 @@ private class CharacterFetcherMock: FetchCharacterDetailUseCase {
     }
 }
 
+private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
+
+    static let resultsStub = [CharacterData.aginar]
+    static let pageInfoStub = PageInfo.zeroWith(results: resultsStub)
+
+    override func fetch(query: FetchCharacterDetailQuery, completion: @escaping (Result<PageInfo, Error>) -> Void) -> Cancellable? {
+        let result = super.fetch(query: query, completion: completion)
+        completion(.success(Self.pageInfoStub))
+        return result
+    }
+}
+
 private extension CharacterDetailViewModelTests {
 
     func givenViewDelegate() {
         sut.viewDelegate = viewDelegateMock
+    }
+
+    func givenSutWithSuccessfulFetcher() {
+        characterFetcherMock = CharacterFetcherSuccessfulStub()
+        sut = CharacterDetailViewModel(characterFetcher: characterFetcherMock)
     }
 }
