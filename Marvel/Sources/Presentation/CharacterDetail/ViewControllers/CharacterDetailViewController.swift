@@ -92,7 +92,6 @@ extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
 private extension CharacterDetailViewController {
 
     func setUp() {
-        // TODO: Fix scroll view constraints when content is long
         setUpBackground()
         setUpSubviews()
         setUpConstraints()
@@ -104,7 +103,7 @@ private extension CharacterDetailViewController {
 
     func setUpSubviews() {
         view.addSubview(scrollView)
-        view.addSubview(mainStackView)
+        scrollView.addSubview(mainStackView)
         mainStackView.addArrangedSubview(characterImageView)
         mainStackView.addArrangedSubview(nameLabel)
         mainStackView.addArrangedSubview(descriptionLabel)
@@ -129,7 +128,9 @@ private extension CharacterDetailViewController {
         NSLayoutConstraint.activate([
             mainStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             mainStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            mainStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
+            mainStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            mainStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            mainStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
     }
 
