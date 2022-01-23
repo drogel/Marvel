@@ -27,7 +27,6 @@ class CharactersLayout: UICollectionViewCompositionalLayout {
     }
 
     private static func buildSingleListSection() -> NSCollectionLayoutSection {
-        // TODO: Add some bottom content insets for devices without safe area
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(Constants.itemHeight))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = .init(top: Constants.spacing, leading: Constants.spacing, bottom: Constants.spacing, trailing: Constants.spacing)

@@ -36,13 +36,7 @@ class CharacterCell: UICollectionViewCell, Configurable {
         }
     }
 
-    private lazy var characterImageView: FetchImageView = {
-        let imageView = FetchImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .tertiarySystemGroupedBackground
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+    private lazy var characterImageView = CharacterImageView()
 
     private lazy var infoView: UIView = {
         let view = UIView()
