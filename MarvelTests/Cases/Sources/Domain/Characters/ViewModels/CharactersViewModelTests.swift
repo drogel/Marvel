@@ -108,10 +108,21 @@ class CharactersViewModelTests: XCTestCase {
     }
 
     func test_givenStartFailed_whenWillDisplayCell_doesNotFetch() {
-        givenSutWithFailingFetcher()
-        sut.start()
+        givenStartFailed()
         let mostRecentQuery = whenWillDisplayCell(atIndex: 0)
         XCTAssertEqual(mostRecentQuery.offset, 0)
+    }
+
+    func test_givenDidStartSuccessfully_whenDisposing_cancellsRequests() {
+        givenDidStartSuccessfully()
+        sut.dispose()
+        assertCancelledRequests()
+    }
+
+    func test_givenStartFailed_whenDisposing_cancellsRequests() {
+        givenStartFailed()
+        sut.dispose()
+        assertCancelledRequests()
     }
 }
 
@@ -140,14 +151,28 @@ private extension CharactersViewModelTests {
         sut.start()
     }
 
+    func givenStartFailed() {
+        givenSutWithFailingFetcher()
+        sut.start()
+    }
+
     func whenWillDisplayCell(atIndex index: Int) -> FetchCharactersQuery {
         whenWillDisplayCellIgnoringQuery(atIndex: index)
         let mostRecentQuery = try! XCTUnwrap(charactersFetcherMock.mostRecentQuery)
         return mostRecentQuery
     }
 
+    func retrieveFetcherMockCancellableMock() -> CancellableMock {
+        try! XCTUnwrap(charactersFetcherMock.cancellable)
+    }
+
     func whenWillDisplayCellIgnoringQuery(atIndex index: Int) {
         sut.willDisplayCell(at: IndexPath(row: index, section: 0))
+    }
+
+    func assertCancelledRequests(line: UInt = #line) {
+        let cancellableMock = retrieveFetcherMockCancellableMock()
+        XCTAssertEqual(cancellableMock.didCancelCallCount, 1)
     }
 
     func assert(numberOfItems: Int, line: UInt = #line) {
@@ -169,10 +194,13 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
     var fetchCallCount = 0
     var mostRecentQuery: FetchCharactersQuery?
 
+    var cancellable: CancellableMock?
+
     func fetch(query: FetchCharactersQuery, completion: @escaping (Result<PageInfo, Error>) -> Void) -> Cancellable? {
         fetchCallCount += 1
         mostRecentQuery = query
-        return nil
+        cancellable = CancellableMock()
+        return cancellable
     }
 }
 

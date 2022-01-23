@@ -64,6 +64,10 @@ class CharactersViewModel: CharactersViewModelProtocol {
         guard isLastCell(at: indexPath) else { return }
         loadMore()
     }
+
+    func dispose() {
+        charactersCancellable?.cancel()
+    }
 }
 
 private extension CharactersViewModel {
@@ -83,7 +87,6 @@ private extension CharactersViewModel {
     }
 
     func loadCharacters(with query: FetchCharactersQuery) {
-        // TODO: Also cancel the cancellable when view is gone
         charactersCancellable?.cancel()
         charactersCancellable = charactersFetcher.fetch(query: query, completion: handleFetchCharactersResult)
     }

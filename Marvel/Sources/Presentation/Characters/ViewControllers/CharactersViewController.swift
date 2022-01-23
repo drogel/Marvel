@@ -33,6 +33,8 @@ class CharactersViewController: ViewController {
         setUpCollectionView()
         viewModel.start()
     }
+
+    // TODO: Call view model dispose when view is gone
 }
 
 extension CharactersViewController: UICollectionViewDataSource {

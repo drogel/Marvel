@@ -36,6 +36,10 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
         // TODO: cache cancellable and cancel when view is gone
         loadCharacter(with: query)
     }
+
+    func dispose() {
+        
+    }
 }
 
 private extension CharacterDetailViewModel {
