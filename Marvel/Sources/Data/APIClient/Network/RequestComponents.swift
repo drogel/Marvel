@@ -10,4 +10,9 @@ import Foundation
 struct RequestComponents {
     let path: String
     let queryParameters: [String: String?]
+
+    init(path: String, queryParameters: [String: String?] = [:]) {
+        self.path = path
+        self.queryParameters = queryParameters
+    }
 }

@@ -8,7 +8,7 @@
 import XCTest
 @testable import Marvel_Debug
 
-class FetchCharactersUserCaseTests: XCTestCase {
+class FetchCharactersUseCaseTests: XCTestCase {
 
     private var sut: FetchCharactersServiceUseCase!
     private var query: FetchCharactersQuery!
@@ -59,11 +59,6 @@ class FetchCharactersUserCaseTests: XCTestCase {
     }
 }
 
-private class CancellableStub: Cancellable {
-
-    func cancel() { }
-}
-
 private class CharactersServiceMock: CharactersService {
 
     static let cancellableStub = CancellableStub()
@@ -97,7 +92,7 @@ private class CharactersServiceSuccessStub: CharactersService {
     }
 }
 
-private extension FetchCharactersUserCaseTests {
+private extension FetchCharactersUseCaseTests {
 
     func whenRetrievingCancellableFromFetchCharacters(completion: ((Result<PageInfo, Error>) -> Void)? = nil) throws -> CancellableStub {
         let cancellable = sut.fetch(query: query) { result in

@@ -39,7 +39,8 @@ class CharactersViewModelTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is CharactersViewModelProtocol)
     }
 
-    func test_givenCoordinatorDelegate_whenSelecting_notifiesDelegate() {
+    func test_givenDidStartSuccessfullyAndACoordinatorDelegate_whenSelecting_notifiesDelegate() {
+        givenDidStartSuccessfully()
         givenCoordinatorDelegate()
         sut.select(at: IndexPath(row: 0, section: 0))
         XCTAssertEqual(coordinatorDelegateMock.didSelectCallCount, 1)
@@ -54,7 +55,7 @@ class CharactersViewModelTests: XCTestCase {
         givenSutWithSuccessfulFetcher()
         assert(numberOfItems: 0)
         sut.start()
-        let expectedNumberOfItems = CharactersSuccessfulStub.resultsStub.count
+        let expectedNumberOfItems = CharactersFetcherSuccessfulStub.resultsStub.count
         assert(numberOfItems: expectedNumberOfItems)
     }
 
@@ -83,16 +84,14 @@ class CharactersViewModelTests: XCTestCase {
     }
 
     func test_givenDidStartSuccessfully_whenRetrievingCellDataAtValidIndex_returnsData() throws {
-        givenSutWithSuccessfulFetcher()
-        sut.start()
+        givenDidStartSuccessfully()
         let actual = try XCTUnwrap(sut.cellData(at: IndexPath(item: 0, section: 0)))
         XCTAssertEqual(actual.name, "Aginar")
         XCTAssertEqual(actual.description, "")
     }
 
     func test_givenDidStartSuccessfully_whenRetrievingCellDataAtInvalidIndex_returnsNil() {
-        givenSutWithSuccessfulFetcher()
-        sut.start()
+        givenDidStartSuccessfully()
         XCTAssertNil(sut.cellData(at: IndexPath(row: -1, section: 0)))
     }
 
@@ -103,10 +102,9 @@ class CharactersViewModelTests: XCTestCase {
     }
 
     func test_givenDidStartSuccessfully_whenWillDisplayCell_fetchesCharactersFromLoadedCharactersCountOffset() {
-        givenSutWithSuccessfulFetcher()
-        sut.start()
-        let mostRecentQuery = whenWillDisplayCell(atIndex: CharactersSuccessfulStub.resultsStub.count - 1)
-        XCTAssertEqual(mostRecentQuery.offset, CharactersSuccessfulStub.resultsStub.count)
+        givenDidStartSuccessfully()
+        let mostRecentQuery = whenWillDisplayCell(atIndex: CharactersFetcherSuccessfulStub.resultsStub.count - 1)
+        XCTAssertEqual(mostRecentQuery.offset, CharactersFetcherSuccessfulStub.resultsStub.count)
     }
 
     func test_givenStartFailed_whenWillDisplayCell_doesNotFetch() {
@@ -120,12 +118,12 @@ class CharactersViewModelTests: XCTestCase {
 private extension CharactersViewModelTests {
 
     func givenSutWithSuccessfulFetcher() {
-        charactersFetcherMock = CharactersSuccessfulStub()
+        charactersFetcherMock = CharactersFetcherSuccessfulStub()
         sut = CharactersViewModel(charactersFetcher: charactersFetcherMock)
     }
 
     func givenSutWithFailingFetcher() {
-        charactersFetcherMock = CharactersFailingStub()
+        charactersFetcherMock = CharactersFetcherFailingStub()
         sut = CharactersViewModel(charactersFetcher: charactersFetcherMock)
     }
 
@@ -135,6 +133,11 @@ private extension CharactersViewModelTests {
 
     func givenCoordinatorDelegate() {
         sut.coordinatorDelegate = coordinatorDelegateMock
+    }
+
+    func givenDidStartSuccessfully() {
+        givenSutWithSuccessfulFetcher()
+        sut.start()
     }
 
     func whenWillDisplayCell(atIndex index: Int) -> FetchCharactersQuery {
@@ -153,9 +156,10 @@ private extension CharactersViewModelTests {
 }
 
 private class CharactersCoordinatorDelegateMock: CharactersViewModelCoordinatorDelegate {
+
     var didSelectCallCount = 0
 
-    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectItemAt indexPath: IndexPath) {
+    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith id: Int) {
         didSelectCallCount += 1
     }
 }
@@ -172,7 +176,7 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
     }
 }
 
-private class CharactersSuccessfulStub: CharactersFetcherMock {
+private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
 
     static let resultsStub = [CharacterData.aginar, CharacterData.aginar]
     static let pageInfoStub = PageInfo.zeroWith(results: resultsStub)
@@ -184,7 +188,7 @@ private class CharactersSuccessfulStub: CharactersFetcherMock {
     }
 }
 
-private class CharactersFailingStub: CharactersFetcherMock {
+private class CharactersFetcherFailingStub: CharactersFetcherMock {
 
     override func fetch(query: FetchCharactersQuery, completion: @escaping (Result<PageInfo, Error>) -> Void) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)

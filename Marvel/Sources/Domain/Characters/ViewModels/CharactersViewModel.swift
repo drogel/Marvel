@@ -15,7 +15,7 @@ protocol CharactersViewModelProtocol: ViewModel {
 }
 
 protocol CharactersViewModelCoordinatorDelegate: AnyObject {
-    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectItemAt indexPath: IndexPath)
+    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int)
 }
 
 protocol CharactersViewModelViewDelegate: AnyObject {
@@ -56,7 +56,8 @@ class CharactersViewModel: CharactersViewModelProtocol {
     }
 
     func select(at indexPath: IndexPath) {
-        coordinatorDelegate?.viewModel(self, didSelectItemAt: indexPath)
+        guard let data = cellData(at: indexPath) else { return }
+        coordinatorDelegate?.viewModel(self, didSelectCharacterWith: data.id)
     }
 
     func willDisplayCell(at indexPath: IndexPath) {
@@ -82,6 +83,7 @@ private extension CharactersViewModel {
     }
 
     func loadCharacters(with query: FetchCharactersQuery) {
+        // TODO: Also cancel the cancellable when view is gone
         charactersCancellable?.cancel()
         charactersCancellable = charactersFetcher.fetch(query: query, completion: handleFetchCharactersResult)
     }
@@ -97,6 +99,7 @@ private extension CharactersViewModel {
     }
 
     func handleSuccess(with pageInfo: PageInfo) {
+        // TODO: Handle error when characterData array is empty
         guard let newCells = mapToCells(characterData: pageInfo.results) else { return }
         cells.append(contentsOf: newCells)
         viewDelegate?.viewModelDidUpdateItems(self)
@@ -108,9 +111,9 @@ private extension CharactersViewModel {
 
     func mapToCells(characterData: [CharacterData]?) -> [CharacterCellData]? {
         characterData?.compactMap { data in
-            guard let name = data.name, let description = data.description else { return nil }
+            guard let id = data.id, let name = data.name, let description = data.description else { return nil }
             let imageURL = buildImageURL(from: data)
-            return CharacterCellData(name: name, description: description, imageURL: imageURL)
+            return CharacterCellData(id: id, name: name, description: description, imageURL: imageURL)
         }
     }
 

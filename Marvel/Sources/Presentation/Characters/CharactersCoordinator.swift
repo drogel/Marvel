@@ -9,14 +9,15 @@ import Foundation
 import UIKit
 
 class CharactersCoordinator: Coordinator {
+
     var children: [Coordinator]
     let navigationController: UINavigationController
 
-    private let container: CharactersContainer
+    private let dependencies: CharactersDependencies
 
-    init(navigationController: UINavigationController, container: CharactersContainer) {
+    init(navigationController: UINavigationController, dependencies: CharactersDependencies) {
         self.navigationController = navigationController
-        self.container = container
+        self.dependencies = dependencies
         self.children = []
     }
 
@@ -33,27 +34,22 @@ private extension CharactersCoordinator {
     }
 
     func createCharactersViewController() -> UIViewController {
-        let viewModel = CharactersViewModel(charactersFetcher: container.fetchCharactersUseCase)
+        let charactersContainer = CharactersDependencyContainer(dependencies: dependencies)
+        let viewModel = CharactersViewModel(charactersFetcher: charactersContainer.fetchCharactersUseCase)
         let viewController = CharactersViewController.instantiate(viewModel: viewModel, layout: CharactersLayout())
         viewModel.coordinatorDelegate = self
         viewModel.viewDelegate = viewController
         return viewController
     }
 
-    func showCharacterDetailViewController() {
-        let characterDetailViewController = createCharacterDetailViewController()
-        navigationController.present(characterDetailViewController, animated: true)
-    }
-
-    func createCharacterDetailViewController() -> UIViewController {
-        // TODO: Move viewController instantiation and dependency wiring to some kind of factory
-        return CharacterDetailViewController()
-    }
 }
 
 extension CharactersCoordinator: CharactersViewModelCoordinatorDelegate {
 
-    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectItemAt indexPath: IndexPath) {
-        showCharacterDetailViewController()
+    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int) {
+        let characterDetailContainer = CharacterDetailDependencyContainer(dependencies: dependencies, characterID: characterID)
+        let characterDetailCoordinator = CharacterDetailCoordinator(navigationController: navigationController, container: characterDetailContainer)
+        characterDetailCoordinator.start()
+        children.append(characterDetailCoordinator)
     }
 }

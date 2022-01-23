@@ -28,6 +28,12 @@ class CharacterCell: UICollectionViewCell, Configurable {
             static let viewAlpha = 0.93
             static let height: CGFloat = nameLabelFontSize + Description.height + 2*stackViewInset + 4*stackViewSpacing
         }
+
+        enum Shadow {
+            static let opacity: Float = 0.18
+            static let offset = CGSize(width: 0, height: 6)
+            static let radius: CGFloat = 8
+        }
     }
 
     private lazy var characterImageView: UIImageView = {
@@ -40,7 +46,7 @@ class CharacterCell: UICollectionViewCell, Configurable {
 
     private lazy var infoView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         view.alpha = Constants.Info.viewAlpha
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -84,10 +90,10 @@ class CharacterCell: UICollectionViewCell, Configurable {
         characterImageView.image = nil
     }
 
-    func configure(using configurator: CharacterCellData) {
-        nameLabel.text = configurator.name
-        configureDescription(using: configurator)
-        characterImageView.loadImage(from: configurator.imageURL)
+    func configure(using item: CharacterCellData) {
+        nameLabel.text = item.name
+        configureDescription(using: item)
+        characterImageView.loadImage(from: item.imageURL)
     }
 }
 
@@ -145,10 +151,9 @@ private extension CharacterCell {
     }
 
     func setUpCellShadow() {
-        // TODO: When the device rotates, bounds are not being updated, and shadows don't match cell bounds. Fix this.
-        layer.shadowOpacity = 0.2
-        layer.shadowOffset = CGSize(width: 0, height: 6)
-        layer.shadowRadius = 8
+        layer.shadowOpacity = Constants.Shadow.opacity
+        layer.shadowOffset = Constants.Shadow.offset
+        layer.shadowRadius = Constants.Shadow.radius
         layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: Constants.cellCornerRadius).cgPath
         layer.shouldRasterize = true
         layer.rasterizationScale = UIScreen.main.scale

@@ -9,6 +9,10 @@ import UIKit
 
 class SpinnerViewController: UIViewController {
 
+    private enum Constants {
+        static let backgroundColor = UIColor.systemBackground.withAlphaComponent(0.8)
+    }
+
     let spinner = UIActivityIndicatorView(style: .large)
 
     override func loadView() {
@@ -20,7 +24,7 @@ private extension SpinnerViewController {
 
     func setUpBackgroundView() {
         view = UIView()
-        view.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        view.backgroundColor = Constants.backgroundColor
     }
 
     func setUpSubviews() {
