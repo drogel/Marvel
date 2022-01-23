@@ -9,8 +9,7 @@ import Foundation
 
 class CharacterDetailClientService: CharacterDetailService {
 
-    // TODO: Find a way to extract this path for Characters and CharacterDetail
-    private let charactersPath = "characters"
+    private let charactersPath = MarvelAPIPaths.characters.rawValue
     private let client: NetworkService
     private let parser: JSONParser
 

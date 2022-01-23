@@ -9,7 +9,7 @@ import Foundation
 
 class CharactersClientService: CharactersService {
 
-    private let charactersPath = "characters"
+    private let charactersPath = MarvelAPIPaths.characters.rawValue
     private let client: NetworkService
     private let parser: JSONParser
 
