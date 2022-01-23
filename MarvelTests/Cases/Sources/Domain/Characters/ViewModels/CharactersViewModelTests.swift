@@ -172,7 +172,7 @@ private extension CharactersViewModelTests {
 
     func assertCancelledRequests(line: UInt = #line) {
         let cancellableMock = retrieveFetcherMockCancellableMock()
-        XCTAssertEqual(cancellableMock.didCancelCallCount, 1)
+        XCTAssertEqual(cancellableMock.didCancelCallCount, 1, line: line)
     }
 
     func assert(numberOfItems: Int, line: UInt = #line) {

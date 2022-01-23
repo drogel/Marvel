@@ -86,6 +86,11 @@ class CharacterDetailViewController: ViewController {
         setUp()
         viewModel.start()
     }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        viewModel.dispose()
+    }
 }
 
 extension CharacterDetailViewController: Configurable {

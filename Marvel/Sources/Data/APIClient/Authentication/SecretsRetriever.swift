@@ -14,6 +14,7 @@ protocol SecretsRetriever {
 
 class EnvironmentVariablesRetriever: SecretsRetriever {
 
+    // TODO: Handle error if no API keys are present
     var publicKey: String? {
         ProcessInfo.processInfo.environment["PUBLIC_KEY"]
     }

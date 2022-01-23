@@ -34,7 +34,10 @@ class CharactersViewController: ViewController {
         viewModel.start()
     }
 
-    // TODO: Call view model dispose when view is gone
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        viewModel.dispose()
+    }
 }
 
 extension CharactersViewController: UICollectionViewDataSource {

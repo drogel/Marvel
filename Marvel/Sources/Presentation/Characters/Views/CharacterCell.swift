@@ -30,9 +30,9 @@ class CharacterCell: UICollectionViewCell, Configurable {
         }
 
         enum Shadow {
-            static let opacity: Float = 0.18
+            static let opacity: Float = 0.15
             static let offset = CGSize(width: 0, height: 6)
-            static let radius: CGFloat = 8
+            static let radius: CGFloat = 10
         }
     }
 
