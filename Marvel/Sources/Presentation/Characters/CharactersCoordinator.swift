@@ -47,7 +47,11 @@ private extension CharactersCoordinator {
 
     func createCharacterDetailViewController() -> UIViewController {
         // TODO: Move viewController instantiation and dependency wiring to some kind of factory
-        return CharacterDetailViewController()
+        // TODO: Implement actual characterID passing to view model
+        let characterDetailService = CharacterDetailDebugService(dataLoader: JsonDecoderDataLoader(parser: JSONDecoderParser()))
+        let characterDetailFetcher = FetchCharacterDetailServiceUseCase(service: characterDetailService)
+        let viewModel = CharacterDetailViewModel(characterFetcher: characterDetailFetcher, characterID: 1011334)
+        return CharacterDetailViewController.instantiate(viewModel: viewModel)
     }
 }
 

@@ -84,10 +84,10 @@ class CharacterCell: UICollectionViewCell, Configurable {
         characterImageView.image = nil
     }
 
-    func configure(using configurator: CharacterCellData) {
-        nameLabel.text = configurator.name
-        configureDescription(using: configurator)
-        characterImageView.loadImage(from: configurator.imageURL)
+    func configure(using item: CharacterCellData) {
+        nameLabel.text = item.name
+        configureDescription(using: item)
+        characterImageView.loadImage(from: item.imageURL)
     }
 }
 

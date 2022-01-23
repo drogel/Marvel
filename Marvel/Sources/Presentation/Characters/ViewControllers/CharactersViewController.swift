@@ -9,15 +9,22 @@ import UIKit
 
 class CharactersViewController: ViewController {
 
-    private var viewModel: CharactersViewModelProtocol!
+    typealias ViewModel = CharactersViewModelProtocol
+
+    private var viewModel: ViewModel!
     private var layout: UICollectionViewCompositionalLayout!
     private var collectionView: UICollectionView!
 
-    static func instantiate(viewModel: CharactersViewModelProtocol, layout: UICollectionViewCompositionalLayout) -> CharactersViewController {
-        let viewController = CharactersViewController()
-        viewController.viewModel = viewModel
+    static func instantiate(viewModel: ViewModel, layout: UICollectionViewCompositionalLayout) -> CharactersViewController {
+        let viewController = instantiate(viewModel: viewModel)
         viewController.layout = layout
         return viewController
+    }
+
+    static func instantiate(viewModel: ViewModel) -> Self {
+        let viewController = CharactersViewController()
+        viewController.viewModel = viewModel
+        return viewController as! Self
     }
 
     override func viewDidLoad() {

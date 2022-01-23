@@ -7,11 +7,47 @@
 
 import UIKit
 
-class CharacterDetailViewController: UIViewController {
+class CharacterDetailViewController: ViewController {
+
+    typealias ViewModel = CharacterDetailViewModelProtocol
+
+    private var viewModel: ViewModel!
+
+    static func instantiate(viewModel: ViewModel) -> Self {
+        let viewController = CharacterDetailViewController()
+        viewController.viewModel = viewModel
+        return viewController as! Self
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // TODO: This is set here temporarily for testing purposes, develop the actual views
-        view.backgroundColor = .red
+        viewModel.start()
+        // TODO: Remove background color set, this is just for testing purposes
+        view.backgroundColor = .systemRed
     }
 }
+
+extension CharacterDetailViewController: Configurable {
+
+    typealias Item = CharacterDetailData
+
+    func configure(using item: CharacterDetailData) {
+        // TODO: Implement
+    }
+}
+
+extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
+
+    func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol) {
+        startLoading()
+    }
+
+    func viewModelDidFinishLoading(_ viewModel: CharacterDetailViewModelProtocol) {
+        stopLoading()
+    }
+
+    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didRetrieve characterDetail: CharacterDetailData) {
+        configure(using: characterDetail)
+    }
+}
+
