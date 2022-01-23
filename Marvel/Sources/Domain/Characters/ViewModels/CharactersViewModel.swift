@@ -15,7 +15,7 @@ protocol CharactersViewModelProtocol: ViewModel {
 }
 
 protocol CharactersViewModelCoordinatorDelegate: AnyObject {
-    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectItemAt indexPath: IndexPath)
+    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int)
 }
 
 protocol CharactersViewModelViewDelegate: AnyObject {
@@ -56,7 +56,8 @@ class CharactersViewModel: CharactersViewModelProtocol {
     }
 
     func select(at indexPath: IndexPath) {
-        coordinatorDelegate?.viewModel(self, didSelectItemAt: indexPath)
+        guard let data = cellData(at: indexPath) else { return }
+        coordinatorDelegate?.viewModel(self, didSelectCharacterWith: data.id)
     }
 
     func willDisplayCell(at indexPath: IndexPath) {
@@ -110,9 +111,9 @@ private extension CharactersViewModel {
 
     func mapToCells(characterData: [CharacterData]?) -> [CharacterCellData]? {
         characterData?.compactMap { data in
-            guard let name = data.name, let description = data.description else { return nil }
+            guard let id = data.id, let name = data.name, let description = data.description else { return nil }
             let imageURL = buildImageURL(from: data)
-            return CharacterCellData(name: name, description: description, imageURL: imageURL)
+            return CharacterCellData(id: id, name: name, description: description, imageURL: imageURL)
         }
     }
 

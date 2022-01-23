@@ -39,7 +39,8 @@ class CharactersViewModelTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is CharactersViewModelProtocol)
     }
 
-    func test_givenCoordinatorDelegate_whenSelecting_notifiesDelegate() {
+    func test_givenDidStartSuccessfullyAndACoordinatorDelegate_whenSelecting_notifiesDelegate() {
+        givenDidStartSuccessfully()
         givenCoordinatorDelegate()
         sut.select(at: IndexPath(row: 0, section: 0))
         XCTAssertEqual(coordinatorDelegateMock.didSelectCallCount, 1)
@@ -83,16 +84,14 @@ class CharactersViewModelTests: XCTestCase {
     }
 
     func test_givenDidStartSuccessfully_whenRetrievingCellDataAtValidIndex_returnsData() throws {
-        givenSutWithSuccessfulFetcher()
-        sut.start()
+        givenDidStartSuccessfully()
         let actual = try XCTUnwrap(sut.cellData(at: IndexPath(item: 0, section: 0)))
         XCTAssertEqual(actual.name, "Aginar")
         XCTAssertEqual(actual.description, "")
     }
 
     func test_givenDidStartSuccessfully_whenRetrievingCellDataAtInvalidIndex_returnsNil() {
-        givenSutWithSuccessfulFetcher()
-        sut.start()
+        givenDidStartSuccessfully()
         XCTAssertNil(sut.cellData(at: IndexPath(row: -1, section: 0)))
     }
 
@@ -103,8 +102,7 @@ class CharactersViewModelTests: XCTestCase {
     }
 
     func test_givenDidStartSuccessfully_whenWillDisplayCell_fetchesCharactersFromLoadedCharactersCountOffset() {
-        givenSutWithSuccessfulFetcher()
-        sut.start()
+        givenDidStartSuccessfully()
         let mostRecentQuery = whenWillDisplayCell(atIndex: CharactersFetcherSuccessfulStub.resultsStub.count - 1)
         XCTAssertEqual(mostRecentQuery.offset, CharactersFetcherSuccessfulStub.resultsStub.count)
     }
@@ -137,6 +135,11 @@ private extension CharactersViewModelTests {
         sut.coordinatorDelegate = coordinatorDelegateMock
     }
 
+    func givenDidStartSuccessfully() {
+        givenSutWithSuccessfulFetcher()
+        sut.start()
+    }
+
     func whenWillDisplayCell(atIndex index: Int) -> FetchCharactersQuery {
         whenWillDisplayCellIgnoringQuery(atIndex: index)
         let mostRecentQuery = try! XCTUnwrap(charactersFetcherMock.mostRecentQuery)
@@ -153,9 +156,10 @@ private extension CharactersViewModelTests {
 }
 
 private class CharactersCoordinatorDelegateMock: CharactersViewModelCoordinatorDelegate {
+
     var didSelectCallCount = 0
 
-    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectItemAt indexPath: IndexPath) {
+    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith id: Int) {
         didSelectCallCount += 1
     }
 }

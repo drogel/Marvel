@@ -29,8 +29,7 @@ private extension MainCoordinator {
 
     func showCharacters() {
         let charactersDependencies = CharactersDependenciesAdapter(networkService: dependencyContainer.networkService, scheme: dependencyContainer.scheme)
-        let charactersContainer = CharactersDependencyContainer(dependencies: charactersDependencies)
-        let charactersCoordinator = CharactersCoordinator(navigationController: navigationController, container: charactersContainer)
+        let charactersCoordinator = CharactersCoordinator(navigationController: navigationController, dependencies: charactersDependencies)
         charactersCoordinator.start()
         children.append(charactersCoordinator)
     }
