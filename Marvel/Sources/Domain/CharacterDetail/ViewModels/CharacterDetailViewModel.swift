@@ -21,18 +21,18 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
 
     private let characterFetcher: FetchCharacterDetailUseCase
     private let imageURLBuilder: ImageURLBuilder
+    private let characterID: Int
     private var characterCancellable: Cancellable?
 
-    // TODO: Move the image URL builder out of here
-    init(characterFetcher: FetchCharacterDetailUseCase, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
+    init(characterFetcher: FetchCharacterDetailUseCase, characterID: Int, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
         self.characterFetcher = characterFetcher
         self.imageURLBuilder = imageURLBuilder
+        self.characterID = characterID
     }
 
     func start() {
         viewDelegate?.viewModelDidStartLoading(self)
-        // TODO: Pass a character ID to the view model
-        let query = FetchCharacterDetailQuery(characterID: 123456)
+        let query = FetchCharacterDetailQuery(characterID: characterID)
         // TODO: cache cancellable and cancel when view is gone
         loadCharacter(with: query)
     }
