@@ -14,7 +14,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private let appDependencyContainer = MarvelDependencyContainer(configuration: MarvelConfigurationValues())
     private var coordinator: Coordinator?
 
-    // TODO: Sort Xcode project folders by type and name.
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         coordinator = MainCoordinator(navigationController: UINavigationController(), dependencyContainer: appDependencyContainer)

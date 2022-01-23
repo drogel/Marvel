@@ -242,10 +242,10 @@
 		053B9DA0279A0BC800CCF1C2 /* APIClient */ = {
 			isa = PBXGroup;
 			children = (
+				0548461B279DC6F600C6EC66 /* CharacterDetailClientService.swift */,
+				05932C58279B5A0700549D7D /* CharactersClientService.swift */,
 				0548461A279DC6E400C6EC66 /* Authentication */,
 				05932C43279B18AE00549D7D /* Network */,
-				05932C58279B5A0700549D7D /* CharactersClientService.swift */,
-				0548461B279DC6F600C6EC66 /* CharacterDetailClientService.swift */,
 			);
 			path = APIClient;
 			sourceTree = "<group>";
@@ -315,8 +315,8 @@
 		054594622798986200A634AD /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				05459463279898A700A634AD /* CharactersService.swift */,
 				054845F6279D649F00C6EC66 /* CharacterDetailService.swift */,
+				05459463279898A700A634AD /* CharactersService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -324,10 +324,10 @@
 		054594652798993B00A634AD /* DebugServices */ = {
 			isa = PBXGroup;
 			children = (
-				05459469279899EF00A634AD /* CharactersDebugService.swift */,
-				0545947127989DC500A634AD /* JsonDecoderDataLoader.swift */,
-				0545947A2798A94100A634AD /* DebugDataFileName.swift */,
 				054845FA279D659200C6EC66 /* CharacterDetailDebugService.swift */,
+				05459469279899EF00A634AD /* CharactersDebugService.swift */,
+				0545947A2798A94100A634AD /* DebugDataFileName.swift */,
+				0545947127989DC500A634AD /* JsonDecoderDataLoader.swift */,
 			);
 			path = DebugServices;
 			sourceTree = "<group>";
@@ -352,9 +352,9 @@
 		0545946C27989A0700A634AD /* DebugServices */ = {
 			isa = PBXGroup;
 			children = (
+				054845FC279D667200C6EC66 /* CharacterDetailDebugServiceTests.swift */,
 				0545946D27989A1A00A634AD /* CharactersDebugServiceTests.swift */,
 				054594762798A7E000A634AD /* JsonDataLoaderTests.swift */,
-				054845FC279D667200C6EC66 /* CharacterDetailDebugServiceTests.swift */,
 			);
 			path = DebugServices;
 			sourceTree = "<group>";
@@ -378,11 +378,11 @@
 		0545947F2798B93000A634AD /* Stubs */ = {
 			isa = PBXGroup;
 			children = (
-				054594802798B93C00A634AD /* DataWrapper+Stubs.swift */,
-				054594822798B94400A634AD /* PageInfo+Stubs.swift */,
-				053B9D982799CADD00CCF1C2 /* CharacterData+Stubs.swift */,
-				054845FE279D66B200C6EC66 /* JsonDataLoaderStubs.swift */,
 				05484608279D69E600C6EC66 /* CancellableStubs.swift */,
+				053B9D982799CADD00CCF1C2 /* CharacterData+Stubs.swift */,
+				054594802798B93C00A634AD /* DataWrapper+Stubs.swift */,
+				054845FE279D66B200C6EC66 /* JsonDataLoaderStubs.swift */,
+				054594822798B94400A634AD /* PageInfo+Stubs.swift */,
 			);
 			path = Stubs;
 			sourceTree = "<group>";
@@ -391,8 +391,8 @@
 			isa = PBXGroup;
 			children = (
 				05484610279D779100C6EC66 /* Models */,
-				0548460A279D6D8100C6EC66 /* ViewModels */,
 				05484601279D687A00C6EC66 /* UseCases */,
+				0548460A279D6D8100C6EC66 /* ViewModels */,
 			);
 			path = CharacterDetail;
 			sourceTree = "<group>";
@@ -409,8 +409,8 @@
 			isa = PBXGroup;
 			children = (
 				05484613279D77AE00C6EC66 /* Models */,
-				0548460D279D6E7100C6EC66 /* ViewModels */,
 				05484605279D695A00C6EC66 /* UseCases */,
+				0548460D279D6E7100C6EC66 /* ViewModels */,
 			);
 			path = CharacterDetail;
 			sourceTree = "<group>";
@@ -468,11 +468,11 @@
 		0585AF9A27975BCF00586ABD /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				05932C5C279B5DCE00549D7D /* Parsers */,
 				053B9DA0279A0BC800CCF1C2 /* APIClient */,
 				054594652798993B00A634AD /* DebugServices */,
-				054594622798986200A634AD /* Services */,
 				0585AF9B27975DBC00586ABD /* Models */,
+				05932C5C279B5DCE00549D7D /* Parsers */,
+				054594622798986200A634AD /* Services */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -480,10 +480,10 @@
 		0585AF9B27975DBC00586ABD /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				0585AF9C27975DDB00586ABD /* DataWrapper.swift */,
-				057D72F327986BB0005ED888 /* PageInfo.swift */,
 				057D72F727986D0D005ED888 /* CharacterData.swift */,
+				0585AF9C27975DDB00586ABD /* DataWrapper.swift */,
 				057D72FB27986E3D005ED888 /* ImageData.swift */,
+				057D72F327986BB0005ED888 /* PageInfo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -510,10 +510,10 @@
 		0585AFA027975E8000586ABD /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				0585AFA127975E9100586ABD /* DataWrapperTests.swift */,
-				057D72F127986BA7005ED888 /* PageInfoTests.swift */,
 				057D72F927986D33005ED888 /* CharacterDataTests.swift */,
+				0585AFA127975E9100586ABD /* DataWrapperTests.swift */,
 				057D730127986F9D005ED888 /* ImageDataTests.swift */,
+				057D72F127986BA7005ED888 /* PageInfoTests.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -554,9 +554,9 @@
 			isa = PBXGroup;
 			children = (
 				057D72FE27986F92005ED888 /* CharacterData.json */,
+				0585AFA827975F5000586ABD /* DataWrapper.json */,
 				057D72FD27986F92005ED888 /* ImageData.json */,
 				057D72F527986C6E005ED888 /* PageInfo.json */,
-				0585AFA827975F5000586ABD /* DataWrapper.json */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -564,8 +564,8 @@
 		0585AFAA2797623200586ABD /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				0585AFAB2797625D00586ABD /* ParsingTester.swift */,
 				057D730327987160005ED888 /* ParsingTestCaseTemplate.swift */,
+				0585AFAB2797625D00586ABD /* ParsingTester.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -573,11 +573,11 @@
 		05932C43279B18AE00549D7D /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				05932C4A279B1ACB00549D7D /* Extensions */,
-				05932C44279B18BC00549D7D /* NetworkSession.swift */,
 				05932C48279B19A700549D7D /* NetworkService.swift */,
+				05932C44279B18BC00549D7D /* NetworkSession.swift */,
 				05932C50279B287800549D7D /* RequestComponents.swift */,
 				05932C4D279B249A00549D7D /* URLComposer.swift */,
+				05932C4A279B1ACB00549D7D /* Extensions */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -594,10 +594,10 @@
 		05932C52279B29F300549D7D /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				05DAC33627973A2A0062CC6F /* Identifiable.swift */,
 				053B9D9D2799E38000CCF1C2 /* Configurable.swift */,
-				05C14930279CA74000927467 /* Loadable.swift */,
+				05DAC33627973A2A0062CC6F /* Identifiable.swift */,
 				05484616279D865800C6EC66 /* Instantiable.swift */,
+				05C14930279CA74000927467 /* Loadable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -606,8 +606,8 @@
 			isa = PBXGroup;
 			children = (
 				05DAC33927973A750062CC6F /* UICollectionReusableView+Identifiable.swift */,
-				05C14919279C1C3B00927467 /* UIImageView+URLImage.swift */,
 				05B7DB66279CAFC2004320FF /* UICollectionView+Dequeue.swift */,
+				05C14919279C1C3B00927467 /* UIImageView+URLImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -626,8 +626,8 @@
 		05932C55279B2B1500549D7D /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				0545945927988CBA00A634AD /* Protocols */,
 				05C1491B279C2C8200927467 /* ImageURLBuilder.swift */,
+				0545945927988CBA00A634AD /* Protocols */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -643,9 +643,9 @@
 		05C14915279C1BD100927467 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				05C14917279C1C0300927467 /* URLImage.swift */,
 				05C1492E279CA6FE00927467 /* LoadingViewController.swift */,
 				05C1492C279CA5E100927467 /* SpinnerViewController.swift */,
+				05C14917279C1C0300927467 /* URLImage.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -698,11 +698,11 @@
 		05DAC3112797258C0062CC6F /* MarvelTests */ = {
 			isa = PBXGroup;
 			children = (
-				0545947F2798B93000A634AD /* Stubs */,
+				0585AFA327975E9400586ABD /* Cases */,
 				054594732798A0FC00A634AD /* Extensions */,
 				0585AFAA2797623200586ABD /* Helpers */,
 				0585AFA427975EEC00586ABD /* Jsons */,
-				0585AFA327975E9400586ABD /* Cases */,
+				0545947F2798B93000A634AD /* Stubs */,
 			);
 			path = MarvelTests;
 			sourceTree = "<group>";
@@ -710,11 +710,11 @@
 		05DAC32B279739610062CC6F /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				0585AF9A27975BCF00586ABD /* Data */,
-				05DAC33327973A020062CC6F /* Common */,
-				05DAC330279739950062CC6F /* Presentation */,
-				05DAC32F279739920062CC6F /* Domain */,
 				05DAC32E2797398E0062CC6F /* App */,
+				05DAC33327973A020062CC6F /* Common */,
+				0585AF9A27975BCF00586ABD /* Data */,
+				05DAC32F279739920062CC6F /* Domain */,
+				05DAC330279739950062CC6F /* Presentation */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -722,8 +722,8 @@
 		05DAC32D2797396C0062CC6F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				05459466279899A000A634AD /* Debug */,
 				05DAC3042797258C0062CC6F /* Assets.xcassets */,
+				05459466279899A000A634AD /* Debug */,
 				05DAC3062797258C0062CC6F /* LaunchScreen.storyboard */,
 			);
 			path = Resources;
@@ -732,13 +732,13 @@
 		05DAC32E2797398E0062CC6F /* App */ = {
 			isa = PBXGroup;
 			children = (
-				05C14928279C75AA00927467 /* DependencyContainers */,
-				05DAC34427974AE00062CC6F /* Coordinators */,
+				05C14920279C53E200927467 /* AppConfigurationValues.swift */,
 				05DAC2FB2797258A0062CC6F /* AppDelegate.swift */,
 				05C1491E279C51E000927467 /* AppDependencyContainer.swift */,
-				05DAC2FD2797258A0062CC6F /* SceneDelegate.swift */,
-				05C14920279C53E200927467 /* AppConfigurationValues.swift */,
 				05C14924279C64E700927467 /* AppScheme.swift */,
+				05DAC2FD2797258A0062CC6F /* SceneDelegate.swift */,
+				05DAC34427974AE00062CC6F /* Coordinators */,
+				05C14928279C75AA00927467 /* DependencyContainers */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -747,8 +747,8 @@
 			isa = PBXGroup;
 			children = (
 				05484600279D686A00C6EC66 /* CharacterDetail */,
-				05932C55279B2B1500549D7D /* Common */,
 				05DAC34D27974D7C0062CC6F /* Characters */,
+				05932C55279B2B1500549D7D /* Common */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -756,9 +756,9 @@
 		05DAC330279739950062CC6F /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				05932C54279B2AFA00549D7D /* Common */,
 				05DAC34927974CA10062CC6F /* CharacterDetail */,
 				05DAC33D27973BED0062CC6F /* Characters */,
+				05932C54279B2AFA00549D7D /* Common */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -801,8 +801,8 @@
 			children = (
 				05C14926279C6F5B00927467 /* CharactersCoordinator.swift */,
 				05DAC34127973E3C0062CC6F /* Layouts */,
-				05DAC332279739BB0062CC6F /* Views */,
 				05DAC331279739B20062CC6F /* ViewControllers */,
+				05DAC332279739BB0062CC6F /* Views */,
 			);
 			path = Characters;
 			sourceTree = "<group>";
