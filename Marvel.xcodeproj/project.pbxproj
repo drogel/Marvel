@@ -737,8 +737,8 @@
 			isa = PBXGroup;
 			children = (
 				05DAC3042797258C0062CC6F /* Assets.xcassets */,
-				05459466279899A000A634AD /* Debug */,
 				05DAC3062797258C0062CC6F /* LaunchScreen.storyboard */,
+				05459466279899A000A634AD /* Debug */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
