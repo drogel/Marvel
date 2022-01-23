@@ -51,7 +51,9 @@ private extension CharactersCoordinator {
         let characterDetailService = CharacterDetailDebugService(dataLoader: JsonDecoderDataLoader(parser: JSONDecoderParser()))
         let characterDetailFetcher = FetchCharacterDetailServiceUseCase(service: characterDetailService)
         let viewModel = CharacterDetailViewModel(characterFetcher: characterDetailFetcher, characterID: 1011334)
-        return CharacterDetailViewController.instantiate(viewModel: viewModel)
+        let viewController = CharacterDetailViewController.instantiate(viewModel: viewModel)
+        viewModel.viewDelegate = viewController
+        return viewController
     }
 }
 
