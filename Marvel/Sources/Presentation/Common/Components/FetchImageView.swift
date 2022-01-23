@@ -8,15 +8,33 @@
 import Foundation
 import UIKit
 
-extension UIImageView: URLImage {
+typealias URLImageCompletion = (Result<UIImage, Error>) -> Void
+
+enum URLImageError: Error {
+    case loadingFailed
+}
+
+protocol URLImage {
+    func loadImage(from url: URL?, completion: URLImageCompletion?)
+    func clear()
+}
+
+class FetchImageView: UIImageView, URLImage {
+
+    private var cancellable: Cancellable?
 
     func loadImage(from url: URL?, completion: URLImageCompletion? = nil) {
         guard let urlRequest = buildURLRequest(from: url) else { return }
         if let image = retrieveCachedImageIfAny(for: urlRequest) {
             self.image = image
         } else {
-            requestNetworkImage(urlRequest, completion: completion)
+            cancellable = requestNetworkImage(urlRequest, completion: completion)
         }
+    }
+
+    func clear() {
+        image = nil
+        cancellable?.cancel()
     }
 }
 
@@ -32,7 +50,7 @@ private extension UIImageView {
         return UIImage(data: cachedData)
     }
 
-    func requestNetworkImage(_ urlRequest: URLRequest, completion: URLImageCompletion?) {
+    func requestNetworkImage(_ urlRequest: URLRequest, completion: URLImageCompletion?) -> Cancellable {
         let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, _) in
             guard let self = self else { return }
             guard let data = data, let response = response else {
@@ -43,6 +61,7 @@ private extension UIImageView {
             self.handleNetworkImage(response: response, data: data, completion: completion)
         }
         dataTask.resume()
+        return dataTask
     }
 
     func handleNetworkImage(response: URLResponse, data: Data, completion: URLImageCompletion?) {

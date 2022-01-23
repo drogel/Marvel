@@ -73,8 +73,7 @@
 		05932C5E279B5DDD00549D7D /* JSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C5D279B5DDD00549D7D /* JSONParser.swift */; };
 		05932C60279B611700549D7D /* AuthenticatedNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C5F279B611700549D7D /* AuthenticatedNetworkService.swift */; };
 		05B7DB67279CAFC2004320FF /* UICollectionView+Dequeue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B7DB66279CAFC2004320FF /* UICollectionView+Dequeue.swift */; };
-		05C14918279C1C0300927467 /* URLImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C14917279C1C0300927467 /* URLImage.swift */; };
-		05C1491A279C1C3B00927467 /* UIImageView+URLImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C14919279C1C3B00927467 /* UIImageView+URLImage.swift */; };
+		05C1491A279C1C3B00927467 /* FetchImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C14919279C1C3B00927467 /* FetchImageView.swift */; };
 		05C1491C279C2C8200927467 /* ImageURLBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C1491B279C2C8200927467 /* ImageURLBuilder.swift */; };
 		05C1491F279C51E000927467 /* AppDependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C1491E279C51E000927467 /* AppDependencyContainer.swift */; };
 		05C14921279C53E200927467 /* AppConfigurationValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C14920279C53E200927467 /* AppConfigurationValues.swift */; };
@@ -179,8 +178,7 @@
 		05932C5D279B5DDD00549D7D /* JSONParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONParser.swift; sourceTree = "<group>"; };
 		05932C5F279B611700549D7D /* AuthenticatedNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedNetworkService.swift; sourceTree = "<group>"; };
 		05B7DB66279CAFC2004320FF /* UICollectionView+Dequeue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Dequeue.swift"; sourceTree = "<group>"; };
-		05C14917279C1C0300927467 /* URLImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLImage.swift; sourceTree = "<group>"; };
-		05C14919279C1C3B00927467 /* UIImageView+URLImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+URLImage.swift"; sourceTree = "<group>"; };
+		05C14919279C1C3B00927467 /* FetchImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchImageView.swift; sourceTree = "<group>"; };
 		05C1491B279C2C8200927467 /* ImageURLBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageURLBuilder.swift; sourceTree = "<group>"; };
 		05C1491E279C51E000927467 /* AppDependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencyContainer.swift; sourceTree = "<group>"; };
 		05C14920279C53E200927467 /* AppConfigurationValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfigurationValues.swift; sourceTree = "<group>"; };
@@ -620,7 +618,6 @@
 			children = (
 				05DAC33927973A750062CC6F /* UICollectionReusableView+Identifiable.swift */,
 				05B7DB66279CAFC2004320FF /* UICollectionView+Dequeue.swift */,
-				05C14919279C1C3B00927467 /* UIImageView+URLImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -658,7 +655,7 @@
 			children = (
 				05C1492E279CA6FE00927467 /* LoadingViewController.swift */,
 				05C1492C279CA5E100927467 /* SpinnerViewController.swift */,
-				05C14917279C1C0300927467 /* URLImage.swift */,
+				05C14919279C1C3B00927467 /* FetchImageView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1006,7 +1003,6 @@
 				05DAC33A27973A750062CC6F /* UICollectionReusableView+Identifiable.swift in Sources */,
 				057D72FC27986E3D005ED888 /* ImageData.swift in Sources */,
 				05DAC34827974C690062CC6F /* MainCoordinator.swift in Sources */,
-				05C14918279C1C0300927467 /* URLImage.swift in Sources */,
 				05484617279D865800C6EC66 /* Instantiable.swift in Sources */,
 				053B9DA4279A0CD100CCF1C2 /* SecretsRetriever.swift in Sources */,
 				05484620279DC98800C6EC66 /* CharacterDetailCoordinator.swift in Sources */,
@@ -1015,7 +1011,7 @@
 				0548461E279DC89C00C6EC66 /* CharacterDetailDependencyContainer.swift in Sources */,
 				05C14931279CA74000927467 /* Loadable.swift in Sources */,
 				0545945B27988CC200A634AD /* ViewModel.swift in Sources */,
-				05C1491A279C1C3B00927467 /* UIImageView+URLImage.swift in Sources */,
+				05C1491A279C1C3B00927467 /* FetchImageView.swift in Sources */,
 				05C14923279C5C5000927467 /* CharactersDependencyContainer.swift in Sources */,
 				05C1492F279CA6FE00927467 /* LoadingViewController.swift in Sources */,
 				05932C60279B611700549D7D /* AuthenticatedNetworkService.swift in Sources */,

@@ -52,9 +52,9 @@ class CharacterDetailViewController: ViewController {
         return stackView
     }()
 
-    private lazy var characterImageView: UIImageView = {
+    private lazy var characterImageView: FetchImageView = {
         // TODO: This turns out to be exactly the same as CharacterCell. Consider extracting.
-        let imageView = UIImageView()
+        let imageView = FetchImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = .tertiarySystemGroupedBackground
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -89,6 +89,7 @@ class CharacterDetailViewController: ViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        characterImageView.clear()
         viewModel.dispose()
     }
 }

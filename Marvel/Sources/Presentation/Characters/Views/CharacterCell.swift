@@ -36,8 +36,8 @@ class CharacterCell: UICollectionViewCell, Configurable {
         }
     }
 
-    private lazy var characterImageView: UIImageView = {
-        let imageView = UIImageView()
+    private lazy var characterImageView: FetchImageView = {
+        let imageView = FetchImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = .tertiarySystemGroupedBackground
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -87,7 +87,7 @@ class CharacterCell: UICollectionViewCell, Configurable {
     }
 
     override func prepareForReuse() {
-        characterImageView.image = nil
+        characterImageView.clear()
     }
 
     func configure(using item: CharacterCellData) {
