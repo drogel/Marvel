@@ -46,7 +46,7 @@ class CharacterCell: UICollectionViewCell, Configurable {
 
     private lazy var infoView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         view.alpha = Constants.Info.viewAlpha
         view.translatesAutoresizingMaskIntoConstraints = false
         return view

@@ -20,7 +20,6 @@ class CharacterDetailViewController: ViewController {
             static let nameFontSize: CGFloat = 28
             static let descriptionFontSize: CGFloat = 12
             static let inset: CGFloat = 20
-            static let viewAlpha = 0.93
         }
     }
 
@@ -41,8 +40,6 @@ class CharacterDetailViewController: ViewController {
 
     private lazy var infoBackgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemBackground
-        view.alpha = Constants.Info.viewAlpha
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
