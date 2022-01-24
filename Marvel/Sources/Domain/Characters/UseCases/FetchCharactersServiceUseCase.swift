@@ -18,6 +18,7 @@ struct FetchCharactersQuery {
 enum FetchCharactersUseCaseError: Error {
     case emptyData
     case unauthorized
+    case noConnection
 }
 
 typealias FetchCharactersResult = Result<PageInfo, FetchCharactersUseCaseError>
@@ -56,6 +57,8 @@ private extension FetchCharactersServiceUseCase {
 
     func handle(_ error: CharactersServiceError, completion: @escaping (FetchCharactersResult) -> Void) {
         switch error {
+        case .noConnection:
+            fail(withError: .noConnection, completion: completion)
         case .emptyData:
             fail(withError: .emptyData, completion: completion)
         case .unauthorized:

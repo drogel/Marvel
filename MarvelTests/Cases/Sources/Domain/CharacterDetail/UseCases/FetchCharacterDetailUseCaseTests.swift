@@ -94,14 +94,14 @@ private class CharacterDetailServiceSuccessStub: CharacterDetailService {
 
 private extension FetchCharacterDetailUseCaseTests {
 
-    func whenRetrievingCancellableFromFetchCharacter(completion: ((Result<PageInfo, Error>) -> Void)? = nil) throws -> CancellableStub {
+    func whenRetrievingCancellableFromFetchCharacter(completion: ((FetchCharacterDetailResult) -> Void)? = nil) throws -> CancellableStub {
         let cancellable = sut.fetch(query: query) { result in
             completion?(result)
         }
         return try XCTUnwrap(cancellable as? CancellableStub)
     }
 
-    func whenFetchingCharacter(completion: ((Result<PageInfo, Error>) -> Void)? = nil) {
+    func whenFetchingCharacter(completion: ((FetchCharacterDetailResult) -> Void)? = nil) {
         let _ = try? whenRetrievingCancellableFromFetchCharacter(completion: completion)
     }
 
@@ -114,8 +114,8 @@ private extension FetchCharacterDetailUseCaseTests {
         sut = FetchCharacterDetailServiceUseCase(service: service)
     }
 
-    func whenRetrievingResultFromFetchingCharacter() -> Result<PageInfo, Error> {
-        var completionResult: Result<PageInfo, Error>!
+    func whenRetrievingResultFromFetchingCharacter() -> FetchCharacterDetailResult {
+        var completionResult: FetchCharacterDetailResult!
         whenFetchingCharacter { result in
             completionResult = result
         }
