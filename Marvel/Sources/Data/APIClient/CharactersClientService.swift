@@ -51,6 +51,8 @@ private extension CharactersClientService {
 
     func handleFailure(with error: NetworkError, completion: @escaping (CharactersServiceResult) -> Void) {
         switch error {
+        case .notConnected:
+            fail(withError: .noConnection, completion: completion)
         case .unauthorized:
             fail(withError: .unauthorized, completion: completion)
         default:

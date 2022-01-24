@@ -30,6 +30,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     private enum Messages {
         static let noCharacters = "Oops! Looks like the server is not responding"
         static let noAPIKeys = "Your API keys to the Marvel API could not be found, or they are not valid. Add your own API keys in the environment variables of the project if you haven't already."
+        static let noConnection = "It looks like you are not connected to the internet. Check your connection and try again."
     }
 
     weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
@@ -114,6 +115,8 @@ private extension CharactersViewModel {
 
     func handleFailure(with error: FetchCharactersUseCaseError) {
         switch error {
+        case .noConnection:
+            viewDelegate?.viewModel(self, didFailWithError: Messages.noConnection)
         case .emptyData:
             notifyNoCharacters()
         case .unauthorized:

@@ -70,13 +70,22 @@ class CharacterDetailViewModelTests: XCTestCase {
         sut.dispose()
         assertCancelledRequests()
     }
+
+    func test_givenStartFailed_notifiesViewDelegate() {
+        givenSutWithFailingFetcher()
+        givenViewDelegate()
+        sut.start()
+        XCTAssertEqual(viewDelegateMock.didFailCallCount, 1)
+    }
 }
 
 private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModelViewDelegate {
 
+
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
     var didRetrieveCharacterCallCount = 0
+    var didFailCallCount = 0
 
     func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol) {
         didStartLoadingCallCount += 1
@@ -89,6 +98,10 @@ private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModel
     func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didRetrieve characterDetail: CharacterDetailData) {
         didRetrieveCharacterCallCount += 1
     }
+
+    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String) {
+        didFailCallCount += 1
+    }
 }
 
 private class CharacterFetcherMock: FetchCharacterDetailUseCase {
@@ -97,7 +110,7 @@ private class CharacterFetcherMock: FetchCharacterDetailUseCase {
     var fetchCallCountsForID: [Int: Int] = [:]
     var cancellable: CancellableMock?
 
-    func fetch(query: FetchCharacterDetailQuery, completion: @escaping (Result<PageInfo, Error>) -> Void) -> Cancellable? {
+    func fetch(query: FetchCharacterDetailQuery, completion: @escaping (FetchCharacterDetailResult) -> Void) -> Cancellable? {
         fetchCallCount += 1
         fetchCallCountsForID[query.characterID] = fetchCallCountsForID[query.characterID] ?? 0 + 1
         cancellable = CancellableMock()
@@ -115,9 +128,18 @@ private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
     static let resultsStub = [CharacterData.aginar]
     static let pageInfoStub = PageInfo.zeroWith(results: resultsStub)
 
-    override func fetch(query: FetchCharacterDetailQuery, completion: @escaping (Result<PageInfo, Error>) -> Void) -> Cancellable? {
+    override func fetch(query: FetchCharacterDetailQuery, completion: @escaping (FetchCharacterDetailResult) -> Void) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(Self.pageInfoStub))
+        return result
+    }
+}
+
+private class CharacterFetcherFailingStub: CharacterFetcherMock {
+
+    override func fetch(query: FetchCharacterDetailQuery, completion: @escaping (FetchCharacterDetailResult) -> Void) -> Cancellable? {
+        let result = super.fetch(query: query, completion: completion)
+        completion(.failure(.unauthorized))
         return result
     }
 }
@@ -140,6 +162,11 @@ private extension CharacterDetailViewModelTests {
     func givenDidStartSuccessfully() {
         givenSutWithSuccessfulFetcher()
         sut.start()
+    }
+
+    func givenSutWithFailingFetcher() {
+        characterFetcherMock = CharacterFetcherFailingStub()
+        givenSut(with: characterFetcherMock)
     }
 
     func retrieveFetcherMockCancellableMock() -> CancellableMock {

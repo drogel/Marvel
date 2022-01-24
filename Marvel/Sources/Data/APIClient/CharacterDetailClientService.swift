@@ -51,6 +51,17 @@ private extension CharacterDetailClientService {
     }
 
     func handleFailure(with error: NetworkError, completion: @escaping (CharacterDetailServiceResult) -> Void) {
-        completion(.failure(.noSuchCharacter))
+        switch error {
+        case .notConnected:
+            fail(withError: .noConnection, completion: completion)
+        case .unauthorized:
+            fail(withError: .unauthorized, completion: completion)
+        default:
+            fail(withError: .noSuchCharacter, completion: completion)
+        }
+    }
+
+    func fail(withError error: CharacterDetailServiceError, completion: @escaping (CharacterDetailServiceResult) -> Void) {
+        completion(.failure(error))
     }
 }

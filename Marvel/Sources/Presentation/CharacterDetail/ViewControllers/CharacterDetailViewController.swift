@@ -111,6 +111,10 @@ extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
     func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didRetrieve characterDetail: CharacterDetailData) {
         configure(using: characterDetail)
     }
+
+    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String) {
+        showErrorAlert(message: message, buttonAction: viewModel.start)
+    }
 }
 
 private extension CharacterDetailViewController {
