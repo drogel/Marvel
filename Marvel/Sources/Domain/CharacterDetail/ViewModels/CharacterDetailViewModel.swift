@@ -33,8 +33,11 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
     func start() {
         viewDelegate?.viewModelDidStartLoading(self)
         let query = FetchCharacterDetailQuery(characterID: characterID)
-        // TODO: cache cancellable and cancel when view is gone
         loadCharacter(with: query)
+    }
+
+    func dispose() {
+        characterCancellable?.cancel()
     }
 }
 

@@ -33,6 +33,11 @@ class CharactersViewController: ViewController {
         setUpCollectionView()
         viewModel.start()
     }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        viewModel.dispose()
+    }
 }
 
 extension CharactersViewController: UICollectionViewDataSource {
@@ -76,6 +81,10 @@ extension CharactersViewController: CharactersViewModelViewDelegate {
 
     func viewModelDidUpdateItems(_ viewModel: CharactersViewModelProtocol) {
         collectionView.reloadData()
+    }
+
+    func viewModel(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String) {
+        showErrorAlert(message: message, buttonAction: viewModel.start)
     }
 }
 

@@ -30,19 +30,13 @@ class CharacterCell: UICollectionViewCell, Configurable {
         }
 
         enum Shadow {
-            static let opacity: Float = 0.18
+            static let opacity: Float = 0.15
             static let offset = CGSize(width: 0, height: 6)
-            static let radius: CGFloat = 8
+            static let radius: CGFloat = 10
         }
     }
 
-    private lazy var characterImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .tertiarySystemGroupedBackground
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+    private lazy var characterImageView = CharacterImageView()
 
     private lazy var infoView: UIView = {
         let view = UIView()
@@ -87,7 +81,7 @@ class CharacterCell: UICollectionViewCell, Configurable {
     }
 
     override func prepareForReuse() {
-        characterImageView.image = nil
+        characterImageView.clear()
     }
 
     func configure(using item: CharacterCellData) {

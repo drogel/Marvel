@@ -11,6 +11,7 @@ typealias CharactersServiceResult = Result<DataWrapper, CharactersServiceError>
 
 enum CharactersServiceError: Error {
     case emptyData
+    case unauthorized
 }
 
 protocol CharactersService {

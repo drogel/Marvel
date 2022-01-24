@@ -64,6 +64,12 @@ class CharacterDetailViewModelTests: XCTestCase {
         sut.start()
         XCTAssertEqual(viewDelegateMock.didFinishLoadingCallCount, 1)
     }
+
+    func test_givenDidStartSuccessfully_whenDisposing_cancellsRequests() {
+        givenDidStartSuccessfully()
+        sut.dispose()
+        assertCancelledRequests()
+    }
 }
 
 private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModelViewDelegate {
@@ -89,11 +95,13 @@ private class CharacterFetcherMock: FetchCharacterDetailUseCase {
 
     var fetchCallCount = 0
     var fetchCallCountsForID: [Int: Int] = [:]
+    var cancellable: CancellableMock?
 
     func fetch(query: FetchCharacterDetailQuery, completion: @escaping (Result<PageInfo, Error>) -> Void) -> Cancellable? {
         fetchCallCount += 1
         fetchCallCountsForID[query.characterID] = fetchCallCountsForID[query.characterID] ?? 0 + 1
-        return CancellableStub()
+        cancellable = CancellableMock()
+        return cancellable
     }
 
     func fetchCallCount(withID id: Int) -> Int {
@@ -127,5 +135,19 @@ private extension CharacterDetailViewModelTests {
 
     func givenSut(with characterFetcherMock: CharacterFetcherMock) {
         sut = CharacterDetailViewModel(characterFetcher: characterFetcherMock, characterID: characterIDStub)
+    }
+
+    func givenDidStartSuccessfully() {
+        givenSutWithSuccessfulFetcher()
+        sut.start()
+    }
+
+    func retrieveFetcherMockCancellableMock() -> CancellableMock {
+        try! XCTUnwrap(characterFetcherMock.cancellable)
+    }
+
+    func assertCancelledRequests(line: UInt = #line) {
+        let cancellableMock = retrieveFetcherMockCancellableMock()
+        XCTAssertEqual(cancellableMock.didCancelCallCount, 1)
     }
 }

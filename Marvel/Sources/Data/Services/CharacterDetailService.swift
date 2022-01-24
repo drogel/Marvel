@@ -11,6 +11,7 @@ typealias CharacterDetailServiceResult = Result<DataWrapper, CharacterDetailServ
 
 enum CharacterDetailServiceError: Error {
     case noSuchCharacter
+    case unauthorized
 }
 
 protocol CharacterDetailService {

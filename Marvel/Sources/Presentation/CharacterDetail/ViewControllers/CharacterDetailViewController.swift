@@ -52,14 +52,7 @@ class CharacterDetailViewController: ViewController {
         return stackView
     }()
 
-    private lazy var characterImageView: UIImageView = {
-        // TODO: This turns out to be exactly the same as CharacterCell. Consider extracting.
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .tertiarySystemGroupedBackground
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+    private lazy var characterImageView = CharacterImageView()
 
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
@@ -85,6 +78,12 @@ class CharacterDetailViewController: ViewController {
         super.viewDidLoad()
         setUp()
         viewModel.start()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        characterImageView.clear()
+        viewModel.dispose()
     }
 }
 

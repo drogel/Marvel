@@ -12,6 +12,7 @@ enum NetworkError: Error {
     case invalidURL
     case notConnected
     case cancelled
+    case unauthorized
     case requestError(Error?)
 }
 
@@ -77,7 +78,7 @@ private extension NetworkSessionService {
 
     func findNetworkError(in response: URLResponse?, with requestError: Error?) -> NetworkError? {
         if let response = response as? HTTPURLResponse, (400..<600).contains(response.statusCode) {
-            return .errorStatusCode(statusCode: response.statusCode)
+            return statusCodeBasedError(for: response.statusCode)
         } else if let urlError = requestError as? URLError {
             return parseToNetworkError(urlError)
         } else if let error = requestError {
@@ -94,6 +95,15 @@ private extension NetworkSessionService {
             return .cancelled
         } else {
             return .requestError(urlError)
+        }
+    }
+
+    func statusCodeBasedError(for statusCode: Int) -> NetworkError {
+        switch statusCode {
+        case 401:
+            return .unauthorized
+        default:
+            return .errorStatusCode(statusCode: statusCode)
         }
     }
 }

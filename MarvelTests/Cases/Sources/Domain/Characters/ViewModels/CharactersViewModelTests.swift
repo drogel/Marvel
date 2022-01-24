@@ -72,6 +72,13 @@ class CharactersViewModelTests: XCTestCase {
         XCTAssertEqual(viewDelegateMock.didUpdateCallCount, 1)
     }
 
+    func test_givenViewDelegateAndEmptyFetcher_whenStartingCompletesSuccessfully_notifiesError() {
+        givenSutWithSuccessfulEmptyFetcher()
+        givenViewDelegate()
+        sut.start()
+        XCTAssertEqual(viewDelegateMock.didFailCallCount, 1)
+    }
+
     func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesFinishLoadToViewDelegate() {
         givenSutWithSuccessfulFetcher()
         givenViewDelegate()
@@ -108,10 +115,28 @@ class CharactersViewModelTests: XCTestCase {
     }
 
     func test_givenStartFailed_whenWillDisplayCell_doesNotFetch() {
-        givenSutWithFailingFetcher()
-        sut.start()
+        givenStartFailed()
         let mostRecentQuery = whenWillDisplayCell(atIndex: 0)
         XCTAssertEqual(mostRecentQuery.offset, 0)
+    }
+
+    func test_givenDidStartSuccessfully_whenDisposing_cancellsRequests() {
+        givenDidStartSuccessfully()
+        sut.dispose()
+        assertCancelledRequests()
+    }
+
+    func test_givenStartFailed_whenDisposing_cancellsRequests() {
+        givenStartFailed()
+        sut.dispose()
+        assertCancelledRequests()
+    }
+
+    func test_givenStartFailed_notifiesViewDelegate() {
+        givenSutWithFailingFetcher()
+        givenViewDelegate()
+        sut.start()
+        XCTAssertEqual(viewDelegateMock.didFailCallCount, 1)
     }
 }
 
@@ -119,6 +144,11 @@ private extension CharactersViewModelTests {
 
     func givenSutWithSuccessfulFetcher() {
         charactersFetcherMock = CharactersFetcherSuccessfulStub()
+        sut = CharactersViewModel(charactersFetcher: charactersFetcherMock)
+    }
+
+    func givenSutWithSuccessfulEmptyFetcher() {
+        charactersFetcherMock = CharactersFetcherSuccessfulEmptyStub()
         sut = CharactersViewModel(charactersFetcher: charactersFetcherMock)
     }
 
@@ -140,14 +170,28 @@ private extension CharactersViewModelTests {
         sut.start()
     }
 
+    func givenStartFailed() {
+        givenSutWithFailingFetcher()
+        sut.start()
+    }
+
     func whenWillDisplayCell(atIndex index: Int) -> FetchCharactersQuery {
         whenWillDisplayCellIgnoringQuery(atIndex: index)
         let mostRecentQuery = try! XCTUnwrap(charactersFetcherMock.mostRecentQuery)
         return mostRecentQuery
     }
 
+    func retrieveFetcherMockCancellableMock() -> CancellableMock {
+        try! XCTUnwrap(charactersFetcherMock.cancellable)
+    }
+
     func whenWillDisplayCellIgnoringQuery(atIndex index: Int) {
         sut.willDisplayCell(at: IndexPath(row: index, section: 0))
+    }
+
+    func assertCancelledRequests(line: UInt = #line) {
+        let cancellableMock = retrieveFetcherMockCancellableMock()
+        XCTAssertEqual(cancellableMock.didCancelCallCount, 1, line: line)
     }
 
     func assert(numberOfItems: Int, line: UInt = #line) {
@@ -169,10 +213,13 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
     var fetchCallCount = 0
     var mostRecentQuery: FetchCharactersQuery?
 
-    func fetch(query: FetchCharactersQuery, completion: @escaping (Result<PageInfo, Error>) -> Void) -> Cancellable? {
+    var cancellable: CancellableMock?
+
+    func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
         fetchCallCount += 1
         mostRecentQuery = query
-        return nil
+        cancellable = CancellableMock()
+        return cancellable
     }
 }
 
@@ -181,18 +228,28 @@ private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
     static let resultsStub = [CharacterData.aginar, CharacterData.aginar]
     static let pageInfoStub = PageInfo.zeroWith(results: resultsStub)
 
-    override func fetch(query: FetchCharactersQuery, completion: @escaping (Result<PageInfo, Error>) -> Void) -> Cancellable? {
+    override func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(Self.pageInfoStub))
         return result
     }
 }
 
+
+private class CharactersFetcherSuccessfulEmptyStub: CharactersFetcherMock {
+
+    override func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
+        let result = super.fetch(query: query, completion: completion)
+        completion(.success(PageInfo.empty))
+        return result
+    }
+}
+
 private class CharactersFetcherFailingStub: CharactersFetcherMock {
 
-    override func fetch(query: FetchCharactersQuery, completion: @escaping (Result<PageInfo, Error>) -> Void) -> Cancellable? {
+    override func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
-        completion(.failure(NSError()))
+        completion(.failure(.unauthorized))
         return result
     }
 }
@@ -202,6 +259,7 @@ private class CharactersViewModelViewDelegateMock: CharactersViewModelViewDelega
     var didUpdateCallCount = 0
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
+    var didFailCallCount = 0
 
     func viewModelDidUpdateItems(_ viewModel: CharactersViewModelProtocol) {
         didUpdateCallCount += 1
@@ -213,5 +271,9 @@ private class CharactersViewModelViewDelegateMock: CharactersViewModelViewDelega
 
     func viewModelDidFinishLoading(_ viewModel: CharactersViewModelProtocol) {
         didFinishLoadingCallCount += 1
+    }
+
+    func viewModel(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String) {
+        didFailCallCount += 1
     }
 }
