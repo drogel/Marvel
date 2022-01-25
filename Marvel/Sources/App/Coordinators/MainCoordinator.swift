@@ -9,9 +9,10 @@ import UIKit
 
 class MainCoordinator: Coordinator {
 
+    var delegate: CoordinatorDelegate?
     var children: [Coordinator]
-    let navigationController: UINavigationController
 
+    private let navigationController: UINavigationController
     private let dependencyContainer: AppDependencyContainer
 
     init(navigationController: UINavigationController, dependencyContainer: AppDependencyContainer) {
