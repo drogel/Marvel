@@ -10,9 +10,10 @@ import UIKit
 
 class CharactersCoordinator: Coordinator {
 
+    weak var delegate: CoordinatorDelegate?
     var children: [Coordinator]
-    let navigationController: UINavigationController
 
+    private let navigationController: UINavigationController
     private let dependencies: CharactersDependencies
 
     init(navigationController: UINavigationController, dependencies: CharactersDependencies) {
@@ -23,6 +24,17 @@ class CharactersCoordinator: Coordinator {
 
     func start() {
         showCharactersViewController()
+    }
+}
+
+extension CharactersCoordinator: CharactersViewModelCoordinatorDelegate {
+
+    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int) {
+        let characterDetailContainer = CharacterDetailDependencyContainer(dependencies: dependencies, characterID: characterID)
+        let characterDetailCoordinator = CharacterDetailCoordinator(navigationController: navigationController, container: characterDetailContainer)
+        characterDetailCoordinator.delegate = self
+        characterDetailCoordinator.start()
+        children.append(characterDetailCoordinator)
     }
 }
 
@@ -40,16 +52,5 @@ private extension CharactersCoordinator {
         viewModel.coordinatorDelegate = self
         viewModel.viewDelegate = viewController
         return viewController
-    }
-
-}
-
-extension CharactersCoordinator: CharactersViewModelCoordinatorDelegate {
-
-    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int) {
-        let characterDetailContainer = CharacterDetailDependencyContainer(dependencies: dependencies, characterID: characterID)
-        let characterDetailCoordinator = CharacterDetailCoordinator(navigationController: navigationController, container: characterDetailContainer)
-        characterDetailCoordinator.start()
-        children.append(characterDetailCoordinator)
     }
 }

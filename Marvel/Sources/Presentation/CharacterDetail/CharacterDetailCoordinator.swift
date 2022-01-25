@@ -8,11 +8,12 @@
 import Foundation
 import UIKit
 
-class CharacterDetailCoordinator: Coordinator {
+class CharacterDetailCoordinator: NSObject, Coordinator {
 
+    weak var delegate: CoordinatorDelegate?
     var children: [Coordinator]
-    let navigationController: UINavigationController
 
+    private let navigationController: UINavigationController
     private let container: CharacterDetailContainer
 
     init(navigationController: UINavigationController, container: CharacterDetailContainer) {
@@ -26,6 +27,15 @@ class CharacterDetailCoordinator: Coordinator {
     }
 }
 
+extension CharacterDetailCoordinator: UIViewControllerTransitioningDelegate {
+
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard dismissed is CharacterDetailViewController else { return nil }
+        delegate?.coordinatorDidFinish(self)
+        return nil
+    }
+}
+
 private extension CharacterDetailCoordinator {
 
     func showCharacterDetailViewController() {
@@ -36,6 +46,7 @@ private extension CharacterDetailCoordinator {
     func createCharacterDetailViewController() -> UIViewController {
         let viewModel = CharacterDetailViewModel(characterFetcher: container.fetchCharacterDetailUseCase, characterID: container.characterID)
         let viewController = CharacterDetailViewController.instantiate(viewModel: viewModel)
+        viewController.transitioningDelegate = self
         viewModel.viewDelegate = viewController
         return viewController
     }
