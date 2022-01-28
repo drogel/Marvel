@@ -55,6 +55,56 @@ class NetworkServiceTests: XCTestCase {
         let _ = whenRequesting()
         assertComposerCompose(callCount: 1)
     }
+
+    func test_givenAnInvalidURLFromComposer_whenRequesting_failsWithInvalidURL() {
+        givenInvalidURLComposer()
+        givenSutWithSuccessfulSession()
+        let result = whenRequesting()
+        assertIsFailure(result) {
+            if case NetworkError.invalidURL = $0 { } else { XCTFail() }
+        }
+    }
+
+    func test_givenAnUnauthorizedHTTPResponse_whenRequesting_failsWithUnauthorized() {
+        givenSutWithHTTPResponseSesssion(responseStatusCode: 401)
+        let result = whenRequesting()
+        assertIsFailure(result) {
+            if case NetworkError.unauthorized = $0 { } else { XCTFail() }
+        }
+    }
+
+    func test_givenAnErrorHTTPResponse_whenRequesting_failsWithStatusCodeError() {
+        let errorStatusCode = 500
+        givenSutWithHTTPResponseSesssion(responseStatusCode: errorStatusCode)
+        let result = whenRequesting()
+        assertIsFailure(result) {
+            if case NetworkError.statusCodeError(statusCode: errorStatusCode) = $0 { } else { XCTFail() }
+        }
+    }
+
+    func test_givenIsNotConnected_whenRequesting_failsWithNotConnected() {
+        givenSutWithFailingSession(errorStub: URLError(.notConnectedToInternet))
+        let result = whenRequesting()
+        assertIsFailure(result) {
+            if case NetworkError.notConnected = $0 { } else { XCTFail() }
+        }
+    }
+
+    func test_givenRequestIsCancelled_whenRequesting_failsWithCancelled() {
+        givenSutWithFailingSession(errorStub: URLError(.cancelled))
+        let result = whenRequesting()
+        assertIsFailure(result) {
+            if case NetworkError.cancelled = $0 { } else { XCTFail() }
+        }
+    }
+
+    func test_givenRequestFailsWithURLError_whenRequesting_failsWithRequestError() {
+        givenSutWithFailingSession(errorStub: URLError(.badURL))
+        let result = whenRequesting()
+        assertIsFailure(result) {
+            if case NetworkError.requestError(_) = $0 { } else { XCTFail() }
+        }
+    }
 }
 
 private extension NetworkServiceTests {
@@ -63,12 +113,21 @@ private extension NetworkServiceTests {
         givenSut(with: NetworkSessionSuccessfulStub())
     }
 
-    func givenSutWithFailingSession() {
-        givenSut(with: NetworkSessionFailureStub())
+    func givenSutWithFailingSession(errorStub: Error = NetworkError.statusCodeError(statusCode: 400)) {
+        givenSut(with: NetworkSessionFailureStub(errorStub: errorStub))
+    }
+
+    func givenSutWithHTTPResponseSesssion(responseStatusCode: Int) {
+        let session = NetworkSessionHTTPResponseStub(statusCodeStub: responseStatusCode)
+        givenSut(with: session)
     }
 
     func givenSut(with session: NetworkSession) {
         sut = NetworkSessionService(session: session, baseURL: baseURLStub, urlComposer: composerMock)
+    }
+
+    func givenInvalidURLComposer() {
+        composerMock = URLComposerInvalidStub()
     }
 
     func whenRequesting() -> Result<Data?, NetworkError> {
@@ -97,6 +156,14 @@ private class URLComposerMock: URLComposer {
     }
 }
 
+private class URLComposerInvalidStub: URLComposerMock {
+
+    override func compose(from baseURL: URL, adding components: RequestComponents) -> URL? {
+        let _ = super.compose(from: baseURL, adding: components)
+        return nil
+    }
+}
+
 private class NetworkSessionSuccessfulStub: NetworkSession {
 
     func loadData(from request: URLRequest, completionHandler: @escaping NetworkCompletion) -> URLSessionDataTask {
@@ -107,8 +174,33 @@ private class NetworkSessionSuccessfulStub: NetworkSession {
 
 private class NetworkSessionFailureStub: NetworkSession {
 
+    private let errorStub: Error
+
+    init(errorStub: Error) {
+        self.errorStub = errorStub
+    }
+
     func loadData(from request: URLRequest, completionHandler: @escaping NetworkCompletion) -> URLSessionDataTask {
-        completionHandler(nil, nil, NetworkError.errorStatusCode(statusCode: 400))
+        completionHandler(nil, nil, errorStub)
+        return URLSession(configuration: .default).dataTask(with: request)
+    }
+}
+
+private class NetworkSessionHTTPResponseStub: NetworkSession {
+
+    private let statusCodeStub: Int
+
+    private var responseStub: HTTPURLResponse {
+        let urlStub = URL(string: "https://example.com")!
+        return HTTPURLResponse(url: urlStub, statusCode: statusCodeStub, httpVersion: nil, headerFields: nil)!
+    }
+
+    init(statusCodeStub: Int) {
+        self.statusCodeStub = statusCodeStub
+    }
+
+    func loadData(from request: URLRequest, completionHandler: @escaping NetworkCompletion) -> URLSessionDataTask {
+        completionHandler(nil, responseStub, nil)
         return URLSession(configuration: .default).dataTask(with: request)
     }
 }
