@@ -13,16 +13,19 @@ class CharactersClientServiceTests: XCTestCase {
     private var sut: CharactersClientService!
     private var networkServiceMock: NetworkServiceMock!
     private var jsonParserMock: JSONParserMock!
+    private var errorHandler: NetworkErrorHandler!
 
     override func setUp() {
         super.setUp()
         jsonParserMock = JSONParserMock()
+        errorHandler = DataServicesNetworkErrorHandler()
     }
 
     override func tearDown() {
         sut = nil
         networkServiceMock = nil
         jsonParserMock = nil
+        errorHandler = nil
         super.tearDown()
     }
 
@@ -71,6 +74,14 @@ class CharactersClientServiceTests: XCTestCase {
             whenNetworkErrorWas: .statusCodeError(statusCode: 500)
         )
     }
+
+    func test_givenFailingNetworkService_whenRetrievingCharacters_delegatesErrorToErrorHandler() {
+        givenErrorHandlerMock()
+        givenSutWithFailingNetworkService(providingError: .invalidURL)
+        assertErrorHandlerHandle(callCount: 0)
+        whenRetrievingCharactersIgnoringResult()
+        assertErrorHandlerHandle(callCount: 1)
+    }
 }
 
 private extension CharactersClientServiceTests {
@@ -100,8 +111,12 @@ private extension CharactersClientServiceTests {
         jsonParserMock = JSONParserSuccessfulStub<DataWrapper>(dataStub: Self.dataWrapperResponseStub)
     }
 
+    func givenErrorHandlerMock() {
+        errorHandler = NetworkErroHandlerMock()
+    }
+
     func givenSut(with networkService: NetworkService) {
-        sut = CharactersClientService(client: networkService, parser: jsonParserMock)
+        sut = CharactersClientService(client: networkService, parser: jsonParserMock, errorHandler: errorHandler)
     }
 
     func whenRetrievingCharactersIgnoringResult(from offset: Int = 0) {
@@ -118,6 +133,11 @@ private extension CharactersClientServiceTests {
 
     func assertNetworkServiceRequest(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(networkServiceMock.requestCallCount, callCount, line: line)
+    }
+
+    func assertErrorHandlerHandle(callCount: Int, line: UInt = #line) {
+        let errorHandlerMock = errorHandler as! NetworkErroHandlerMock
+        XCTAssertEqual(errorHandlerMock.handleCallCount, callCount, line: line)
     }
 
     func assert(_ actualError: CharactersServiceError, isEqualTo expectedError: CharactersServiceError) {
