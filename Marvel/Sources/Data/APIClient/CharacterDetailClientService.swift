@@ -19,8 +19,7 @@ class CharacterDetailClientService: CharacterDetailService {
     }
 
     func character(with id: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
-        let components = components(for: id)
-        return client.request(endpoint: components) { [weak self] result in
+        client.request(endpoint: components(for: id)) { [weak self] result in
             self?.handle(result: result, completion: completion)
         }
     }

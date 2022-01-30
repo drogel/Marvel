@@ -45,6 +45,16 @@ class CharactersClientServiceTests: XCTestCase {
         }
     }
 
+    func test_givenACachingNetworkServiceFake_whenRetrievingCharacters_requestIsCalledWithExpectedComponents() {
+        let offsetStub = 40
+        let charactersPath = MarvelAPIPaths.characters.rawValue
+        let expectedComponentsPath = RequestComponents(path: charactersPath, queryParameters: ["offset": String(offsetStub)])
+        givenSutWithNetworkServiceCacherFake()
+        whenRetrievingCharactersIgnoringResult(from: offsetStub)
+        let actualComponents = whenGettingCachedComponentsFromNetworkService()
+        XCTAssertEqual(actualComponents, expectedComponentsPath)
+    }
+
     func test_givenASucessfulNetworkServiceAndSuccessfulParser_whenRetrievingCharacters_resultIsSuccess() {
         givenSuccesfulParser()
         givenSutWithSuccessfulNetworkService()
@@ -115,6 +125,11 @@ private extension CharactersClientServiceTests {
         errorHandler = NetworkErroHandlerMock()
     }
 
+    func givenSutWithNetworkServiceCacherFake() {
+        networkServiceMock = NetworkServiceRequestCacheFake()
+        givenSut(with: networkServiceMock)
+    }
+
     func givenSut(with networkService: NetworkService) {
         sut = CharactersClientService(client: networkService, parser: jsonParserMock, errorHandler: errorHandler)
     }
@@ -129,6 +144,11 @@ private extension CharactersClientServiceTests {
             charactersResult = result
         }
         return charactersResult
+    }
+
+    func whenGettingCachedComponentsFromNetworkService() -> RequestComponents {
+        let cacher = try! XCTUnwrap(networkServiceMock as? NetworkServiceRequestCacheFake)
+        return try! XCTUnwrap(cacher.cachedComponents)
     }
 
     func assertNetworkServiceRequest(callCount: Int, line: UInt = #line) {

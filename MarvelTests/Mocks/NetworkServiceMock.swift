@@ -42,3 +42,12 @@ class NetworkServiceFailingStub: NetworkServiceMock {
     }
 }
 
+class NetworkServiceRequestCacheFake: NetworkServiceMock {
+
+    var cachedComponents: RequestComponents?
+
+    override func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Cancellable? {
+        cachedComponents = endpoint
+        return super.request(endpoint: endpoint, completion: completion)
+    }
+}
