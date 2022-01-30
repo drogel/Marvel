@@ -7,7 +7,7 @@
 
 import Foundation
 
-typealias CharacterDetailServiceResult = Result<DataWrapper, CharacterDetailServiceError>
+typealias CharacterDetailServiceResult = CharactersServiceResult
 
 typealias CharacterDetailServiceError = DataServiceError
 

@@ -35,7 +35,7 @@ private extension CharacterDetailDependencyContainer {
         case .debug:
             return CharacterDetailDebugService(dataLoader: JsonDecoderDataLoader(parser: parser))
         case .release:
-            return CharacterDetailClientService(client: dependencies.networkService, parser: parser, errorHandler: errorHandler)
+            return CharacterDetailClientService(client: dependencies.networkService, resultHandler: resultHandler)
         }
     }
 
@@ -45,5 +45,9 @@ private extension CharacterDetailDependencyContainer {
 
     var errorHandler: NetworkErrorHandler {
         DataServicesNetworkErrorHandler()
+    }
+
+    var resultHandler: CharactersResultHandler {
+        CharactersClientServiceResultHandler(parser: parser, errorHandler: errorHandler)
     }
 }
