@@ -131,7 +131,8 @@ private extension CharactersClientServiceTests {
     }
 
     func givenSut(with networkService: NetworkService) {
-        sut = CharactersClientService(client: networkService, parser: jsonParserMock, errorHandler: errorHandler)
+        let resultHandler = CharactersClientServiceResultHandler(parser: jsonParserMock, errorHandler: errorHandler)
+        sut = CharactersClientService(client: networkService, resultHandler: resultHandler)
     }
 
     func whenRetrievingCharactersIgnoringResult(from offset: Int = 0) {

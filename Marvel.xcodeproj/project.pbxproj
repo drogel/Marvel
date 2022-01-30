@@ -50,6 +50,7 @@
 		05484625279DE8C800C6EC66 /* CancellableMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05484624279DE8C800C6EC66 /* CancellableMock.swift */; };
 		05484627279E035600C6EC66 /* CharacterImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05484626279E035600C6EC66 /* CharacterImageView.swift */; };
 		05484629279E1B0D00C6EC66 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05484628279E1B0D00C6EC66 /* AlertPresenter.swift */; };
+		054ED2BD27A716C3000358A3 /* CharactersResultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054ED2BC27A716C3000358A3 /* CharactersResultHandler.swift */; };
 		0571306527A559F10009383E /* CharactersClientServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0571306427A559F10009383E /* CharactersClientServiceTests.swift */; };
 		0571306727A55B3A0009383E /* NetworkServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0571306627A55B3A0009383E /* NetworkServiceMock.swift */; };
 		0571306927A55C280009383E /* JSONParserMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0571306827A55C280009383E /* JSONParserMock.swift */; };
@@ -165,6 +166,7 @@
 		05484624279DE8C800C6EC66 /* CancellableMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellableMock.swift; sourceTree = "<group>"; };
 		05484626279E035600C6EC66 /* CharacterImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterImageView.swift; sourceTree = "<group>"; };
 		05484628279E1B0D00C6EC66 /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
+		054ED2BC27A716C3000358A3 /* CharactersResultHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersResultHandler.swift; sourceTree = "<group>"; };
 		0571306427A559F10009383E /* CharactersClientServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersClientServiceTests.swift; sourceTree = "<group>"; };
 		0571306627A55B3A0009383E /* NetworkServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceMock.swift; sourceTree = "<group>"; };
 		0571306827A55C280009383E /* JSONParserMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONParserMock.swift; sourceTree = "<group>"; };
@@ -264,10 +266,11 @@
 		053B9DA0279A0BC800CCF1C2 /* APIClient */ = {
 			isa = PBXGroup;
 			children = (
+				054ED2BC27A716C3000358A3 /* CharactersResultHandler.swift */,
 				0548461B279DC6F600C6EC66 /* CharacterDetailClientService.swift */,
 				05932C58279B5A0700549D7D /* CharactersClientService.swift */,
-				0571306F27A5C1D30009383E /* NetworkErrorHandler.swift */,
 				05484621279DE69300C6EC66 /* MarvelAPIPaths.swift */,
+				0571306F27A5C1D30009383E /* NetworkErrorHandler.swift */,
 				0548461A279DC6E400C6EC66 /* Authentication */,
 				05932C43279B18AE00549D7D /* Network */,
 			);
@@ -1079,6 +1082,7 @@
 				05DAC34627974AFB0062CC6F /* Coordinator.swift in Sources */,
 				0548461C279DC6F600C6EC66 /* CharacterDetailClientService.swift in Sources */,
 				05932C49279B19A700549D7D /* NetworkService.swift in Sources */,
+				054ED2BD27A716C3000358A3 /* CharactersResultHandler.swift in Sources */,
 				0585AF9D27975DDB00586ABD /* DataWrapper.swift in Sources */,
 				05459464279898A700A634AD /* CharactersService.swift in Sources */,
 				05484627279E035600C6EC66 /* CharacterImageView.swift in Sources */,
