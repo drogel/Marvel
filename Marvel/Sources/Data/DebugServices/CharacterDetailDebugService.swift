@@ -29,7 +29,7 @@ private extension CharacterDetailDebugService {
 
     func retrieveCharacter(completion: @escaping (CharacterDetailServiceResult) -> Void) {
         guard let character: DataWrapper = dataLoader.load(fromFileNamed: characterDetailFileName) else {
-            completion(.failure(.noSuchCharacter))
+            completion(.failure(.emptyData))
             return
         }
         completion(.success(character))

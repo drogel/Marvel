@@ -59,7 +59,7 @@ private extension FetchCharacterDetailServiceUseCase {
         switch error {
         case .noConnection:
             fail(withError: .noConnection, completion: completion)
-        case .noSuchCharacter:
+        case .emptyData:
             fail(withError: .noSuchCharacter, completion: completion)
         case .unauthorized:
             fail(withError: .unauthorized, completion: completion)

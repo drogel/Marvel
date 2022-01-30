@@ -13,16 +13,19 @@ class CharacterDetailClientServiceTests: XCTestCase {
     private var sut: CharacterDetailClientService!
     private var jsonParserMock: JSONParserMock!
     private var networkServiceMock: NetworkServiceMock!
+    private var errorHandler: NetworkErrorHandler!
 
     override func setUp() {
         super.setUp()
         jsonParserMock = JSONParserMock()
+        errorHandler = DataServicesNetworkErrorHandler()
     }
 
     override func tearDown() {
         sut = nil
         jsonParserMock = nil
         networkServiceMock = nil
+        errorHandler = nil
         super.tearDown()
     }
 
@@ -47,7 +50,7 @@ class CharacterDetailClientServiceTests: XCTestCase {
         givenSutWithSuccessfulNetworkService()
         let result = whenRetrievingCharacter()
         assertIsFailure(result) {
-            assert($0, isEqualTo: .noSuchCharacter)
+            assert($0, isEqualTo: .emptyData)
         }
     }
 
@@ -76,9 +79,17 @@ class CharacterDetailClientServiceTests: XCTestCase {
 
     func test_givenGenericError_whenRetrievingCharacters_resultIsFailureWithEmptyData() {
         assertWhenRetrievingCharacter(
-            returnsFailureWithError: .noSuchCharacter,
+            returnsFailureWithError: .emptyData,
             whenNetworkErrorWas: .statusCodeError(statusCode: 500)
         )
+    }
+
+    func test_givenFailingNetworkService_whenRetrievingCharacters_delegatesErrorToErrorHandler() {
+        givenErrorHandlerMock()
+        givenSutWithFailingNetworkService(providingError: .invalidURL)
+        assertErrorHandlerHandle(callCount: 0)
+        whenRetrievingCharacterIgnoringResult()
+        assertErrorHandlerHandle(callCount: 1)
     }
 }
 
@@ -108,7 +119,7 @@ private extension CharacterDetailClientServiceTests {
     }
 
     func givenSut(with networkService: NetworkService) {
-        sut = CharacterDetailClientService(client: networkService, parser: jsonParserMock)
+        sut = CharacterDetailClientService(client: networkService, parser: jsonParserMock, errorHandler: errorHandler)
     }
 
     func givenFailingParser() {
@@ -117,6 +128,10 @@ private extension CharacterDetailClientServiceTests {
 
     func givenSuccesfulParser() {
         jsonParserMock = JSONParserSuccessfulStub<DataWrapper>(dataStub: Self.dataWrapperResponseStub)
+    }
+
+    func givenErrorHandlerMock() {
+        errorHandler = NetworkErroHandlerMock()
     }
 
     func whenRetrievingCharacterIgnoringResult(with id: Int = 0) {
@@ -148,5 +163,10 @@ private extension CharacterDetailClientServiceTests {
         givenSutWithFailingNetworkService(providingError: networkError)
         let result = whenRetrievingCharacter()
         assertIsFailure(result, then: { assert($0, isEqualTo: expectedError) }, line: line)
+    }
+
+    func assertErrorHandlerHandle(callCount: Int, line: UInt = #line) {
+        let errorHandlerMock = errorHandler as! NetworkErroHandlerMock
+        XCTAssertEqual(errorHandlerMock.handleCallCount, callCount, line: line)
     }
 }
