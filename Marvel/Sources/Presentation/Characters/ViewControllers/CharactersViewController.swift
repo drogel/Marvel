@@ -22,9 +22,9 @@ class CharactersViewController: ViewController {
     }
 
     static func instantiate(viewModel: ViewModel) -> Self {
-        let viewController = CharactersViewController()
+        let viewController = Self()
         viewController.viewModel = viewModel
-        return viewController as! Self
+        return viewController
     }
 
     override func viewDidLoad() {
