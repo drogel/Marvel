@@ -39,7 +39,7 @@ class AuthenticatedNetworkServiceTests: XCTestCase {
     func test_givenAuthenticatorMock_whenRequesting_completsWithUnauthorizedError() {
         let result = whenRequesting()
         assertIsFailure(result) {
-            if case NetworkError.unauthorized = $0 { } else { XCTFail() }
+            if case NetworkError.unauthorized = $0 { } else { failExpectingErrorMatching($0) }
         }
     }
 
@@ -53,7 +53,10 @@ class AuthenticatedNetworkServiceTests: XCTestCase {
     func test_givenNonEmptyAuthenticator_whenRequesting_componentsContainAuthenticationParams() {
         givenSutWithNonEmptyAuthenticator()
         whenRequestingIgnoringResult()
-        let expectedComponents = RequestComponents(path: componentsStub.path, queryParameters: AuthenticatorStub.authenticationParamsStub)
+        let expectedComponents = RequestComponents(
+            path: componentsStub.path,
+            queryParameters: AuthenticatorStub.authenticationParamsStub
+        )
         XCTAssertEqual(networkServiceMock.cachedComponents, expectedComponents)
     }
 }

@@ -58,7 +58,12 @@ private extension NetworkSessionService {
         return sessionDataTask
     }
 
-    func handleDataLoaded(_ data: Data?, response: URLResponse?, error: Error?, completion: @escaping NetworkServiceCompletion) {
+    func handleDataLoaded(
+        _ data: Data?,
+        response: URLResponse?,
+        error: Error?,
+        completion: @escaping NetworkServiceCompletion
+    ) {
         if let networkError = findNetworkError(in: response, with: error) {
             handle(networkError, completion: completion)
         } else {

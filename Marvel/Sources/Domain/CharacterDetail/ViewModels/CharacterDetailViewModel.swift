@@ -30,7 +30,11 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
     private let characterID: Int
     private var characterCancellable: Cancellable?
 
-    init(characterFetcher: FetchCharacterDetailUseCase, characterID: Int, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
+    init(
+        characterFetcher: FetchCharacterDetailUseCase,
+        characterID: Int,
+        imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()
+    ) {
         self.characterFetcher = characterFetcher
         self.imageURLBuilder = imageURLBuilder
         self.characterID = characterID
@@ -64,7 +68,7 @@ private extension CharacterDetailViewModel {
     }
 
     func handleSuccess(with pageInfo: PageInfo) {
-        guard let characterDetail = mapToCharacterDetail(characterData: pageInfo.results) else { return notifyNoCharacter() }
+        guard let characterDetail = mapToCharacterDetail(characterData: pageInfo.results) else { return }
         viewDelegate?.viewModel(self, didRetrieve: characterDetail)
     }
 
@@ -95,9 +99,5 @@ private extension CharacterDetailViewModel {
     func imageURL(for characterData: CharacterData) -> URL? {
         guard let thumbnail = characterData.thumbnail else { return nil }
         return imageURLBuilder.buildURL(from: thumbnail)
-    }
-
-    func fail(withError error: FetchCharacterDetailUseCaseError, completion: @escaping (FetchCharacterDetailResult) -> Void) {
-        completion(.failure(error))
     }
 }

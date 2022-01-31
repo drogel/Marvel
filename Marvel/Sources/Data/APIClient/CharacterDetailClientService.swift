@@ -17,16 +17,16 @@ class CharacterDetailClientService: CharacterDetailService {
         self.resultHandler = resultHandler
     }
 
-    func character(with id: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
-        client.request(endpoint: components(for: id)) { [weak self] result in
+    func character(with identifier: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
+        client.request(endpoint: components(for: identifier)) { [weak self] result in
             self?.resultHandler.handle(result: result, completion: completion)
         }
     }
 }
 
 private extension CharacterDetailClientService {
-    func components(for id: Int) -> RequestComponents {
-        let characterDetailPath = charactersPath + "/" + String(id)
+    func components(for identifier: Int) -> RequestComponents {
+        let characterDetailPath = charactersPath + "/" + String(identifier)
         return RequestComponents(path: characterDetailPath)
     }
 }

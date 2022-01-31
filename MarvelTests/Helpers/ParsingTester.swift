@@ -12,7 +12,8 @@ protocol ParsingTester {
     associatedtype ParseableObjectType: Decodable, Equatable
 
     /// Parse a JSON named after the type of the object specified in the associated type of ``ParsingTester``.
-    /// - Returns: An instance of the object specified in the associated type of ``ParsingTester`` that contains the parsed data from a JSON named after the runtime type of ``ParseableObjectType``.
+    /// - Returns: An instance of the object specified in the associated type of ``ParsingTester`` that contains
+    /// the parsed data from a JSON named after the runtime type of ``ParseableObjectType``.
     func givenParsedObjectFromJson() -> ParseableObjectType
 }
 

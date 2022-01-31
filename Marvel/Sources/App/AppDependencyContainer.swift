@@ -34,7 +34,7 @@ class MarvelDependencyContainer: AppDependencyContainer {
 private extension MarvelDependencyContainer {
     var baseURL: URL {
         guard let url = URL(string: "https://" + configuration.apiBaseURLString) else {
-            fatalError("Expected a valid API base URL. Review the app configuration files and ensure it is properly formatted.")
+            fatalError("Expected a valid API base URL.")
         }
         return url
     }

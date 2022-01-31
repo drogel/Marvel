@@ -60,7 +60,7 @@ class NetworkServiceTests: XCTestCase {
         givenSutWithSuccessfulSession()
         let result = whenRequesting()
         assertIsFailure(result) {
-            if case NetworkError.invalidURL = $0 { } else { XCTFail() }
+            if case NetworkError.invalidURL = $0 { } else { failExpectingErrorMatching($0) }
         }
     }
 
@@ -68,7 +68,7 @@ class NetworkServiceTests: XCTestCase {
         givenSutWithHTTPResponseSesssion(responseStatusCode: 401)
         let result = whenRequesting()
         assertIsFailure(result) {
-            if case NetworkError.unauthorized = $0 { } else { XCTFail() }
+            if case NetworkError.unauthorized = $0 { } else { failExpectingErrorMatching($0) }
         }
     }
 
@@ -77,7 +77,10 @@ class NetworkServiceTests: XCTestCase {
         givenSutWithHTTPResponseSesssion(responseStatusCode: errorStatusCode)
         let result = whenRequesting()
         assertIsFailure(result) {
-            if case NetworkError.statusCodeError(statusCode: errorStatusCode) = $0 { } else { XCTFail() }
+            if case NetworkError.statusCodeError(statusCode: errorStatusCode) = $0 {
+            } else {
+                failExpectingErrorMatching($0)
+            }
         }
     }
 
@@ -85,7 +88,7 @@ class NetworkServiceTests: XCTestCase {
         givenSutWithFailingSession(errorStub: URLError(.notConnectedToInternet))
         let result = whenRequesting()
         assertIsFailure(result) {
-            if case NetworkError.notConnected = $0 { } else { XCTFail() }
+            if case NetworkError.notConnected = $0 { } else { failExpectingErrorMatching($0) }
         }
     }
 
@@ -93,7 +96,7 @@ class NetworkServiceTests: XCTestCase {
         givenSutWithFailingSession(errorStub: URLError(.cancelled))
         let result = whenRequesting()
         assertIsFailure(result) {
-            if case NetworkError.cancelled = $0 { } else { XCTFail() }
+            if case NetworkError.cancelled = $0 { } else { failExpectingErrorMatching($0) }
         }
     }
 
@@ -101,7 +104,7 @@ class NetworkServiceTests: XCTestCase {
         givenSutWithFailingSession(errorStub: URLError(.badURL))
         let result = whenRequesting()
         assertIsFailure(result) {
-            if case NetworkError.requestError = $0 { } else { XCTFail() }
+            if case NetworkError.requestError = $0 { } else { failExpectingErrorMatching($0) }
         }
     }
 }

@@ -13,7 +13,7 @@ class CharacterCellDataTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        sut = CharacterCellData(id: 0, name: "name", description: "description")
+        sut = CharacterCellData(identifier: 0, name: "name", description: "description")
     }
 
     override func tearDown() {
@@ -22,12 +22,12 @@ class CharacterCellDataTests: XCTestCase {
     }
 
     func test_givenOther_areEqualIfIDNameAndDescriptionAreEqual() {
-        let other = CharacterCellData(id: 0, name: "name", description: "description")
+        let other = CharacterCellData(identifier: 0, name: "name", description: "description")
         XCTAssertEqual(other, sut)
     }
 
     func test_givenOther_areNotEqualIfIDNameOrDescriptionAreNotEqual() {
-        let other = CharacterCellData(id: 0, name: "", description: "description")
+        let other = CharacterCellData(identifier: 0, name: "", description: "description")
         XCTAssertNotEqual(other, sut)
     }
 }

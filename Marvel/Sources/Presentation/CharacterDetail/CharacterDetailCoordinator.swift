@@ -41,7 +41,10 @@ private extension CharacterDetailCoordinator {
     }
 
     func createCharacterDetailViewController() -> UIViewController {
-        let viewModel = CharacterDetailViewModel(characterFetcher: container.fetchCharacterDetailUseCase, characterID: container.characterID)
+        let viewModel = CharacterDetailViewModel(
+            characterFetcher: container.fetchCharacterDetailUseCase,
+            characterID: container.characterID
+        )
         let viewController = CharacterDetailViewController.instantiate(viewModel: viewModel)
         viewController.transitioningDelegate = self
         viewModel.viewDelegate = viewController

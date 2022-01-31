@@ -63,7 +63,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
 
     func select(at indexPath: IndexPath) {
         guard let data = cellData(at: indexPath) else { return }
-        coordinatorDelegate?.viewModel(self, didSelectCharacterWith: data.id)
+        coordinatorDelegate?.viewModel(self, didSelectCharacterWith: data.identifier)
     }
 
     func willDisplayCell(at indexPath: IndexPath) {
@@ -107,7 +107,7 @@ private extension CharactersViewModel {
     }
 
     func handleSuccess(with pageInfo: PageInfo) {
-        guard let newCells = mapToCells(characterData: pageInfo.results), newCells.hasElements else { return notifyNoCharacters() }
+        guard let newCells = mapToCells(characterData: pageInfo.results), newCells.hasElements else { return }
         updateCells(using: newCells)
     }
 
@@ -124,9 +124,12 @@ private extension CharactersViewModel {
 
     func mapToCells(characterData: [CharacterData]?) -> [CharacterCellData]? {
         characterData?.compactMap { data in
-            guard let id = data.id, let name = data.name, let description = data.description else { return nil }
+            guard let identifier = data.identifier,
+                  let name = data.name,
+                  let description = data.description
+            else { return nil }
             let imageURL = buildImageURL(from: data)
-            return CharacterCellData(id: id, name: name, description: description, imageURL: imageURL)
+            return CharacterCellData(identifier: identifier, name: name, description: description, imageURL: imageURL)
         }
     }
 

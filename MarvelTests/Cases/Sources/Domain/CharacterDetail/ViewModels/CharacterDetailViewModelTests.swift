@@ -106,15 +106,18 @@ private class CharacterFetcherMock: FetchCharacterDetailUseCase {
     var fetchCallCountsForID: [Int: Int] = [:]
     var cancellable: CancellableMock?
 
-    func fetch(query: FetchCharacterDetailQuery, completion _: @escaping (FetchCharacterDetailResult) -> Void) -> Cancellable? {
+    func fetch(
+        query: FetchCharacterDetailQuery,
+        completion _: @escaping (FetchCharacterDetailResult) -> Void
+    ) -> Cancellable? {
         fetchCallCount += 1
         fetchCallCountsForID[query.characterID] = fetchCallCountsForID[query.characterID] ?? 0 + 1
         cancellable = CancellableMock()
         return cancellable
     }
 
-    func fetchCallCount(withID id: Int) -> Int {
-        guard let fetchCallCountForID = fetchCallCountsForID[id] else { return 0 }
+    func fetchCallCount(withID identifier: Int) -> Int {
+        guard let fetchCallCountForID = fetchCallCountsForID[identifier] else { return 0 }
         return fetchCallCountForID
     }
 }
@@ -123,7 +126,10 @@ private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
     static let resultsStub = [CharacterData.aginar]
     static let pageInfoStub = PageInfo.zeroWith(results: resultsStub)
 
-    override func fetch(query: FetchCharacterDetailQuery, completion: @escaping (FetchCharacterDetailResult) -> Void) -> Cancellable? {
+    override func fetch(
+        query: FetchCharacterDetailQuery,
+        completion: @escaping (FetchCharacterDetailResult) -> Void
+    ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(Self.pageInfoStub))
         return result
@@ -131,7 +137,10 @@ private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
 }
 
 private class CharacterFetcherFailingStub: CharacterFetcherMock {
-    override func fetch(query: FetchCharacterDetailQuery, completion: @escaping (FetchCharacterDetailResult) -> Void) -> Cancellable? {
+    override func fetch(
+        query: FetchCharacterDetailQuery,
+        completion: @escaping (FetchCharacterDetailResult) -> Void
+    ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.failure(.unauthorized))
         return result

@@ -223,7 +223,10 @@ private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
     static let resultsStub = [CharacterData.aginar, CharacterData.aginar]
     static let pageInfoStub = PageInfo.zeroWith(results: resultsStub)
 
-    override func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
+    override func fetch(
+        query: FetchCharactersQuery,
+        completion: @escaping (FetchCharactersResult) -> Void
+    ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(Self.pageInfoStub))
         return result
@@ -231,7 +234,10 @@ private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
 }
 
 private class CharactersFetcherSuccessfulEmptyStub: CharactersFetcherMock {
-    override func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
+    override func fetch(
+        query: FetchCharactersQuery,
+        completion: @escaping (FetchCharactersResult) -> Void
+    ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(PageInfo.empty))
         return result
@@ -239,7 +245,10 @@ private class CharactersFetcherSuccessfulEmptyStub: CharactersFetcherMock {
 }
 
 private class CharactersFetcherFailingStub: CharactersFetcherMock {
-    override func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
+    override func fetch(
+        query: FetchCharactersQuery,
+        completion: @escaping (FetchCharactersResult) -> Void
+    ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.failure(.unauthorized))
         return result

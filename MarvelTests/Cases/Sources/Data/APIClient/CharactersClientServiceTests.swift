@@ -47,7 +47,10 @@ class CharactersClientServiceTests: XCTestCase {
     func test_givenACachingNetworkServiceFake_whenRetrievingCharacters_requestIsCalledWithExpectedComponents() {
         let offsetStub = 40
         let charactersPath = MarvelAPIPaths.characters.rawValue
-        let expectedComponentsPath = RequestComponents(path: charactersPath, queryParameters: ["offset": String(offsetStub)])
+        let expectedComponentsPath = RequestComponents(
+            path: charactersPath,
+            queryParameters: ["offset": String(offsetStub)]
+        )
         givenSutWithNetworkServiceCacherFake()
         whenRetrievingCharactersIgnoringResult(from: offsetStub)
         let actualComponents = whenGettingCachedComponentsFromNetworkService()
@@ -160,10 +163,14 @@ private extension CharactersClientServiceTests {
     }
 
     func assert(_ actualError: CharactersServiceError, isEqualTo expectedError: CharactersServiceError) {
-        if case actualError = expectedError { } else { XCTFail() }
+        if case actualError = expectedError { } else { failExpectingErrorMatching(actualError) }
     }
 
-    func assertWhenRetrievingCharacters(returnsFailureWithError expectedError: CharactersServiceError, whenNetworkErrorWas networkError: NetworkError, line: UInt = #line) {
+    func assertWhenRetrievingCharacters(
+        returnsFailureWithError expectedError: CharactersServiceError,
+        whenNetworkErrorWas networkError: NetworkError,
+        line: UInt = #line
+    ) {
         givenSutWithFailingNetworkService(providingError: networkError)
         let result = whenRetrievingCharacters()
         assertIsFailure(result, then: { assert($0, isEqualTo: expectedError) }, line: line)

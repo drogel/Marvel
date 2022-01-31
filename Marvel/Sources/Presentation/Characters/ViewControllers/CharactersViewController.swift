@@ -14,7 +14,10 @@ class CharactersViewController: ViewController {
     private var layout: UICollectionViewCompositionalLayout!
     private var collectionView: UICollectionView!
 
-    static func instantiate(viewModel: ViewModel, layout: UICollectionViewCompositionalLayout) -> CharactersViewController {
+    static func instantiate(
+        viewModel: ViewModel,
+        layout: UICollectionViewCompositionalLayout
+    ) -> CharactersViewController {
         let viewController = instantiate(viewModel: viewModel)
         viewController.layout = layout
         return viewController
@@ -52,7 +55,10 @@ extension CharactersViewController: UICollectionViewDataSource {
         return viewModel.numberOfItems
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
         guard let cellData = viewModel.cellData(at: indexPath) else { return UICollectionViewCell() }
         let cell = collectionView.dequeue(cellOfType: CharacterCell.self, at: indexPath)
         cell.configure(using: cellData)

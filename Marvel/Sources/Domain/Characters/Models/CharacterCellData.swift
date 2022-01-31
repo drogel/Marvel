@@ -8,13 +8,13 @@
 import Foundation
 
 struct CharacterCellData: Hashable {
-    let id: Int
+    let identifier: Int
     let name: String
     let description: String
     let imageURL: URL?
 
-    init(id: Int, name: String, description: String, imageURL: URL? = nil) {
-        self.id = id
+    init(identifier: Int, name: String, description: String, imageURL: URL? = nil) {
+        self.identifier = identifier
         self.name = name
         self.description = description
         self.imageURL = imageURL

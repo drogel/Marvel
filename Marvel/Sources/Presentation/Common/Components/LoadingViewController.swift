@@ -63,6 +63,12 @@ private extension LoadingViewController {
     }
 
     func animate(animations: @escaping () -> Void, completion: (() -> Void)? = nil) {
-        UIView.animate(withDuration: Constants.animationDuration, delay: 0, options: .curveEaseOut, animations: animations, completion: { _ in completion?() })
+        UIView.animate(
+            withDuration: Constants.animationDuration,
+            delay: 0,
+            options: .curveEaseOut,
+            animations: animations,
+            completion: { _ in completion?() }
+        )
     }
 }

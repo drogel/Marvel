@@ -28,8 +28,14 @@ class CharactersCoordinator: Coordinator {
 
 extension CharactersCoordinator: CharactersViewModelCoordinatorDelegate {
     func viewModel(_: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int) {
-        let characterDetailContainer = CharacterDetailDependencyContainer(dependencies: dependencies, characterID: characterID)
-        let characterDetailCoordinator = CharacterDetailCoordinator(navigationController: navigationController, container: characterDetailContainer)
+        let characterDetailContainer = CharacterDetailDependencyContainer(
+            dependencies: dependencies,
+            characterID: characterID
+        )
+        let characterDetailCoordinator = CharacterDetailCoordinator(
+            navigationController: navigationController,
+            container: characterDetailContainer
+        )
         characterDetailCoordinator.delegate = self
         characterDetailCoordinator.start()
         children.append(characterDetailCoordinator)

@@ -20,7 +20,7 @@ class MarvelConfigurationValues: AppConfigurationValues {
 private extension MarvelConfigurationValues {
     func scheme(fromConfigurationKey configurationKey: String) -> AppScheme {
         guard let scheme = AppScheme(rawValue: value(forConfigurationKey: configurationKey)) else {
-            fatalError("The scheme value \(String(describing: value)) retrieved from configuration files is not a valid \(String(describing: AppScheme.self))")
+            fatalError("Scheme value \(String(describing: value)) not in \(String(describing: AppScheme.self))")
         }
         return scheme
     }

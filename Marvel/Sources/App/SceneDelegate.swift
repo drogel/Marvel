@@ -16,7 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options _: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let navigationController = UINavigationController()
-        coordinator = MainCoordinator(navigationController: navigationController, dependencyContainer: appDependencyContainer)
+        coordinator = MainCoordinator(
+            navigationController: navigationController,
+            dependencyContainer: appDependencyContainer
+        )
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         window?.rootViewController = navigationController

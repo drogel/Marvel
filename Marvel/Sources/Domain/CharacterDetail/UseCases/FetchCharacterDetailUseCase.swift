@@ -8,7 +8,10 @@
 import Foundation
 
 protocol FetchCharacterDetailUseCase {
-    func fetch(query: FetchCharacterDetailQuery, completion: @escaping (FetchCharacterDetailResult) -> Void) -> Cancellable?
+    func fetch(
+        query: FetchCharacterDetailQuery,
+        completion: @escaping (FetchCharacterDetailResult) -> Void
+    ) -> Cancellable?
 }
 
 struct FetchCharacterDetailQuery {
@@ -26,7 +29,10 @@ class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {
         self.service = service
     }
 
-    func fetch(query: FetchCharacterDetailQuery, completion: @escaping (FetchCharacterDetailResult) -> Void) -> Cancellable? {
+    func fetch(
+        query: FetchCharacterDetailQuery,
+        completion: @escaping (FetchCharacterDetailResult) -> Void
+    ) -> Cancellable? {
         service.character(with: query.characterID) { [weak self] result in
             guard let self = self else { return }
             self.handle(result, completion: completion)

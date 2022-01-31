@@ -31,7 +31,7 @@ class AuthenticatorTests: XCTestCase {
         let expectedParameters = [
             "hash": "ffd275c5130566a2916217b101f26150",
             "apikey": SecretsRetrieverStub.publicKeyStub,
-            "ts": expectedTsParameter
+            "ts": expectedTsParameter,
         ]
         XCTAssertEqual(result, expectedParameters)
     }

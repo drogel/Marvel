@@ -161,17 +161,19 @@ private extension CharacterDetailViewController {
     }
 
     func setUpInfoStackViewConstraints() {
+        let inset = Constants.Info.inset
         NSLayoutConstraint.activate([
-            infoStackView.leadingAnchor.constraint(equalTo: infoBackgroundView.leadingAnchor, constant: Constants.Info.inset),
-            infoStackView.topAnchor.constraint(equalTo: infoBackgroundView.topAnchor, constant: Constants.Info.inset),
-            infoStackView.trailingAnchor.constraint(equalTo: infoBackgroundView.trailingAnchor, constant: -Constants.Info.inset),
-            infoStackView.bottomAnchor.constraint(equalTo: infoBackgroundView.bottomAnchor, constant: -Constants.Info.inset),
+            infoStackView.leadingAnchor.constraint(equalTo: infoBackgroundView.leadingAnchor, constant: inset),
+            infoStackView.topAnchor.constraint(equalTo: infoBackgroundView.topAnchor, constant: inset),
+            infoStackView.trailingAnchor.constraint(equalTo: infoBackgroundView.trailingAnchor, constant: -inset),
+            infoStackView.bottomAnchor.constraint(equalTo: infoBackgroundView.bottomAnchor, constant: -inset),
         ])
     }
 
     func setUpCharacterImageViewConstraints() {
+        let multiplier = Constants.imageHeightMultiplier
         NSLayoutConstraint.activate([
-            characterImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: Constants.imageHeightMultiplier),
+            characterImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: multiplier),
         ])
     }
 }

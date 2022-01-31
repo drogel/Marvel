@@ -89,7 +89,9 @@ private class CharactersServiceSuccessStub: CharactersService {
 }
 
 private extension FetchCharactersUseCaseTests {
-    func whenRetrievingCancellableFromFetchCharacters(completion: ((FetchCharactersResult) -> Void)? = nil) throws -> CancellableStub {
+    func whenRetrievingCancellableFromFetchCharacters(
+        completion: ((FetchCharactersResult) -> Void)? = nil
+    ) throws -> CancellableStub {
         let cancellable = sut.fetch(query: query) { result in
             completion?(result)
         }

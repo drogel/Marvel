@@ -93,7 +93,6 @@ class CharacterDetailClientServiceTests: XCTestCase {
 }
 
 private extension CharacterDetailClientServiceTests {
-    // TODO: Extract duplicates between CharacterDetailClientServiceTests and CharactersClientServiceTests
     static let dataWrapperResponseStub = DataWrapper.withNilData
 
     func givenSutWithNetworkServiceMock() {
@@ -133,13 +132,13 @@ private extension CharacterDetailClientServiceTests {
         errorHandler = NetworkErroHandlerMock()
     }
 
-    func whenRetrievingCharacterIgnoringResult(with id: Int = 0) {
-        _ = sut.character(with: id) { _ in }
+    func whenRetrievingCharacterIgnoringResult(with identifier: Int = 0) {
+        _ = sut.character(with: identifier) { _ in }
     }
 
-    func whenRetrievingCharacter(with id: Int = 0) -> CharacterDetailServiceResult {
+    func whenRetrievingCharacter(with identifier: Int = 0) -> CharacterDetailServiceResult {
         var characterResult: CharacterDetailServiceResult!
-        _ = sut.character(with: id) { result in
+        _ = sut.character(with: identifier) { result in
             characterResult = result
         }
         return characterResult
@@ -155,10 +154,14 @@ private extension CharacterDetailClientServiceTests {
     }
 
     func assert(_ actualError: CharacterDetailServiceError, isEqualTo expectedError: CharacterDetailServiceError) {
-        if case actualError = expectedError { } else { XCTFail() }
+        if case actualError = expectedError { } else { failExpectingErrorMatching(actualError) }
     }
 
-    func assertWhenRetrievingCharacter(returnsFailureWithError expectedError: CharacterDetailServiceError, whenNetworkErrorWas networkError: NetworkError, line: UInt = #line) {
+    func assertWhenRetrievingCharacter(
+        returnsFailureWithError expectedError: CharacterDetailServiceError,
+        whenNetworkErrorWas networkError: NetworkError,
+        line: UInt = #line
+    ) {
         givenSutWithFailingNetworkService(providingError: networkError)
         let result = whenRetrievingCharacter()
         assertIsFailure(result, then: { assert($0, isEqualTo: expectedError) }, line: line)

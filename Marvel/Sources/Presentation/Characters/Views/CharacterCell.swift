@@ -24,7 +24,9 @@ class CharacterCell: UICollectionViewCell, Configurable {
             static let stackViewInset: CGFloat = 12
             static let stackViewSpacing: CGFloat = 4
             static let viewAlpha = 0.93
-            static let height: CGFloat = nameLabelFontSize + Description.height + 2 * stackViewInset + 4 * stackViewSpacing
+            static var height: CGFloat {
+                nameLabelFontSize + Description.height + 2 * stackViewInset + 4 * stackViewSpacing
+            }
         }
 
         enum Shadow {
@@ -110,15 +112,16 @@ private extension CharacterCell {
     }
 
     func setUpInfoConstraints() {
+        let inset = Constants.Info.stackViewInset
         NSLayoutConstraint.activate([
             infoView.heightAnchor.constraint(equalToConstant: Constants.Info.height),
             infoView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             infoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             infoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            infoStackView.topAnchor.constraint(equalTo: infoView.topAnchor, constant: Constants.Info.stackViewInset),
-            infoStackView.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: Constants.Info.stackViewInset),
-            infoStackView.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -Constants.Info.stackViewInset),
-            infoStackView.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -Constants.Info.stackViewInset),
+            infoStackView.topAnchor.constraint(equalTo: infoView.topAnchor, constant: inset),
+            infoStackView.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: inset),
+            infoStackView.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -inset),
+            infoStackView.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -inset),
         ])
     }
 

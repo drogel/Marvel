@@ -27,10 +27,21 @@ class CharactersLayout: UICollectionViewCompositionalLayout {
     }
 
     private static func buildSingleListSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(Constants.itemHeight))
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .absolute(Constants.itemHeight)
+        )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = .init(top: Constants.spacing, leading: Constants.spacing, bottom: Constants.spacing, trailing: Constants.spacing)
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(Constants.itemHeight))
+        item.contentInsets = NSDirectionalEdgeInsets(
+            top: Constants.spacing,
+            leading: Constants.spacing,
+            bottom: Constants.spacing,
+            trailing: Constants.spacing
+        )
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .estimated(Constants.itemHeight)
+        )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         return section
