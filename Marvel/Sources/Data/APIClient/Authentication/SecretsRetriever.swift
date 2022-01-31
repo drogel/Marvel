@@ -13,7 +13,6 @@ protocol SecretsRetriever {
 }
 
 class EnvironmentVariablesRetriever: SecretsRetriever {
-
     var publicKey: String? {
         ProcessInfo.processInfo.environment["PUBLIC_KEY"]
     }

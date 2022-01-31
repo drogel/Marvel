@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 19/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class CharactersViewModelTests: XCTestCase {
-
     private var sut: CharactersViewModel!
     private var coordinatorDelegateMock: CharactersCoordinatorDelegateMock!
     private var charactersFetcherMock: CharactersFetcherMock!
@@ -70,13 +69,6 @@ class CharactersViewModelTests: XCTestCase {
         givenViewDelegate()
         sut.start()
         XCTAssertEqual(viewDelegateMock.didUpdateCallCount, 1)
-    }
-
-    func test_givenViewDelegateAndEmptyFetcher_whenStartingCompletesSuccessfully_notifiesError() {
-        givenSutWithSuccessfulEmptyFetcher()
-        givenViewDelegate()
-        sut.start()
-        XCTAssertEqual(viewDelegateMock.didFailCallCount, 1)
     }
 
     func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesFinishLoadToViewDelegate() {
@@ -141,7 +133,6 @@ class CharactersViewModelTests: XCTestCase {
 }
 
 private extension CharactersViewModelTests {
-
     func givenSutWithSuccessfulFetcher() {
         charactersFetcherMock = CharactersFetcherSuccessfulStub()
         sut = CharactersViewModel(charactersFetcher: charactersFetcherMock)
@@ -200,22 +191,20 @@ private extension CharactersViewModelTests {
 }
 
 private class CharactersCoordinatorDelegateMock: CharactersViewModelCoordinatorDelegate {
-
     var didSelectCallCount = 0
 
-    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith id: Int) {
+    func viewModel(_: CharactersViewModelProtocol, didSelectCharacterWith _: Int) {
         didSelectCallCount += 1
     }
 }
 
 private class CharactersFetcherMock: FetchCharactersUseCase {
-
     var fetchCallCount = 0
     var mostRecentQuery: FetchCharactersQuery?
 
     var cancellable: CancellableMock?
 
-    func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
+    func fetch(query: FetchCharactersQuery, completion _: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
         fetchCallCount += 1
         mostRecentQuery = query
         cancellable = CancellableMock()
@@ -224,21 +213,24 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
 }
 
 private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
-
     static let resultsStub = [CharacterData.aginar, CharacterData.aginar]
     static let pageInfoStub = PageInfo.zeroWith(results: resultsStub)
 
-    override func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
+    override func fetch(
+        query: FetchCharactersQuery,
+        completion: @escaping (FetchCharactersResult) -> Void
+    ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(Self.pageInfoStub))
         return result
     }
 }
 
-
 private class CharactersFetcherSuccessfulEmptyStub: CharactersFetcherMock {
-
-    override func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
+    override func fetch(
+        query: FetchCharactersQuery,
+        completion: @escaping (FetchCharactersResult) -> Void
+    ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(PageInfo.empty))
         return result
@@ -246,8 +238,10 @@ private class CharactersFetcherSuccessfulEmptyStub: CharactersFetcherMock {
 }
 
 private class CharactersFetcherFailingStub: CharactersFetcherMock {
-
-    override func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
+    override func fetch(
+        query: FetchCharactersQuery,
+        completion: @escaping (FetchCharactersResult) -> Void
+    ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.failure(.unauthorized))
         return result
@@ -255,25 +249,24 @@ private class CharactersFetcherFailingStub: CharactersFetcherMock {
 }
 
 private class CharactersViewModelViewDelegateMock: CharactersViewModelViewDelegate {
-
     var didUpdateCallCount = 0
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
     var didFailCallCount = 0
 
-    func viewModelDidUpdateItems(_ viewModel: CharactersViewModelProtocol) {
+    func viewModelDidUpdateItems(_: CharactersViewModelProtocol) {
         didUpdateCallCount += 1
     }
 
-    func viewModelDidStartLoading(_ viewModel: CharactersViewModelProtocol) {
+    func viewModelDidStartLoading(_: CharactersViewModelProtocol) {
         didStartLoadingCallCount += 1
     }
 
-    func viewModelDidFinishLoading(_ viewModel: CharactersViewModelProtocol) {
+    func viewModelDidFinishLoading(_: CharactersViewModelProtocol) {
         didFinishLoadingCallCount += 1
     }
 
-    func viewModel(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String) {
+    func viewModel(_: CharactersViewModelProtocol, didFailWithError _: String) {
         didFailCallCount += 1
     }
 }

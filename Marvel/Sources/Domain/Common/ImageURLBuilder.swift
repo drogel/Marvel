@@ -12,7 +12,6 @@ protocol ImageURLBuilder {
 }
 
 class ImageDataURLBuilder: ImageURLBuilder {
-
     func buildURL(from imageData: ImageData) -> URL? {
         guard let insecureURL = buildInsecureURL(from: imageData) else { return nil }
         return buildSecureURL(from: insecureURL)
@@ -20,7 +19,6 @@ class ImageDataURLBuilder: ImageURLBuilder {
 }
 
 private extension ImageDataURLBuilder {
-
     func buildInsecureURL(from imageData: ImageData) -> URL? {
         guard let path = imageData.path, let imageExtension = imageData.imageExtension else { return nil }
         let fullURL = path + "." + imageExtension

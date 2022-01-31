@@ -15,16 +15,11 @@ struct FetchCharactersQuery {
     let offset: Int
 }
 
-enum FetchCharactersUseCaseError: Error {
-    case emptyData
-    case unauthorized
-    case noConnection
-}
+typealias FetchCharactersUseCaseError = CharactersServiceError
 
 typealias FetchCharactersResult = Result<PageInfo, FetchCharactersUseCaseError>
 
 class FetchCharactersServiceUseCase: FetchCharactersUseCase {
-
     private let service: CharactersService
 
     init(service: CharactersService) {
@@ -40,33 +35,17 @@ class FetchCharactersServiceUseCase: FetchCharactersUseCase {
 }
 
 private extension FetchCharactersServiceUseCase {
-
     func handle(_ result: CharactersServiceResult, completion: @escaping (FetchCharactersResult) -> Void) {
         switch result {
-        case .success(let dataWrapper):
+        case let .success(dataWrapper):
             completion(buildResult(from: dataWrapper))
-        case .failure(let error):
-            handle(error, completion: completion)
+        case let .failure(error):
+            completion(.failure(error))
         }
     }
 
     func buildResult(from dataWrapper: DataWrapper) -> FetchCharactersResult {
         guard let pageInfo = dataWrapper.data else { return .failure(.emptyData) }
         return .success(pageInfo)
-    }
-
-    func handle(_ error: CharactersServiceError, completion: @escaping (FetchCharactersResult) -> Void) {
-        switch error {
-        case .noConnection:
-            fail(withError: .noConnection, completion: completion)
-        case .emptyData:
-            fail(withError: .emptyData, completion: completion)
-        case .unauthorized:
-            fail(withError: .unauthorized, completion: completion)
-        }
-    }
-
-    func fail(withError error: FetchCharactersUseCaseError, completion: @escaping (FetchCharactersResult) -> Void) {
-        completion(.failure(error))
     }
 }

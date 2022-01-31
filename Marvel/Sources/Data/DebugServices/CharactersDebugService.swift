@@ -8,7 +8,6 @@
 import Foundation
 
 class CharactersDebugService: CharactersService {
-
     private let dataLoader: JsonDataLoader
     private let charactersFileName = DebugDataFileName.charactersFileName.rawValue
 
@@ -16,7 +15,7 @@ class CharactersDebugService: CharactersService {
         self.dataLoader = dataLoader
     }
 
-    func characters(from offset: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
+    func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.retrieveCharacters(completion: completion)
@@ -26,7 +25,6 @@ class CharactersDebugService: CharactersService {
 }
 
 private extension CharactersDebugService {
-
     func retrieveCharacters(completion: @escaping (CharactersServiceResult) -> Void) {
         guard let characters: DataWrapper = dataLoader.load(fromFileNamed: charactersFileName) else {
             completion(.failure(.emptyData))

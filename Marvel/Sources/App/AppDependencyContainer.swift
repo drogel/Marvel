@@ -13,7 +13,6 @@ protocol AppDependencyContainer {
 }
 
 class MarvelDependencyContainer: AppDependencyContainer {
-
     private let configuration: AppConfigurationValues
 
     init(configuration: AppConfigurationValues) {
@@ -23,7 +22,7 @@ class MarvelDependencyContainer: AppDependencyContainer {
     lazy var networkService: NetworkService = {
         AuthenticatedNetworkService(
             networkService: baseNetworkService,
-            authenticator:authenticator
+            authenticator: authenticator
         )
     }()
 
@@ -33,10 +32,9 @@ class MarvelDependencyContainer: AppDependencyContainer {
 }
 
 private extension MarvelDependencyContainer {
-
     var baseURL: URL {
         guard let url = URL(string: "https://" + configuration.apiBaseURLString) else {
-            fatalError("Expected a valid API base URL. Review the app configuration files and ensure it is properly formatted.")
+            fatalError("Expected a valid API base URL.")
         }
         return url
     }

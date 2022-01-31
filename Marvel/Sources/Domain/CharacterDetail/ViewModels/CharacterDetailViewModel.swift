@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol CharacterDetailViewModelProtocol: ViewModel { }
+protocol CharacterDetailViewModelProtocol: ViewModel {}
 
 protocol CharacterDetailViewModelViewDelegate: AnyObject {
     func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol)
@@ -17,11 +17,10 @@ protocol CharacterDetailViewModelViewDelegate: AnyObject {
 }
 
 class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
-
     private enum Messages {
-        static let noSuchCharacter = "The character you are looking for can't be found in the database"
-        static let noAPIKeys = "Your API keys to the Marvel API could not be found, or they are not valid. Add your own API keys in the environment variables of the project if you haven't already."
-        static let noConnection = "It looks like you are not connected to the internet. Check your connection and try again."
+        static let noSuchCharacter = "character_not_found".localized
+        static let noAPIKeys = "api_keys_not_found".localized
+        static let noConnection = "no_internet".localized
     }
 
     weak var viewDelegate: CharacterDetailViewModelViewDelegate?
@@ -31,7 +30,11 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
     private let characterID: Int
     private var characterCancellable: Cancellable?
 
-    init(characterFetcher: FetchCharacterDetailUseCase, characterID: Int, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
+    init(
+        characterFetcher: FetchCharacterDetailUseCase,
+        characterID: Int,
+        imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()
+    ) {
         self.characterFetcher = characterFetcher
         self.imageURLBuilder = imageURLBuilder
         self.characterID = characterID
@@ -49,7 +52,6 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
 }
 
 private extension CharacterDetailViewModel {
-
     func loadCharacter(with query: FetchCharacterDetailQuery) {
         characterCancellable?.cancel()
         characterCancellable = characterFetcher.fetch(query: query, completion: handleFetchCharacterResult)
@@ -58,15 +60,15 @@ private extension CharacterDetailViewModel {
     func handleFetchCharacterResult(_ result: FetchCharacterDetailResult) {
         viewDelegate?.viewModelDidFinishLoading(self)
         switch result {
-        case .success(let pageInfo):
+        case let .success(pageInfo):
             handleSuccess(with: pageInfo)
-        case .failure(let error):
+        case let .failure(error):
             handleFailure(with: error)
         }
     }
 
     func handleSuccess(with pageInfo: PageInfo) {
-        guard let characterDetail = mapToCharacterDetail(characterData: pageInfo.results) else { return notifyNoCharacter() }
+        guard let characterDetail = mapToCharacterDetail(characterData: pageInfo.results) else { return }
         viewDelegate?.viewModel(self, didRetrieve: characterDetail)
     }
 
@@ -74,15 +76,11 @@ private extension CharacterDetailViewModel {
         switch error {
         case .noConnection:
             viewDelegate?.viewModel(self, didFailWithError: Messages.noConnection)
-        case .noSuchCharacter:
-            notifyNoCharacter()
+        case .emptyData:
+            viewDelegate?.viewModel(self, didFailWithError: Messages.noSuchCharacter)
         case .unauthorized:
             viewDelegate?.viewModel(self, didFailWithError: Messages.noAPIKeys)
         }
-    }
-
-    func notifyNoCharacter() {
-        viewDelegate?.viewModel(self, didFailWithError: Messages.noSuchCharacter)
     }
 
     func mapToCharacterDetail(characterData: [CharacterData]?) -> CharacterDetailData? {
@@ -97,9 +95,5 @@ private extension CharacterDetailViewModel {
     func imageURL(for characterData: CharacterData) -> URL? {
         guard let thumbnail = characterData.thumbnail else { return nil }
         return imageURLBuilder.buildURL(from: thumbnail)
-    }
-
-    func fail(withError error: FetchCharacterDetailUseCaseError, completion: @escaping (FetchCharacterDetailResult) -> Void) {
-        completion(.failure(error))
     }
 }

@@ -8,7 +8,6 @@
 import Foundation
 
 protocol Configurable {
-
     associatedtype Item
 
     func configure(using item: Item)

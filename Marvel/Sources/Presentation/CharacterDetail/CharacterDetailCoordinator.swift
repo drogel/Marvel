@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 class CharacterDetailCoordinator: NSObject, Coordinator {
-
     weak var delegate: CoordinatorDelegate?
     var children: [Coordinator]
 
@@ -19,7 +18,7 @@ class CharacterDetailCoordinator: NSObject, Coordinator {
     init(navigationController: UINavigationController, container: CharacterDetailContainer) {
         self.navigationController = navigationController
         self.container = container
-        self.children = []
+        children = []
     }
 
     func start() {
@@ -28,7 +27,6 @@ class CharacterDetailCoordinator: NSObject, Coordinator {
 }
 
 extension CharacterDetailCoordinator: UIViewControllerTransitioningDelegate {
-
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         guard dismissed is CharacterDetailViewController else { return nil }
         delegate?.coordinatorDidFinish(self)
@@ -37,14 +35,16 @@ extension CharacterDetailCoordinator: UIViewControllerTransitioningDelegate {
 }
 
 private extension CharacterDetailCoordinator {
-
     func showCharacterDetailViewController() {
         let characterDetailViewController = createCharacterDetailViewController()
         navigationController.present(characterDetailViewController, animated: true)
     }
 
     func createCharacterDetailViewController() -> UIViewController {
-        let viewModel = CharacterDetailViewModel(characterFetcher: container.fetchCharacterDetailUseCase, characterID: container.characterID)
+        let viewModel = CharacterDetailViewModel(
+            characterFetcher: container.fetchCharacterDetailUseCase,
+            characterID: container.characterID
+        )
         let viewController = CharacterDetailViewController.instantiate(viewModel: viewModel)
         viewController.transitioningDelegate = self
         viewModel.viewDelegate = viewController

@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 protocol CoordinatorDelegate: AnyObject {
     func coordinatorDidFinish(_ coordinator: Coordinator)
 }
@@ -19,7 +18,6 @@ protocol Coordinator: CoordinatorDelegate {
 }
 
 extension Coordinator {
-
     func disposeChild(_ child: Coordinator?) {
         for (index, coordinator) in children.enumerated() {
             guard coordinator === child else { continue }

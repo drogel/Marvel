@@ -14,9 +14,13 @@ protocol AlertPresenter {
 }
 
 extension AlertPresenter where Self: UIViewController {
-
     func showErrorAlert(message: String, buttonAction: (() -> Void)? = nil) {
-        showAlert(title: "Error", message: message, buttonTitle: "Retry", buttonAction: buttonAction)
+        showAlert(
+            title: "error".localized,
+            message: message,
+            buttonTitle: "retry".localized,
+            buttonAction: buttonAction
+        )
     }
 
     func showAlert(title: String, message: String, buttonTitle: String, buttonAction: (() -> Void)? = nil) {

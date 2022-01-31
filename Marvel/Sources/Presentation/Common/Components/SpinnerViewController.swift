@@ -8,7 +8,6 @@
 import UIKit
 
 class SpinnerViewController: UIViewController {
-
     private enum Constants {
         static let backgroundColor = UIColor.systemBackground.withAlphaComponent(0.8)
     }
@@ -21,7 +20,6 @@ class SpinnerViewController: UIViewController {
 }
 
 private extension SpinnerViewController {
-
     func setUpBackgroundView() {
         view = UIView()
         view.backgroundColor = Constants.backgroundColor
@@ -42,7 +40,7 @@ private extension SpinnerViewController {
     func setUpSpinnerConstraints() {
         NSLayoutConstraint.activate([
             spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
     }
 }

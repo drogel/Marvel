@@ -8,12 +8,11 @@
 import Foundation
 
 protocol JSONParser {
-    func parse<T: Decodable>(data: Data) -> T? 
+    func parse<T: Decodable>(data: Data) -> T?
 }
 
 class JSONDecoderParser: JSONParser {
-
-    func parse<T>(data: Data) -> T? where T : Decodable {
+    func parse<T>(data: Data) -> T? where T: Decodable {
         let decoder = JSONDecoder()
         return try? decoder.decode(T.self, from: data)
     }

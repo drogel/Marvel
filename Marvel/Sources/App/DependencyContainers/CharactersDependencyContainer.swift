@@ -13,7 +13,6 @@ protocol CharactersDependencies {
 }
 
 class CharactersDependenciesAdapter: CharactersDependencies {
-
     let networkService: NetworkService
     let scheme: AppScheme
 
@@ -28,7 +27,6 @@ protocol CharactersContainer {
 }
 
 class CharactersDependencyContainer: CharactersContainer {
-
     private let dependencies: CharactersDependencies
 
     init(dependencies: CharactersDependencies) {
@@ -41,17 +39,24 @@ class CharactersDependencyContainer: CharactersContainer {
 }
 
 private extension CharactersDependencyContainer {
-
     var charactersService: CharactersService {
         switch dependencies.scheme {
         case .debug:
             return CharactersDebugService(dataLoader: JsonDecoderDataLoader(parser: parser))
         case .release:
-            return CharactersClientService(client: dependencies.networkService, parser: parser)
+            return CharactersClientService(client: dependencies.networkService, resultHandler: resultHandler)
         }
     }
 
     var parser: JSONParser {
         JSONDecoderParser()
+    }
+
+    var errorHandler: NetworkErrorHandler {
+        DataServicesNetworkErrorHandler()
+    }
+
+    var resultHandler: CharactersResultHandler {
+        CharactersClientServiceResultHandler(parser: parser, errorHandler: errorHandler)
     }
 }

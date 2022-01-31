@@ -26,11 +26,10 @@ protocol CharactersViewModelViewDelegate: AnyObject {
 }
 
 class CharactersViewModel: CharactersViewModelProtocol {
-
     private enum Messages {
-        static let noCharacters = "Oops! Looks like the server is not responding"
-        static let noAPIKeys = "Your API keys to the Marvel API could not be found, or they are not valid. Add your own API keys in the environment variables of the project if you haven't already."
-        static let noConnection = "It looks like you are not connected to the internet. Check your connection and try again."
+        static let noCharacters = "server_not_responding".localized
+        static let noAPIKeys = "api_keys_not_found".localized
+        static let noConnection = "no_internet".localized
     }
 
     weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
@@ -48,7 +47,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
         self.charactersFetcher = charactersFetcher
         self.imageURLBuilder = imageURLBuilder
-        self.cells = []
+        cells = []
     }
 
     func start() {
@@ -64,7 +63,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
 
     func select(at indexPath: IndexPath) {
         guard let data = cellData(at: indexPath) else { return }
-        coordinatorDelegate?.viewModel(self, didSelectCharacterWith: data.id)
+        coordinatorDelegate?.viewModel(self, didSelectCharacterWith: data.identifier)
     }
 
     func willDisplayCell(at indexPath: IndexPath) {
@@ -78,7 +77,6 @@ class CharactersViewModel: CharactersViewModelProtocol {
 }
 
 private extension CharactersViewModel {
-
     var startingQuery: FetchCharactersQuery {
         FetchCharactersQuery(offset: 0)
     }
@@ -101,15 +99,15 @@ private extension CharactersViewModel {
     func handleFetchCharactersResult(_ result: FetchCharactersResult) {
         viewDelegate?.viewModelDidFinishLoading(self)
         switch result {
-        case .success(let pageInfo):
+        case let .success(pageInfo):
             handleSuccess(with: pageInfo)
-        case .failure(let error):
+        case let .failure(error):
             handleFailure(with: error)
         }
     }
 
     func handleSuccess(with pageInfo: PageInfo) {
-        guard let newCells = mapToCells(characterData: pageInfo.results), newCells.hasElements else { return notifyNoCharacters() }
+        guard let newCells = mapToCells(characterData: pageInfo.results), newCells.hasElements else { return }
         updateCells(using: newCells)
     }
 
@@ -118,7 +116,7 @@ private extension CharactersViewModel {
         case .noConnection:
             viewDelegate?.viewModel(self, didFailWithError: Messages.noConnection)
         case .emptyData:
-            notifyNoCharacters()
+            viewDelegate?.viewModel(self, didFailWithError: Messages.noCharacters)
         case .unauthorized:
             viewDelegate?.viewModel(self, didFailWithError: Messages.noAPIKeys)
         }
@@ -126,19 +124,18 @@ private extension CharactersViewModel {
 
     func mapToCells(characterData: [CharacterData]?) -> [CharacterCellData]? {
         characterData?.compactMap { data in
-            guard let id = data.id, let name = data.name, let description = data.description else { return nil }
+            guard let identifier = data.identifier,
+                  let name = data.name,
+                  let description = data.description
+            else { return nil }
             let imageURL = buildImageURL(from: data)
-            return CharacterCellData(id: id, name: name, description: description, imageURL: imageURL)
+            return CharacterCellData(identifier: identifier, name: name, description: description, imageURL: imageURL)
         }
     }
 
     func buildImageURL(from data: CharacterData) -> URL? {
         guard let imageData = data.thumbnail else { return nil }
         return imageURLBuilder.buildURL(from: imageData)
-    }
-
-    func notifyNoCharacters() {
-        viewDelegate?.viewModel(self, didFailWithError: Messages.noCharacters)
     }
 
     func updateCells(using newCells: [CharacterCellData]) {

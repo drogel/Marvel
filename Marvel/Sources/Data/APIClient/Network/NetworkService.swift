@@ -8,7 +8,7 @@
 import Foundation
 
 enum NetworkError: Error {
-    case errorStatusCode(statusCode: Int)
+    case statusCodeError(statusCode: Int)
     case invalidURL
     case notConnected
     case cancelled
@@ -23,7 +23,6 @@ protocol NetworkService {
 }
 
 class NetworkSessionService: NetworkService {
-
     private let session: NetworkSession
     private let baseURL: URL
     private let urlComposer: URLComposer
@@ -44,14 +43,13 @@ class NetworkSessionService: NetworkService {
 }
 
 private extension NetworkSessionService {
-
     func buildURLRequest(from components: RequestComponents) -> URLRequest? {
         guard let url = urlComposer.compose(from: baseURL, adding: components) else { return nil }
         return URLRequest(url: url)
     }
 
     func request(request: URLRequest, completion: @escaping NetworkServiceCompletion) -> Cancellable {
-        let sessionDataTask = session.loadData(from: request) { [weak self] (data, response, requestError) in
+        let sessionDataTask = session.loadData(from: request) { [weak self] data, response, requestError in
             DispatchQueue.main.async {
                 self?.handleDataLoaded(data, response: response, error: requestError, completion: completion)
             }
@@ -60,7 +58,12 @@ private extension NetworkSessionService {
         return sessionDataTask
     }
 
-    func handleDataLoaded(_ data: Data?, response: URLResponse?, error: Error?, completion: @escaping NetworkServiceCompletion) {
+    func handleDataLoaded(
+        _ data: Data?,
+        response: URLResponse?,
+        error: Error?,
+        completion: @escaping NetworkServiceCompletion
+    ) {
         if let networkError = findNetworkError(in: response, with: error) {
             handle(networkError, completion: completion)
         } else {
@@ -77,7 +80,7 @@ private extension NetworkSessionService {
     }
 
     func findNetworkError(in response: URLResponse?, with requestError: Error?) -> NetworkError? {
-        if let response = response as? HTTPURLResponse, (400..<600).contains(response.statusCode) {
+        if let response = response as? HTTPURLResponse, (400 ..< 600).contains(response.statusCode) {
             return statusCodeBasedError(for: response.statusCode)
         } else if let urlError = requestError as? URLError {
             return parseToNetworkError(urlError)
@@ -103,7 +106,7 @@ private extension NetworkSessionService {
         case 401:
             return .unauthorized
         default:
-            return .errorStatusCode(statusCode: statusCode)
+            return .statusCodeError(statusCode: statusCode)
         }
     }
 }

@@ -9,9 +9,8 @@ import Foundation
 @testable import Marvel_Debug
 
 extension CharacterData {
-
     static let empty = CharacterData(
-        id: nil,
+        identifier: nil,
         name: nil,
         description: nil,
         modified: nil,
@@ -20,7 +19,7 @@ extension CharacterData {
     )
 
     static let aginar = CharacterData(
-        id: 1011175,
+        identifier: 1_011_175,
         name: "Aginar",
         description: "",
         modified: "1969-12-31T19:00:00-0500",

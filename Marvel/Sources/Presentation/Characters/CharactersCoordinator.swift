@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 class CharactersCoordinator: Coordinator {
-
     weak var delegate: CoordinatorDelegate?
     var children: [Coordinator]
 
@@ -19,7 +18,7 @@ class CharactersCoordinator: Coordinator {
     init(navigationController: UINavigationController, dependencies: CharactersDependencies) {
         self.navigationController = navigationController
         self.dependencies = dependencies
-        self.children = []
+        children = []
     }
 
     func start() {
@@ -28,10 +27,15 @@ class CharactersCoordinator: Coordinator {
 }
 
 extension CharactersCoordinator: CharactersViewModelCoordinatorDelegate {
-
-    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int) {
-        let characterDetailContainer = CharacterDetailDependencyContainer(dependencies: dependencies, characterID: characterID)
-        let characterDetailCoordinator = CharacterDetailCoordinator(navigationController: navigationController, container: characterDetailContainer)
+    func viewModel(_: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int) {
+        let characterDetailContainer = CharacterDetailDependencyContainer(
+            dependencies: dependencies,
+            characterID: characterID
+        )
+        let characterDetailCoordinator = CharacterDetailCoordinator(
+            navigationController: navigationController,
+            container: characterDetailContainer
+        )
         characterDetailCoordinator.delegate = self
         characterDetailCoordinator.start()
         children.append(characterDetailCoordinator)
@@ -39,7 +43,6 @@ extension CharactersCoordinator: CharactersViewModelCoordinatorDelegate {
 }
 
 private extension CharactersCoordinator {
-
     func showCharactersViewController() {
         let charactersViewController = createCharactersViewController()
         navigationController.pushViewController(charactersViewController, animated: false)

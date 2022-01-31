@@ -7,13 +7,9 @@
 
 import Foundation
 
-typealias CharactersServiceResult = Result<DataWrapper, CharactersServiceError>
+typealias CharactersServiceError = DataServiceError
 
-enum CharactersServiceError: Error {
-    case emptyData
-    case unauthorized
-    case noConnection
-}
+typealias CharactersServiceResult = Result<DataWrapper, CharactersServiceError>
 
 protocol CharactersService {
     func characters(from offset: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable?

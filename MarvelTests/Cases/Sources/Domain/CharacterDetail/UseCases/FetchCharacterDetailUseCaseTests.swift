@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 23/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class FetchCharacterDetailUseCaseTests: XCTestCase {
-
     private var sut: FetchCharacterDetailServiceUseCase!
     private var query: FetchCharacterDetailQuery!
     private var serviceMock: CharacterDetailServiceMock!
@@ -17,7 +16,7 @@ class FetchCharacterDetailUseCaseTests: XCTestCase {
     override func setUp() {
         super.setUp()
         serviceMock = CharacterDetailServiceMock()
-        query = FetchCharacterDetailQuery(characterID: 123456)
+        query = FetchCharacterDetailQuery(characterID: 123_456)
         sut = FetchCharacterDetailServiceUseCase(service: serviceMock)
     }
 
@@ -60,41 +59,39 @@ class FetchCharacterDetailUseCaseTests: XCTestCase {
 }
 
 private class CharacterDetailServiceMock: CharacterDetailService {
-
     static let cancellableStub = CancellableStub()
     var characterCallCount = 0
 
-    func character(with id: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
+    func character(with _: Int, completion _: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
         characterCallCount += 1
         return Self.cancellableStub
     }
 }
 
 private class CharacterDetailServiceFailureStub: CharacterDetailService {
-
-    func character(with id: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
-        completion(.failure(.noSuchCharacter))
+    func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
+        completion(.failure(.emptyData))
         return CancellableStub()
     }
 }
 
 private class CharacterDetailServiceSuccessStub: CharacterDetailService {
-
     private let dataWrapperStub: DataWrapper
 
     init(dataWrapperStub: DataWrapper) {
         self.dataWrapperStub = dataWrapperStub
     }
 
-    func character(with id: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
+    func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
         completion(.success(dataWrapperStub))
         return CancellableStub()
     }
 }
 
 private extension FetchCharacterDetailUseCaseTests {
-
-    func whenRetrievingCancellableFromFetchCharacter(completion: ((FetchCharacterDetailResult) -> Void)? = nil) throws -> CancellableStub {
+    func whenRetrievingCancellableFromFetchCharacter(
+        completion: ((FetchCharacterDetailResult) -> Void)? = nil
+    ) throws -> CancellableStub {
         let cancellable = sut.fetch(query: query) { result in
             completion?(result)
         }
@@ -102,7 +99,7 @@ private extension FetchCharacterDetailUseCaseTests {
     }
 
     func whenFetchingCharacter(completion: ((FetchCharacterDetailResult) -> Void)? = nil) {
-        let _ = try? whenRetrievingCancellableFromFetchCharacter(completion: completion)
+        _ = try? whenRetrievingCancellableFromFetchCharacter(completion: completion)
     }
 
     func givenSutWithFailureServiceStub() {
