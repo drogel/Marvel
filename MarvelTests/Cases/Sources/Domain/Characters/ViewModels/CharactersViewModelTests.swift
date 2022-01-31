@@ -71,13 +71,6 @@ class CharactersViewModelTests: XCTestCase {
         XCTAssertEqual(viewDelegateMock.didUpdateCallCount, 1)
     }
 
-    func test_givenViewDelegateAndEmptyFetcher_whenStartingCompletesSuccessfully_notifiesError() {
-        givenSutWithSuccessfulEmptyFetcher()
-        givenViewDelegate()
-        sut.start()
-        XCTAssertEqual(viewDelegateMock.didFailCallCount, 1)
-    }
-
     func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesFinishLoadToViewDelegate() {
         givenSutWithSuccessfulFetcher()
         givenViewDelegate()

@@ -97,7 +97,7 @@ extension CharactersViewController: CharactersViewModelViewDelegate {
 private extension CharactersViewController {
     func setUpNavigationController() {
         navigationController?.navigationBar.prefersLargeTitles = true
-        title = "Characters"
+        title = "characters".localized
     }
 
     func setUpCollectionView() {

@@ -27,9 +27,9 @@ protocol CharactersViewModelViewDelegate: AnyObject {
 
 class CharactersViewModel: CharactersViewModelProtocol {
     private enum Messages {
-        static let noCharacters = "Oops! Looks like the server is not responding"
-        static let noAPIKeys = "Your API keys to the Marvel API could not be found, or they are not valid. Add your own API keys in the environment variables of the project if you haven't already."
-        static let noConnection = "It looks like you are not connected to the internet. Check your connection and try again."
+        static let noCharacters = "server_not_responding".localized
+        static let noAPIKeys = "api_keys_not_found".localized
+        static let noConnection = "no_internet".localized
     }
 
     weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
@@ -116,7 +116,7 @@ private extension CharactersViewModel {
         case .noConnection:
             viewDelegate?.viewModel(self, didFailWithError: Messages.noConnection)
         case .emptyData:
-            notifyNoCharacters()
+            viewDelegate?.viewModel(self, didFailWithError: Messages.noCharacters)
         case .unauthorized:
             viewDelegate?.viewModel(self, didFailWithError: Messages.noAPIKeys)
         }
@@ -136,10 +136,6 @@ private extension CharactersViewModel {
     func buildImageURL(from data: CharacterData) -> URL? {
         guard let imageData = data.thumbnail else { return nil }
         return imageURLBuilder.buildURL(from: imageData)
-    }
-
-    func notifyNoCharacters() {
-        viewDelegate?.viewModel(self, didFailWithError: Messages.noCharacters)
     }
 
     func updateCells(using newCells: [CharacterCellData]) {

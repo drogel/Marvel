@@ -18,9 +18,9 @@ protocol CharacterDetailViewModelViewDelegate: AnyObject {
 
 class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
     private enum Messages {
-        static let noSuchCharacter = "The character you are looking for can't be found in the database"
-        static let noAPIKeys = "Your API keys to the Marvel API could not be found, or they are not valid. Add your own API keys in the environment variables of the project if you haven't already."
-        static let noConnection = "It looks like you are not connected to the internet. Check your connection and try again."
+        static let noSuchCharacter = "character_not_found".localized
+        static let noAPIKeys = "api_keys_not_found".localized
+        static let noConnection = "no_internet".localized
     }
 
     weak var viewDelegate: CharacterDetailViewModelViewDelegate?
@@ -77,14 +77,10 @@ private extension CharacterDetailViewModel {
         case .noConnection:
             viewDelegate?.viewModel(self, didFailWithError: Messages.noConnection)
         case .emptyData:
-            notifyNoCharacter()
+            viewDelegate?.viewModel(self, didFailWithError: Messages.noSuchCharacter)
         case .unauthorized:
             viewDelegate?.viewModel(self, didFailWithError: Messages.noAPIKeys)
         }
-    }
-
-    func notifyNoCharacter() {
-        viewDelegate?.viewModel(self, didFailWithError: Messages.noSuchCharacter)
     }
 
     func mapToCharacterDetail(characterData: [CharacterData]?) -> CharacterDetailData? {
