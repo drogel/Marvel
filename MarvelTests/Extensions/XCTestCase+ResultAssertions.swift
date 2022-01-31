@@ -9,19 +9,18 @@ import Foundation
 import XCTest
 
 extension XCTestCase {
-    
     /// Asserts whether the provided ``Result`` is of case ``.success``. Additional assertions can be provided via the ``then`` parameter.
     func assertIsSuccess<T, E>(
         _ result: Result<T, E>,
         then assertions: (T) -> Void = { _ in },
-        message: (E) -> String = { "Expected success but got failure with \($0) "},
+        message: (E) -> String = { "Expected success but got failure with \($0) " },
         file: StaticString = #filePath,
         line: UInt = #line
     ) where E: Error {
         switch result {
-        case .failure(let error):
+        case let .failure(error):
             XCTFail(message(error), file: file, line: line)
-        case .success(let value):
+        case let .success(value):
             assertions(value)
         }
     }
@@ -30,14 +29,14 @@ extension XCTestCase {
     func assertIsFailure<T, E>(
         _ result: Result<T, E>,
         then assertions: (E) -> Void = { _ in },
-        message: (T) -> String = { "Expected failure but got success with \($0) "},
+        message: (T) -> String = { "Expected failure but got success with \($0) " },
         file: StaticString = #filePath,
         line: UInt = #line
     ) where E: Error {
         switch result {
-        case .failure(let error):
+        case let .failure(error):
             assertions(error)
-        case .success(let value):
+        case let .success(value):
             XCTFail(message(value), file: file, line: line)
         }
     }

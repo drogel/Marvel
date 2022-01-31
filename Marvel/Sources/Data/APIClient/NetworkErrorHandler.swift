@@ -12,7 +12,6 @@ protocol NetworkErrorHandler {
 }
 
 class DataServicesNetworkErrorHandler: NetworkErrorHandler {
-
     func handle(_ networkError: NetworkError) -> DataServiceError {
         switch networkError {
         case .notConnected:

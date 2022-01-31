@@ -5,15 +5,14 @@
 //  Created by Diego Rogel on 20/1/22.
 //
 
-import Foundation
 import CryptoKit
+import Foundation
 
 protocol Authenticator {
     func authenticate(with timestamp: TimeInterval) -> [String: String]?
 }
 
 class MD5Authenticator: Authenticator {
-
     private let secrets: SecretsRetriever
 
     init(secrets: SecretsRetriever) {
@@ -27,7 +26,6 @@ class MD5Authenticator: Authenticator {
 }
 
 private extension MD5Authenticator {
-
     func authentication(from timestamp: TimeInterval) -> (hash: String, publicKey: String)? {
         guard let fullKey = retrieveFullAuthenticationKey(using: timestamp), let hash = md5Hash(fullKey), let publicKey = secrets.publicKey, !publicKey.isEmpty else { return nil }
         return (hash: hash, publicKey: publicKey)

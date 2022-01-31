@@ -8,7 +8,6 @@
 import UIKit
 
 class MainCoordinator: Coordinator {
-
     var delegate: CoordinatorDelegate?
     var children: [Coordinator]
 
@@ -17,7 +16,7 @@ class MainCoordinator: Coordinator {
 
     init(navigationController: UINavigationController, dependencyContainer: AppDependencyContainer) {
         self.navigationController = navigationController
-        self.children = []
+        children = []
         self.dependencyContainer = dependencyContainer
     }
 
@@ -27,7 +26,6 @@ class MainCoordinator: Coordinator {
 }
 
 private extension MainCoordinator {
-
     func showCharacters() {
         let charactersDependencies = CharactersDependenciesAdapter(networkService: dependencyContainer.networkService, scheme: dependencyContainer.scheme)
         let charactersCoordinator = CharactersCoordinator(navigationController: navigationController, dependencies: charactersDependencies)

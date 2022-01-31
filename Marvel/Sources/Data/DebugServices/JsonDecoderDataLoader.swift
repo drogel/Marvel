@@ -12,7 +12,6 @@ protocol JsonDataLoader {
 }
 
 class JsonDecoderDataLoader: JsonDataLoader {
-
     let parser: JSONParser
 
     init(parser: JSONParser) {
@@ -26,7 +25,6 @@ class JsonDecoderDataLoader: JsonDataLoader {
 }
 
 private extension JsonDecoderDataLoader {
-
     func url(for resource: String) -> URL? {
         Bundle(for: Self.self).url(forResource: resource, withExtension: "json")
     }

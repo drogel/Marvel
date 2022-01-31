@@ -8,25 +8,23 @@
 import UIKit
 
 class CharacterCell: UICollectionViewCell, Configurable {
-
     typealias Item = CharacterCellData
 
     private enum Constants {
-
         static let nameLabelFontSize: CGFloat = 20
         static let cellCornerRadius: CGFloat = 16
 
         enum Description {
             static let labelFontSize: CGFloat = 12
             static let maxLines = 2
-            static let height = CGFloat(maxLines)*labelFontSize
+            static let height = CGFloat(maxLines) * labelFontSize
         }
 
         enum Info {
             static let stackViewInset: CGFloat = 12
             static let stackViewSpacing: CGFloat = 4
             static let viewAlpha = 0.93
-            static let height: CGFloat = nameLabelFontSize + Description.height + 2*stackViewInset + 4*stackViewSpacing
+            static let height: CGFloat = nameLabelFontSize + Description.height + 2 * stackViewInset + 4 * stackViewSpacing
         }
 
         enum Shadow {
@@ -92,7 +90,6 @@ class CharacterCell: UICollectionViewCell, Configurable {
 }
 
 private extension CharacterCell {
-
     func setUp() {
         setUpSubviews()
         setUpConstraints()
@@ -121,7 +118,7 @@ private extension CharacterCell {
             infoStackView.topAnchor.constraint(equalTo: infoView.topAnchor, constant: Constants.Info.stackViewInset),
             infoStackView.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: Constants.Info.stackViewInset),
             infoStackView.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -Constants.Info.stackViewInset),
-            infoStackView.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -Constants.Info.stackViewInset)
+            infoStackView.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -Constants.Info.stackViewInset),
         ])
     }
 
@@ -130,7 +127,7 @@ private extension CharacterCell {
             characterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             characterImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             characterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            characterImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            characterImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
     }
 

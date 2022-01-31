@@ -10,7 +10,6 @@ import XCTest
 
 /// Helper base template to easily build test cases in which the main focus is testing object parsing.
 protocol ParsingTestCaseTemplate: ParsingTester {
-
     /// Runs the parsing test, based on a template that delegates the expected object creation to the classes that conform to ``ParsingTestCaseTemplate``.
     func runParsingTest(filePath: StaticString, line: UInt)
 
@@ -21,7 +20,6 @@ protocol ParsingTestCaseTemplate: ParsingTester {
 }
 
 extension ParsingTestCaseTemplate where Self: XCTestCase {
-
     func runParsingTest(filePath: StaticString = #filePath, line: UInt = #line) {
         let actual = givenParsedObjectFromJson()
         let expected = buildExpectedObject()

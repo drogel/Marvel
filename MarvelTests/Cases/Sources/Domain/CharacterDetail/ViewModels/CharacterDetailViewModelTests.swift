@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 23/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class CharacterDetailViewModelTests: XCTestCase {
-
     private var sut: CharacterDetailViewModel!
     private var characterFetcherMock: CharacterFetcherMock!
     private var characterIDStub: Int!
@@ -18,7 +17,7 @@ class CharacterDetailViewModelTests: XCTestCase {
     override func setUp() {
         super.setUp()
         characterFetcherMock = CharacterFetcherMock()
-        characterIDStub = 123456
+        characterIDStub = 123_456
         viewDelegateMock = CharacterDetailViewModelViewDelegateMock()
         givenSut(with: characterFetcherMock)
     }
@@ -80,37 +79,34 @@ class CharacterDetailViewModelTests: XCTestCase {
 }
 
 private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModelViewDelegate {
-
-
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
     var didRetrieveCharacterCallCount = 0
     var didFailCallCount = 0
 
-    func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol) {
+    func viewModelDidStartLoading(_: CharacterDetailViewModelProtocol) {
         didStartLoadingCallCount += 1
     }
 
-    func viewModelDidFinishLoading(_ viewModel: CharacterDetailViewModelProtocol) {
+    func viewModelDidFinishLoading(_: CharacterDetailViewModelProtocol) {
         didFinishLoadingCallCount += 1
     }
 
-    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didRetrieve characterDetail: CharacterDetailData) {
+    func viewModel(_: CharacterDetailViewModelProtocol, didRetrieve _: CharacterDetailData) {
         didRetrieveCharacterCallCount += 1
     }
 
-    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String) {
+    func viewModel(_: CharacterDetailViewModelProtocol, didFailWithError _: String) {
         didFailCallCount += 1
     }
 }
 
 private class CharacterFetcherMock: FetchCharacterDetailUseCase {
-
     var fetchCallCount = 0
     var fetchCallCountsForID: [Int: Int] = [:]
     var cancellable: CancellableMock?
 
-    func fetch(query: FetchCharacterDetailQuery, completion: @escaping (FetchCharacterDetailResult) -> Void) -> Cancellable? {
+    func fetch(query: FetchCharacterDetailQuery, completion _: @escaping (FetchCharacterDetailResult) -> Void) -> Cancellable? {
         fetchCallCount += 1
         fetchCallCountsForID[query.characterID] = fetchCallCountsForID[query.characterID] ?? 0 + 1
         cancellable = CancellableMock()
@@ -124,7 +120,6 @@ private class CharacterFetcherMock: FetchCharacterDetailUseCase {
 }
 
 private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
-
     static let resultsStub = [CharacterData.aginar]
     static let pageInfoStub = PageInfo.zeroWith(results: resultsStub)
 
@@ -136,7 +131,6 @@ private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
 }
 
 private class CharacterFetcherFailingStub: CharacterFetcherMock {
-
     override func fetch(query: FetchCharacterDetailQuery, completion: @escaping (FetchCharacterDetailResult) -> Void) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.failure(.unauthorized))
@@ -145,7 +139,6 @@ private class CharacterFetcherFailingStub: CharacterFetcherMock {
 }
 
 private extension CharacterDetailViewModelTests {
-
     func givenViewDelegate() {
         sut.viewDelegate = viewDelegateMock
     }
@@ -173,7 +166,7 @@ private extension CharacterDetailViewModelTests {
         try! XCTUnwrap(characterFetcherMock.cancellable)
     }
 
-    func assertCancelledRequests(line: UInt = #line) {
+    func assertCancelledRequests(line _: UInt = #line) {
         let cancellableMock = retrieveFetcherMockCancellableMock()
         XCTAssertEqual(cancellableMock.didCancelCallCount, 1)
     }

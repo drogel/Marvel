@@ -9,17 +9,15 @@ import Foundation
 @testable import Marvel_Debug
 
 class NetworkServiceMock: NetworkService {
-
     var requestCallCount = 0
 
-    func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Cancellable? {
+    func request(endpoint _: RequestComponents, completion _: @escaping NetworkServiceCompletion) -> Cancellable? {
         requestCallCount += 1
         return CancellableMock()
     }
 }
 
 class NetworkServiceSuccessfulStub: NetworkServiceMock {
-
     override func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Cancellable? {
         let result = super.request(endpoint: endpoint, completion: completion)
         completion(.success(Data()))
@@ -28,7 +26,6 @@ class NetworkServiceSuccessfulStub: NetworkServiceMock {
 }
 
 class NetworkServiceFailingStub: NetworkServiceMock {
-
     private let errorStub: NetworkError
 
     init(errorStub: NetworkError) {
@@ -43,7 +40,6 @@ class NetworkServiceFailingStub: NetworkServiceMock {
 }
 
 class NetworkServiceRequestCacheFake: NetworkServiceMock {
-
     var cachedComponents: RequestComponents?
 
     override func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Cancellable? {

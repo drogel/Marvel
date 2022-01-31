@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 19/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class FetchCharactersUseCaseTests: XCTestCase {
-
     private var sut: FetchCharactersServiceUseCase!
     private var query: FetchCharactersQuery!
     private var serviceMock: CharactersServiceMock!
@@ -60,40 +59,36 @@ class FetchCharactersUseCaseTests: XCTestCase {
 }
 
 private class CharactersServiceMock: CharactersService {
-
     static let cancellableStub = CancellableStub()
     var charactersCallCount = 0
 
-    func characters(from offset: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
+    func characters(from _: Int, completion _: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
         charactersCallCount += 1
         return Self.cancellableStub
     }
 }
 
 private class CharactersServiceFailureStub: CharactersService {
-
-    func characters(from offset: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
+    func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
         completion(.failure(.emptyData))
         return CancellableStub()
     }
 }
 
 private class CharactersServiceSuccessStub: CharactersService {
-
     private let dataWrapperStub: DataWrapper
 
     init(dataWrapperStub: DataWrapper) {
         self.dataWrapperStub = dataWrapperStub
     }
 
-    func characters(from offset: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
+    func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
         completion(.success(dataWrapperStub))
         return CancellableStub()
     }
 }
 
 private extension FetchCharactersUseCaseTests {
-
     func whenRetrievingCancellableFromFetchCharacters(completion: ((FetchCharactersResult) -> Void)? = nil) throws -> CancellableStub {
         let cancellable = sut.fetch(query: query) { result in
             completion?(result)
@@ -102,7 +97,7 @@ private extension FetchCharactersUseCaseTests {
     }
 
     func whenFetchingCharacters(completion: ((FetchCharactersResult) -> Void)? = nil) {
-        let _ = try? whenRetrievingCancellableFromFetchCharacters(completion: completion)
+        _ = try? whenRetrievingCancellableFromFetchCharacters(completion: completion)
     }
 
     func givenSutWithFailureServiceStub() {

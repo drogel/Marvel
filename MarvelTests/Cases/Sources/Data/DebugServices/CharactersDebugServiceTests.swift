@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 19/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class CharactersDebugServiceTests: XCTestCase {
-
     private var sut: CharactersDebugService!
 
     override func setUp() {
@@ -46,7 +45,6 @@ class CharactersDebugServiceTests: XCTestCase {
 }
 
 private extension CharactersDebugServiceTests {
-
     func givenSutWithDataLoader() {
         sut = CharactersDebugService(dataLoader: JsonDataLoaderStub())
     }
@@ -58,7 +56,7 @@ private extension CharactersDebugServiceTests {
     func whenRetrievingResultFromCharacters() -> CharactersServiceResult {
         var completionResult: CharactersServiceResult!
         let expectation = expectation(description: "JSON file parsing completion")
-        let _ = sut.characters(from: 0) { result in
+        _ = sut.characters(from: 0) { result in
             completionResult = result
             expectation.fulfill()
         }

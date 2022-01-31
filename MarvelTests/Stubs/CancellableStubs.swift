@@ -9,6 +9,5 @@ import Foundation
 @testable import Marvel_Debug
 
 class CancellableStub: Cancellable {
-
-    func cancel() { }
+    func cancel() {}
 }

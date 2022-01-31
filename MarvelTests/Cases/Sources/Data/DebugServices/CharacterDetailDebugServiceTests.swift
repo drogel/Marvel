@@ -6,11 +6,10 @@
 //
 
 import Foundation
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class CharacterDetailDebugServiceTests: XCTestCase {
-
     private var sut: CharacterDetailDebugService!
 
     override func setUp() {
@@ -28,7 +27,7 @@ class CharacterDetailDebugServiceTests: XCTestCase {
     }
 
     func test_whenRetrievingCharacterDetail_returnsNil() {
-        XCTAssertNil(sut.character(with: 123456, completion: { _ in }))
+        XCTAssertNil(sut.character(with: 123_456, completion: { _ in }))
     }
 
     func test_givenSutWithEmptyDataLoader_whenRetrievingCharacterDetail_completesWithFailure() {
@@ -47,7 +46,6 @@ class CharacterDetailDebugServiceTests: XCTestCase {
 }
 
 private extension CharacterDetailDebugServiceTests {
-
     func givenSutWithDataLoader() {
         sut = CharacterDetailDebugService(dataLoader: JsonDataLoaderStub())
     }
@@ -59,7 +57,7 @@ private extension CharacterDetailDebugServiceTests {
     func whenRetrievingResultFromCharacterDetail() -> CharacterDetailServiceResult {
         var completionResult: CharacterDetailServiceResult!
         let expectation = expectation(description: "JSON file parsing completion")
-        let _ = sut.character(with: 123456) { result in
+        _ = sut.character(with: 123_456) { result in
             completionResult = result
             expectation.fulfill()
         }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol CharacterDetailViewModelProtocol: ViewModel { }
+protocol CharacterDetailViewModelProtocol: ViewModel {}
 
 protocol CharacterDetailViewModelViewDelegate: AnyObject {
     func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol)
@@ -17,7 +17,6 @@ protocol CharacterDetailViewModelViewDelegate: AnyObject {
 }
 
 class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
-
     private enum Messages {
         static let noSuchCharacter = "The character you are looking for can't be found in the database"
         static let noAPIKeys = "Your API keys to the Marvel API could not be found, or they are not valid. Add your own API keys in the environment variables of the project if you haven't already."
@@ -49,7 +48,6 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
 }
 
 private extension CharacterDetailViewModel {
-
     func loadCharacter(with query: FetchCharacterDetailQuery) {
         characterCancellable?.cancel()
         characterCancellable = characterFetcher.fetch(query: query, completion: handleFetchCharacterResult)
@@ -58,9 +56,9 @@ private extension CharacterDetailViewModel {
     func handleFetchCharacterResult(_ result: FetchCharacterDetailResult) {
         viewDelegate?.viewModelDidFinishLoading(self)
         switch result {
-        case .success(let pageInfo):
+        case let .success(pageInfo):
             handleSuccess(with: pageInfo)
-        case .failure(let error):
+        case let .failure(error):
             handleFailure(with: error)
         }
     }

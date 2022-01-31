@@ -9,7 +9,6 @@ import Foundation
 @testable import Marvel_Debug
 
 class CancellableMock: Cancellable {
-
     var didCancelCallCount = 0
 
     func cancel() {

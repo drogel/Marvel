@@ -6,11 +6,10 @@
 //
 
 import Foundation
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class CharacterDetailDataTests: XCTestCase {
-
     private var sut: CharacterDetailData!
 
     override func setUp() {

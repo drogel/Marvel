@@ -20,7 +20,6 @@ protocol URLImage {
 }
 
 class FetchImageView: UIImageView, URLImage {
-
     private var cancellable: Cancellable?
 
     func loadImage(from url: URL?, completion: URLImageCompletion? = nil) {
@@ -39,7 +38,6 @@ class FetchImageView: UIImageView, URLImage {
 }
 
 private extension UIImageView {
-
     func buildURLRequest(from url: URL?) -> URLRequest? {
         guard let url = url else { return nil }
         return URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 20)
@@ -51,7 +49,7 @@ private extension UIImageView {
     }
 
     func requestNetworkImage(_ urlRequest: URLRequest, completion: URLImageCompletion?) -> Cancellable {
-        let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, _) in
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response, _ in
             guard let self = self else { return }
             guard let data = data, let response = response else {
                 completion?(.failure(URLImageError.loadingFailed))
@@ -64,7 +62,7 @@ private extension UIImageView {
         return dataTask
     }
 
-    func handleNetworkImage(response: URLResponse, data: Data, completion: URLImageCompletion?) {
+    func handleNetworkImage(response _: URLResponse, data: Data, completion: URLImageCompletion?) {
         DispatchQueue.main.async {
             guard let image = UIImage(data: data) else {
                 completion?(.failure(URLImageError.loadingFailed))

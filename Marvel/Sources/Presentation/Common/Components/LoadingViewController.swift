@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 class LoadingViewController: UIViewController {
-
     enum Constants {
         static let animationDuration = 0.35
     }
@@ -18,7 +17,6 @@ class LoadingViewController: UIViewController {
 }
 
 extension LoadingViewController: Loadable {
-
     func startLoading() {
         animateSpinnerShowing()
     }
@@ -29,7 +27,6 @@ extension LoadingViewController: Loadable {
 }
 
 private extension LoadingViewController {
-
     func animateSpinnerShowing() {
         hideSpinner()
         addSpinnerToView()

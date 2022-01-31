@@ -8,7 +8,6 @@
 import UIKit
 
 class CharactersLayout: UICollectionViewCompositionalLayout {
-
     private enum Constants {
         static let spacing: CGFloat = 18
         static let itemHeight: CGFloat = 300
@@ -22,7 +21,8 @@ class CharactersLayout: UICollectionViewCompositionalLayout {
         super.init(sectionProvider: Self.sectionProvider)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("Initialization of \(String(describing: CharactersLayout.self)) through coder not supported")
     }
 

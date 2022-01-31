@@ -20,7 +20,6 @@ typealias FetchCharactersUseCaseError = CharactersServiceError
 typealias FetchCharactersResult = Result<PageInfo, FetchCharactersUseCaseError>
 
 class FetchCharactersServiceUseCase: FetchCharactersUseCase {
-
     private let service: CharactersService
 
     init(service: CharactersService) {
@@ -36,12 +35,11 @@ class FetchCharactersServiceUseCase: FetchCharactersUseCase {
 }
 
 private extension FetchCharactersServiceUseCase {
-
     func handle(_ result: CharactersServiceResult, completion: @escaping (FetchCharactersResult) -> Void) {
         switch result {
-        case .success(let dataWrapper):
+        case let .success(dataWrapper):
             completion(buildResult(from: dataWrapper))
-        case .failure(let error):
+        case let .failure(error):
             completion(.failure(error))
         }
     }

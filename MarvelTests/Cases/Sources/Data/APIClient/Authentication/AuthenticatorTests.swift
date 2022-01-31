@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 20/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class AuthenticatorTests: XCTestCase {
-
     private var sut: MD5Authenticator!
     private var secretsStub: SecretsRetrieverStub!
 
@@ -29,7 +28,12 @@ class AuthenticatorTests: XCTestCase {
         let timestamp: Double = 1
         let expectedTsParameter = String(Int(timestamp))
         let result = sut.authenticate(with: timestamp)
-        XCTAssertEqual(result, ["hash": "ffd275c5130566a2916217b101f26150", "apikey": SecretsRetrieverStub.publicKeyStub, "ts": expectedTsParameter])
+        let expectedParameters = [
+            "hash": "ffd275c5130566a2916217b101f26150",
+            "apikey": SecretsRetrieverStub.publicKeyStub,
+            "ts": expectedTsParameter
+        ]
+        XCTAssertEqual(result, expectedParameters)
     }
 
     func test_givenEmptySecrets_whenAuthenticating_returnsNil() {
@@ -39,14 +43,12 @@ class AuthenticatorTests: XCTestCase {
 }
 
 private extension AuthenticatorTests {
-
     func givenSutWithEmptySecrets() {
         sut = MD5Authenticator(secrets: SecretsRetrieverEmptyStub())
     }
 }
 
 private class SecretsRetrieverStub: SecretsRetriever {
-
     static let publicKeyStub = "1234"
     static let privateKeyStub = "abcd"
 
@@ -60,7 +62,6 @@ private class SecretsRetrieverStub: SecretsRetriever {
 }
 
 private class SecretsRetrieverEmptyStub: SecretsRetriever {
-
     var publicKey: String? {
         nil
     }

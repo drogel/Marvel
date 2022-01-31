@@ -26,7 +26,6 @@ protocol CharactersViewModelViewDelegate: AnyObject {
 }
 
 class CharactersViewModel: CharactersViewModelProtocol {
-
     private enum Messages {
         static let noCharacters = "Oops! Looks like the server is not responding"
         static let noAPIKeys = "Your API keys to the Marvel API could not be found, or they are not valid. Add your own API keys in the environment variables of the project if you haven't already."
@@ -48,7 +47,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
         self.charactersFetcher = charactersFetcher
         self.imageURLBuilder = imageURLBuilder
-        self.cells = []
+        cells = []
     }
 
     func start() {
@@ -78,7 +77,6 @@ class CharactersViewModel: CharactersViewModelProtocol {
 }
 
 private extension CharactersViewModel {
-
     var startingQuery: FetchCharactersQuery {
         FetchCharactersQuery(offset: 0)
     }
@@ -101,9 +99,9 @@ private extension CharactersViewModel {
     func handleFetchCharactersResult(_ result: FetchCharactersResult) {
         viewDelegate?.viewModelDidFinishLoading(self)
         switch result {
-        case .success(let pageInfo):
+        case let .success(pageInfo):
             handleSuccess(with: pageInfo)
-        case .failure(let error):
+        case let .failure(error):
             handleFailure(with: error)
         }
     }

@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 31/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class AuthenticatedNetworkServiceTests: XCTestCase {
-
     private var sut: AuthenticatedNetworkService!
     private var networkServiceMock: NetworkServiceRequestCacheFake!
     private var authenticatorMock: AuthenticatorMock!
@@ -60,7 +59,6 @@ class AuthenticatedNetworkServiceTests: XCTestCase {
 }
 
 private extension AuthenticatedNetworkServiceTests {
-
     func givenSut(with authenticator: Authenticator) {
         sut = AuthenticatedNetworkService(networkService: networkServiceMock, authenticator: authenticator)
     }
@@ -71,12 +69,12 @@ private extension AuthenticatedNetworkServiceTests {
     }
 
     func whenRequestingIgnoringResult() {
-        let _ = sut.request(endpoint: componentsStub, completion: { _ in })
+        _ = sut.request(endpoint: componentsStub, completion: { _ in })
     }
 
     func whenRequesting() -> Result<Data?, NetworkError> {
         var requestResult: Result<Data?, NetworkError>!
-        let _ = sut.request(endpoint: componentsStub) { result in
+        _ = sut.request(endpoint: componentsStub) { result in
             requestResult = result
         }
         return requestResult
@@ -92,21 +90,19 @@ private extension AuthenticatedNetworkServiceTests {
 }
 
 private class AuthenticatorMock: Authenticator {
-
     var authenticateCallCount = 0
 
-    func authenticate(with timestamp: TimeInterval) -> [String : String]? {
+    func authenticate(with _: TimeInterval) -> [String: String]? {
         authenticateCallCount += 1
         return nil
     }
 }
 
 private class AuthenticatorStub: AuthenticatorMock {
+    static let authenticationParamsStub = ["testAuthParam": "testAuthKey"]
 
-    static let authenticationParamsStub = ["testAuthParam":"testAuthKey"]
-
-    override func authenticate(with timestamp: TimeInterval) -> [String : String]? {
-        let _ = super.authenticate(with: timestamp)
+    override func authenticate(with timestamp: TimeInterval) -> [String: String]? {
+        _ = super.authenticate(with: timestamp)
         return Self.authenticationParamsStub
     }
 }

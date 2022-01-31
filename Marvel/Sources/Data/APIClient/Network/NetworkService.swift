@@ -23,7 +23,6 @@ protocol NetworkService {
 }
 
 class NetworkSessionService: NetworkService {
-
     private let session: NetworkSession
     private let baseURL: URL
     private let urlComposer: URLComposer
@@ -44,14 +43,13 @@ class NetworkSessionService: NetworkService {
 }
 
 private extension NetworkSessionService {
-
     func buildURLRequest(from components: RequestComponents) -> URLRequest? {
         guard let url = urlComposer.compose(from: baseURL, adding: components) else { return nil }
         return URLRequest(url: url)
     }
 
     func request(request: URLRequest, completion: @escaping NetworkServiceCompletion) -> Cancellable {
-        let sessionDataTask = session.loadData(from: request) { [weak self] (data, response, requestError) in
+        let sessionDataTask = session.loadData(from: request) { [weak self] data, response, requestError in
             DispatchQueue.main.async {
                 self?.handleDataLoaded(data, response: response, error: requestError, completion: completion)
             }
@@ -77,7 +75,7 @@ private extension NetworkSessionService {
     }
 
     func findNetworkError(in response: URLResponse?, with requestError: Error?) -> NetworkError? {
-        if let response = response as? HTTPURLResponse, (400..<600).contains(response.statusCode) {
+        if let response = response as? HTTPURLResponse, (400 ..< 600).contains(response.statusCode) {
             return statusCodeBasedError(for: response.statusCode)
         } else if let urlError = requestError as? URLError {
             return parseToNetworkError(urlError)

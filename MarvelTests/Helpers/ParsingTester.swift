@@ -9,7 +9,6 @@ import Foundation
 
 /// Helper protocol to easily parse JSONs into subjects under test.
 protocol ParsingTester {
-
     associatedtype ParseableObjectType: Decodable, Equatable
 
     /// Parse a JSON named after the type of the object specified in the associated type of ``ParsingTester``.
@@ -18,7 +17,6 @@ protocol ParsingTester {
 }
 
 extension ParsingTester where Self: AnyObject {
-
     func givenParsedObjectFromJson() -> ParseableObjectType {
         try! parseObjectFromJson()
     }

@@ -12,7 +12,6 @@ protocol CharactersResultHandler {
 }
 
 class CharactersClientServiceResultHandler: CharactersResultHandler {
-
     private let parser: JSONParser
     private let errorHandler: NetworkErrorHandler
 
@@ -23,16 +22,15 @@ class CharactersClientServiceResultHandler: CharactersResultHandler {
 
     func handle(result: Result<Data?, NetworkError>, completion: @escaping (CharactersServiceResult) -> Void) {
         switch result {
-        case .success(let data):
+        case let .success(data):
             handleSuccess(with: data, completion: completion)
-        case .failure(let error):
+        case let .failure(error):
             handleFailure(with: error, completion: completion)
         }
     }
 }
 
 private extension CharactersClientServiceResultHandler {
-
     func handleSuccess(with data: Data?, completion: @escaping (CharactersServiceResult) -> Void) {
         guard let data = data, let dataWrapper: DataWrapper = parser.parse(data: data) else {
             completion(.failure(.emptyData))

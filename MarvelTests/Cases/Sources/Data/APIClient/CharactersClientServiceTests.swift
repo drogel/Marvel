@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 29/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class CharactersClientServiceTests: XCTestCase {
-
     private var sut: CharactersClientService!
     private var networkServiceMock: NetworkServiceMock!
     private var jsonParserMock: JSONParserMock!
@@ -95,7 +94,6 @@ class CharactersClientServiceTests: XCTestCase {
 }
 
 private extension CharactersClientServiceTests {
-
     static let dataWrapperResponseStub = DataWrapper.withNilData
 
     func givenSutWithNetworkServiceMock() {
@@ -136,12 +134,12 @@ private extension CharactersClientServiceTests {
     }
 
     func whenRetrievingCharactersIgnoringResult(from offset: Int = 0) {
-        let _ = sut.characters(from: offset) { _ in }
+        _ = sut.characters(from: offset) { _ in }
     }
 
     func whenRetrievingCharacters(from offset: Int = 0) -> CharactersServiceResult {
         var charactersResult: CharactersServiceResult!
-        let _ = sut.characters(from: offset) { result in
+        _ = sut.characters(from: offset) { result in
             charactersResult = result
         }
         return charactersResult
