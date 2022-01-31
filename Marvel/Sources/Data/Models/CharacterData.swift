@@ -14,4 +14,13 @@ struct CharacterData: Codable, Equatable {
     let modified: String?
     let thumbnail: ImageData?
     let resourceURI: String?
+
+    enum CodingKeys: String, CodingKey {
+        case identifier = "id"
+        case name
+        case description
+        case modified
+        case thumbnail
+        case resourceURI
+    }
 }

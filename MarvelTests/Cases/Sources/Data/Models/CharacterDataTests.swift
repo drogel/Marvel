@@ -34,7 +34,7 @@ private extension CharacterDataTests {
 
     func buildExpectedCharacterData(with imageData: ImageData) -> CharacterData {
         let characterData = CharacterData(
-            id: 1_011_334,
+            identifier: 1_011_334,
             name: "3-D Man",
             description: "",
             modified: "2014-04-29T14:18:17-0400",
