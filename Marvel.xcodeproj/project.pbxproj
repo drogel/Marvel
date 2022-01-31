@@ -929,6 +929,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 05DAC3222797258C0062CC6F /* Build configuration list for PBXNativeTarget "Marvel" */;
 			buildPhases = (
+				0559260E27A8586E00026919 /* Run SwiftLint Integration Script */,
 				05DAC2F42797258A0062CC6F /* Sources */,
 				05DAC2F52797258A0062CC6F /* Frameworks */,
 				05DAC2F62797258A0062CC6F /* Resources */,
@@ -1023,6 +1024,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0559260E27A8586E00026919 /* Run SwiftLint Integration Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run SwiftLint Integration Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		05DAC2F42797258A0062CC6F /* Sources */ = {
