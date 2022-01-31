@@ -13,7 +13,6 @@ protocol CharactersDependencies {
 }
 
 class CharactersDependenciesAdapter: CharactersDependencies {
-
     let networkService: NetworkService
     let scheme: AppScheme
 
@@ -28,7 +27,6 @@ protocol CharactersContainer {
 }
 
 class CharactersDependencyContainer: CharactersContainer {
-
     private let dependencies: CharactersDependencies
 
     init(dependencies: CharactersDependencies) {
@@ -41,7 +39,6 @@ class CharactersDependencyContainer: CharactersContainer {
 }
 
 private extension CharactersDependencyContainer {
-
     var charactersService: CharactersService {
         switch dependencies.scheme {
         case .debug:

@@ -8,11 +8,9 @@
 import UIKit
 
 class CharacterDetailViewController: ViewController {
-
     typealias ViewModel = CharacterDetailViewModelProtocol
 
     private enum Constants {
-
         static let imageHeightMultiplier = 0.618
 
         enum Info {
@@ -69,9 +67,9 @@ class CharacterDetailViewController: ViewController {
     }()
 
     static func instantiate(viewModel: ViewModel) -> Self {
-        let viewController = CharacterDetailViewController()
+        let viewController = Self()
         viewController.viewModel = viewModel
-        return viewController as! Self
+        return viewController
     }
 
     override func viewDidLoad() {
@@ -88,7 +86,6 @@ class CharacterDetailViewController: ViewController {
 }
 
 extension CharacterDetailViewController: Configurable {
-
     typealias Item = CharacterDetailData
 
     func configure(using item: CharacterDetailData) {
@@ -99,16 +96,15 @@ extension CharacterDetailViewController: Configurable {
 }
 
 extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
-
-    func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol) {
+    func viewModelDidStartLoading(_: CharacterDetailViewModelProtocol) {
         startLoading()
     }
 
-    func viewModelDidFinishLoading(_ viewModel: CharacterDetailViewModelProtocol) {
+    func viewModelDidFinishLoading(_: CharacterDetailViewModelProtocol) {
         stopLoading()
     }
 
-    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didRetrieve characterDetail: CharacterDetailData) {
+    func viewModel(_: CharacterDetailViewModelProtocol, didRetrieve characterDetail: CharacterDetailData) {
         configure(using: characterDetail)
     }
 
@@ -118,7 +114,6 @@ extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
 }
 
 private extension CharacterDetailViewController {
-
     func setUp() {
         setUpBackground()
         setUpSubviews()
@@ -151,7 +146,7 @@ private extension CharacterDetailViewController {
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
 
@@ -161,22 +156,24 @@ private extension CharacterDetailViewController {
             mainStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             mainStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             mainStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            mainStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+            mainStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
         ])
     }
 
     func setUpInfoStackViewConstraints() {
+        let inset = Constants.Info.inset
         NSLayoutConstraint.activate([
-            infoStackView.leadingAnchor.constraint(equalTo: infoBackgroundView.leadingAnchor, constant: Constants.Info.inset),
-            infoStackView.topAnchor.constraint(equalTo: infoBackgroundView.topAnchor, constant: Constants.Info.inset),
-            infoStackView.trailingAnchor.constraint(equalTo: infoBackgroundView.trailingAnchor, constant: -Constants.Info.inset),
-            infoStackView.bottomAnchor.constraint(equalTo: infoBackgroundView.bottomAnchor, constant: -Constants.Info.inset)
+            infoStackView.leadingAnchor.constraint(equalTo: infoBackgroundView.leadingAnchor, constant: inset),
+            infoStackView.topAnchor.constraint(equalTo: infoBackgroundView.topAnchor, constant: inset),
+            infoStackView.trailingAnchor.constraint(equalTo: infoBackgroundView.trailingAnchor, constant: -inset),
+            infoStackView.bottomAnchor.constraint(equalTo: infoBackgroundView.bottomAnchor, constant: -inset),
         ])
     }
 
     func setUpCharacterImageViewConstraints() {
+        let multiplier = Constants.imageHeightMultiplier
         NSLayoutConstraint.activate([
-            characterImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: Constants.imageHeightMultiplier)
+            characterImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: multiplier),
         ])
     }
 }

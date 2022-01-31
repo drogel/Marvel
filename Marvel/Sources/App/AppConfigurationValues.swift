@@ -13,16 +13,14 @@ protocol AppConfigurationValues {
 }
 
 class MarvelConfigurationValues: AppConfigurationValues {
-
     lazy var scheme: AppScheme = scheme(fromConfigurationKey: "SCHEME")
     lazy var apiBaseURLString: String = apiBaseURLString(fromConfigurationKey: "API_BASE_URL")
 }
 
 private extension MarvelConfigurationValues {
-
     func scheme(fromConfigurationKey configurationKey: String) -> AppScheme {
         guard let scheme = AppScheme(rawValue: value(forConfigurationKey: configurationKey)) else {
-            fatalError("The scheme value \(String(describing: value)) retrieved from configuration files is not a valid \(String(describing: AppScheme.self))")
+            fatalError("Scheme value \(String(describing: value)) not in \(String(describing: AppScheme.self))")
         }
         return scheme
     }

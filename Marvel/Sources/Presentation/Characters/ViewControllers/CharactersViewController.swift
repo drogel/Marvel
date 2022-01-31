@@ -8,23 +8,25 @@
 import UIKit
 
 class CharactersViewController: ViewController {
-
     typealias ViewModel = CharactersViewModelProtocol
 
     private var viewModel: ViewModel!
     private var layout: UICollectionViewCompositionalLayout!
     private var collectionView: UICollectionView!
 
-    static func instantiate(viewModel: ViewModel, layout: UICollectionViewCompositionalLayout) -> CharactersViewController {
+    static func instantiate(
+        viewModel: ViewModel,
+        layout: UICollectionViewCompositionalLayout
+    ) -> CharactersViewController {
         let viewController = instantiate(viewModel: viewModel)
         viewController.layout = layout
         return viewController
     }
 
     static func instantiate(viewModel: ViewModel) -> Self {
-        let viewController = CharactersViewController()
+        let viewController = Self()
         viewController.viewModel = viewModel
-        return viewController as! Self
+        return viewController
     }
 
     override func viewDidLoad() {
@@ -45,16 +47,18 @@ class CharactersViewController: ViewController {
 }
 
 extension CharactersViewController: UICollectionViewDataSource {
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    func numberOfSections(in _: UICollectionView) -> Int {
         return 1
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
         return viewModel.numberOfItems
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
         guard let cellData = viewModel.cellData(at: indexPath) else { return UICollectionViewCell() }
         let cell = collectionView.dequeue(cellOfType: CharacterCell.self, at: indexPath)
         cell.configure(using: cellData)
@@ -63,27 +67,25 @@ extension CharactersViewController: UICollectionViewDataSource {
 }
 
 extension CharactersViewController: UICollectionViewDelegate {
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewModel.select(at: indexPath)
     }
 
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         viewModel.willDisplayCell(at: indexPath)
     }
 }
 
 extension CharactersViewController: CharactersViewModelViewDelegate {
-
-    func viewModelDidStartLoading(_ viewModel: CharactersViewModelProtocol) {
+    func viewModelDidStartLoading(_: CharactersViewModelProtocol) {
         startLoading()
     }
 
-    func viewModelDidFinishLoading(_ viewModel: CharactersViewModelProtocol) {
+    func viewModelDidFinishLoading(_: CharactersViewModelProtocol) {
         stopLoading()
     }
 
-    func viewModelDidUpdateItems(_ viewModel: CharactersViewModelProtocol) {
+    func viewModelDidUpdateItems(_: CharactersViewModelProtocol) {
         collectionView.reloadData()
     }
 
@@ -93,7 +95,6 @@ extension CharactersViewController: CharactersViewModelViewDelegate {
 }
 
 private extension CharactersViewController {
-
     func setUpNavigationController() {
         navigationController?.navigationBar.prefersLargeTitles = true
         title = "Characters"
@@ -127,7 +128,7 @@ private extension CharactersViewController {
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
 

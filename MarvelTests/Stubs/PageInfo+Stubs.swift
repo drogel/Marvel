@@ -9,7 +9,6 @@ import Foundation
 @testable import Marvel_Debug
 
 extension PageInfo {
-
     static let empty = PageInfo.zeroWith(results: [])
 
     static func zeroWith(results: [CharacterData]) -> PageInfo {

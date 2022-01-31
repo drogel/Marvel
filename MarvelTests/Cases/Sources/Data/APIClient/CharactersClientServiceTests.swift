@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 29/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class CharactersClientServiceTests: XCTestCase {
-
     private var sut: CharactersClientService!
     private var networkServiceMock: NetworkServiceMock!
     private var jsonParserMock: JSONParserMock!
@@ -48,7 +47,10 @@ class CharactersClientServiceTests: XCTestCase {
     func test_givenACachingNetworkServiceFake_whenRetrievingCharacters_requestIsCalledWithExpectedComponents() {
         let offsetStub = 40
         let charactersPath = MarvelAPIPaths.characters.rawValue
-        let expectedComponentsPath = RequestComponents(path: charactersPath, queryParameters: ["offset": String(offsetStub)])
+        let expectedComponentsPath = RequestComponents(
+            path: charactersPath,
+            queryParameters: ["offset": String(offsetStub)]
+        )
         givenSutWithNetworkServiceCacherFake()
         whenRetrievingCharactersIgnoringResult(from: offsetStub)
         let actualComponents = whenGettingCachedComponentsFromNetworkService()
@@ -95,7 +97,6 @@ class CharactersClientServiceTests: XCTestCase {
 }
 
 private extension CharactersClientServiceTests {
-
     static let dataWrapperResponseStub = DataWrapper.withNilData
 
     func givenSutWithNetworkServiceMock() {
@@ -136,12 +137,12 @@ private extension CharactersClientServiceTests {
     }
 
     func whenRetrievingCharactersIgnoringResult(from offset: Int = 0) {
-        let _ = sut.characters(from: offset) { _ in }
+        _ = sut.characters(from: offset) { _ in }
     }
 
     func whenRetrievingCharacters(from offset: Int = 0) -> CharactersServiceResult {
         var charactersResult: CharactersServiceResult!
-        let _ = sut.characters(from: offset) { result in
+        _ = sut.characters(from: offset) { result in
             charactersResult = result
         }
         return charactersResult
@@ -162,10 +163,14 @@ private extension CharactersClientServiceTests {
     }
 
     func assert(_ actualError: CharactersServiceError, isEqualTo expectedError: CharactersServiceError) {
-        if case actualError = expectedError { } else { XCTFail() }
+        if case actualError = expectedError { } else { failExpectingErrorMatching(actualError) }
     }
 
-    func assertWhenRetrievingCharacters(returnsFailureWithError expectedError: CharactersServiceError, whenNetworkErrorWas networkError: NetworkError, line: UInt = #line) {
+    func assertWhenRetrievingCharacters(
+        returnsFailureWithError expectedError: CharactersServiceError,
+        whenNetworkErrorWas networkError: NetworkError,
+        line: UInt = #line
+    ) {
         givenSutWithFailingNetworkService(providingError: networkError)
         let result = whenRetrievingCharacters()
         assertIsFailure(result, then: { assert($0, isEqualTo: expectedError) }, line: line)

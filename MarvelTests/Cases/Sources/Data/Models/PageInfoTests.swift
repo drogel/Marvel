@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 19/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class PageInfoTests: XCTestCase {
-
     typealias ParseableObjectType = PageInfo
 
     func test_givenPageInfoFromJson_parsesExpectedValues() {
@@ -18,7 +17,6 @@ class PageInfoTests: XCTestCase {
 }
 
 extension PageInfoTests: ParsingTestCaseTemplate {
-
     func buildExpectedObject() -> PageInfo {
         PageInfo(offset: 0, limit: 20, total: 1559, count: 20, results: nil)
     }

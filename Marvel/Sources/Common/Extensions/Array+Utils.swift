@@ -8,7 +8,6 @@
 import Foundation
 
 extension Array {
-
     var hasElements: Bool {
         !isEmpty
     }

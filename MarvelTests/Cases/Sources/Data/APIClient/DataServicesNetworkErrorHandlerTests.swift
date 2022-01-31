@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 29/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class DataServicesNetworkErrorHandlerTests: XCTestCase {
-
     private var sut: DataServicesNetworkErrorHandler!
 
     override func setUp() {
@@ -36,7 +35,6 @@ class DataServicesNetworkErrorHandlerTests: XCTestCase {
 }
 
 private extension DataServicesNetworkErrorHandlerTests {
-
     func assertHandling(_ networkError: NetworkError, returns dataServiceError: DataServiceError, line: UInt = #line) {
         XCTAssertEqual(sut.handle(networkError), dataServiceError, line: line)
     }

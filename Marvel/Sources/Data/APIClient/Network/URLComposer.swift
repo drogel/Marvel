@@ -12,7 +12,6 @@ protocol URLComposer {
 }
 
 class URLComponentsBuilder: URLComposer {
-
     func compose(from baseURL: URL, adding components: RequestComponents) -> URL? {
         let url = buildFullURL(from: baseURL, and: components)
         guard var urlComponents = urlComponents(from: url) else { return nil }
@@ -22,7 +21,6 @@ class URLComponentsBuilder: URLComposer {
 }
 
 private extension URLComponentsBuilder {
-
     func urlComponents(from url: URL) -> URLComponents? {
         URLComponents(url: url, resolvingAgainstBaseURL: false)
     }

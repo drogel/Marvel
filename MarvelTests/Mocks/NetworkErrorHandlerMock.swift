@@ -9,7 +9,6 @@ import Foundation
 @testable import Marvel_Debug
 
 class NetworkErroHandlerMock: NetworkErrorHandler {
-
     var handleCallCount = 0
 
     private let errorStub: DataServiceError
@@ -18,7 +17,7 @@ class NetworkErroHandlerMock: NetworkErrorHandler {
         self.errorStub = errorStub
     }
 
-    func handle(_ networkError: NetworkError) -> DataServiceError {
+    func handle(_: NetworkError) -> DataServiceError {
         handleCallCount += 1
         return errorStub
     }

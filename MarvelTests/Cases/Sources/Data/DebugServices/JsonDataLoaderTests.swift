@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 19/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class JsonDataLoaderTests: XCTestCase {
-
     private var sut: JsonDecoderDataLoader!
 
     override func setUp() {
@@ -35,4 +34,4 @@ class JsonDataLoaderTests: XCTestCase {
     }
 }
 
-private class DecodableMock: Decodable { }
+private class DecodableMock: Decodable {}

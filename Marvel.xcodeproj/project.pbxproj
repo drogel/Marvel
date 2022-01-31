@@ -52,6 +52,7 @@
 		05484627279E035600C6EC66 /* CharacterImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05484626279E035600C6EC66 /* CharacterImageView.swift */; };
 		05484629279E1B0D00C6EC66 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05484628279E1B0D00C6EC66 /* AlertPresenter.swift */; };
 		054ED2BD27A716C3000358A3 /* CharactersResultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054ED2BC27A716C3000358A3 /* CharactersResultHandler.swift */; };
+		0559261027A85EB500026919 /* XCTestCase+FailureMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */; };
 		0571306527A559F10009383E /* CharactersClientServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0571306427A559F10009383E /* CharactersClientServiceTests.swift */; };
 		0571306727A55B3A0009383E /* NetworkServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0571306627A55B3A0009383E /* NetworkServiceMock.swift */; };
 		0571306927A55C280009383E /* JSONParserMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0571306827A55C280009383E /* JSONParserMock.swift */; };
@@ -169,6 +170,7 @@
 		05484626279E035600C6EC66 /* CharacterImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterImageView.swift; sourceTree = "<group>"; };
 		05484628279E1B0D00C6EC66 /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
 		054ED2BC27A716C3000358A3 /* CharactersResultHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersResultHandler.swift; sourceTree = "<group>"; };
+		0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FailureMessage.swift"; sourceTree = "<group>"; };
 		0571306427A559F10009383E /* CharactersClientServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersClientServiceTests.swift; sourceTree = "<group>"; };
 		0571306627A55B3A0009383E /* NetworkServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceMock.swift; sourceTree = "<group>"; };
 		0571306827A55C280009383E /* JSONParserMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONParserMock.swift; sourceTree = "<group>"; };
@@ -396,6 +398,7 @@
 			isa = PBXGroup;
 			children = (
 				054594742798A11000A634AD /* XCTestCase+ResultAssertions.swift */,
+				0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -929,6 +932,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 05DAC3222797258C0062CC6F /* Build configuration list for PBXNativeTarget "Marvel" */;
 			buildPhases = (
+				0559260E27A8586E00026919 /* Run SwiftLint Integration Script */,
 				05DAC2F42797258A0062CC6F /* Sources */,
 				05DAC2F52797258A0062CC6F /* Frameworks */,
 				05DAC2F62797258A0062CC6F /* Resources */,
@@ -1024,6 +1028,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0559260E27A8586E00026919 /* Run SwiftLint Integration Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run SwiftLint Integration Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		05DAC2F42797258A0062CC6F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1108,6 +1133,7 @@
 				05484607279D697000C6EC66 /* FetchCharacterDetailUseCaseTests.swift in Sources */,
 				0571306727A55B3A0009383E /* NetworkServiceMock.swift in Sources */,
 				054594812798B93C00A634AD /* DataWrapper+Stubs.swift in Sources */,
+				0559261027A85EB500026919 /* XCTestCase+FailureMessage.swift in Sources */,
 				0571306B27A5B36A0009383E /* CharacterDetailClientServiceTests.swift in Sources */,
 				053B9D992799CADD00CCF1C2 /* CharacterData+Stubs.swift in Sources */,
 				053B9D952799C7BC00CCF1C2 /* CharacterCellDataTests.swift in Sources */,

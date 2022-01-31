@@ -8,7 +8,7 @@
 import Foundation
 
 struct CharacterData: Codable, Equatable {
-    let id: Int?
+    let identifier: Int?
     let name: String?
     let description: String?
     let modified: String?

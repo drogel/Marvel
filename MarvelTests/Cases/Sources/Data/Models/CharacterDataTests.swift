@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 19/1/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class CharacterDataTests: XCTestCase {
-
     typealias ParseableObjectType = CharacterData
 
     func test_givenCharacterDataFromJson_parsesExpectedValues() {
@@ -18,7 +17,6 @@ class CharacterDataTests: XCTestCase {
 }
 
 extension CharacterDataTests: ParsingTestCaseTemplate {
-
     func buildExpectedObject() -> CharacterData {
         let imageData = buildExpectedImageData()
         return buildExpectedCharacterData(with: imageData)
@@ -26,7 +24,6 @@ extension CharacterDataTests: ParsingTestCaseTemplate {
 }
 
 private extension CharacterDataTests {
-
     func buildExpectedImageData() -> ImageData {
         let imageData = ImageData(
             path: "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784",
@@ -37,7 +34,7 @@ private extension CharacterDataTests {
 
     func buildExpectedCharacterData(with imageData: ImageData) -> CharacterData {
         let characterData = CharacterData(
-            id: 1011334,
+            id: 1_011_334,
             name: "3-D Man",
             description: "",
             modified: "2014-04-29T14:18:17-0400",

@@ -13,7 +13,6 @@ protocol CharacterDetailContainer {
 }
 
 class CharacterDetailDependencyContainer: CharacterDetailContainer {
-
     let characterID: Int
 
     private let dependencies: CharactersDependencies
@@ -29,7 +28,6 @@ class CharacterDetailDependencyContainer: CharacterDetailContainer {
 }
 
 private extension CharacterDetailDependencyContainer {
-
     var characterDetailService: CharacterDetailService {
         switch dependencies.scheme {
         case .debug:
