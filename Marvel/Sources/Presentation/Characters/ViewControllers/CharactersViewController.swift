@@ -31,6 +31,10 @@ class CharactersViewController: ViewController {
         super.viewDidLoad()
         setUpNavigationController()
         setUpCollectionView()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         viewModel.start()
     }
 
