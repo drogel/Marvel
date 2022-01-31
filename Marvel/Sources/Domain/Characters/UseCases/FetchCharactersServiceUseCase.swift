@@ -15,11 +15,7 @@ struct FetchCharactersQuery {
     let offset: Int
 }
 
-enum FetchCharactersUseCaseError: Error {
-    case emptyData
-    case unauthorized
-    case noConnection
-}
+typealias FetchCharactersUseCaseError = CharactersServiceError
 
 typealias FetchCharactersResult = Result<PageInfo, FetchCharactersUseCaseError>
 
@@ -46,27 +42,12 @@ private extension FetchCharactersServiceUseCase {
         case .success(let dataWrapper):
             completion(buildResult(from: dataWrapper))
         case .failure(let error):
-            handle(error, completion: completion)
+            completion(.failure(error))
         }
     }
 
     func buildResult(from dataWrapper: DataWrapper) -> FetchCharactersResult {
         guard let pageInfo = dataWrapper.data else { return .failure(.emptyData) }
         return .success(pageInfo)
-    }
-
-    func handle(_ error: CharactersServiceError, completion: @escaping (FetchCharactersResult) -> Void) {
-        switch error {
-        case .noConnection:
-            fail(withError: .noConnection, completion: completion)
-        case .emptyData:
-            fail(withError: .emptyData, completion: completion)
-        case .unauthorized:
-            fail(withError: .unauthorized, completion: completion)
-        }
-    }
-
-    func fail(withError error: FetchCharactersUseCaseError, completion: @escaping (FetchCharactersResult) -> Void) {
-        completion(.failure(error))
     }
 }

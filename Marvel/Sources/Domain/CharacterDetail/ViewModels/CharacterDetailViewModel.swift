@@ -74,7 +74,7 @@ private extension CharacterDetailViewModel {
         switch error {
         case .noConnection:
             viewDelegate?.viewModel(self, didFailWithError: Messages.noConnection)
-        case .noSuchCharacter:
+        case .emptyData:
             notifyNoCharacter()
         case .unauthorized:
             viewDelegate?.viewModel(self, didFailWithError: Messages.noAPIKeys)
