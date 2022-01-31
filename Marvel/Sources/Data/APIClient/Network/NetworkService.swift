@@ -8,7 +8,7 @@
 import Foundation
 
 enum NetworkError: Error {
-    case errorStatusCode(statusCode: Int)
+    case statusCodeError(statusCode: Int)
     case invalidURL
     case notConnected
     case cancelled
@@ -103,7 +103,7 @@ private extension NetworkSessionService {
         case 401:
             return .unauthorized
         default:
-            return .errorStatusCode(statusCode: statusCode)
+            return .statusCodeError(statusCode: statusCode)
         }
     }
 }

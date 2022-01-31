@@ -15,11 +15,7 @@ struct FetchCharacterDetailQuery {
     let characterID: Int
 }
 
-enum FetchCharacterDetailUseCaseError: Error {
-    case noSuchCharacter
-    case unauthorized
-    case noConnection
-}
+typealias FetchCharacterDetailUseCaseError = CharacterDetailServiceError
 
 typealias FetchCharacterDetailResult = Result<PageInfo, FetchCharacterDetailUseCaseError>
 
@@ -46,27 +42,12 @@ private extension FetchCharacterDetailServiceUseCase {
         case .success(let dataWrapper):
             completion(buildResult(from: dataWrapper))
         case .failure(let error):
-            handle(error, completion: completion)
+            completion(.failure(error))
         }
     }
 
     func buildResult(from dataWrapper: DataWrapper) -> FetchCharacterDetailResult {
-        guard let pageInfo = dataWrapper.data else { return .failure(FetchCharacterDetailUseCaseError.noSuchCharacter) }
+        guard let pageInfo = dataWrapper.data else { return .failure(.emptyData) }
         return .success(pageInfo)
-    }
-
-    func handle(_ error: CharacterDetailServiceError, completion: @escaping (FetchCharacterDetailResult) -> Void) {
-        switch error {
-        case .noConnection:
-            fail(withError: .noConnection, completion: completion)
-        case .noSuchCharacter:
-            fail(withError: .noSuchCharacter, completion: completion)
-        case .unauthorized:
-            fail(withError: .unauthorized, completion: completion)
-        }
-    }
-
-    func fail(withError error: FetchCharacterDetailUseCaseError, completion: @escaping (FetchCharacterDetailResult) -> Void) {
-        completion(.failure(error))
     }
 }

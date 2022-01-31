@@ -73,7 +73,7 @@ private class CharacterDetailServiceMock: CharacterDetailService {
 private class CharacterDetailServiceFailureStub: CharacterDetailService {
 
     func character(with id: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
-        completion(.failure(.noSuchCharacter))
+        completion(.failure(.emptyData))
         return CancellableStub()
     }
 }
