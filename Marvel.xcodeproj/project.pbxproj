@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0506E30127A8481C0006C759 /* AuthenticatedNetworkServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0506E30027A8481C0006C759 /* AuthenticatedNetworkServiceTests.swift */; };
 		053B9D932799C76300CCF1C2 /* CharacterCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D922799C76300CCF1C2 /* CharacterCellData.swift */; };
 		053B9D952799C7BC00CCF1C2 /* CharacterCellDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D942799C7BC00CCF1C2 /* CharacterCellDataTests.swift */; };
 		053B9D992799CADD00CCF1C2 /* CharacterData+Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D982799CADD00CCF1C2 /* CharacterData+Stubs.swift */; };
@@ -121,6 +122,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0506E30027A8481C0006C759 /* AuthenticatedNetworkServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedNetworkServiceTests.swift; sourceTree = "<group>"; };
 		053B9D922799C76300CCF1C2 /* CharacterCellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCellData.swift; sourceTree = "<group>"; };
 		053B9D942799C7BC00CCF1C2 /* CharacterCellDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCellDataTests.swift; sourceTree = "<group>"; };
 		053B9D982799CADD00CCF1C2 /* CharacterData+Stubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CharacterData+Stubs.swift"; sourceTree = "<group>"; };
@@ -511,6 +513,7 @@
 			isa = PBXGroup;
 			children = (
 				053B9DA6279A0EA900CCF1C2 /* AuthenticatorTests.swift */,
+				0506E30027A8481C0006C759 /* AuthenticatedNetworkServiceTests.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -1114,6 +1117,7 @@
 				0585AFA227975E9100586ABD /* DataWrapperTests.swift in Sources */,
 				054845FF279D66B200C6EC66 /* JsonDataLoaderStubs.swift in Sources */,
 				0545945827988C9B00A634AD /* CharactersViewModelTests.swift in Sources */,
+				0506E30127A8481C0006C759 /* AuthenticatedNetworkServiceTests.swift in Sources */,
 				0545946E27989A1A00A634AD /* CharactersDebugServiceTests.swift in Sources */,
 				0548460F279D6E8400C6EC66 /* CharacterDetailViewModelTests.swift in Sources */,
 				0571307227A5C3080009383E /* DataServicesNetworkErrorHandlerTests.swift in Sources */,
