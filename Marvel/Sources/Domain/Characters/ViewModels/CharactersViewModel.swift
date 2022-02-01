@@ -111,14 +111,19 @@ private extension CharactersViewModel {
         updateCells(using: newCells)
     }
 
-    func handleFailure(with error: FetchCharactersUseCaseError) {
+    func handleFailure(with error: FetchCharacterDetailUseCaseError) {
+        let message = message(for: error)
+        viewDelegate?.viewModel(self, didFailWithError: message)
+    }
+
+    func message(for error: FetchCharacterDetailUseCaseError) -> String {
         switch error {
         case .noConnection:
-            viewDelegate?.viewModel(self, didFailWithError: Messages.noConnection)
+            return Messages.noConnection
         case .emptyData:
-            viewDelegate?.viewModel(self, didFailWithError: Messages.noCharacters)
+            return Messages.noCharacters
         case .unauthorized:
-            viewDelegate?.viewModel(self, didFailWithError: Messages.noAPIKeys)
+            return Messages.noAPIKeys
         }
     }
 
