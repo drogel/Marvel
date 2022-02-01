@@ -13,6 +13,7 @@ protocol URLComposer {
 
 class URLComponentsBuilder: URLComposer {
     func compose(from baseURL: URL, adding components: RequestComponents) -> URL? {
+        guard components != RequestComponents.empty else { return baseURL }
         let url = buildFullURL(from: baseURL, and: components)
         guard var urlComponents = urlComponents(from: url) else { return nil }
         urlComponents.queryItems = buildQueryItems(from: components)
