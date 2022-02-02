@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 1/2/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class CharacterDetailCoordinatorTests: XCTestCase {
-
     private var sut: CharacterDetailCoordinator!
     private var navigationController: UINavigationControllerMock!
     private var delegateMock: CoordinatorDelegateMock!
@@ -65,15 +64,14 @@ private class CharacterDetailContainerStub: CharacterDetailContainer {
 
 private class FetchCharacterDetailUseCaseStub: FetchCharacterDetailUseCase {
     func fetch(
-        query: FetchCharacterDetailQuery,
-        completion: @escaping (FetchCharacterDetailResult) -> Void
+        query _: FetchCharacterDetailQuery,
+        completion _: @escaping (FetchCharacterDetailResult) -> Void
     ) -> Cancellable? {
         nil
     }
 }
 
 private extension CharacterDetailCoordinatorTests {
-
     func assertCoordinatorDelegateDidFinish(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(delegateMock.didFinishCallCount, callCount, line: line)
     }

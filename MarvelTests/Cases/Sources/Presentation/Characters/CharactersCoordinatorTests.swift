@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 1/2/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class CharactersCoordinatorTests: XCTestCase {
-
     private var sut: CharactersCoordinator!
     private var navigationController: UINavigationControllerMock!
     private var delegateMock: CoordinatorDelegateMock!
@@ -58,21 +57,20 @@ private class CharactersViewModelStub: CharactersViewModelProtocol {
         0
     }
 
-    func willDisplayCell(at indexPath: IndexPath) { }
+    func willDisplayCell(at _: IndexPath) {}
 
-    func select(at indexPath: IndexPath) { }
+    func select(at _: IndexPath) {}
 
-    func cellData(at indexPath: IndexPath) -> CharacterCellData? {
+    func cellData(at _: IndexPath) -> CharacterCellData? {
         nil
     }
 
-    func start() { }
+    func start() {}
 
-    func dispose() { }
+    func dispose() {}
 }
 
 private extension CharactersCoordinatorTests {
-
     func assertCoordinatorDelegateDidFinish(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(delegateMock.didFinishCallCount, callCount, line: line)
     }
