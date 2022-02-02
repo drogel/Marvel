@@ -90,7 +90,7 @@ extension CharactersViewController: CharactersViewModelViewDelegate {
     }
 
     func viewModel(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String) {
-        showErrorAlert(message: message, buttonAction: viewModel.start)
+        showErrorAlert(message: message, retryButtonAction: viewModel.start)
     }
 }
 

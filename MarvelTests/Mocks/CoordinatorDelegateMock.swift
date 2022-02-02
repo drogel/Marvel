@@ -11,7 +11,7 @@ import Foundation
 class CoordinatorDelegateMock: CoordinatorDelegate {
     var didFinishCallCount = 0
 
-    func coordinatorDidFinish(_ coordinator: Coordinator) {
+    func coordinatorDidFinish(_: Coordinator) {
         didFinishCallCount += 1
     }
 }
