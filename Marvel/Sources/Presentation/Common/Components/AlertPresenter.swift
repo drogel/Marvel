@@ -10,16 +10,16 @@ import UIKit
 
 protocol AlertPresenter {
     func showAlert(title: String, message: String, buttonTitle: String, buttonAction: (() -> Void)?)
-    func showErrorAlert(message: String, buttonAction: (() -> Void)?)
+    func showErrorAlert(message: String, retryButtonAction: (() -> Void)?)
 }
 
 extension AlertPresenter where Self: UIViewController {
-    func showErrorAlert(message: String, buttonAction: (() -> Void)? = nil) {
+    func showErrorAlert(message: String, retryButtonAction: (() -> Void)? = nil) {
         showAlert(
             title: "error".localized,
             message: message,
             buttonTitle: "retry".localized,
-            buttonAction: buttonAction
+            buttonAction: retryButtonAction
         )
     }
 

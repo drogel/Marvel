@@ -109,7 +109,7 @@ extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
     }
 
     func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String) {
-        showErrorAlert(message: message, buttonAction: viewModel.start)
+        showErrorAlert(message: message, retryButtonAction: viewModel.start)
     }
 }
 
