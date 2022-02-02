@@ -142,32 +142,16 @@ private extension CharacterDetailViewController {
     }
 
     func setUpScrollViewConstraints() {
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+        NSLayoutConstraint.fit(scrollView, in: view)
     }
 
     func setUpMainStackViewViewConstraints() {
-        NSLayoutConstraint.activate([
-            mainStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            mainStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            mainStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            mainStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            mainStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-        ])
+        NSLayoutConstraint.fit(mainStackView, in: scrollView)
+        NSLayoutConstraint.activate([mainStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)])
     }
 
     func setUpInfoStackViewConstraints() {
-        let inset = Constants.Info.inset
-        NSLayoutConstraint.activate([
-            infoStackView.leadingAnchor.constraint(equalTo: infoBackgroundView.leadingAnchor, constant: inset),
-            infoStackView.topAnchor.constraint(equalTo: infoBackgroundView.topAnchor, constant: inset),
-            infoStackView.trailingAnchor.constraint(equalTo: infoBackgroundView.trailingAnchor, constant: -inset),
-            infoStackView.bottomAnchor.constraint(equalTo: infoBackgroundView.bottomAnchor, constant: -inset),
-        ])
+        NSLayoutConstraint.fit(infoStackView, in: infoBackgroundView, inset: Constants.Info.inset)
     }
 
     func setUpCharacterImageViewConstraints() {

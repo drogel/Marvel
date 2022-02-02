@@ -38,11 +38,6 @@ private extension CharacterImageCell {
     }
 
     func setUpConstraints() {
-        NSLayoutConstraint.activate([
-            characterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            characterImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            characterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            characterImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-        ])
+        NSLayoutConstraint.fit(characterImageView, in: contentView)
     }
 }

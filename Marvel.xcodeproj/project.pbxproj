@@ -91,6 +91,7 @@
 		059CD7B227AAE6A700523EE3 /* CharactersViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059CD7B127AAE6A700523EE3 /* CharactersViewControllerTests.swift */; };
 		059CD7B527AAFD3C00523EE3 /* CharacterImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059CD7B427AAFD3C00523EE3 /* CharacterImageCell.swift */; };
 		059CD7B727AAFD5400523EE3 /* CharacterInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059CD7B627AAFD5400523EE3 /* CharacterInfoCell.swift */; };
+		059CD7B927AB109F00523EE3 /* NSLayoutConstraints+Fitting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059CD7B827AB109F00523EE3 /* NSLayoutConstraints+Fitting.swift */; };
 		05B7DB67279CAFC2004320FF /* UICollectionView+Dequeue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B7DB66279CAFC2004320FF /* UICollectionView+Dequeue.swift */; };
 		05BD40A027A9A2DC00F2E513 /* CoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BD409F27A9A2DC00F2E513 /* CoordinatorTests.swift */; };
 		05BD40A227A9A5B100F2E513 /* URLComponentsBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BD40A127A9A5B100F2E513 /* URLComponentsBuilderTests.swift */; };
@@ -222,6 +223,7 @@
 		059CD7B127AAE6A700523EE3 /* CharactersViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersViewControllerTests.swift; sourceTree = "<group>"; };
 		059CD7B427AAFD3C00523EE3 /* CharacterImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterImageCell.swift; sourceTree = "<group>"; };
 		059CD7B627AAFD5400523EE3 /* CharacterInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterInfoCell.swift; sourceTree = "<group>"; };
+		059CD7B827AB109F00523EE3 /* NSLayoutConstraints+Fitting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraints+Fitting.swift"; sourceTree = "<group>"; };
 		05B7DB66279CAFC2004320FF /* UICollectionView+Dequeue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Dequeue.swift"; sourceTree = "<group>"; };
 		05BD409F27A9A2DC00F2E513 /* CoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorTests.swift; sourceTree = "<group>"; };
 		05BD40A127A9A5B100F2E513 /* URLComponentsBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLComponentsBuilderTests.swift; sourceTree = "<group>"; };
@@ -709,6 +711,7 @@
 			children = (
 				05DAC33927973A750062CC6F /* UICollectionReusableView+Identifiable.swift */,
 				05B7DB66279CAFC2004320FF /* UICollectionView+Dequeue.swift */,
+				059CD7B827AB109F00523EE3 /* NSLayoutConstraints+Fitting.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1181,6 +1184,7 @@
 				05932C59279B5A0700549D7D /* CharactersClientService.swift in Sources */,
 				05932C5E279B5DDD00549D7D /* JSONParser.swift in Sources */,
 				05932C51279B287800549D7D /* RequestComponents.swift in Sources */,
+				059CD7B927AB109F00523EE3 /* NSLayoutConstraints+Fitting.swift in Sources */,
 				05484619279D889500C6EC66 /* ViewController.swift in Sources */,
 				05C14927279C6F5B00927467 /* CharactersCoordinator.swift in Sources */,
 				0571306E27A5C1250009383E /* DataServiceError.swift in Sources */,

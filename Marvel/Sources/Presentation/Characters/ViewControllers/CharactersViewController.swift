@@ -124,12 +124,7 @@ private extension CharactersViewController {
 
     func configureConstraints(of collectionView: UICollectionView) {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+        NSLayoutConstraint.fit(collectionView, in: view)
     }
 
     func registerSubviews(in collectionView: UICollectionView) {
