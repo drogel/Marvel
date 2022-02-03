@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 3/2/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class OptionalStringNilOrEmptyTests: XCTestCase {
-
     func test_givenNilString_returnsTrue() {
         let sut: String? = nil
         XCTAssertTrue(sut.isNilOrEmpty)

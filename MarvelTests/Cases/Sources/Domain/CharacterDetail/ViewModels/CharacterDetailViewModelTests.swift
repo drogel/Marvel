@@ -200,7 +200,7 @@ private extension CharacterDetailViewModelTests {
         XCTAssertEqual(cancellableMock.didCancelCallCount, 1)
     }
 
-    func assertCellDataIsNil(line: UInt = #line) {
+    func assertCellDataIsNil(line _: UInt = #line) {
         XCTAssertNil(sut.imageCellData)
         XCTAssertNil(sut.infoCellData)
     }

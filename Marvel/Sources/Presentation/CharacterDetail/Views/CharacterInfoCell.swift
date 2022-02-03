@@ -56,7 +56,6 @@ class CharacterInfoCell: UICollectionViewCell {
 }
 
 extension CharacterInfoCell: Configurable {
-
     typealias Item = CharacterInfoData?
 
     func configure(using item: CharacterInfoData?) {

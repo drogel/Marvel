@@ -9,12 +9,11 @@ import Foundation
 import UIKit
 
 class UICollectionViewStub: UICollectionView {
-
     init() {
         super.init(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
     }
 
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         super.init(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
     }
 }

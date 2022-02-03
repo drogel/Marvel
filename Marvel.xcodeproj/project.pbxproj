@@ -97,6 +97,10 @@
 		05B0854827AC439800A74DD0 /* OptionalString+NilOrEmpty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B0854727AC439800A74DD0 /* OptionalString+NilOrEmpty.swift */; };
 		05B0854C27AC43D300A74DD0 /* OptionalStringNilOrEmptyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B0854B27AC43D300A74DD0 /* OptionalStringNilOrEmptyTests.swift */; };
 		05B0854E27AC457500A74DD0 /* UICollectionViewStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B0854D27AC457500A74DD0 /* UICollectionViewStub.swift */; };
+		05B0855127AC52A500A74DD0 /* CharacterDetailDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B0855027AC52A500A74DD0 /* CharacterDetailDataSource.swift */; };
+		05B0855427AC554600A74DD0 /* CharacterDetailDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B0855327AC554600A74DD0 /* CharacterDetailDataSourceTests.swift */; };
+		05B0855627AC569F00A74DD0 /* CollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B0855527AC569F00A74DD0 /* CollectionViewDataSource.swift */; };
+		05B0855827AC57AA00A74DD0 /* CollectionViewDataSourceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B0855727AC57AA00A74DD0 /* CollectionViewDataSourceMock.swift */; };
 		05B7DB67279CAFC2004320FF /* UICollectionView+Dequeue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B7DB66279CAFC2004320FF /* UICollectionView+Dequeue.swift */; };
 		05BD40A027A9A2DC00F2E513 /* CoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BD409F27A9A2DC00F2E513 /* CoordinatorTests.swift */; };
 		05BD40A227A9A5B100F2E513 /* URLComponentsBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BD40A127A9A5B100F2E513 /* URLComponentsBuilderTests.swift */; };
@@ -234,6 +238,10 @@
 		05B0854727AC439800A74DD0 /* OptionalString+NilOrEmpty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OptionalString+NilOrEmpty.swift"; sourceTree = "<group>"; };
 		05B0854B27AC43D300A74DD0 /* OptionalStringNilOrEmptyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalStringNilOrEmptyTests.swift; sourceTree = "<group>"; };
 		05B0854D27AC457500A74DD0 /* UICollectionViewStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionViewStub.swift; sourceTree = "<group>"; };
+		05B0855027AC52A500A74DD0 /* CharacterDetailDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailDataSource.swift; sourceTree = "<group>"; };
+		05B0855327AC554600A74DD0 /* CharacterDetailDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailDataSourceTests.swift; sourceTree = "<group>"; };
+		05B0855527AC569F00A74DD0 /* CollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSource.swift; sourceTree = "<group>"; };
+		05B0855727AC57AA00A74DD0 /* CollectionViewDataSourceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSourceMock.swift; sourceTree = "<group>"; };
 		05B7DB66279CAFC2004320FF /* UICollectionView+Dequeue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Dequeue.swift"; sourceTree = "<group>"; };
 		05BD409F27A9A2DC00F2E513 /* CoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorTests.swift; sourceTree = "<group>"; };
 		05BD40A127A9A5B100F2E513 /* URLComponentsBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLComponentsBuilderTests.swift; sourceTree = "<group>"; };
@@ -550,6 +558,7 @@
 				0571307327A5C53E0009383E /* NetworkErrorHandlerMock.swift */,
 				0571306827A55C280009383E /* JSONParserMock.swift */,
 				05BD40A927A9B4AC00F2E513 /* CoordinatorDelegateMock.swift */,
+				05B0855727AC57AA00A74DD0 /* CollectionViewDataSourceMock.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -716,6 +725,7 @@
 				05DAC33627973A2A0062CC6F /* Identifiable.swift */,
 				05484616279D865800C6EC66 /* Instantiable.swift */,
 				05C14930279CA74000927467 /* Loadable.swift */,
+				05B0855527AC569F00A74DD0 /* CollectionViewDataSource.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -799,6 +809,22 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		05B0854F27AC528500A74DD0 /* DataSources */ = {
+			isa = PBXGroup;
+			children = (
+				05B0855027AC52A500A74DD0 /* CharacterDetailDataSource.swift */,
+			);
+			path = DataSources;
+			sourceTree = "<group>";
+		};
+		05B0855227AC552E00A74DD0 /* DataSources */ = {
+			isa = PBXGroup;
+			children = (
+				05B0855327AC554600A74DD0 /* CharacterDetailDataSourceTests.swift */,
+			);
+			path = DataSources;
+			sourceTree = "<group>";
+		};
 		05BD409D27A9A2C500F2E513 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -828,6 +854,7 @@
 			isa = PBXGroup;
 			children = (
 				05BD40A527A9B17800F2E513 /* CharacterDetailCoordinatorTests.swift */,
+				05B0855227AC552E00A74DD0 /* DataSources */,
 				059CD7AD27AAE4A400523EE3 /* ViewControllers */,
 			);
 			path = CharacterDetail;
@@ -1036,6 +1063,7 @@
 			isa = PBXGroup;
 			children = (
 				0548461F279DC98800C6EC66 /* CharacterDetailCoordinator.swift */,
+				05B0854F27AC528500A74DD0 /* DataSources */,
 				05DAC34A27974CAA0062CC6F /* ViewControllers */,
 				059CD7B327AAFCD100523EE3 /* Views */,
 			);
@@ -1251,8 +1279,10 @@
 				0548460C279D6D8B00C6EC66 /* CharacterDetailViewModel.swift in Sources */,
 				0545945327988A4700A634AD /* FetchCharactersServiceUseCase.swift in Sources */,
 				05932C4E279B249A00549D7D /* URLComposer.swift in Sources */,
+				05B0855627AC569F00A74DD0 /* CollectionViewDataSource.swift in Sources */,
 				05B7DB67279CAFC2004320FF /* UICollectionView+Dequeue.swift in Sources */,
 				05DAC2FC2797258A0062CC6F /* AppDelegate.swift in Sources */,
+				05B0855127AC52A500A74DD0 /* CharacterDetailDataSource.swift in Sources */,
 				05932C45279B18BC00549D7D /* NetworkSession.swift in Sources */,
 				05DAC2FE2797258A0062CC6F /* SceneDelegate.swift in Sources */,
 				05DAC34327973E590062CC6F /* CharactersLayout.swift in Sources */,
@@ -1289,6 +1319,7 @@
 				05484607279D697000C6EC66 /* FetchCharacterDetailUseCaseTests.swift in Sources */,
 				0571306727A55B3A0009383E /* NetworkServiceMock.swift in Sources */,
 				054594812798B93C00A634AD /* DataWrapper+Stubs.swift in Sources */,
+				05B0855827AC57AA00A74DD0 /* CollectionViewDataSourceMock.swift in Sources */,
 				0559261027A85EB500026919 /* XCTestCase+FailureMessage.swift in Sources */,
 				0571306B27A5B36A0009383E /* CharacterDetailClientServiceTests.swift in Sources */,
 				053B9D992799CADD00CCF1C2 /* CharacterData+Stubs.swift in Sources */,
@@ -1302,6 +1333,7 @@
 				054845FF279D66B200C6EC66 /* JsonDataLoaderStubs.swift in Sources */,
 				0545945827988C9B00A634AD /* CharactersViewModelTests.swift in Sources */,
 				05BD40A827A9B29400F2E513 /* UINavigationControllerMock.swift in Sources */,
+				05B0855427AC554600A74DD0 /* CharacterDetailDataSourceTests.swift in Sources */,
 				05B0854C27AC43D300A74DD0 /* OptionalStringNilOrEmptyTests.swift in Sources */,
 				0506E30127A8481C0006C759 /* AuthenticatedNetworkServiceTests.swift in Sources */,
 				0545946E27989A1A00A634AD /* CharactersDebugServiceTests.swift in Sources */,
