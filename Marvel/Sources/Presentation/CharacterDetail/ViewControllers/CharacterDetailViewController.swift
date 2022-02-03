@@ -10,17 +10,6 @@ import UIKit
 class CharacterDetailViewController: ViewController {
     typealias ViewModel = CharacterDetailViewModelProtocol
 
-    private enum Constants {
-        static let imageHeightMultiplier = 0.618
-
-        enum Info {
-            static let spacing: CGFloat = 8
-            static let nameFontSize: CGFloat = 28
-            static let descriptionFontSize: CGFloat = 12
-            static let inset: CGFloat = 20
-        }
-    }
-
     private var viewModel: ViewModel!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
