@@ -17,7 +17,11 @@ class CharacterDetailViewControllerTests: XCTestCase {
         super.setUp()
         dataSourceMock = CollectionViewDataSourceMock()
         viewModelMock = CharacterDetailViewModelMock()
-        sut = CharacterDetailViewController.instantiate(viewModel: viewModelMock, dataSource: dataSourceMock)
+        sut = CharacterDetailViewController.instantiate(
+            viewModel: viewModelMock,
+            dataSource: dataSourceMock,
+            layout: CharacterDetailLayout()
+        )
     }
 
     override func tearDown() {

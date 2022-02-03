@@ -24,10 +24,16 @@ class CharacterDetailViewController: ViewController {
     private var viewModel: ViewModel!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
+    private var layout: UICollectionViewCompositionalLayout!
 
-    static func instantiate(viewModel: ViewModel, dataSource: CollectionViewDataSource) -> Self {
+    static func instantiate(
+        viewModel: ViewModel,
+        dataSource: CollectionViewDataSource,
+        layout: UICollectionViewCompositionalLayout
+    ) -> Self {
         let viewController = instantiate(viewModel: viewModel)
         viewController.dataSource = dataSource
+        viewController.layout = layout
         return viewController
     }
 
@@ -80,8 +86,7 @@ private extension CharacterDetailViewController {
     }
 
     func createCollectionView() -> UICollectionView {
-        // TODO: Develop an actual character detail layout
-        UICollectionView(frame: .zero, collectionViewLayout: CharactersLayout())
+        UICollectionView(frame: .zero, collectionViewLayout: layout)
     }
 
     func setSubview(_ collectionView: UICollectionView) {

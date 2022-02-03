@@ -46,7 +46,11 @@ private extension CharacterDetailCoordinator {
             characterID: container.characterID
         )
         let dataSource = CharacterDetailDataSource(viewModel: viewModel)
-        let viewController = CharacterDetailViewController.instantiate(viewModel: viewModel, dataSource: dataSource)
+        let viewController = CharacterDetailViewController.instantiate(
+            viewModel: viewModel,
+            dataSource: dataSource,
+            layout: CharacterDetailLayout()
+        )
         viewController.transitioningDelegate = self
         viewModel.viewDelegate = viewController
         return viewController
