@@ -103,7 +103,7 @@ private class CharactersViewModelMock: CharactersViewModelProtocol {
 
 private extension CharactersViewControllerTests {
     var collectionViewStub: UICollectionView {
-        UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
+        UICollectionViewStub()
     }
 
     var indexPathStub: IndexPath {

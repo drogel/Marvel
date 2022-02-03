@@ -1,5 +1,5 @@
 //
-//  CharacterDetailDataTests.swift
+//  CharacterInfoDataTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 23/1/22.
@@ -9,12 +9,12 @@ import Foundation
 @testable import Marvel_Debug
 import XCTest
 
-class CharacterDetailDataTests: XCTestCase {
-    private var sut: CharacterDetailData!
+class CharacterInfoDataTests: XCTestCase {
+    private var sut: CharacterInfoData!
 
     override func setUp() {
         super.setUp()
-        sut = CharacterDetailData(name: "name", description: "description")
+        sut = CharacterInfoData(name: "name", description: "description")
     }
 
     override func tearDown() {
@@ -23,12 +23,12 @@ class CharacterDetailDataTests: XCTestCase {
     }
 
     func test_givenOther_areEqualIfNameAndDescriptionAreEqual() {
-        let other = CharacterDetailData(name: "name", description: "description")
+        let other = CharacterInfoData(name: "name", description: "description")
         XCTAssertEqual(other, sut)
     }
 
     func test_givenOther_areNotEqualIfNameAndDescriptionAreNotEqual() {
-        let other = CharacterDetailData(name: "", description: "description")
+        let other = CharacterInfoData(name: "", description: "description")
         XCTAssertNotEqual(other, sut)
     }
 }

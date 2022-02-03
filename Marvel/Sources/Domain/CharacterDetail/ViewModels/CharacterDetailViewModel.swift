@@ -7,12 +7,15 @@
 
 import Foundation
 
-protocol CharacterDetailViewModelProtocol: ViewModel {}
+protocol CharacterDetailViewModelProtocol: ViewModel {
+    var imageCellData: CharacterImageData? { get }
+    var infoCellData: CharacterInfoData? { get }
+}
 
 protocol CharacterDetailViewModelViewDelegate: AnyObject {
     func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol)
     func viewModelDidFinishLoading(_ viewModel: CharacterDetailViewModelProtocol)
-    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didRetrieve characterDetail: CharacterDetailData)
+    func viewModelDidRetrieveData(_ viewModel: CharacterDetailViewModelProtocol)
     func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String)
 }
 
@@ -25,9 +28,18 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
 
     weak var viewDelegate: CharacterDetailViewModelViewDelegate?
 
+    var imageCellData: CharacterImageData? {
+        characterDetailData?.image
+    }
+
+    var infoCellData: CharacterInfoData? {
+        characterDetailData?.info
+    }
+
     private let characterFetcher: FetchCharacterDetailUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let characterID: Int
+    private var characterDetailData: CharacterDetailData?
     private var characterCancellable: Cancellable?
 
     init(
@@ -69,7 +81,8 @@ private extension CharacterDetailViewModel {
 
     func handleSuccess(with pageInfo: PageInfo) {
         guard let characterDetail = mapToCharacterDetail(characterData: pageInfo.results) else { return }
-        viewDelegate?.viewModel(self, didRetrieve: characterDetail)
+        characterDetailData = characterDetail
+        viewDelegate?.viewModelDidRetrieveData(self)
     }
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {
@@ -90,11 +103,19 @@ private extension CharacterDetailViewModel {
 
     func mapToCharacterDetail(characterData: [CharacterData]?) -> CharacterDetailData? {
         guard let firstCharacterData = characterData?.first,
-              let name = firstCharacterData.name,
-              let description = firstCharacterData.description
+              let characterInfoData = infoData(from: firstCharacterData)
         else { return nil }
-        let imageURL = imageURL(for: firstCharacterData)
-        return CharacterDetailData(name: name, description: description, imageURL: imageURL)
+        let characterImageData = imageData(from: firstCharacterData)
+        return CharacterDetailData(image: characterImageData, info: characterInfoData)
+    }
+
+    func imageData(from characterData: CharacterData) -> CharacterImageData {
+        CharacterImageData(imageURL: imageURL(for: characterData))
+    }
+
+    func infoData(from characterData: CharacterData) -> CharacterInfoData? {
+        guard let name = characterData.name, let description = characterData.description else { return nil }
+        return CharacterInfoData(name: name, description: description)
     }
 
     func imageURL(for characterData: CharacterData) -> URL? {

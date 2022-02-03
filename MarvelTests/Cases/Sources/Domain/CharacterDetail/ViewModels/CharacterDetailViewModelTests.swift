@@ -40,6 +40,10 @@ class CharacterDetailViewModelTests: XCTestCase {
         XCTAssertEqual(viewDelegateMock.didStartLoadingCallCount, 1)
     }
 
+    func test_infoCellDataIsNilInitially() {
+        assertCellDataIsNil()
+    }
+
     func test_givenCharacterFetcher_whenStrating_fetchesCharacter() {
         sut.start()
         XCTAssertEqual(characterFetcherMock.fetchCallCount, 1)
@@ -51,29 +55,38 @@ class CharacterDetailViewModelTests: XCTestCase {
     }
 
     func test_givenSuccessfulCharacterFetcher_whenStartingCompletes_notifiesViewWithData() {
-        givenSutWithSuccessfulFetcher()
-        givenViewDelegate()
-        sut.start()
-        XCTAssertEqual(viewDelegateMock.didRetrieveCharacterCallCount, 1)
+        givenStartCompletedSuccessfully()
+        XCTAssertEqual(viewDelegateMock.didRetrieveDataCallCount, 1)
+    }
+
+    func test_givenSuccessfulCharacterFetcher_whenStartingCompletes_infoCellDataIsNotNil() {
+        givenStartCompletedSuccessfully()
+        XCTAssertNotNil(sut.infoCellData)
+    }
+
+    func test_givenSuccessfulCharacterFetcher_whenStartingCompletes_imageCellDataIsNotNil() {
+        givenStartCompletedSuccessfully()
+        XCTAssertNotNil(sut.imageCellData)
+    }
+
+    func test_givenStartFailed_allCellDataIsNil() {
+        givenStartFailed()
+        assertCellDataIsNil()
     }
 
     func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesFinishLoadToViewDelegate() {
-        givenSutWithSuccessfulFetcher()
-        givenViewDelegate()
-        sut.start()
+        givenStartCompletedSuccessfully()
         XCTAssertEqual(viewDelegateMock.didFinishLoadingCallCount, 1)
     }
 
     func test_givenDidStartSuccessfully_whenDisposing_cancellsRequests() {
-        givenDidStartSuccessfully()
+        givenStartCompletedSuccessfully()
         sut.dispose()
         assertCancelledRequests()
     }
 
     func test_givenStartFailed_notifiesViewDelegate() {
-        givenSutWithFailingFetcher()
-        givenViewDelegate()
-        sut.start()
+        givenStartFailed()
         XCTAssertEqual(viewDelegateMock.didFailCallCount, 1)
     }
 }
@@ -81,7 +94,7 @@ class CharacterDetailViewModelTests: XCTestCase {
 private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModelViewDelegate {
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
-    var didRetrieveCharacterCallCount = 0
+    var didRetrieveDataCallCount = 0
     var didFailCallCount = 0
 
     func viewModelDidStartLoading(_: CharacterDetailViewModelProtocol) {
@@ -92,8 +105,8 @@ private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModel
         didFinishLoadingCallCount += 1
     }
 
-    func viewModel(_: CharacterDetailViewModelProtocol, didRetrieve _: CharacterDetailData) {
-        didRetrieveCharacterCallCount += 1
+    func viewModelDidRetrieveData(_: CharacterDetailViewModelProtocol) {
+        didRetrieveDataCallCount += 1
     }
 
     func viewModel(_: CharacterDetailViewModelProtocol, didFailWithError _: String) {
@@ -161,14 +174,21 @@ private extension CharacterDetailViewModelTests {
         sut = CharacterDetailViewModel(characterFetcher: characterFetcherMock, characterID: characterIDStub)
     }
 
-    func givenDidStartSuccessfully() {
-        givenSutWithSuccessfulFetcher()
-        sut.start()
-    }
-
     func givenSutWithFailingFetcher() {
         characterFetcherMock = CharacterFetcherFailingStub()
         givenSut(with: characterFetcherMock)
+    }
+
+    func givenStartCompletedSuccessfully() {
+        givenSutWithSuccessfulFetcher()
+        givenViewDelegate()
+        sut.start()
+    }
+
+    func givenStartFailed() {
+        givenSutWithFailingFetcher()
+        givenViewDelegate()
+        sut.start()
     }
 
     func retrieveFetcherMockCancellableMock() -> CancellableMock {
@@ -178,5 +198,10 @@ private extension CharacterDetailViewModelTests {
     func assertCancelledRequests(line _: UInt = #line) {
         let cancellableMock = retrieveFetcherMockCancellableMock()
         XCTAssertEqual(cancellableMock.didCancelCallCount, 1)
+    }
+
+    func assertCellDataIsNil(line: UInt = #line) {
+        XCTAssertNil(sut.imageCellData)
+        XCTAssertNil(sut.infoCellData)
     }
 }

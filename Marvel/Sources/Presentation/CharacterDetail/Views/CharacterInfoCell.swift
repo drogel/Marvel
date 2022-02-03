@@ -55,6 +55,16 @@ class CharacterInfoCell: UICollectionViewCell {
     }
 }
 
+extension CharacterInfoCell: Configurable {
+
+    typealias Item = CharacterInfoData?
+
+    func configure(using item: CharacterInfoData?) {
+        nameLabel.text = item?.name
+        configure(description: item?.description)
+    }
+}
+
 private extension CharacterInfoCell {
     func setUp() {
         setUpSubviews()
@@ -80,5 +90,10 @@ private extension CharacterInfoCell {
     func setUpInfoStackViewConstraints() {
         let inset = Constants.inset
         NSLayoutConstraint.fit(infoStackView, in: infoBackgroundView, inset: inset)
+    }
+
+    func configure(description: String?) {
+        descriptionLabel.text = description
+        descriptionLabel.isHidden = description.isNilOrEmpty
     }
 }

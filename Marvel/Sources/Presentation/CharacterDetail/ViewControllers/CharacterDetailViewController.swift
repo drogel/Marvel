@@ -8,6 +8,7 @@
 import UIKit
 
 class CharacterDetailViewController: ViewController {
+
     typealias ViewModel = CharacterDetailViewModelProtocol
 
     private enum Constants {
@@ -21,50 +22,13 @@ class CharacterDetailViewController: ViewController {
         }
     }
 
+    private enum Section: Int {
+        case image
+        case info
+    }
+
     private var viewModel: ViewModel!
-
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        return scrollView
-    }()
-
-    private lazy var mainStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        return stackView
-    }()
-
-    private lazy var infoBackgroundView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var infoStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.spacing = Constants.Info.spacing
-        stackView.axis = .vertical
-        return stackView
-    }()
-
-    private lazy var characterImageView = CharacterImageView()
-
-    private lazy var nameLabel: UILabel = {
-        let label = UILabel()
-        label.font = .boldSystemFont(ofSize: Constants.Info.nameFontSize)
-        return label
-    }()
-
-    private lazy var descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = .boldSystemFont(ofSize: Constants.Info.descriptionFontSize)
-        label.textColor = .systemGray
-        label.numberOfLines = 0
-        return label
-    }()
+    private var collectionView: UICollectionView!
 
     static func instantiate(viewModel: ViewModel) -> Self {
         let viewController = Self()
@@ -80,18 +44,7 @@ class CharacterDetailViewController: ViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        characterImageView.clear()
         viewModel.dispose()
-    }
-}
-
-extension CharacterDetailViewController: Configurable {
-    typealias Item = CharacterDetailData
-
-    func configure(using item: CharacterDetailData) {
-        nameLabel.text = item.name
-        descriptionLabel.text = item.description
-        characterImageView.loadImage(from: item.imageURL)
     }
 }
 
@@ -104,8 +57,8 @@ extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
         stopLoading()
     }
 
-    func viewModel(_: CharacterDetailViewModelProtocol, didRetrieve characterDetail: CharacterDetailData) {
-        configure(using: characterDetail)
+    func viewModelDidRetrieveData(_: CharacterDetailViewModelProtocol) {
+        collectionView.reloadData()
     }
 
     func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String) {
@@ -113,51 +66,73 @@ extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
     }
 }
 
+extension CharacterDetailViewController: UICollectionViewDataSource {
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        2
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        1
+    }
+
+    func collectionView(_: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let section = Section(rawValue: indexPath.section) else { fatalError() }
+        switch section {
+        case .image:
+            return imageCell(in: collectionView, at: indexPath)
+        case .info:
+            return infoCell(in: collectionView, at: indexPath)
+        }
+    }
+}
+
 private extension CharacterDetailViewController {
     func setUp() {
-        setUpBackground()
-        setUpSubviews()
-        setUpConstraints()
+        setUpCollectionView()
     }
 
-    func setUpBackground() {
-        view.backgroundColor = .systemBackground
+    func setUpCollectionView() {
+        let collectionView = createCollectionView()
+        setSubview(collectionView)
+        configureDataSource(of: collectionView)
+        configureConstraints(of: collectionView)
+        registerSubviews(in: collectionView)
     }
 
-    func setUpSubviews() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(mainStackView)
-        mainStackView.addArrangedSubview(characterImageView)
-        mainStackView.addArrangedSubview(infoBackgroundView)
-        infoBackgroundView.addSubview(infoStackView)
-        infoStackView.addArrangedSubview(nameLabel)
-        infoStackView.addArrangedSubview(descriptionLabel)
+    func createCollectionView() -> UICollectionView {
+        // TODO: Develop an actual character detail layout
+        UICollectionView(frame: .zero, collectionViewLayout: CharactersLayout())
     }
 
-    func setUpConstraints() {
-        setUpScrollViewConstraints()
-        setUpMainStackViewViewConstraints()
-        setUpInfoStackViewConstraints()
-        setUpCharacterImageViewConstraints()
+    func setSubview(_ collectionView: UICollectionView) {
+        self.collectionView = collectionView
+        view.addSubview(collectionView)
     }
 
-    func setUpScrollViewConstraints() {
-        NSLayoutConstraint.fit(scrollView, in: view)
+    func configureDataSource(of collectionView: UICollectionView) {
+        collectionView.dataSource = self
     }
 
-    func setUpMainStackViewViewConstraints() {
-        NSLayoutConstraint.fit(mainStackView, in: scrollView)
-        NSLayoutConstraint.activate([mainStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)])
+    func configureConstraints(of collectionView: UICollectionView) {
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.fit(collectionView, in: view)
     }
 
-    func setUpInfoStackViewConstraints() {
-        NSLayoutConstraint.fit(infoStackView, in: infoBackgroundView, inset: Constants.Info.inset)
+    func registerSubviews(in collectionView: UICollectionView) {
+        collectionView.register(CharacterImageCell.self, forCellWithReuseIdentifier: CharacterImageCell.identifier)
+        collectionView.register(CharacterInfoCell.self, forCellWithReuseIdentifier: CharacterInfoCell.identifier)
     }
 
-    func setUpCharacterImageViewConstraints() {
-        let multiplier = Constants.imageHeightMultiplier
-        NSLayoutConstraint.activate([
-            characterImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: multiplier),
-        ])
+    func imageCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeue(cellOfType: CharacterImageCell.self, at: indexPath)
+        cell.configure(using: viewModel.imageCellData)
+        return cell
+    }
+
+    func infoCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeue(cellOfType: CharacterInfoCell.self, at: indexPath)
+        cell.configure(using: viewModel.infoCellData)
+        return cell
     }
 }

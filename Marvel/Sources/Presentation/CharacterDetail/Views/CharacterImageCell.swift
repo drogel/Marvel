@@ -27,6 +27,14 @@ class CharacterImageCell: UICollectionViewCell {
     }
 }
 
+extension CharacterImageCell: Configurable {
+    typealias Item = CharacterImageData?
+
+    func configure(using item: CharacterImageData?) {
+        characterImageView.loadImage(from: item?.imageURL)
+    }
+}
+
 private extension CharacterImageCell {
     func setUp() {
         setUpSubviews()
