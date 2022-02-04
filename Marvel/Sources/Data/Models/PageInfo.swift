@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PageInfo<ContentType: Equatable & Codable>: Codable, Equatable {
+struct PageInfo<ContentType: DataObject>: DataObject {
     let offset: Int?
     let limit: Int?
     let total: Int?

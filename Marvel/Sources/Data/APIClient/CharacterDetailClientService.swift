@@ -10,9 +10,9 @@ import Foundation
 class CharacterDetailClientService: CharacterDetailService {
     private let charactersPath = MarvelAPIPaths.characters.rawValue
     private let client: NetworkService
-    private let resultHandler: CharactersResultHandler
+    private let resultHandler: ResultHandler
 
-    init(client: NetworkService, resultHandler: CharactersResultHandler) {
+    init(client: NetworkService, resultHandler: ResultHandler) {
         self.client = client
         self.resultHandler = resultHandler
     }

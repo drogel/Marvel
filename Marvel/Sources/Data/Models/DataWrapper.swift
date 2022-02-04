@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DataWrapper<ContentType: Equatable & Codable>: Codable, Equatable {
+struct DataWrapper<ContentType: DataObject>: DataObject {
     let code: Int?
     let status: String?
     let copyright: String?

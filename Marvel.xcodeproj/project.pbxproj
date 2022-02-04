@@ -18,6 +18,7 @@
 		053BBD7E27AD85F50033640A /* ComicData.json in Resources */ = {isa = PBXBuildFile; fileRef = 053BBD7D27AD85F50033640A /* ComicData.json */; };
 		053BBD8027AD86230033640A /* ComicData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD7F27AD86230033640A /* ComicData.swift */; };
 		053BBD8227AD86840033640A /* ComicDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD8127AD86840033640A /* ComicDataTests.swift */; };
+		053BBD8427AD99130033640A /* DataObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD8327AD99130033640A /* DataObject.swift */; };
 		0545945027988A1400A634AD /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545944F27988A1400A634AD /* Cancellable.swift */; };
 		0545945327988A4700A634AD /* FetchCharactersServiceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945227988A4700A634AD /* FetchCharactersServiceUseCase.swift */; };
 		0545945827988C9B00A634AD /* CharactersViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945727988C9B00A634AD /* CharactersViewModelTests.swift */; };
@@ -54,7 +55,7 @@
 		05484625279DE8C800C6EC66 /* CancellableMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05484624279DE8C800C6EC66 /* CancellableMock.swift */; };
 		05484627279E035600C6EC66 /* CharacterImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05484626279E035600C6EC66 /* CharacterImageView.swift */; };
 		05484629279E1B0D00C6EC66 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05484628279E1B0D00C6EC66 /* AlertPresenter.swift */; };
-		054ED2BD27A716C3000358A3 /* CharactersResultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054ED2BC27A716C3000358A3 /* CharactersResultHandler.swift */; };
+		054ED2BD27A716C3000358A3 /* ResultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054ED2BC27A716C3000358A3 /* ResultHandler.swift */; };
 		0559261027A85EB500026919 /* XCTestCase+FailureMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */; };
 		0559261427A868BA00026919 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0559261627A868BA00026919 /* Localizable.strings */; };
 		0559261B27A86B2700026919 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0559261A27A86B2700026919 /* String+Localized.swift */; };
@@ -163,6 +164,7 @@
 		053BBD7D27AD85F50033640A /* ComicData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ComicData.json; sourceTree = "<group>"; };
 		053BBD7F27AD86230033640A /* ComicData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicData.swift; sourceTree = "<group>"; };
 		053BBD8127AD86840033640A /* ComicDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicDataTests.swift; sourceTree = "<group>"; };
+		053BBD8327AD99130033640A /* DataObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataObject.swift; sourceTree = "<group>"; };
 		0545944D2798872700A634AD /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		0545944E2798872D00A634AD /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		0545944F27988A1400A634AD /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
@@ -201,7 +203,7 @@
 		05484624279DE8C800C6EC66 /* CancellableMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellableMock.swift; sourceTree = "<group>"; };
 		05484626279E035600C6EC66 /* CharacterImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterImageView.swift; sourceTree = "<group>"; };
 		05484628279E1B0D00C6EC66 /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
-		054ED2BC27A716C3000358A3 /* CharactersResultHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersResultHandler.swift; sourceTree = "<group>"; };
+		054ED2BC27A716C3000358A3 /* ResultHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultHandler.swift; sourceTree = "<group>"; };
 		0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FailureMessage.swift"; sourceTree = "<group>"; };
 		0559261527A868BA00026919 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0559261927A869CD00026919 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -329,7 +331,7 @@
 		053B9DA0279A0BC800CCF1C2 /* APIClient */ = {
 			isa = PBXGroup;
 			children = (
-				054ED2BC27A716C3000358A3 /* CharactersResultHandler.swift */,
+				054ED2BC27A716C3000358A3 /* ResultHandler.swift */,
 				0548461B279DC6F600C6EC66 /* CharacterDetailClientService.swift */,
 				05932C58279B5A0700549D7D /* CharactersClientService.swift */,
 				05484621279DE69300C6EC66 /* MarvelAPIPaths.swift */,
@@ -622,6 +624,7 @@
 				0585AF9C27975DDB00586ABD /* DataWrapper.swift */,
 				057D72FB27986E3D005ED888 /* ImageData.swift */,
 				057D72F327986BB0005ED888 /* PageInfo.swift */,
+				053BBD8327AD99130033640A /* DataObject.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1309,6 +1312,7 @@
 				0559261B27A86B2700026919 /* String+Localized.swift in Sources */,
 				05DAC33C27973AC40062CC6F /* CharacterCell.swift in Sources */,
 				05C1491C279C2C8200927467 /* ImageURLBuilder.swift in Sources */,
+				053BBD8427AD99130033640A /* DataObject.swift in Sources */,
 				05C1492D279CA5E100927467 /* SpinnerViewController.swift in Sources */,
 				0548460C279D6D8B00C6EC66 /* CharacterDetailViewModel.swift in Sources */,
 				0545945327988A4700A634AD /* FetchCharactersServiceUseCase.swift in Sources */,
@@ -1323,7 +1327,7 @@
 				05DAC34627974AFB0062CC6F /* Coordinator.swift in Sources */,
 				0548461C279DC6F600C6EC66 /* CharacterDetailClientService.swift in Sources */,
 				05932C49279B19A700549D7D /* NetworkService.swift in Sources */,
-				054ED2BD27A716C3000358A3 /* CharactersResultHandler.swift in Sources */,
+				054ED2BD27A716C3000358A3 /* ResultHandler.swift in Sources */,
 				0585AF9D27975DDB00586ABD /* DataWrapper.swift in Sources */,
 				05B0856127AC5CB000A74DD0 /* CharacterInfoSection.swift in Sources */,
 				05459464279898A700A634AD /* CharactersService.swift in Sources */,

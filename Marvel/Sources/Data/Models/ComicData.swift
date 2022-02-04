@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ComicData: Codable, Equatable {
+struct ComicData: DataObject {
     let identifier: Int?
     let title: String?
     let issueNumber: Int?

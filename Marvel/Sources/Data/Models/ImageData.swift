@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ImageData: Equatable, Codable {
+struct ImageData: DataObject {
     let path: String?
     let imageExtension: String?
 

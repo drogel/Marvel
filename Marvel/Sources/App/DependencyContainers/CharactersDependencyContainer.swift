@@ -56,7 +56,7 @@ private extension CharactersDependencyContainer {
         DataServicesNetworkErrorHandler()
     }
 
-    var resultHandler: CharactersResultHandler {
-        CharactersClientServiceResultHandler(parser: parser, errorHandler: errorHandler)
+    var resultHandler: ResultHandler {
+        ClientResultHandler(parser: parser, errorHandler: errorHandler)
     }
 }
