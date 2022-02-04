@@ -15,6 +15,9 @@
 		053B9DA2279A0BE900CCF1C2 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9DA1279A0BE900CCF1C2 /* Authenticator.swift */; };
 		053B9DA4279A0CD100CCF1C2 /* SecretsRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9DA3279A0CD100CCF1C2 /* SecretsRetriever.swift */; };
 		053B9DA7279A0EA900CCF1C2 /* AuthenticatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9DA6279A0EA900CCF1C2 /* AuthenticatorTests.swift */; };
+		053BBD7E27AD85F50033640A /* ComicData.json in Resources */ = {isa = PBXBuildFile; fileRef = 053BBD7D27AD85F50033640A /* ComicData.json */; };
+		053BBD8027AD86230033640A /* ComicData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD7F27AD86230033640A /* ComicData.swift */; };
+		053BBD8227AD86840033640A /* ComicDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD8127AD86840033640A /* ComicDataTests.swift */; };
 		0545945027988A1400A634AD /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545944F27988A1400A634AD /* Cancellable.swift */; };
 		0545945327988A4700A634AD /* FetchCharactersServiceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945227988A4700A634AD /* FetchCharactersServiceUseCase.swift */; };
 		0545945827988C9B00A634AD /* CharactersViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945727988C9B00A634AD /* CharactersViewModelTests.swift */; };
@@ -157,6 +160,9 @@
 		053B9DA1279A0BE900CCF1C2 /* Authenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authenticator.swift; sourceTree = "<group>"; };
 		053B9DA3279A0CD100CCF1C2 /* SecretsRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretsRetriever.swift; sourceTree = "<group>"; };
 		053B9DA6279A0EA900CCF1C2 /* AuthenticatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatorTests.swift; sourceTree = "<group>"; };
+		053BBD7D27AD85F50033640A /* ComicData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ComicData.json; sourceTree = "<group>"; };
+		053BBD7F27AD86230033640A /* ComicData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicData.swift; sourceTree = "<group>"; };
+		053BBD8127AD86840033640A /* ComicDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicDataTests.swift; sourceTree = "<group>"; };
 		0545944D2798872700A634AD /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		0545944E2798872D00A634AD /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		0545944F27988A1400A634AD /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
@@ -612,6 +618,7 @@
 			isa = PBXGroup;
 			children = (
 				057D72F727986D0D005ED888 /* CharacterData.swift */,
+				053BBD7F27AD86230033640A /* ComicData.swift */,
 				0585AF9C27975DDB00586ABD /* DataWrapper.swift */,
 				057D72FB27986E3D005ED888 /* ImageData.swift */,
 				057D72F327986BB0005ED888 /* PageInfo.swift */,
@@ -645,6 +652,7 @@
 			isa = PBXGroup;
 			children = (
 				057D72F927986D33005ED888 /* CharacterDataTests.swift */,
+				053BBD8127AD86840033640A /* ComicDataTests.swift */,
 				0585AFA127975E9100586ABD /* DataWrapperTests.swift */,
 				057D730127986F9D005ED888 /* ImageDataTests.swift */,
 				057D72F127986BA7005ED888 /* PageInfoTests.swift */,
@@ -688,6 +696,7 @@
 			isa = PBXGroup;
 			children = (
 				057D72FE27986F92005ED888 /* CharacterData.json */,
+				053BBD7D27AD85F50033640A /* ComicData.json */,
 				0585AFA827975F5000586ABD /* DataWrapper.json */,
 				057D72FD27986F92005ED888 /* ImageData.json */,
 				057D72F527986C6E005ED888 /* PageInfo.json */,
@@ -1216,6 +1225,7 @@
 				057D730027986F92005ED888 /* CharacterData.json in Resources */,
 				057D72FF27986F92005ED888 /* ImageData.json in Resources */,
 				0585AFA927975F5000586ABD /* DataWrapper.json in Resources */,
+				053BBD7E27AD85F50033640A /* ComicData.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1254,6 +1264,7 @@
 				05B0854627AC38AD00A74DD0 /* CharacterInfoData.swift in Sources */,
 				057D72F827986D0D005ED888 /* CharacterData.swift in Sources */,
 				05DAC34C27974CE30062CC6F /* CharacterDetailViewController.swift in Sources */,
+				053BBD8027AD86230033640A /* ComicData.swift in Sources */,
 				05C1491F279C51E000927467 /* AppDependencyContainer.swift in Sources */,
 				053B9D932799C76300CCF1C2 /* CharacterCellData.swift in Sources */,
 				05932C4C279B1AF000549D7D /* URLSessionDataTask+Cancellable.swift in Sources */,
@@ -1339,6 +1350,7 @@
 				053B9DA7279A0EA900CCF1C2 /* AuthenticatorTests.swift in Sources */,
 				059CD7AF27AAE4B300523EE3 /* CharacterDetailViewControllerTests.swift in Sources */,
 				05BD40AD27A9B5C400F2E513 /* CharactersCoordinatorTests.swift in Sources */,
+				053BBD8227AD86840033640A /* ComicDataTests.swift in Sources */,
 				05932C57279B540900549D7D /* NetworkServiceTests.swift in Sources */,
 				05484607279D697000C6EC66 /* FetchCharacterDetailUseCaseTests.swift in Sources */,
 				0571306727A55B3A0009383E /* NetworkServiceMock.swift in Sources */,
