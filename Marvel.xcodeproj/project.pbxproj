@@ -19,6 +19,11 @@
 		053BBD8027AD86230033640A /* ComicData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD7F27AD86230033640A /* ComicData.swift */; };
 		053BBD8227AD86840033640A /* ComicDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD8127AD86840033640A /* ComicDataTests.swift */; };
 		053BBD8427AD99130033640A /* DataObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD8327AD99130033640A /* DataObject.swift */; };
+		053BBD8627AD9B4E0033640A /* ComicsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD8527AD9B4E0033640A /* ComicsService.swift */; };
+		053BBD8827AD9DC70033640A /* ComicsResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 053BBD8727AD9DC70033640A /* ComicsResponse.json */; };
+		053BBD8A27AD9E000033640A /* ComicsDebugService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD8927AD9E000033640A /* ComicsDebugService.swift */; };
+		053BBD8C27AD9E390033640A /* ComicsDebugServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD8B27AD9E390033640A /* ComicsDebugServiceTests.swift */; };
+		053BBD8E27ADA8390033640A /* DataLoaderDebugService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD8D27ADA8390033640A /* DataLoaderDebugService.swift */; };
 		0545945027988A1400A634AD /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545944F27988A1400A634AD /* Cancellable.swift */; };
 		0545945327988A4700A634AD /* FetchCharactersServiceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945227988A4700A634AD /* FetchCharactersServiceUseCase.swift */; };
 		0545945827988C9B00A634AD /* CharactersViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945727988C9B00A634AD /* CharactersViewModelTests.swift */; };
@@ -165,6 +170,11 @@
 		053BBD7F27AD86230033640A /* ComicData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicData.swift; sourceTree = "<group>"; };
 		053BBD8127AD86840033640A /* ComicDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicDataTests.swift; sourceTree = "<group>"; };
 		053BBD8327AD99130033640A /* DataObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataObject.swift; sourceTree = "<group>"; };
+		053BBD8527AD9B4E0033640A /* ComicsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsService.swift; sourceTree = "<group>"; };
+		053BBD8727AD9DC70033640A /* ComicsResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ComicsResponse.json; sourceTree = "<group>"; };
+		053BBD8927AD9E000033640A /* ComicsDebugService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsDebugService.swift; sourceTree = "<group>"; };
+		053BBD8B27AD9E390033640A /* ComicsDebugServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsDebugServiceTests.swift; sourceTree = "<group>"; };
+		053BBD8D27ADA8390033640A /* DataLoaderDebugService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoaderDebugService.swift; sourceTree = "<group>"; };
 		0545944D2798872700A634AD /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		0545944E2798872D00A634AD /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		0545944F27988A1400A634AD /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
@@ -355,6 +365,15 @@
 			path = APIClient;
 			sourceTree = "<group>";
 		};
+		053BBD8F27ADAA7E0033640A /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				053BBD8D27ADA8390033640A /* DataLoaderDebugService.swift */,
+				0545947127989DC500A634AD /* JsonDecoderDataLoader.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
 		0545944C2798871C00A634AD /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
@@ -413,6 +432,7 @@
 			children = (
 				054845F6279D649F00C6EC66 /* CharacterDetailService.swift */,
 				05459463279898A700A634AD /* CharactersService.swift */,
+				053BBD8527AD9B4E0033640A /* ComicsService.swift */,
 				0571306D27A5C1250009383E /* DataServiceError.swift */,
 			);
 			path = Services;
@@ -423,8 +443,9 @@
 			children = (
 				054845FA279D659200C6EC66 /* CharacterDetailDebugService.swift */,
 				05459469279899EF00A634AD /* CharactersDebugService.swift */,
+				053BBD8927AD9E000033640A /* ComicsDebugService.swift */,
 				0545947A2798A94100A634AD /* DebugDataFileName.swift */,
-				0545947127989DC500A634AD /* JsonDecoderDataLoader.swift */,
+				053BBD8F27ADAA7E0033640A /* Base */,
 			);
 			path = DebugServices;
 			sourceTree = "<group>";
@@ -442,6 +463,7 @@
 			children = (
 				054845F8279D658000C6EC66 /* CharacterDetailResponse.json */,
 				054594782798A8E700A634AD /* CharactersResponse.json */,
+				053BBD8727AD9DC70033640A /* ComicsResponse.json */,
 			);
 			path = Jsons;
 			sourceTree = "<group>";
@@ -451,6 +473,7 @@
 			children = (
 				054845FC279D667200C6EC66 /* CharacterDetailDebugServiceTests.swift */,
 				0545946D27989A1A00A634AD /* CharactersDebugServiceTests.swift */,
+				053BBD8B27AD9E390033640A /* ComicsDebugServiceTests.swift */,
 				054594762798A7E000A634AD /* JsonDataLoaderTests.swift */,
 			);
 			path = DebugServices;
@@ -621,10 +644,10 @@
 			children = (
 				057D72F727986D0D005ED888 /* CharacterData.swift */,
 				053BBD7F27AD86230033640A /* ComicData.swift */,
+				053BBD8327AD99130033640A /* DataObject.swift */,
 				0585AF9C27975DDB00586ABD /* DataWrapper.swift */,
 				057D72FB27986E3D005ED888 /* ImageData.swift */,
 				057D72F327986BB0005ED888 /* PageInfo.swift */,
-				053BBD8327AD99130033640A /* DataObject.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1212,6 +1235,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				053BBD8827AD9DC70033640A /* ComicsResponse.json in Resources */,
 				0559261427A868BA00026919 /* Localizable.strings in Resources */,
 				054594792798A8E700A634AD /* CharactersResponse.json in Resources */,
 				05DAC3082797258C0062CC6F /* LaunchScreen.storyboard in Resources */,
@@ -1285,6 +1309,7 @@
 				0571306E27A5C1250009383E /* DataServiceError.swift in Sources */,
 				05DAC3002797258A0062CC6F /* CharactersViewController.swift in Sources */,
 				0571307027A5C1D30009383E /* NetworkErrorHandler.swift in Sources */,
+				053BBD8A27AD9E000033640A /* ComicsDebugService.swift in Sources */,
 				0545947B2798A94100A634AD /* DebugDataFileName.swift in Sources */,
 				0545945027988A1400A634AD /* Cancellable.swift in Sources */,
 				05C14921279C53E200927467 /* AppConfigurationValues.swift in Sources */,
@@ -1301,11 +1326,13 @@
 				053B9DA2279A0BE900CCF1C2 /* Authenticator.swift in Sources */,
 				0548461E279DC89C00C6EC66 /* CharacterDetailDependencyContainer.swift in Sources */,
 				05C14931279CA74000927467 /* Loadable.swift in Sources */,
+				053BBD8E27ADA8390033640A /* DataLoaderDebugService.swift in Sources */,
 				0545945B27988CC200A634AD /* ViewModel.swift in Sources */,
 				05C1491A279C1C3B00927467 /* FetchImageView.swift in Sources */,
 				05484629279E1B0D00C6EC66 /* AlertPresenter.swift in Sources */,
 				05C14923279C5C5000927467 /* CharactersDependencyContainer.swift in Sources */,
 				05B0855D27AC5B7C00A74DD0 /* CharactersSection.swift in Sources */,
+				053BBD8627AD9B4E0033640A /* ComicsService.swift in Sources */,
 				05C1492F279CA6FE00927467 /* LoadingViewController.swift in Sources */,
 				05932C60279B611700549D7D /* AuthenticatedNetworkService.swift in Sources */,
 				05C1492B279C861300927467 /* Array+Utils.swift in Sources */,
@@ -1364,6 +1391,7 @@
 				0571306B27A5B36A0009383E /* CharacterDetailClientServiceTests.swift in Sources */,
 				053B9D992799CADD00CCF1C2 /* CharacterData+Stubs.swift in Sources */,
 				05B0854E27AC457500A74DD0 /* UICollectionViewStub.swift in Sources */,
+				053BBD8C27AD9E390033640A /* ComicsDebugServiceTests.swift in Sources */,
 				053B9D952799C7BC00CCF1C2 /* CharacterCellDataTests.swift in Sources */,
 				057D72F227986BA7005ED888 /* PageInfoTests.swift in Sources */,
 				05BD40A027A9A2DC00F2E513 /* CoordinatorTests.swift in Sources */,

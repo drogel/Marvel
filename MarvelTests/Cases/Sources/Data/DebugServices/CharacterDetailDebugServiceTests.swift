@@ -11,6 +11,7 @@ import XCTest
 
 class CharacterDetailDebugServiceTests: XCTestCase {
     private var sut: CharacterDetailDebugService!
+    private var jsonDataLoaderCode: Int!
 
     override func setUp() {
         super.setUp()
@@ -19,6 +20,7 @@ class CharacterDetailDebugServiceTests: XCTestCase {
 
     override func tearDown() {
         sut = nil
+        jsonDataLoaderCode = nil
         super.tearDown()
     }
 
@@ -40,14 +42,16 @@ class CharacterDetailDebugServiceTests: XCTestCase {
         givenSutWithDataLoader()
         let completionResult = whenRetrievingResultFromCharacterDetail()
         assertIsSuccess(completionResult) {
-            XCTAssertEqual($0.code, JsonDataLoaderStub.codeStub)
+            XCTAssertEqual($0.code, jsonDataLoaderCode)
         }
     }
 }
 
 private extension CharacterDetailDebugServiceTests {
     func givenSutWithDataLoader() {
-        sut = CharacterDetailDebugService(dataLoader: JsonDataLoaderStub())
+        let jsonDataLoader = JsonDataLoaderStub<CharacterData>()
+        jsonDataLoaderCode = jsonDataLoader.codeStub
+        sut = CharacterDetailDebugService(dataLoader: jsonDataLoader)
     }
 
     func givenSutWithEmptyDataLoader() {
