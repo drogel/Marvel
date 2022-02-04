@@ -26,7 +26,7 @@ class CharactersDebugService: CharactersService {
 
 private extension CharactersDebugService {
     func retrieveCharacters(completion: @escaping (CharactersServiceResult) -> Void) {
-        guard let characters: DataWrapper = dataLoader.load(fromFileNamed: charactersFileName) else {
+        guard let characters: DataWrapper<CharacterData> = dataLoader.load(fromFileNamed: charactersFileName) else {
             completion(.failure(.emptyData))
             return
         }

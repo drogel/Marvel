@@ -137,7 +137,7 @@ private class CharacterFetcherMock: FetchCharacterDetailUseCase {
 
 private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
     static let resultsStub = [CharacterData.aginar]
-    static let pageInfoStub = PageInfo.zeroWith(results: resultsStub)
+    static let pageInfoStub = PageInfo<CharacterData>.zeroWith(results: resultsStub)
 
     override func fetch(
         query: FetchCharacterDetailQuery,

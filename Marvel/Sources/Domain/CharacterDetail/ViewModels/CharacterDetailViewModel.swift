@@ -79,7 +79,7 @@ private extension CharacterDetailViewModel {
         }
     }
 
-    func handleSuccess(with pageInfo: PageInfo) {
+    func handleSuccess(with pageInfo: PageInfo<CharacterData>) {
         guard let characterDetail = mapToCharacterDetail(characterData: pageInfo.results) else { return }
         characterDetailData = characterDetail
         viewDelegate?.viewModelDidRetrieveData(self)

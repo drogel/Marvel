@@ -18,6 +18,6 @@ class JsonDataLoaderStub: JsonDataLoader {
     static let codeStub = 200
 
     func load<T>(fromFileNamed _: String) -> T? {
-        DataWrapper(code: Self.codeStub, status: nil, copyright: nil, data: nil) as? T
+        DataWrapper<CharacterData>(code: Self.codeStub, status: nil, copyright: nil, data: nil) as? T
     }
 }

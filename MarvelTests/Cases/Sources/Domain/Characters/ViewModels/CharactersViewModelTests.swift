@@ -214,7 +214,7 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
 
 private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
     static let resultsStub = [CharacterData.aginar, CharacterData.aginar]
-    static let pageInfoStub = PageInfo.zeroWith(results: resultsStub)
+    static let pageInfoStub = PageInfo<CharacterData>.zeroWith(results: resultsStub)
 
     override func fetch(
         query: FetchCharactersQuery,
@@ -232,7 +232,7 @@ private class CharactersFetcherSuccessfulEmptyStub: CharactersFetcherMock {
         completion: @escaping (FetchCharactersResult) -> Void
     ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
-        completion(.success(PageInfo.empty))
+        completion(.success(PageInfo<CharacterData>.empty))
         return result
     }
 }

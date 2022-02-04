@@ -20,17 +20,12 @@ class CharacterInfoSection: NSCollectionLayoutSection {
             heightDimension: Constants.infoHeight
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(
-            top: Constants.spacing,
-            leading: Constants.spacing,
-            bottom: Constants.spacing,
-            trailing: Constants.spacing
-        )
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
             heightDimension: Constants.infoHeight
         )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = .fixed(Constants.spacing)
         self.init(group: group)
     }
 }

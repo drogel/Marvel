@@ -32,7 +32,7 @@ class CharactersClientServiceResultHandler: CharactersResultHandler {
 
 private extension CharactersClientServiceResultHandler {
     func handleSuccess(with data: Data?, completion: @escaping (CharactersServiceResult) -> Void) {
-        guard let data = data, let dataWrapper: DataWrapper = parser.parse(data: data) else {
+        guard let data = data, let dataWrapper: DataWrapper<CharacterData> = parser.parse(data: data) else {
             completion(.failure(.emptyData))
             return
         }

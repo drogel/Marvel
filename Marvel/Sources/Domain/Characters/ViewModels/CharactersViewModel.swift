@@ -106,7 +106,7 @@ private extension CharactersViewModel {
         }
     }
 
-    func handleSuccess(with pageInfo: PageInfo) {
+    func handleSuccess(with pageInfo: PageInfo<CharacterData>) {
         guard let newCells = mapToCells(characterData: pageInfo.results), newCells.hasElements else { return }
         updateCells(using: newCells)
     }

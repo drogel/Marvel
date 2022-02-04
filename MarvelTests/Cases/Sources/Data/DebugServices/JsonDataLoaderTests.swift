@@ -28,7 +28,7 @@ class JsonDataLoaderTests: XCTestCase {
 
     func test_givenValidDebugJson_returnsData() {
         let fileName = DebugDataFileName.charactersFileName.rawValue
-        let result: DataWrapper? = sut.load(fromFileNamed: fileName)
+        let result: DataWrapper<CharacterData>? = sut.load(fromFileNamed: fileName)
         XCTAssertNotNil(result)
         XCTAssertEqual(result?.code, 200)
     }

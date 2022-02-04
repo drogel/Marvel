@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 4/2/22.
 //
 
-import XCTest
 @testable import Marvel_Debug
+import XCTest
 
 class ComicDataTests: XCTestCase {
-
     typealias ParseableObjectType = ComicData
 
     func test_givenComicDataFromJson_parsesExpectedValues() {

@@ -17,7 +17,7 @@ struct FetchCharactersQuery {
 
 typealias FetchCharactersUseCaseError = CharactersServiceError
 
-typealias FetchCharactersResult = Result<PageInfo, FetchCharactersUseCaseError>
+typealias FetchCharactersResult = Result<PageInfo<CharacterData>, FetchCharactersUseCaseError>
 
 class FetchCharactersServiceUseCase: FetchCharactersUseCase {
     private let service: CharactersService
@@ -44,7 +44,7 @@ private extension FetchCharactersServiceUseCase {
         }
     }
 
-    func buildResult(from dataWrapper: DataWrapper) -> FetchCharactersResult {
+    func buildResult(from dataWrapper: DataWrapper<CharacterData>) -> FetchCharactersResult {
         guard let pageInfo = dataWrapper.data else { return .failure(.emptyData) }
         return .success(pageInfo)
     }
