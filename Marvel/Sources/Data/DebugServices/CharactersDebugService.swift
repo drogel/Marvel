@@ -8,8 +8,8 @@
 import Foundation
 
 class CharactersDebugService: CharactersService {
-    private let dataLoader: JsonDataLoader
     private let charactersFileName = DebugDataFileName.charactersFileName.rawValue
+    private let dataLoader: JsonDataLoader
 
     init(dataLoader: JsonDataLoader) {
         self.dataLoader = dataLoader
