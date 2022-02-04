@@ -1,5 +1,5 @@
 //
-//  DataWrapper<CharacterData>.swift
+//  DataWrapper.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 18/1/22.

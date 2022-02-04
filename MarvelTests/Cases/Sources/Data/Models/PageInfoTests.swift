@@ -1,5 +1,5 @@
 //
-//  PageInfo<CharacterData>Tests.swift
+//  PageInfoTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 19/1/22.

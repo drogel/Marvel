@@ -15,11 +15,7 @@ class ComicsDebugService: ComicsService {
         self.dataLoader = JsonDataLoaderDebugService(dataLoader: dataLoader, fileName: comicsFileName)
     }
 
-    func comics(
-        for _: Int,
-        from _: Int,
-        completion: @escaping (ComicsServiceResult) -> Void
-    ) -> Cancellable? {
+    func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Cancellable? {
         dataLoader.loadData(completion: completion)
     }
 }

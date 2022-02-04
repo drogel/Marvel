@@ -1,5 +1,5 @@
 //
-//  DataWrapper<CharacterData>Tests.swift
+//  DataWrapperTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 18/1/22.
