@@ -14,7 +14,7 @@ protocol FetchComicsUseCase {
     ) -> Cancellable?
 }
 
-struct FetchComicsQuery {
+struct FetchComicsQuery: Equatable {
     let characterID: Int
     let offset: Int
 }

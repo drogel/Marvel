@@ -148,7 +148,7 @@ private extension CharactersViewModelTests {
         givenSut(with: charactersFetcherMock)
     }
 
-    func givenSut(with charactersFetcher: FetchCharactersUseCase) {
+    func givenSut(with _: FetchCharactersUseCase) {
         sut = CharactersViewModel(charactersFetcher: charactersFetcherMock, imageURLBuilder: ImageURLBuilderStub())
     }
 

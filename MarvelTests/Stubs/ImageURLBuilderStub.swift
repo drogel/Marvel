@@ -9,7 +9,7 @@ import Foundation
 @testable import Marvel_Debug
 
 class ImageURLBuilderStub: ImageURLBuilder {
-    func buildURL(from imageData: ImageData) -> URL? {
+    func buildURL(from _: ImageData) -> URL? {
         URL(string: "https://example.com")!
     }
 }

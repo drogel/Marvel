@@ -11,14 +11,42 @@ protocol ComicsViewModelProtocol: ViewModel {}
 
 protocol ComicsViewModelViewDelegate: AnyObject {
     func viewModelDidStartLoading(_ viewModel: ComicsViewModelProtocol)
+    func viewModelDidFinishLoading(_ viewMode: ComicsViewModelProtocol)
 }
 
 class ComicsViewModel: ComicsViewModelProtocol {
     weak var viewDelegate: ComicsViewModelViewDelegate?
 
-    func start() {
-        viewDelegate?.viewModelDidStartLoading(self)
+    private let comicsFetcher: FetchComicsUseCase
+    private let characterID: Int
+    private var cancellable: Cancellable?
+
+    init(comicsFetcher: FetchComicsUseCase, characterID: Int) {
+        self.comicsFetcher = comicsFetcher
+        self.characterID = characterID
     }
 
-    func dispose() { }
+    func start() {
+        viewDelegate?.viewModelDidStartLoading(self)
+        loadComics()
+    }
+
+    func dispose() {
+        cancellable?.cancel()
+    }
+}
+
+private extension ComicsViewModel {
+    var startingQuery: FetchComicsQuery {
+        FetchComicsQuery(characterID: characterID, offset: 0)
+    }
+
+    func loadComics() {
+        cancellable?.cancel()
+        cancellable = comicsFetcher.fetch(query: startingQuery, completion: handle)
+    }
+
+    func handle(result _: FetchComicsResult) {
+        viewDelegate?.viewModelDidFinishLoading(self)
+    }
 }
