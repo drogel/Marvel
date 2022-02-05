@@ -5,11 +5,10 @@
 //  Created by Diego Rogel on 5/2/22.
 //
 
-import Foundation
 @testable import Marvel_Debug
 import XCTest
 
-class ComicCellDataTests: XCTest {
+class ComicCellDataTests: XCTestCase {
     private var sut: ComicCellData!
 
     override func setUp() {

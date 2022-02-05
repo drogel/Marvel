@@ -50,31 +50,6 @@ class CharacterDetailViewControllerTests: XCTestCase {
     }
 }
 
-class CharacterDetailInfoViewModelMock: CharacterDetailInfoViewModelProtocol {
-    var startCallCount = 0
-    var disposeCallCount = 0
-    var imageCellDataCallCount = 0
-    var infoCellDataCallCount = 0
-
-    var imageCellData: CharacterImageData? {
-        imageCellDataCallCount += 1
-        return nil
-    }
-
-    var infoCellData: CharacterInfoData? {
-        infoCellDataCallCount += 1
-        return nil
-    }
-
-    func start() {
-        startCallCount += 1
-    }
-
-    func dispose() {
-        disposeCallCount += 1
-    }
-}
-
 private extension CharacterDetailViewControllerTests {
     func assertViewModelStart(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(viewModelMock.startCallCount, callCount, line: line)
