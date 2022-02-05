@@ -74,11 +74,29 @@ class ComicsViewModelTests: XCTestCase {
         sut.start()
         assertViewDelegateDidFinishLoading(callCount: 1)
     }
+
+    func test_givenViewDelegate_whenStartingFinishesSuccessfully_notifiesView() {
+        givenSutWithSuccessfulFetcher()
+        givenViewDelegate()
+        assertViewDelegateDidRetrieveData(callCount: 0)
+        sut.start()
+        assertViewDelegateDidRetrieveData(callCount: 1)
+    }
+
+    func test_givenViewDelegate_whenStartingFails_notifiesView() {
+        givenSutWithFailingFetcher()
+        givenViewDelegate()
+        assertViewDelegateDidFailRetrievingData(callCount: 0)
+        sut.start()
+        assertViewDelegateDidFailRetrievingData(callCount: 1)
+    }
 }
 
 private class ComicsViewModelViewDelegateMock: ComicsViewModelViewDelegate {
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
+    var didRetrieveDataCallCount = 0
+    var didFailRetrievingDataCallCount = 0
 
     func viewModelDidStartLoading(_: ComicsViewModelProtocol) {
         didStartLoadingCallCount += 1
@@ -86,6 +104,14 @@ private class ComicsViewModelViewDelegateMock: ComicsViewModelViewDelegate {
 
     func viewModelDidFinishLoading(_: ComicsViewModelProtocol) {
         didFinishLoadingCallCount += 1
+    }
+
+    func viewModelDidRetrieveData(_: ComicsViewModelProtocol) {
+        didRetrieveDataCallCount += 1
+    }
+
+    func viewModelDidFailRetrievingData(_ viewModel: ComicsViewModelProtocol) {
+        didFailRetrievingDataCallCount += 1
     }
 }
 
@@ -110,6 +136,14 @@ private class ComicFetcherSuccessfulStub: ComicFetcherMock {
     }
 }
 
+private class ComicFetcherFailureStub: ComicFetcherMock {
+    override func fetch(query: FetchComicsQuery, completion: @escaping (FetchComicsResult) -> Void) -> Cancellable? {
+        let cancellable = super.fetch(query: query, completion: completion)
+        completion(.failure(.emptyData))
+        return cancellable
+    }
+}
+
 private extension ComicsViewModelTests {
     var characterIDStub: Int {
         12345
@@ -125,6 +159,11 @@ private extension ComicsViewModelTests {
         givenSut(with: comicFetcherMock)
     }
 
+    func givenSutWithFailingFetcher() {
+        comicFetcherMock = ComicFetcherFailureStub()
+        givenSut(with: comicFetcherMock)
+    }
+
     func givenSut(with comicsFetcher: ComicFetcherMock) {
         sut = ComicsViewModel(comicsFetcher: comicsFetcher, characterID: characterIDStub)
     }
@@ -135,6 +174,14 @@ private extension ComicsViewModelTests {
 
     func assertViewDelegateDidFinishLoading(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(viewDelegate.didFinishLoadingCallCount, callCount, line: line)
+    }
+
+    func assertViewDelegateDidRetrieveData(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewDelegate.didRetrieveDataCallCount, callCount, line: line)
+    }
+
+    func assertViewDelegateDidFailRetrievingData(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewDelegate.didFailRetrievingDataCallCount, callCount, line: line)
     }
 
     func assertComicFetcherFetch(callCount: Int, line: UInt = #line) {

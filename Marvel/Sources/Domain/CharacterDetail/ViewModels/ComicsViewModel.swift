@@ -11,7 +11,9 @@ protocol ComicsViewModelProtocol: ViewModel {}
 
 protocol ComicsViewModelViewDelegate: AnyObject {
     func viewModelDidStartLoading(_ viewModel: ComicsViewModelProtocol)
-    func viewModelDidFinishLoading(_ viewMode: ComicsViewModelProtocol)
+    func viewModelDidFinishLoading(_ viewModel: ComicsViewModelProtocol)
+    func viewModelDidRetrieveData(_ viewModel: ComicsViewModelProtocol)
+    func viewModelDidFailRetrievingData(_ viewModel: ComicsViewModelProtocol)
 }
 
 class ComicsViewModel: ComicsViewModelProtocol {
@@ -46,7 +48,21 @@ private extension ComicsViewModel {
         cancellable = comicsFetcher.fetch(query: startingQuery, completion: handle)
     }
 
-    func handle(result _: FetchComicsResult) {
+    func handle(result: FetchComicsResult) {
         viewDelegate?.viewModelDidFinishLoading(self)
+        switch result {
+        case .success(let pageInfo):
+            handleSuccess(with: pageInfo)
+        case .failure(_):
+            handleFailure()
+        }
+    }
+
+    func handleSuccess(with pageInfo: PageInfo<ComicData>) {
+        viewDelegate?.viewModelDidRetrieveData(self)
+    }
+
+    func handleFailure() {
+        viewDelegate?.viewModelDidFailRetrievingData(self)
     }
 }
