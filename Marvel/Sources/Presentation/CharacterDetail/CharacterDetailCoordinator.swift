@@ -43,7 +43,8 @@ private extension CharacterDetailCoordinator {
     func createCharacterDetailViewController() -> UIViewController {
         let viewModel = CharacterDetailViewModel(
             characterFetcher: container.fetchCharacterDetailUseCase,
-            characterID: container.characterID
+            characterID: container.characterID,
+            imageURLBuilder: container.imageURLBuilder
         )
         let dataSource = CharacterDetailDataSource(viewModel: viewModel)
         let viewController = CharacterDetailViewController.instantiate(

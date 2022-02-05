@@ -171,7 +171,11 @@ private extension CharacterDetailViewModelTests {
     }
 
     func givenSut(with characterFetcherMock: CharacterFetcherMock) {
-        sut = CharacterDetailViewModel(characterFetcher: characterFetcherMock, characterID: characterIDStub)
+        sut = CharacterDetailViewModel(
+            characterFetcher: characterFetcherMock,
+            characterID: characterIDStub,
+            imageURLBuilder: ImageURLBuilderStub()
+        )
     }
 
     func givenSutWithFailingFetcher() {

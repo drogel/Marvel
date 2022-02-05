@@ -19,7 +19,7 @@ class CharactersViewModelTests: XCTestCase {
         viewDelegateMock = CharactersViewModelViewDelegateMock()
         coordinatorDelegateMock = CharactersCoordinatorDelegateMock()
         charactersFetcherMock = CharactersFetcherMock()
-        sut = CharactersViewModel(charactersFetcher: charactersFetcherMock)
+        sut = CharactersViewModel(charactersFetcher: charactersFetcherMock, imageURLBuilder: ImageURLBuilderStub())
     }
 
     override func tearDown() {
@@ -135,17 +135,21 @@ class CharactersViewModelTests: XCTestCase {
 private extension CharactersViewModelTests {
     func givenSutWithSuccessfulFetcher() {
         charactersFetcherMock = CharactersFetcherSuccessfulStub()
-        sut = CharactersViewModel(charactersFetcher: charactersFetcherMock)
+        givenSut(with: charactersFetcherMock)
     }
 
     func givenSutWithSuccessfulEmptyFetcher() {
         charactersFetcherMock = CharactersFetcherSuccessfulEmptyStub()
-        sut = CharactersViewModel(charactersFetcher: charactersFetcherMock)
+        givenSut(with: charactersFetcherMock)
     }
 
     func givenSutWithFailingFetcher() {
         charactersFetcherMock = CharactersFetcherFailingStub()
-        sut = CharactersViewModel(charactersFetcher: charactersFetcherMock)
+        givenSut(with: charactersFetcherMock)
+    }
+
+    func givenSut(with charactersFetcher: FetchCharactersUseCase) {
+        sut = CharactersViewModel(charactersFetcher: charactersFetcherMock, imageURLBuilder: ImageURLBuilderStub())
     }
 
     func givenViewDelegate() {

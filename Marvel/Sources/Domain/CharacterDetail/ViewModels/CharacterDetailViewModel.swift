@@ -45,7 +45,7 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
     init(
         characterFetcher: FetchCharacterDetailUseCase,
         characterID: Int,
-        imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()
+        imageURLBuilder: ImageURLBuilder
     ) {
         self.characterFetcher = characterFetcher
         self.imageURLBuilder = imageURLBuilder

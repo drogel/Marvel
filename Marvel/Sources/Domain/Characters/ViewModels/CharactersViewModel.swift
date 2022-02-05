@@ -44,7 +44,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     private var cells: [CharacterCellData]
     private var charactersCancellable: Cancellable?
 
-    init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
+    init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder) {
         self.charactersFetcher = charactersFetcher
         self.imageURLBuilder = imageURLBuilder
         cells = []

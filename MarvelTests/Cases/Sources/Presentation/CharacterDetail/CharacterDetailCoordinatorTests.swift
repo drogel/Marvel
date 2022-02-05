@@ -60,6 +60,10 @@ private class CharacterDetailContainerStub: CharacterDetailContainer {
     var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase {
         FetchCharacterDetailUseCaseStub()
     }
+
+    var imageURLBuilder: ImageURLBuilder {
+        ImageURLBuilderStub()
+    }
 }
 
 private class FetchCharacterDetailUseCaseStub: FetchCharacterDetailUseCase {

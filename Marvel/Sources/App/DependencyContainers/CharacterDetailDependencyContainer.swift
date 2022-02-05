@@ -10,6 +10,7 @@ import Foundation
 protocol CharacterDetailContainer {
     var characterID: Int { get }
     var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase { get }
+    var imageURLBuilder: ImageURLBuilder { get }
 }
 
 class CharacterDetailDependencyContainer: CharacterDetailContainer {
@@ -24,6 +25,10 @@ class CharacterDetailDependencyContainer: CharacterDetailContainer {
 
     lazy var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase = {
         FetchCharacterDetailServiceUseCase(service: characterDetailService)
+    }()
+
+    lazy var imageURLBuilder: ImageURLBuilder = {
+        ImageDataURLBuilder()
     }()
 }
 

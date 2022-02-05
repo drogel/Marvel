@@ -24,6 +24,7 @@ class CharactersDependenciesAdapter: CharactersDependencies {
 
 protocol CharactersContainer {
     var fetchCharactersUseCase: FetchCharactersUseCase { get }
+    var imageURLBuilder: ImageURLBuilder { get }
 }
 
 class CharactersDependencyContainer: CharactersContainer {
@@ -35,6 +36,10 @@ class CharactersDependencyContainer: CharactersContainer {
 
     lazy var fetchCharactersUseCase: FetchCharactersUseCase = {
         FetchCharactersServiceUseCase(service: charactersService)
+    }()
+
+    lazy var imageURLBuilder: ImageURLBuilder = {
+        ImageDataURLBuilder()
     }()
 }
 
