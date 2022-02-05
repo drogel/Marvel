@@ -8,8 +8,8 @@
 import Foundation
 
 protocol ComicsViewModelProtocol: ViewModel {
-    var numberOfItems: Int { get }
-    func cellData(at indexPath: IndexPath) -> ComicCellData?
+    var numberOfComics: Int { get }
+    func comicCellData(at indexPath: IndexPath) -> ComicCellData?
 }
 
 protocol ComicsViewModelViewDelegate: AnyObject {
@@ -28,7 +28,7 @@ class ComicsViewModel: ComicsViewModelProtocol {
     private var cancellable: Cancellable?
     private var comics: [ComicCellData]
 
-    var numberOfItems: Int {
+    var numberOfComics: Int {
         comics.count
     }
 
@@ -44,7 +44,7 @@ class ComicsViewModel: ComicsViewModelProtocol {
         loadComics()
     }
 
-    func cellData(at indexPath: IndexPath) -> ComicCellData? {
+    func comicCellData(at indexPath: IndexPath) -> ComicCellData? {
         let row = indexPath.row
         guard comics.indices.contains(row) else { return nil }
         return comics[row]

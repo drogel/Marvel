@@ -94,7 +94,7 @@ class ComicsViewModelTests: XCTestCase {
         assertViewDelegateDidFailRetrievingData(callCount: 1)
     }
 
-    func test_givenDidNotStart_numberOfItemsAndCellDataAreEmpty() {
+    func test_givenDidNotStart_hasNoCellData() {
         assertHasNoCellData()
     }
 
@@ -102,7 +102,7 @@ class ComicsViewModelTests: XCTestCase {
         givenSutWithSuccessfulFetcher()
         sut.start()
         XCTAssertNotNil(whenRetrievingFirstCellData())
-        assertSutNumberOfItems(equals: 1)
+        assertSutNumberOfComics(equals: 1)
     }
 
     func test_givenStartDidFail_hasNoCellData() {
@@ -208,7 +208,7 @@ private extension ComicsViewModelTests {
     }
 
     func whenRetrievingFirstCellData() -> ComicCellData? {
-        sut.cellData(at: IndexPath(row: 0, section: 0))
+        sut.comicCellData(at: IndexPath(row: 0, section: 0))
     }
 
     func assertViewDelegateDidStartLoading(callCount: Int, line: UInt = #line) {
@@ -239,8 +239,8 @@ private extension ComicsViewModelTests {
         XCTAssertEqual(comicFetcherMock.cancellables.first?.didCancelCallCount, callCount, line: line)
     }
 
-    func assertSutNumberOfItems(equals expectedNumberOfItems: Int, line: UInt = #line) {
-        XCTAssertEqual(sut.numberOfItems, expectedNumberOfItems, line: line)
+    func assertSutNumberOfComics(equals expectedNumberOfComics: Int, line: UInt = #line) {
+        XCTAssertEqual(sut.numberOfComics, expectedNumberOfComics, line: line)
     }
 
     func assertImageURLBuilderBuild(callCount: Int, line: UInt = #line) {
@@ -249,6 +249,6 @@ private extension ComicsViewModelTests {
 
     func assertHasNoCellData(line: UInt = #line) {
         XCTAssertNil(whenRetrievingFirstCellData(), line: line)
-        assertSutNumberOfItems(equals: 0, line: line)
+        assertSutNumberOfComics(equals: 0, line: line)
     }
 }

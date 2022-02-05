@@ -7,9 +7,21 @@
 
 import Foundation
 
-protocol CharacterDetailViewModelProtocol: ViewModel {}
+protocol CharacterDetailViewModelProtocol: CharacterDetailInfoViewModelProtocol, ComicsViewModelProtocol {}
 
 class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
+    var imageCellData: CharacterImageData? {
+        infoViewModel.imageCellData
+    }
+
+    var infoCellData: CharacterInfoData? {
+        infoViewModel.infoCellData
+    }
+
+    var numberOfComics: Int {
+        comicsViewModel.numberOfComics
+    }
+
     private var infoViewModel: CharacterDetailInfoViewModelProtocol
     private var comicsViewModel: ComicsViewModelProtocol
 
@@ -21,6 +33,10 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
     func start() {
         infoViewModel.start()
         comicsViewModel.start()
+    }
+
+    func comicCellData(at indexPath: IndexPath) -> ComicCellData? {
+        comicsViewModel.comicCellData(at: indexPath)
     }
 
     func dispose() {

@@ -11,16 +11,16 @@ import Foundation
 class ComicsViewModelMock: ComicsViewModelProtocol {
     var startCallCount = 0
     var disposeCallCount = 0
-    var numberOfItemsCallCount = 0
-    var cellDataCallCount = 0
+    var numberOfComicsCallCount = 0
+    var comicsCellDataCallCount = 0
 
-    var numberOfItems: Int {
-        numberOfItemsCallCount += 1
+    var numberOfComics: Int {
+        numberOfComicsCallCount += 1
         return 0
     }
 
-    func cellData(at _: IndexPath) -> ComicCellData? {
-        cellDataCallCount += 1
+    func comicCellData(at _: IndexPath) -> ComicCellData? {
+        comicsCellDataCallCount += 1
         return nil
     }
 
