@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0506E30127A8481C0006C759 /* AuthenticatedNetworkServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0506E30027A8481C0006C759 /* AuthenticatedNetworkServiceTests.swift */; };
 		05314CFB27AE8DE100A5A658 /* ImageURLBuilderStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05314CFA27AE8DE100A5A658 /* ImageURLBuilderStub.swift */; };
+		05314CFD27AE8EE100A5A658 /* ComicsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05314CFC27AE8EE100A5A658 /* ComicsViewModel.swift */; };
+		05314CFF27AE8F0300A5A658 /* ComicsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05314CFE27AE8F0300A5A658 /* ComicsViewModelTests.swift */; };
 		053B9D932799C76300CCF1C2 /* CharacterCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D922799C76300CCF1C2 /* CharacterCellData.swift */; };
 		053B9D952799C7BC00CCF1C2 /* CharacterCellDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D942799C7BC00CCF1C2 /* CharacterCellDataTests.swift */; };
 		053B9D992799CADD00CCF1C2 /* CharacterData+Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053B9D982799CADD00CCF1C2 /* CharacterData+Stubs.swift */; };
@@ -163,6 +165,8 @@
 /* Begin PBXFileReference section */
 		0506E30027A8481C0006C759 /* AuthenticatedNetworkServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedNetworkServiceTests.swift; sourceTree = "<group>"; };
 		05314CFA27AE8DE100A5A658 /* ImageURLBuilderStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageURLBuilderStub.swift; sourceTree = "<group>"; };
+		05314CFC27AE8EE100A5A658 /* ComicsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsViewModel.swift; sourceTree = "<group>"; };
+		05314CFE27AE8F0300A5A658 /* ComicsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsViewModelTests.swift; sourceTree = "<group>"; };
 		053B9D922799C76300CCF1C2 /* CharacterCellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCellData.swift; sourceTree = "<group>"; };
 		053B9D942799C7BC00CCF1C2 /* CharacterCellDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCellDataTests.swift; sourceTree = "<group>"; };
 		053B9D982799CADD00CCF1C2 /* CharacterData+Stubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CharacterData+Stubs.swift"; sourceTree = "<group>"; };
@@ -558,6 +562,7 @@
 			isa = PBXGroup;
 			children = (
 				0548460B279D6D8B00C6EC66 /* CharacterDetailViewModel.swift */,
+				05314CFC27AE8EE100A5A658 /* ComicsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -566,6 +571,7 @@
 			isa = PBXGroup;
 			children = (
 				0548460E279D6E8400C6EC66 /* CharacterDetailViewModelTests.swift */,
+				05314CFE27AE8F0300A5A658 /* ComicsViewModelTests.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1351,6 +1357,7 @@
 				053BBD8427AD99130033640A /* DataObject.swift in Sources */,
 				05C1492D279CA5E100927467 /* SpinnerViewController.swift in Sources */,
 				0548460C279D6D8B00C6EC66 /* CharacterDetailViewModel.swift in Sources */,
+				05314CFD27AE8EE100A5A658 /* ComicsViewModel.swift in Sources */,
 				0545945327988A4700A634AD /* FetchCharactersServiceUseCase.swift in Sources */,
 				05932C4E279B249A00549D7D /* URLComposer.swift in Sources */,
 				05B0855627AC569F00A74DD0 /* CollectionViewDataSource.swift in Sources */,
@@ -1403,6 +1410,7 @@
 				053B9D992799CADD00CCF1C2 /* CharacterData+Stubs.swift in Sources */,
 				05B0854E27AC457500A74DD0 /* UICollectionViewStub.swift in Sources */,
 				053BBD8C27AD9E390033640A /* ComicsDebugServiceTests.swift in Sources */,
+				05314CFF27AE8F0300A5A658 /* ComicsViewModelTests.swift in Sources */,
 				053B9D952799C7BC00CCF1C2 /* CharacterCellDataTests.swift in Sources */,
 				057D72F227986BA7005ED888 /* PageInfoTests.swift in Sources */,
 				05BD40A027A9A2DC00F2E513 /* CoordinatorTests.swift in Sources */,
