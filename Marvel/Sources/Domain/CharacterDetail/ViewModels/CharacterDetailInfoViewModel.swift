@@ -1,5 +1,5 @@
 //
-//  CharacterDetailViewModel.swift
+//  CharacterDetailInfoViewModel.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 23/1/22.
@@ -7,26 +7,26 @@
 
 import Foundation
 
-protocol CharacterDetailViewModelProtocol: ViewModel {
+protocol CharacterDetailInfoViewModelProtocol: ViewModel {
     var imageCellData: CharacterImageData? { get }
     var infoCellData: CharacterInfoData? { get }
 }
 
-protocol CharacterDetailViewModelViewDelegate: AnyObject {
-    func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol)
-    func viewModelDidFinishLoading(_ viewModel: CharacterDetailViewModelProtocol)
-    func viewModelDidRetrieveData(_ viewModel: CharacterDetailViewModelProtocol)
-    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String)
+protocol CharacterDetailInfoViewModelViewDelegate: AnyObject {
+    func viewModelDidStartLoading(_ viewModel: CharacterDetailInfoViewModelProtocol)
+    func viewModelDidFinishLoading(_ viewModel: CharacterDetailInfoViewModelProtocol)
+    func viewModelDidRetrieveData(_ viewModel: CharacterDetailInfoViewModelProtocol)
+    func viewModel(_ viewModel: CharacterDetailInfoViewModelProtocol, didFailWithError message: String)
 }
 
-class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
+class CharacterDetailInfoViewModel: CharacterDetailInfoViewModelProtocol {
     private enum Messages {
         static let noSuchCharacter = "character_not_found".localized
         static let noAPIKeys = "api_keys_not_found".localized
         static let noConnection = "no_internet".localized
     }
 
-    weak var viewDelegate: CharacterDetailViewModelViewDelegate?
+    weak var viewDelegate: CharacterDetailInfoViewModelViewDelegate?
 
     var imageCellData: CharacterImageData? {
         characterDetailData?.image
@@ -63,7 +63,7 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
     }
 }
 
-private extension CharacterDetailViewModel {
+private extension CharacterDetailInfoViewModel {
     func loadCharacter(with query: FetchCharacterDetailQuery) {
         characterCancellable?.cancel()
         characterCancellable = characterFetcher.fetch(query: query, completion: handleFetchCharacterResult)

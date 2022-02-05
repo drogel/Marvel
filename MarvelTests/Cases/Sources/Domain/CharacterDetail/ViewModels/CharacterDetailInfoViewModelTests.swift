@@ -1,5 +1,5 @@
 //
-//  CharacterDetailViewModelTests.swift
+//  CharacterDetailInfoViewModelTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 23/1/22.
@@ -8,17 +8,17 @@
 @testable import Marvel_Debug
 import XCTest
 
-class CharacterDetailViewModelTests: XCTestCase {
-    private var sut: CharacterDetailViewModel!
+class CharacterDetailInfoViewModelTests: XCTestCase {
+    private var sut: CharacterDetailInfoViewModel!
     private var characterFetcherMock: CharacterFetcherMock!
     private var characterIDStub: Int!
-    private var viewDelegateMock: CharacterDetailViewModelViewDelegateMock!
+    private var viewDelegateMock: CharacterDetailInfoViewModelDelegateMock!
 
     override func setUp() {
         super.setUp()
         characterFetcherMock = CharacterFetcherMock()
         characterIDStub = 123_456
-        viewDelegateMock = CharacterDetailViewModelViewDelegateMock()
+        viewDelegateMock = CharacterDetailInfoViewModelDelegateMock()
         givenSut(with: characterFetcherMock)
     }
 
@@ -91,25 +91,25 @@ class CharacterDetailViewModelTests: XCTestCase {
     }
 }
 
-private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModelViewDelegate {
+private class CharacterDetailInfoViewModelDelegateMock: CharacterDetailInfoViewModelViewDelegate {
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
     var didRetrieveDataCallCount = 0
     var didFailCallCount = 0
 
-    func viewModelDidStartLoading(_: CharacterDetailViewModelProtocol) {
+    func viewModelDidStartLoading(_: CharacterDetailInfoViewModelProtocol) {
         didStartLoadingCallCount += 1
     }
 
-    func viewModelDidFinishLoading(_: CharacterDetailViewModelProtocol) {
+    func viewModelDidFinishLoading(_: CharacterDetailInfoViewModelProtocol) {
         didFinishLoadingCallCount += 1
     }
 
-    func viewModelDidRetrieveData(_: CharacterDetailViewModelProtocol) {
+    func viewModelDidRetrieveData(_: CharacterDetailInfoViewModelProtocol) {
         didRetrieveDataCallCount += 1
     }
 
-    func viewModel(_: CharacterDetailViewModelProtocol, didFailWithError _: String) {
+    func viewModel(_: CharacterDetailInfoViewModelProtocol, didFailWithError _: String) {
         didFailCallCount += 1
     }
 }
@@ -160,7 +160,7 @@ private class CharacterFetcherFailingStub: CharacterFetcherMock {
     }
 }
 
-private extension CharacterDetailViewModelTests {
+private extension CharacterDetailInfoViewModelTests {
     func givenViewDelegate() {
         sut.viewDelegate = viewDelegateMock
     }
@@ -171,7 +171,7 @@ private extension CharacterDetailViewModelTests {
     }
 
     func givenSut(with characterFetcherMock: CharacterFetcherMock) {
-        sut = CharacterDetailViewModel(
+        sut = CharacterDetailInfoViewModel(
             characterFetcher: characterFetcherMock,
             characterID: characterIDStub,
             imageURLBuilder: ImageURLBuilderStub()

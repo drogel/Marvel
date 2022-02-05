@@ -8,7 +8,7 @@
 import UIKit
 
 class CharacterDetailViewController: ViewController {
-    typealias ViewModel = CharacterDetailViewModelProtocol
+    typealias ViewModel = CharacterDetailInfoViewModelProtocol
 
     private var viewModel: ViewModel!
     private var collectionView: UICollectionView!
@@ -44,20 +44,20 @@ class CharacterDetailViewController: ViewController {
     }
 }
 
-extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
-    func viewModelDidStartLoading(_: CharacterDetailViewModelProtocol) {
+extension CharacterDetailViewController: CharacterDetailInfoViewModelViewDelegate {
+    func viewModelDidStartLoading(_: CharacterDetailInfoViewModelProtocol) {
         startLoading()
     }
 
-    func viewModelDidFinishLoading(_: CharacterDetailViewModelProtocol) {
+    func viewModelDidFinishLoading(_: CharacterDetailInfoViewModelProtocol) {
         stopLoading()
     }
 
-    func viewModelDidRetrieveData(_: CharacterDetailViewModelProtocol) {
+    func viewModelDidRetrieveData(_: CharacterDetailInfoViewModelProtocol) {
         collectionView.reloadData()
     }
 
-    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String) {
+    func viewModel(_ viewModel: CharacterDetailInfoViewModelProtocol, didFailWithError message: String) {
         showErrorAlert(message: message, retryButtonAction: viewModel.start)
     }
 }

@@ -19,9 +19,9 @@ enum CharacterDetailSection: Int {
 }
 
 class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
-    private let viewModel: CharacterDetailViewModelProtocol!
+    private let viewModel: CharacterDetailInfoViewModelProtocol!
 
-    init(viewModel: CharacterDetailViewModelProtocol) {
+    init(viewModel: CharacterDetailInfoViewModelProtocol) {
         self.viewModel = viewModel
     }
 

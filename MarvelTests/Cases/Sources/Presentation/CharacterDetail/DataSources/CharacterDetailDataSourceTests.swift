@@ -10,13 +10,13 @@ import XCTest
 
 class CharacterDetailDataSourceTests: XCTestCase {
     private var sut: CharacterDetailDataSource!
-    private var viewModelMock: CharacterDetailViewModelMock!
+    private var viewModelMock: CharacterDetailInfoViewModelMock!
     private var collectionViewStub: UICollectionViewStub!
 
     override func setUp() {
         super.setUp()
         collectionViewStub = UICollectionViewStub()
-        viewModelMock = CharacterDetailViewModelMock()
+        viewModelMock = CharacterDetailInfoViewModelMock()
         sut = CharacterDetailDataSource(viewModel: viewModelMock)
         sut.registerSubviews(in: collectionViewStub)
     }

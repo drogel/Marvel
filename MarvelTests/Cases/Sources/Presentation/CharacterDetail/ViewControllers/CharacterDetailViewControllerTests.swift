@@ -10,13 +10,13 @@ import XCTest
 
 class CharacterDetailViewControllerTests: XCTestCase {
     private var sut: CharacterDetailViewController!
-    private var viewModelMock: CharacterDetailViewModelMock!
+    private var viewModelMock: CharacterDetailInfoViewModelMock!
     private var dataSourceMock: CollectionViewDataSourceMock!
 
     override func setUp() {
         super.setUp()
         dataSourceMock = CollectionViewDataSourceMock()
-        viewModelMock = CharacterDetailViewModelMock()
+        viewModelMock = CharacterDetailInfoViewModelMock()
         sut = CharacterDetailViewController.instantiate(
             viewModel: viewModelMock,
             dataSource: dataSourceMock,
@@ -50,7 +50,7 @@ class CharacterDetailViewControllerTests: XCTestCase {
     }
 }
 
-class CharacterDetailViewModelMock: CharacterDetailViewModelProtocol {
+class CharacterDetailInfoViewModelMock: CharacterDetailInfoViewModelProtocol {
     var startCallCount = 0
     var disposeCallCount = 0
     var imageCellDataCallCount = 0
