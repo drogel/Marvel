@@ -9,7 +9,16 @@ import Foundation
 
 protocol CharacterDetailViewModelProtocol: CharacterDetailInfoViewModelProtocol, ComicsViewModelProtocol {}
 
+protocol CharacterDetailViewModelViewDelegate: AnyObject {
+    func viewModelDidStartLoading(_ viewModel: CharacterDetailInfoViewModelProtocol)
+    func viewModelDidFinishLoading(_ viewModel: CharacterDetailInfoViewModelProtocol)
+    func viewModelDidRetrieveData(_ viewModel: CharacterDetailInfoViewModelProtocol)
+    func viewModel(_ viewModel: CharacterDetailInfoViewModelProtocol, didFailWithError message: String)
+}
+
 class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
+    weak var viewDelegate: CharacterDetailViewModelViewDelegate?
+
     var imageCellData: CharacterImageData? {
         infoViewModel.imageCellData
     }
@@ -43,4 +52,34 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
         infoViewModel.dispose()
         comicsViewModel.dispose()
     }
+}
+
+extension CharacterDetailViewModel: CharacterDetailInfoViewModelViewDelegate {
+    func viewModelDidStartLoading(_: CharacterDetailInfoViewModelProtocol) {
+        viewDelegate?.viewModelDidStartLoading(self)
+    }
+
+    func viewModelDidFinishLoading(_: CharacterDetailInfoViewModelProtocol) {
+        viewDelegate?.viewModelDidFinishLoading(self)
+    }
+
+    func viewModelDidRetrieveData(_: CharacterDetailInfoViewModelProtocol) {
+        viewDelegate?.viewModelDidRetrieveData(self)
+    }
+
+    func viewModel(_: CharacterDetailInfoViewModelProtocol, didFailWithError message: String) {
+        viewDelegate?.viewModel(self, didFailWithError: message)
+    }
+}
+
+extension CharacterDetailViewModel: ComicsViewModelViewDelegate {
+    func viewModelDidStartLoading(_: ComicsViewModelProtocol) {}
+
+    func viewModelDidFinishLoading(_: ComicsViewModelProtocol) {}
+
+    func viewModelDidRetrieveData(_: ComicsViewModelProtocol) {
+        viewDelegate?.viewModelDidRetrieveData(self)
+    }
+
+    func viewModelDidFailRetrievingData(_: ComicsViewModelProtocol) {}
 }
