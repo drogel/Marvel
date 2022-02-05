@@ -7,7 +7,10 @@
 
 import Foundation
 
-protocol ComicsViewModelProtocol: ViewModel {}
+protocol ComicsViewModelProtocol: ViewModel {
+    var numberOfItems: Int { get }
+    func cellData(at indexPath: IndexPath) -> ComicCellData?
+}
 
 protocol ComicsViewModelViewDelegate: AnyObject {
     func viewModelDidStartLoading(_ viewModel: ComicsViewModelProtocol)
@@ -21,16 +24,30 @@ class ComicsViewModel: ComicsViewModelProtocol {
 
     private let comicsFetcher: FetchComicsUseCase
     private let characterID: Int
+    private let imageURLBuilder: ImageURLBuilder
     private var cancellable: Cancellable?
+    private var comics: [ComicCellData]
 
-    init(comicsFetcher: FetchComicsUseCase, characterID: Int) {
+    var numberOfItems: Int {
+        comics.count
+    }
+
+    init(comicsFetcher: FetchComicsUseCase, characterID: Int, imageURLBuilder: ImageURLBuilder) {
         self.comicsFetcher = comicsFetcher
         self.characterID = characterID
+        self.imageURLBuilder = imageURLBuilder
+        comics = []
     }
 
     func start() {
         viewDelegate?.viewModelDidStartLoading(self)
         loadComics()
+    }
+
+    func cellData(at indexPath: IndexPath) -> ComicCellData? {
+        let row = indexPath.row
+        guard comics.indices.contains(row) else { return nil }
+        return comics[row]
     }
 
     func dispose() {
@@ -51,15 +68,32 @@ private extension ComicsViewModel {
     func handle(result: FetchComicsResult) {
         viewDelegate?.viewModelDidFinishLoading(self)
         switch result {
-        case .success(let pageInfo):
+        case let .success(pageInfo):
             handleSuccess(with: pageInfo)
-        case .failure(_):
+        case .failure:
             handleFailure()
         }
     }
 
     func handleSuccess(with pageInfo: PageInfo<ComicData>) {
+        guard let comicsCellData = mapToCells(comicData: pageInfo.results) else { return }
+        comics = comicsCellData
         viewDelegate?.viewModelDidRetrieveData(self)
+    }
+
+    func mapToCells(comicData: [ComicData]?) -> [ComicCellData]? {
+        comicData?.compactMap { data in
+            guard let title = data.title,
+                  let issueNumber = data.issueNumber
+            else { return nil }
+            let imageURL = buildImageURL(from: data)
+            return ComicCellData(title: title, issueNumber: issueNumber, imageURL: imageURL)
+        }
+    }
+
+    func buildImageURL(from comicData: ComicData) -> URL? {
+        guard let thumbnail = comicData.thumbnail else { return nil }
+        return imageURLBuilder.buildURL(from: thumbnail)
     }
 
     func handleFailure() {

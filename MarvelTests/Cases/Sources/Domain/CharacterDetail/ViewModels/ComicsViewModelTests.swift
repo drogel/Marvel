@@ -12,15 +12,18 @@ class ComicsViewModelTests: XCTestCase {
     private var sut: ComicsViewModel!
     private var viewDelegate: ComicsViewModelViewDelegateMock!
     private var comicFetcherMock: ComicFetcherMock!
+    private var imageURLBuilderMock: ImageURLBuilderMock!
 
     override func setUp() {
         super.setUp()
         comicFetcherMock = ComicFetcherMock()
+        imageURLBuilderMock = ImageURLBuilderMock()
         givenSut(with: comicFetcherMock)
     }
 
     override func tearDown() {
         sut = nil
+        imageURLBuilderMock = nil
         comicFetcherMock = nil
         viewDelegate = nil
         super.tearDown()
@@ -90,6 +93,30 @@ class ComicsViewModelTests: XCTestCase {
         sut.start()
         assertViewDelegateDidFailRetrievingData(callCount: 1)
     }
+
+    func test_givenDidNotStart_numberOfItemsAndCellDataAreEmpty() {
+        assertHasNoCellData()
+    }
+
+    func test_givenDidStartSuccessfully_hasCellData() {
+        givenSutWithSuccessfulFetcher()
+        sut.start()
+        XCTAssertNotNil(whenRetrievingFirstCellData())
+        assertSutNumberOfItems(equals: 1)
+    }
+
+    func test_givenStartDidFail_hasNoCellData() {
+        givenSutWithFailingFetcher()
+        sut.start()
+        assertHasNoCellData()
+    }
+
+    func test_givenDidStartSuccessfully_callsImageURLBuilderBuild() {
+        givenSutWithSuccessfulFetcher()
+        assertImageURLBuilderBuild(callCount: 0)
+        sut.start()
+        assertImageURLBuilderBuild(callCount: 1)
+    }
 }
 
 private class ComicsViewModelViewDelegateMock: ComicsViewModelViewDelegate {
@@ -110,7 +137,7 @@ private class ComicsViewModelViewDelegateMock: ComicsViewModelViewDelegate {
         didRetrieveDataCallCount += 1
     }
 
-    func viewModelDidFailRetrievingData(_ viewModel: ComicsViewModelProtocol) {
+    func viewModelDidFailRetrievingData(_: ComicsViewModelProtocol) {
         didFailRetrievingDataCallCount += 1
     }
 }
@@ -129,9 +156,17 @@ private class ComicFetcherMock: FetchComicsUseCase {
 }
 
 private class ComicFetcherSuccessfulStub: ComicFetcherMock {
+    static let comicDataStub = ComicData(
+        identifier: 0,
+        title: "TestTitle",
+        issueNumber: 0,
+        thumbnail: ImageData(path: "", imageExtension: "")
+    )
+    static let pageInfoStub = PageInfo<ComicData>.zeroWith(results: [ComicFetcherSuccessfulStub.comicDataStub])
+
     override func fetch(query: FetchComicsQuery, completion: @escaping (FetchComicsResult) -> Void) -> Cancellable? {
         let cancellable = super.fetch(query: query, completion: completion)
-        completion(.success(PageInfo.empty))
+        completion(.success(Self.pageInfoStub))
         return cancellable
     }
 }
@@ -165,7 +200,15 @@ private extension ComicsViewModelTests {
     }
 
     func givenSut(with comicsFetcher: ComicFetcherMock) {
-        sut = ComicsViewModel(comicsFetcher: comicsFetcher, characterID: characterIDStub)
+        sut = ComicsViewModel(
+            comicsFetcher: comicsFetcher,
+            characterID: characterIDStub,
+            imageURLBuilder: imageURLBuilderMock
+        )
+    }
+
+    func whenRetrievingFirstCellData() -> ComicCellData? {
+        sut.cellData(at: IndexPath(row: 0, section: 0))
     }
 
     func assertViewDelegateDidStartLoading(callCount: Int, line: UInt = #line) {
@@ -194,5 +237,18 @@ private extension ComicsViewModelTests {
 
     func assertComicFetcherFetchFirstCancellableDidCancel(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(comicFetcherMock.cancellables.first?.didCancelCallCount, callCount, line: line)
+    }
+
+    func assertSutNumberOfItems(equals expectedNumberOfItems: Int, line: UInt = #line) {
+        XCTAssertEqual(sut.numberOfItems, expectedNumberOfItems, line: line)
+    }
+
+    func assertImageURLBuilderBuild(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(imageURLBuilderMock.buildURLCallCount, callCount, line: line)
+    }
+
+    func assertHasNoCellData(line: UInt = #line) {
+        XCTAssertNil(whenRetrievingFirstCellData(), line: line)
+        assertSutNumberOfItems(equals: 0, line: line)
     }
 }
