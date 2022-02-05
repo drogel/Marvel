@@ -10,13 +10,13 @@ import XCTest
 
 class CharacterDetailViewControllerTests: XCTestCase {
     private var sut: CharacterDetailViewController!
-    private var viewModelMock: CharacterDetailInfoViewModelMock!
+    private var viewModelMock: CharacterDetailViewModelMock!
     private var dataSourceMock: CollectionViewDataSourceMock!
 
     override func setUp() {
         super.setUp()
         dataSourceMock = CollectionViewDataSourceMock()
-        viewModelMock = CharacterDetailInfoViewModelMock()
+        viewModelMock = CharacterDetailViewModelMock()
         sut = CharacterDetailViewController.instantiate(
             viewModel: viewModelMock,
             dataSource: dataSourceMock,
@@ -49,6 +49,8 @@ class CharacterDetailViewControllerTests: XCTestCase {
         assertDataSourceRegisterSubviews(callCount: 1)
     }
 }
+
+private class CharacterDetailViewModelMock: ViewModelMock {}
 
 private extension CharacterDetailViewControllerTests {
     func assertViewModelStart(callCount: Int, line: UInt = #line) {

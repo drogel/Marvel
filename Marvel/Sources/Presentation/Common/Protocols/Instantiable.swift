@@ -8,6 +8,6 @@
 import Foundation
 
 protocol ViewModelInstantiable {
-    associatedtype ViewModel
-    static func instantiate(viewModel: ViewModel) -> Self
+    associatedtype ViewModelProtocol
+    static func instantiate(viewModel: ViewModelProtocol) -> Self
 }

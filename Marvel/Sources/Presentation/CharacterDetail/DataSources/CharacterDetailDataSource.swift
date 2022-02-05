@@ -46,8 +46,8 @@ class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
     }
 
     func registerSubviews(in collectionView: UICollectionView) {
-        collectionView.register(CharacterImageCell.self, forCellWithReuseIdentifier: CharacterImageCell.identifier)
-        collectionView.register(CharacterInfoCell.self, forCellWithReuseIdentifier: CharacterInfoCell.identifier)
+        collectionView.register(cellOfType: CharacterImageCell.self)
+        collectionView.register(cellOfType: CharacterInfoCell.self)
     }
 }
 

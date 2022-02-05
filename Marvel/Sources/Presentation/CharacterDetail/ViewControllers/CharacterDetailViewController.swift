@@ -8,15 +8,15 @@
 import UIKit
 
 class CharacterDetailViewController: ViewController {
-    typealias ViewModel = CharacterDetailInfoViewModelProtocol
+    typealias ViewModelProtocol = ViewModel
 
-    private var viewModel: ViewModel!
+    private var viewModel: ViewModelProtocol!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
     private var layout: UICollectionViewCompositionalLayout!
 
     static func instantiate(
-        viewModel: ViewModel,
+        viewModel: ViewModelProtocol,
         dataSource: CollectionViewDataSource,
         layout: UICollectionViewCompositionalLayout
     ) -> Self {
@@ -26,7 +26,7 @@ class CharacterDetailViewController: ViewController {
         return viewController
     }
 
-    static func instantiate(viewModel: ViewModel) -> Self {
+    static func instantiate(viewModel: ViewModelProtocol) -> Self {
         let viewController = Self()
         viewController.viewModel = viewModel
         return viewController
@@ -44,20 +44,20 @@ class CharacterDetailViewController: ViewController {
     }
 }
 
-extension CharacterDetailViewController: CharacterDetailInfoViewModelViewDelegate {
-    func viewModelDidStartLoading(_: CharacterDetailInfoViewModelProtocol) {
+extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
+    func viewModelDidStartLoading(_: CharacterDetailViewModelProtocol) {
         startLoading()
     }
 
-    func viewModelDidFinishLoading(_: CharacterDetailInfoViewModelProtocol) {
+    func viewModelDidFinishLoading(_: CharacterDetailViewModelProtocol) {
         stopLoading()
     }
 
-    func viewModelDidRetrieveData(_: CharacterDetailInfoViewModelProtocol) {
+    func viewModelDidRetrieveData(_: CharacterDetailViewModelProtocol) {
         collectionView.reloadData()
     }
 
-    func viewModel(_ viewModel: CharacterDetailInfoViewModelProtocol, didFailWithError message: String) {
+    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String) {
         showErrorAlert(message: message, retryButtonAction: viewModel.start)
     }
 }

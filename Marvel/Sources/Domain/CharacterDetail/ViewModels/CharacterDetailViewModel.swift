@@ -10,10 +10,10 @@ import Foundation
 protocol CharacterDetailViewModelProtocol: CharacterDetailInfoViewModelProtocol, ComicsViewModelProtocol {}
 
 protocol CharacterDetailViewModelViewDelegate: AnyObject {
-    func viewModelDidStartLoading(_ viewModel: CharacterDetailInfoViewModelProtocol)
-    func viewModelDidFinishLoading(_ viewModel: CharacterDetailInfoViewModelProtocol)
-    func viewModelDidRetrieveData(_ viewModel: CharacterDetailInfoViewModelProtocol)
-    func viewModel(_ viewModel: CharacterDetailInfoViewModelProtocol, didFailWithError message: String)
+    func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol)
+    func viewModelDidFinishLoading(_ viewModel: CharacterDetailViewModelProtocol)
+    func viewModelDidRetrieveData(_ viewModel: CharacterDetailViewModelProtocol)
+    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String)
 }
 
 class CharacterDetailViewModel: CharacterDetailViewModelProtocol {

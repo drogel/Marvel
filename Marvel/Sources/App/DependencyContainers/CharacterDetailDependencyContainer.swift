@@ -10,6 +10,7 @@ import Foundation
 protocol CharacterDetailContainer {
     var characterID: Int { get }
     var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase { get }
+    var fetchComicsUseCase: FetchComicsUseCase { get }
     var imageURLBuilder: ImageURLBuilder { get }
 }
 
@@ -27,6 +28,10 @@ class CharacterDetailDependencyContainer: CharacterDetailContainer {
         FetchCharacterDetailServiceUseCase(service: characterDetailService)
     }()
 
+    lazy var fetchComicsUseCase: FetchComicsUseCase = {
+        FetchComicsServiceUseCase(service: comicsDetailService)
+    }()
+
     lazy var imageURLBuilder: ImageURLBuilder = {
         ImageDataURLBuilder()
     }()
@@ -36,10 +41,19 @@ private extension CharacterDetailDependencyContainer {
     var characterDetailService: CharacterDetailService {
         switch dependencies.scheme {
         case .debug:
-            return CharacterDetailDebugService(dataLoader: JsonDecoderDataLoader(parser: parser))
+            return CharacterDetailDebugService(dataLoader: jsonDataLoader)
         case .release:
             return CharacterDetailClientService(client: dependencies.networkService, resultHandler: resultHandler)
         }
+    }
+
+    var comicsDetailService: ComicsService {
+        // TODO: Inject the Marvel API Comics Service when ready
+        ComicsDebugService(dataLoader: jsonDataLoader)
+    }
+
+    var jsonDataLoader: JsonDecoderDataLoader {
+        JsonDecoderDataLoader(parser: parser)
     }
 
     var parser: JSONParser {

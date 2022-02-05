@@ -61,6 +61,10 @@ private class CharacterDetailContainerStub: CharacterDetailContainer {
         FetchCharacterDetailUseCaseStub()
     }
 
+    var fetchComicsUseCase: FetchComicsUseCase {
+        FetchComicsUseCaseStub()
+    }
+
     var imageURLBuilder: ImageURLBuilder {
         ImageURLBuilderStub()
     }
@@ -71,6 +75,12 @@ private class FetchCharacterDetailUseCaseStub: FetchCharacterDetailUseCase {
         query _: FetchCharacterDetailQuery,
         completion _: @escaping (FetchCharacterDetailResult) -> Void
     ) -> Cancellable? {
+        nil
+    }
+}
+
+private class FetchComicsUseCaseStub: FetchComicsUseCase {
+    func fetch(query _: FetchComicsQuery, completion _: @escaping (FetchComicsResult) -> Void) -> Cancellable? {
         nil
     }
 }

@@ -151,25 +151,24 @@ private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModel
     var didRetrieveDataCallCount = 0
     var didFailCallCount = 0
 
-    func viewModelDidStartLoading(_ viewModel: CharacterDetailInfoViewModelProtocol) {
+    func viewModelDidStartLoading(_: CharacterDetailViewModelProtocol) {
         didStartLoadingCallCount += 1
     }
 
-    func viewModelDidFinishLoading(_ viewModel: CharacterDetailInfoViewModelProtocol) {
+    func viewModelDidFinishLoading(_: CharacterDetailViewModelProtocol) {
         didFinishLoadingCallCount += 1
     }
 
-    func viewModelDidRetrieveData(_ viewModel: CharacterDetailInfoViewModelProtocol) {
+    func viewModelDidRetrieveData(_: CharacterDetailViewModelProtocol) {
         didRetrieveDataCallCount += 1
     }
 
-    func viewModel(_ viewModel: CharacterDetailInfoViewModelProtocol, didFailWithError message: String) {
+    func viewModel(_: CharacterDetailViewModelProtocol, didFailWithError _: String) {
         didFailCallCount += 1
     }
 }
 
 private extension CharacterDetailViewModelTests {
-
     func givenViewDelegate() {
         viewDelegateMock = CharacterDetailViewModelViewDelegateMock()
         sut.viewDelegate = viewDelegateMock

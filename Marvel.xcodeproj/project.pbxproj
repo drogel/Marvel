@@ -15,6 +15,8 @@
 		0513D24B27AEEB3A0040DF58 /* CharacterDetailInfoViewModelMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0513D24A27AEEB3A0040DF58 /* CharacterDetailInfoViewModelMock.swift */; };
 		0513D24D27AEEB840040DF58 /* ComicsViewModelMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0513D24C27AEEB840040DF58 /* ComicsViewModelMock.swift */; };
 		0513D24F27AEEDA50040DF58 /* ComicCellDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0513D24E27AEEDA50040DF58 /* ComicCellDataTests.swift */; };
+		0513D25127AEF9790040DF58 /* ViewModelMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0513D25027AEF9790040DF58 /* ViewModelMock.swift */; };
+		0513D25327AEFCC30040DF58 /* UICollectionView+CellRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0513D25227AEFCC30040DF58 /* UICollectionView+CellRegistration.swift */; };
 		05314CFB27AE8DE100A5A658 /* ImageURLBuilderStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05314CFA27AE8DE100A5A658 /* ImageURLBuilderStub.swift */; };
 		05314CFD27AE8EE100A5A658 /* ComicsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05314CFC27AE8EE100A5A658 /* ComicsViewModel.swift */; };
 		05314CFF27AE8F0300A5A658 /* ComicsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05314CFE27AE8F0300A5A658 /* ComicsViewModelTests.swift */; };
@@ -178,6 +180,8 @@
 		0513D24A27AEEB3A0040DF58 /* CharacterDetailInfoViewModelMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailInfoViewModelMock.swift; sourceTree = "<group>"; };
 		0513D24C27AEEB840040DF58 /* ComicsViewModelMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsViewModelMock.swift; sourceTree = "<group>"; };
 		0513D24E27AEEDA50040DF58 /* ComicCellDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicCellDataTests.swift; sourceTree = "<group>"; };
+		0513D25027AEF9790040DF58 /* ViewModelMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelMock.swift; sourceTree = "<group>"; };
+		0513D25227AEFCC30040DF58 /* UICollectionView+CellRegistration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+CellRegistration.swift"; sourceTree = "<group>"; };
 		05314CFA27AE8DE100A5A658 /* ImageURLBuilderStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageURLBuilderStub.swift; sourceTree = "<group>"; };
 		05314CFC27AE8EE100A5A658 /* ComicsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsViewModel.swift; sourceTree = "<group>"; };
 		05314CFE27AE8F0300A5A658 /* ComicsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsViewModelTests.swift; sourceTree = "<group>"; };
@@ -634,6 +638,7 @@
 				0571306827A55C280009383E /* JSONParserMock.swift */,
 				0571307327A5C53E0009383E /* NetworkErrorHandlerMock.swift */,
 				0571306627A55B3A0009383E /* NetworkServiceMock.swift */,
+				0513D25027AEF9790040DF58 /* ViewModelMock.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -812,9 +817,10 @@
 		05932C53279B2A3400549D7D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				05DAC33927973A750062CC6F /* UICollectionReusableView+Identifiable.swift */,
-				05B7DB66279CAFC2004320FF /* UICollectionView+Dequeue.swift */,
 				059CD7B827AB109F00523EE3 /* NSLayoutConstraints+Fitting.swift */,
+				05DAC33927973A750062CC6F /* UICollectionReusableView+Identifiable.swift */,
+				0513D25227AEFCC30040DF58 /* UICollectionView+CellRegistration.swift */,
+				05B7DB66279CAFC2004320FF /* UICollectionView+Dequeue.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1345,6 +1351,7 @@
 				0571306E27A5C1250009383E /* DataServiceError.swift in Sources */,
 				0513D24127AEC0E50040DF58 /* ComicCellData.swift in Sources */,
 				05DAC3002797258A0062CC6F /* CharactersViewController.swift in Sources */,
+				0513D25327AEFCC30040DF58 /* UICollectionView+CellRegistration.swift in Sources */,
 				0571307027A5C1D30009383E /* NetworkErrorHandler.swift in Sources */,
 				053BBD8A27AD9E000033640A /* ComicsDebugService.swift in Sources */,
 				0545947B2798A94100A634AD /* DebugDataFileName.swift in Sources */,
@@ -1421,6 +1428,7 @@
 				0571306527A559F10009383E /* CharactersClientServiceTests.swift in Sources */,
 				053B9DA7279A0EA900CCF1C2 /* AuthenticatorTests.swift in Sources */,
 				059CD7AF27AAE4B300523EE3 /* CharacterDetailViewControllerTests.swift in Sources */,
+				0513D25127AEF9790040DF58 /* ViewModelMock.swift in Sources */,
 				05BD40AD27A9B5C400F2E513 /* CharactersCoordinatorTests.swift in Sources */,
 				053BBD8227AD86840033640A /* ComicDataTests.swift in Sources */,
 				05932C57279B540900549D7D /* NetworkServiceTests.swift in Sources */,
