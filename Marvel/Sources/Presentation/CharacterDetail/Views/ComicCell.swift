@@ -49,7 +49,6 @@ class ComicCell: UICollectionViewCell, Configurable {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
 
@@ -105,17 +104,8 @@ private extension ComicCell {
     }
 
     func setUpConstraints() {
-        setUpComicImageConstraints()
         setUpMainStackViewConstraints()
-    }
-
-    func setUpComicImageConstraints() {
-        NSLayoutConstraint.activate([
-            comicImageView.heightAnchor.constraint(
-                equalTo: comicImageView.widthAnchor,
-                multiplier: Constants.Image.aspectRatio
-            ),
-        ])
+        comicImageView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
     }
 
     func setUpMainStackViewConstraints() {

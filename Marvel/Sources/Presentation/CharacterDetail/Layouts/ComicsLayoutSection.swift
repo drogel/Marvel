@@ -9,10 +9,11 @@ import Foundation
 import UIKit
 
 class ComicsLayoutSection: NSCollectionLayoutSection {
-    // TODO: Fix layout issues when scrolling
     private enum Constants {
-        static let height: NSCollectionLayoutDimension = .estimated(266)
-        static let width: NSCollectionLayoutDimension = .fractionalWidth(0.375)
+        private static let heightValue: CGFloat = 270
+        private static let aspectRatio: CGFloat = 2
+        static let height: NSCollectionLayoutDimension = .absolute(heightValue)
+        static let width: NSCollectionLayoutDimension = .absolute(heightValue / aspectRatio)
         static let itemInset: CGFloat = 8
         static let layoutInset: CGFloat = 14
     }
