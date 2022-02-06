@@ -14,7 +14,8 @@ protocol CharacterDetailViewModelProtocol: CharacterDetailInfoViewModelProtocol,
 protocol CharacterDetailViewModelViewDelegate: AnyObject {
     func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol)
     func viewModelDidFinishLoading(_ viewModel: CharacterDetailViewModelProtocol)
-    func viewModelDidRetrieveData(_ viewModel: CharacterDetailViewModelProtocol)
+    func viewModelDidRetrieveCharacterInfo(_ viewModel: CharacterDetailViewModelProtocol)
+    func viewModelDidRetrieveComics(_ viewModel: CharacterDetailViewModelProtocol)
     func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String)
 }
 
@@ -70,7 +71,7 @@ extension CharacterDetailViewModel: CharacterDetailInfoViewModelViewDelegate {
     }
 
     func viewModelDidRetrieveData(_: CharacterDetailInfoViewModelProtocol) {
-        viewDelegate?.viewModelDidRetrieveData(self)
+        viewDelegate?.viewModelDidRetrieveCharacterInfo(self)
     }
 
     func viewModel(_: CharacterDetailInfoViewModelProtocol, didFailWithError message: String) {
@@ -84,7 +85,7 @@ extension CharacterDetailViewModel: ComicsViewModelViewDelegate {
     func viewModelDidFinishLoading(_: ComicsViewModelProtocol) {}
 
     func viewModelDidRetrieveData(_: ComicsViewModelProtocol) {
-        viewDelegate?.viewModelDidRetrieveData(self)
+        viewDelegate?.viewModelDidRetrieveComics(self)
     }
 
     func viewModelDidFailRetrievingData(_: ComicsViewModelProtocol) {}

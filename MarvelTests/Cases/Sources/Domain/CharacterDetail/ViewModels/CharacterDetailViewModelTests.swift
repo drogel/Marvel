@@ -104,16 +104,16 @@ class CharacterDetailViewModelTests: XCTestCase {
 
     func test_givenViewDelegate_whenInfoRetrievesData_notifiesView() {
         givenViewDelegate()
-        assertViewDelegateDidRetrieveData(callCount: 0)
+        assertViewDelegateDidRetrieveCharacterInfo(callCount: 0)
         sut.viewModelDidRetrieveData(infoViewModelMock)
-        assertViewDelegateDidRetrieveData(callCount: 1)
+        assertViewDelegateDidRetrieveCharacterInfo(callCount: 1)
     }
 
     func test_givenViewDelegate_whenComicsAreRetrieved_notifiesView() {
         givenViewDelegate()
-        assertViewDelegateDidRetrieveData(callCount: 0)
+        assertViewDelegateDidRetrieveComics(callCount: 0)
         sut.viewModelDidRetrieveData(comicsViewModelMock)
-        assertViewDelegateDidRetrieveData(callCount: 1)
+        assertViewDelegateDidRetrieveComics(callCount: 1)
     }
 
     func test_givenViewDelegate_whenInfoFails_notifiesView() {
@@ -152,7 +152,8 @@ class CharacterDetailViewModelTests: XCTestCase {
 private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModelViewDelegate {
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
-    var didRetrieveDataCallCount = 0
+    var didRetrieveCharacterInfoCallCount = 0
+    var didRetrieveComicsCallCount = 0
     var didFailCallCount = 0
 
     func viewModelDidStartLoading(_: CharacterDetailViewModelProtocol) {
@@ -163,8 +164,12 @@ private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModel
         didFinishLoadingCallCount += 1
     }
 
-    func viewModelDidRetrieveData(_: CharacterDetailViewModelProtocol) {
-        didRetrieveDataCallCount += 1
+    func viewModelDidRetrieveCharacterInfo(_: CharacterDetailViewModelProtocol) {
+        didRetrieveCharacterInfoCallCount += 1
+    }
+
+    func viewModelDidRetrieveComics(_: CharacterDetailViewModelProtocol) {
+        didRetrieveComicsCallCount += 1
     }
 
     func viewModel(_: CharacterDetailViewModelProtocol, didFailWithError _: String) {
@@ -218,8 +223,12 @@ private extension CharacterDetailViewModelTests {
         XCTAssertEqual(viewDelegateMock.didFinishLoadingCallCount, callCount, line: line)
     }
 
-    func assertViewDelegateDidRetrieveData(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewDelegateMock.didRetrieveDataCallCount, callCount, line: line)
+    func assertViewDelegateDidRetrieveCharacterInfo(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewDelegateMock.didRetrieveCharacterInfoCallCount, callCount, line: line)
+    }
+
+    func assertViewDelegateDidRetrieveComics(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewDelegateMock.didRetrieveComicsCallCount, callCount, line: line)
     }
 
     func assertViewDelegateDidFail(callCount: Int, line: UInt = #line) {

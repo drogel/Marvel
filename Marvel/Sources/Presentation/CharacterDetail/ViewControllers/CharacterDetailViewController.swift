@@ -57,8 +57,12 @@ extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
         stopLoading()
     }
 
-    func viewModelDidRetrieveData(_: CharacterDetailViewModelProtocol) {
+    func viewModelDidRetrieveCharacterInfo(_: CharacterDetailViewModelProtocol) {
         collectionView.reloadData()
+    }
+
+    func viewModelDidRetrieveComics(_: CharacterDetailViewModelProtocol) {
+        reload(section: .comics)
     }
 
     func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String) {
@@ -97,5 +101,10 @@ private extension CharacterDetailViewController {
     func configureConstraints(of collectionView: UICollectionView) {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.fit(collectionView, in: view)
+    }
+
+    func reload(section: CharacterDetailSection) {
+        let singleSectionIndexSet = IndexSet(integer: section.rawValue)
+        collectionView.reloadSections(singleSectionIndexSet)
     }
 }
