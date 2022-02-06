@@ -8,9 +8,9 @@
 import Foundation
 import UIKit
 
-class CharacterImageSection: NSCollectionLayoutSection {
+class CharacterImageLayoutSection: NSCollectionLayoutSection {
     private enum Constants {
-        static let imageHeight: NSCollectionLayoutDimension = .fractionalHeight(0.618)
+        static let imageHeight: NSCollectionLayoutDimension = .absolute(450)
     }
 
     convenience init() {

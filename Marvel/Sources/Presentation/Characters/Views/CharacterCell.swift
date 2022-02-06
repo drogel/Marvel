@@ -36,7 +36,7 @@ class CharacterCell: UICollectionViewCell, Configurable {
         }
     }
 
-    private lazy var characterImageView = CharacterImageView()
+    private lazy var characterImageView = FillImageView()
 
     private lazy var infoView: UIView = {
         let view = UIView()
@@ -64,7 +64,7 @@ class CharacterCell: UICollectionViewCell, Configurable {
 
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = .boldSystemFont(ofSize: Constants.Description.labelFontSize)
+        label.font = .systemFont(ofSize: Constants.Description.labelFontSize)
         label.textColor = .systemGray
         label.numberOfLines = Constants.Description.maxLines
         return label

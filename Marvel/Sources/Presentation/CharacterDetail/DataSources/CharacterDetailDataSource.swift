@@ -8,9 +8,10 @@
 import Foundation
 import UIKit
 
-enum CharacterDetailSection: Int {
+enum CharacterDetailSection: Int, CaseIterable {
     case image
     case info
+    case comics
 
     static func fromSectionIndex(_ sectionIndex: Int) -> CharacterDetailSection {
         guard let section = CharacterDetailSection(rawValue: sectionIndex) else { fatalError() }
@@ -19,18 +20,23 @@ enum CharacterDetailSection: Int {
 }
 
 class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
-    private let viewModel: CharacterDetailInfoViewModelProtocol!
+    private let viewModel: CharacterDetailViewModelProtocol!
 
-    init(viewModel: CharacterDetailInfoViewModelProtocol) {
+    init(viewModel: CharacterDetailViewModelProtocol) {
         self.viewModel = viewModel
     }
 
     func numberOfSections(in _: UICollectionView) -> Int {
-        2
+        CharacterDetailSection.allCases.count
     }
 
-    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        1
+    func collectionView(_: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        switch CharacterDetailSection.fromSectionIndex(section) {
+        case .comics:
+            return viewModel.numberOfComics
+        default:
+            return 1
+        }
     }
 
     func collectionView(
@@ -42,12 +48,15 @@ class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
             return imageCell(in: collectionView, at: indexPath)
         case .info:
             return infoCell(in: collectionView, at: indexPath)
+        case .comics:
+            return comicCell(in: collectionView, at: indexPath)
         }
     }
 
     func registerSubviews(in collectionView: UICollectionView) {
         collectionView.register(cellOfType: CharacterImageCell.self)
         collectionView.register(cellOfType: CharacterInfoCell.self)
+        collectionView.register(cellOfType: ComicCell.self)
     }
 }
 
@@ -61,6 +70,13 @@ private extension CharacterDetailDataSource {
     func infoCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeue(cellOfType: CharacterInfoCell.self, at: indexPath)
         cell.configure(using: viewModel.infoCellData)
+        return cell
+    }
+
+    func comicCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
+        guard let comicCellData = viewModel.comicCellData(at: indexPath) else { return UICollectionViewCell() }
+        let cell = collectionView.dequeue(cellOfType: ComicCell.self, at: indexPath)
+        cell.configure(using: comicCellData)
         return cell
     }
 }

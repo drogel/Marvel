@@ -38,7 +38,7 @@ class CharacterInfoCell: UICollectionViewCell {
 
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = .boldSystemFont(ofSize: Constants.descriptionFontSize)
+        label.font = .systemFont(ofSize: Constants.descriptionFontSize)
         label.textColor = .systemGray
         label.numberOfLines = 0
         return label

@@ -87,6 +87,7 @@ private extension ComicsViewModel {
                   let issueNumber = data.issueNumber
             else { return nil }
             let imageURL = buildImageURL(from: data)
+            // TODO: Change Issue Number into a readable string
             return ComicCellData(title: title, issueNumber: issueNumber, imageURL: imageURL)
         }
     }

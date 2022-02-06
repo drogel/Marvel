@@ -13,9 +13,11 @@ class CharacterDetailLayout: UICollectionViewCompositionalLayout {
         let section = CharacterDetailSection.fromSectionIndex(sectionIndex)
         switch section {
         case .image:
-            return CharacterImageSection()
+            return CharacterImageLayoutSection()
         case .info:
-            return CharacterInfoSection()
+            return CharacterInfoLayoutSection()
+        case .comics:
+            return ComicsLayoutSection()
         }
     }
 

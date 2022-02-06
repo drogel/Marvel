@@ -54,7 +54,7 @@ private extension CharacterDetailCoordinator {
         let viewModel = CharacterDetailViewModel(infoViewModel: infoViewModel, comicsViewModel: comicsViewModel)
         infoViewModel.viewDelegate = viewModel
         comicsViewModel.viewDelegate = viewModel
-        let dataSource = CharacterDetailDataSource(viewModel: infoViewModel)
+        let dataSource = CharacterDetailDataSource(viewModel: viewModel)
         let viewController = CharacterDetailViewController.instantiate(
             viewModel: viewModel,
             dataSource: dataSource,

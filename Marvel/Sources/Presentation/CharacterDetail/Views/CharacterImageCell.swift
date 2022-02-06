@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class CharacterImageCell: UICollectionViewCell {
-    private lazy var characterImageView = CharacterImageView()
+    private lazy var characterImageView = FillImageView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)

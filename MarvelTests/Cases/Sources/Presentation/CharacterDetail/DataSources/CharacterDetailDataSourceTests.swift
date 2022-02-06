@@ -10,13 +10,13 @@ import XCTest
 
 class CharacterDetailDataSourceTests: XCTestCase {
     private var sut: CharacterDetailDataSource!
-    private var viewModelMock: CharacterDetailInfoViewModelMock!
+    private var viewModelMock: CharacterDetailViewModelMock!
     private var collectionViewStub: UICollectionViewStub!
 
     override func setUp() {
         super.setUp()
         collectionViewStub = UICollectionViewStub()
-        viewModelMock = CharacterDetailInfoViewModelMock()
+        viewModelMock = CharacterDetailViewModelMock()
         sut = CharacterDetailDataSource(viewModel: viewModelMock)
         sut.registerSubviews(in: collectionViewStub)
     }
@@ -40,14 +40,45 @@ class CharacterDetailDataSourceTests: XCTestCase {
         assertViewModelInfoCellData(callCount: 1)
     }
 
-    func test_collectionViewHasTwoSections() {
-        XCTAssertEqual(sut.numberOfSections(in: collectionViewStub), 2)
-    }
-
-    func test_collectionViewHasOneCellPerSection() {
+    func test_collectionViewHasOneCellPerSectionInImageAndInfoSections() {
         XCTAssertEqual(whenRetrievingNumberOfCells(inSection: .image), 1)
         XCTAssertEqual(whenRetrievingNumberOfCells(inSection: .info), 1)
     }
+
+    func test_collectionViewComicsSectionHasComicsViewModelItemsCount() {
+        XCTAssertEqual(whenRetrievingNumberOfCells(inSection: .comics), viewModelMock.numberOfComics)
+    }
+
+    func test_numberOfSections_equalsCharacterDetailSectionCasesCount() {
+        XCTAssertEqual(sut.numberOfSections(in: collectionViewStub), CharacterDetailSection.allCases.count)
+    }
+}
+
+private class CharacterDetailViewModelMock: CharacterDetailViewModelProtocol {
+    var imageCellDataCallCount = 0
+    var infoCellDataCallCount = 0
+
+    var imageCellData: CharacterImageData? {
+        imageCellDataCallCount += 1
+        return nil
+    }
+
+    var infoCellData: CharacterInfoData? {
+        infoCellDataCallCount += 1
+        return nil
+    }
+
+    var numberOfComics: Int {
+        0
+    }
+
+    func comicCellData(at _: IndexPath) -> ComicCellData? {
+        nil
+    }
+
+    func start() {}
+
+    func dispose() {}
 }
 
 private extension CharacterDetailDataSourceTests {

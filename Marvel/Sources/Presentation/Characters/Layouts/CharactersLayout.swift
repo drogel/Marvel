@@ -9,7 +9,7 @@ import UIKit
 
 class CharactersLayout: UICollectionViewCompositionalLayout {
     private static var sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = { _, _ in
-        CharactersSection()
+        CharactersLayoutSection()
     }
 
     init() {
