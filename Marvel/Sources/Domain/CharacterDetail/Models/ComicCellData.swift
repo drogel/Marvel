@@ -9,6 +9,6 @@ import Foundation
 
 struct ComicCellData: Hashable {
     let title: String
-    let issueNumber: Int
+    let issueNumber: String
     let imageURL: URL?
 }

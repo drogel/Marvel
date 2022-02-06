@@ -13,3 +13,4 @@
 "character_not_found" = "El personaje que buscas no existe en la base de datos.";
 "api_keys_not_found" = "No se han encontrado claves para la API de Marvel, o las que hay no son válidas. Añade tus propias claves como variables de entorno del proyecto si no lo has hecho ya.";
 "no_internet" = "Parece que no estás conectado a internet. Revisa tu conexión e inténtalo de nuevo.";
+"issue_number %@" = "Número %@";

@@ -105,6 +105,15 @@ class ComicsViewModelTests: XCTestCase {
         assertSutNumberOfComics(equals: 1)
     }
 
+    func test_givenDidStartSuccessfully_cellDataHasFormattedFields() {
+        givenDidStartSuccessfully()
+        XCTAssertNotNil(whenRetrievingFirstCellData())
+        let actualCellData = try! XCTUnwrap(sut.comicCellData(at: IndexPath(row: 0, section: 0)))
+        XCTAssertEqual(actualCellData.title, "Test Title")
+        let expectedIssueNumber = String(format: "issue_number %@".localized, String(1))
+        XCTAssertEqual(actualCellData.issueNumber, expectedIssueNumber)
+    }
+
     func test_givenStartDidFail_hasNoCellData() {
         givenSutWithFailingFetcher()
         sut.start()
@@ -158,8 +167,8 @@ private class ComicFetcherMock: FetchComicsUseCase {
 private class ComicFetcherSuccessfulStub: ComicFetcherMock {
     static let comicDataStub = ComicData(
         identifier: 0,
-        title: "TestTitle",
-        issueNumber: 0,
+        title: "Test #1 Title #1123",
+        issueNumber: 1,
         thumbnail: ImageData(path: "", imageExtension: "")
     )
     static let pageInfoStub = PageInfo<ComicData>.zeroWith(results: [ComicFetcherSuccessfulStub.comicDataStub])
@@ -205,6 +214,11 @@ private extension ComicsViewModelTests {
             characterID: characterIDStub,
             imageURLBuilder: imageURLBuilderMock
         )
+    }
+
+    func givenDidStartSuccessfully() {
+        givenSutWithSuccessfulFetcher()
+        sut.start()
     }
 
     func whenRetrievingFirstCellData() -> ComicCellData? {

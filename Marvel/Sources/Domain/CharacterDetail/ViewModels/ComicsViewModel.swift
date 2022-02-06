@@ -82,14 +82,24 @@ private extension ComicsViewModel {
     }
 
     func mapToCells(comicData: [ComicData]?) -> [ComicCellData]? {
-        comicData?.compactMap { data in
-            guard let title = data.title,
-                  let issueNumber = data.issueNumber
-            else { return nil }
-            let imageURL = buildImageURL(from: data)
-            // TODO: Change Issue Number into a readable string, remove issue number from title
-            return ComicCellData(title: title, issueNumber: issueNumber, imageURL: imageURL)
-        }
+        comicData?.compactMap(comicCell)
+    }
+
+    func comicCell(from comicData: ComicData) -> ComicCellData? {
+        guard let dataTitle = comicData.title, let dataIssueNumber = comicData.issueNumber else { return nil }
+        let imageURL = buildImageURL(from: comicData)
+        let title = buildTitle(from: dataTitle)
+        let issueNumber = buildIssueNumber(from: dataIssueNumber)
+        return ComicCellData(title: title, issueNumber: issueNumber, imageURL: imageURL)
+    }
+
+    func buildTitle(from title: String) -> String {
+        removeIssueNumber(from: title)
+    }
+
+    func buildIssueNumber(from issueNumber: Int) -> String {
+        let issueNumberString = String(issueNumber)
+        return String(format: "issue_number %@".localized, issueNumberString)
     }
 
     func buildImageURL(from comicData: ComicData) -> URL? {
@@ -99,5 +109,11 @@ private extension ComicsViewModel {
 
     func handleFailure() {
         viewDelegate?.viewModelDidFailRetrievingData(self)
+    }
+
+    func removeIssueNumber(from comicTitle: String) -> String {
+        comicTitle
+            .replacingOccurrences(of: #"\s#\d*"#, with: "", options: .regularExpression)
+            .trimmingCharacters(in: .whitespaces)
     }
 }

@@ -37,6 +37,7 @@ class ComicsLayoutSection: NSCollectionLayoutSection {
         )
         self.init(group: group)
         orthogonalScrollingBehavior = .continuous
+        // TODO: Add section header
         contentInsets = NSDirectionalEdgeInsets(
             top: Constants.layoutInset,
             leading: Constants.layoutInset,

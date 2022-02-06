@@ -13,3 +13,4 @@
 "character_not_found" = "The character you are looking for can't be found in the database.";
 "api_keys_not_found" = "Your API keys to the Marvel API could not be found, or they are not valid. Add your own API keys in the environment variables of the project if you haven't already.";
 "no_internet" = "It looks like you are not connected to the internet. Check your connection and try again.";
+"issue_number %@" = "Issue number %@";

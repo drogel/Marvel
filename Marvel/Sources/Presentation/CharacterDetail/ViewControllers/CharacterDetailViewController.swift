@@ -10,6 +10,10 @@ import UIKit
 class CharacterDetailViewController: ViewController {
     typealias ViewModelProtocol = ViewModel
 
+    private enum Constants {
+        static let collectionContentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
+    }
+
     private var viewModel: ViewModelProtocol!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
@@ -75,7 +79,9 @@ private extension CharacterDetailViewController {
     }
 
     func createCollectionView() -> UICollectionView {
-        UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.contentInset = Constants.collectionContentInset
+        return collectionView
     }
 
     func setSubview(_ collectionView: UICollectionView) {
