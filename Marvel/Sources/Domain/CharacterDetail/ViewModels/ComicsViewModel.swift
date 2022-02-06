@@ -10,6 +10,7 @@ import Foundation
 protocol ComicsViewModelProtocol: ViewModel {
     var numberOfComics: Int { get }
     func comicCellData(at indexPath: IndexPath) -> ComicCellData?
+    func willDisplayComicCell(at indexPath: IndexPath)
 }
 
 protocol ComicsViewModelViewDelegate: AnyObject {
@@ -41,13 +42,18 @@ class ComicsViewModel: ComicsViewModelProtocol {
 
     func start() {
         viewDelegate?.viewModelDidStartLoading(self)
-        loadComics()
+        loadComics(with: startingQuery)
     }
 
     func comicCellData(at indexPath: IndexPath) -> ComicCellData? {
         let row = indexPath.row
         guard comics.indices.contains(row) else { return nil }
         return comics[row]
+    }
+
+    func willDisplayComicCell(at indexPath: IndexPath) {
+        guard isLastCell(at: indexPath) else { return }
+        loadMore()
     }
 
     func dispose() {
@@ -57,12 +63,24 @@ class ComicsViewModel: ComicsViewModelProtocol {
 
 private extension ComicsViewModel {
     var startingQuery: FetchComicsQuery {
-        FetchComicsQuery(characterID: characterID, offset: 0)
+        query(atOffset: 0)
     }
 
-    func loadComics() {
+    func isLastCell(at indexPath: IndexPath) -> Bool {
+        indexPath.row == numberOfComics - 1
+    }
+
+    func query(atOffset offset: Int) -> FetchComicsQuery {
+        FetchComicsQuery(characterID: characterID, offset: offset)
+    }
+
+    func loadMore() {
+        loadComics(with: query(atOffset: comics.count))
+    }
+
+    func loadComics(with query: FetchComicsQuery) {
         cancellable?.cancel()
-        cancellable = comicsFetcher.fetch(query: startingQuery, completion: handle)
+        cancellable = comicsFetcher.fetch(query: query, completion: handle)
     }
 
     func handle(result: FetchComicsResult) {
@@ -77,7 +95,7 @@ private extension ComicsViewModel {
 
     func handleSuccess(with pageInfo: PageInfo<ComicData>) {
         guard let comicsCellData = mapToCells(comicData: pageInfo.results) else { return }
-        comics = comicsCellData
+        comics.append(contentsOf: comicsCellData)
         viewDelegate?.viewModelDidRetrieveData(self)
     }
 

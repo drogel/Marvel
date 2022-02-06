@@ -17,15 +17,18 @@ class CharacterDetailViewController: ViewController {
     private var viewModel: ViewModelProtocol!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
+    private var collectionViewDelegate: UICollectionViewDelegate!
     private var layout: UICollectionViewCompositionalLayout!
 
     static func instantiate(
         viewModel: ViewModelProtocol,
         dataSource: CollectionViewDataSource,
+        collectionViewDelegate: UICollectionViewDelegate,
         layout: UICollectionViewCompositionalLayout
     ) -> Self {
         let viewController = instantiate(viewModel: viewModel)
         viewController.dataSource = dataSource
+        viewController.collectionViewDelegate = collectionViewDelegate
         viewController.layout = layout
         return viewController
     }
@@ -58,11 +61,11 @@ extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
     }
 
     func viewModelDidRetrieveCharacterInfo(_: CharacterDetailViewModelProtocol) {
-        collectionView.reloadData()
+        reload()
     }
 
     func viewModelDidRetrieveComics(_: CharacterDetailViewModelProtocol) {
-        reload(section: .comics)
+        reload()
     }
 
     func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String) {
@@ -95,6 +98,7 @@ private extension CharacterDetailViewController {
 
     func configureDataSource(of collectionView: UICollectionView) {
         collectionView.dataSource = dataSource
+        collectionView.delegate = collectionViewDelegate
         dataSource.registerSubviews(in: collectionView)
     }
 
@@ -103,8 +107,7 @@ private extension CharacterDetailViewController {
         NSLayoutConstraint.fit(collectionView, in: view)
     }
 
-    func reload(section: CharacterDetailSection) {
-        let singleSectionIndexSet = IndexSet(integer: section.rawValue)
-        collectionView.reloadSections(singleSectionIndexSet)
+    func reload() {
+        collectionView.reloadData()
     }
 }

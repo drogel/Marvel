@@ -147,6 +147,12 @@ class CharacterDetailViewModelTests: XCTestCase {
     func test_comicsSectionTitle_returnsComics() {
         XCTAssertEqual(sut.comicsSectionTitle, "comics".localized)
     }
+
+    func test_whenAboutToDisplayAComicCell_delegatesToComicsViewModel() {
+        assertComicsViewModelWillDisplayCell(callCount: 0)
+        whenAboutToDisplayAComicCell()
+        assertComicsViewModelWillDisplayCell(callCount: 1)
+    }
 }
 
 private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModelViewDelegate {
@@ -183,6 +189,10 @@ private extension CharacterDetailViewModelTests {
         sut.viewDelegate = viewDelegateMock
     }
 
+    func whenAboutToDisplayAComicCell() {
+        sut.willDisplayComicCell(at: IndexPath(row: 0, section: 0))
+    }
+
     func assertInfoViewModelStart(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(infoViewModelMock.startCallCount, callCount, line: line)
     }
@@ -213,6 +223,10 @@ private extension CharacterDetailViewModelTests {
 
     func assertComicsViewModelComicCellData(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(comicsViewModelMock.comicsCellDataCallCount, callCount, line: line)
+    }
+
+    func assertComicsViewModelWillDisplayCell(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(comicsViewModelMock.willDisplayComicCellCallCount, callCount, line: line)
     }
 
     func assertViewDelegateDidStartLoading(callCount: Int, line: UInt = #line) {

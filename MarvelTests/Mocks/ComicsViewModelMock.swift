@@ -13,10 +13,15 @@ class ComicsViewModelMock: ComicsViewModelProtocol {
     var disposeCallCount = 0
     var numberOfComicsCallCount = 0
     var comicsCellDataCallCount = 0
+    var willDisplayComicCellCallCount = 0
 
     var numberOfComics: Int {
         numberOfComicsCallCount += 1
         return 0
+    }
+
+    func start() {
+        startCallCount += 1
     }
 
     func comicCellData(at _: IndexPath) -> ComicCellData? {
@@ -24,8 +29,8 @@ class ComicsViewModelMock: ComicsViewModelProtocol {
         return nil
     }
 
-    func start() {
-        startCallCount += 1
+    func willDisplayComicCell(at _: IndexPath) {
+        willDisplayComicCellCallCount += 1
     }
 
     func dispose() {

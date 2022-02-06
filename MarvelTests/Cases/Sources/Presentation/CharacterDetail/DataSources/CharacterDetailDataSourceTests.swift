@@ -58,6 +58,12 @@ class CharacterDetailDataSourceTests: XCTestCase {
     func test_numberOfSections_equalsCharacterDetailSectionCasesCount() {
         XCTAssertEqual(sut.numberOfSections(in: collectionViewStub), CharacterDetailSection.allCases.count)
     }
+
+    func test_whenAboutToDisplayAComicCell_notifiesViewModel() {
+        assertViewModelWillDisplayComicCell(callCount: 0)
+        whenAboutToDisplayCell(inSection: .comics)
+        assertViewModelWillDisplayComicCell(callCount: 1)
+    }
 }
 
 private class CharacterDetailViewModelMock: CharacterDetailViewModelProtocol {
@@ -65,6 +71,7 @@ private class CharacterDetailViewModelMock: CharacterDetailViewModelProtocol {
     var infoCellDataCallCount = 0
     var comicsSectionTitleCallCount = 0
     var comicCellDataCallCount = 0
+    var willDisplayComicCellCallCount = 0
 
     var comicsSectionTitle: String {
         comicsSectionTitleCallCount += 1
@@ -92,6 +99,10 @@ private class CharacterDetailViewModelMock: CharacterDetailViewModelProtocol {
 
     func start() {}
 
+    func willDisplayComicCell(at _: IndexPath) {
+        willDisplayComicCellCallCount += 1
+    }
+
     func dispose() {}
 }
 
@@ -102,6 +113,10 @@ private extension CharacterDetailDataSourceTests {
 
     func whenRetrievingCell(inSection section: CharacterDetailSection) {
         _ = sut.collectionView(collectionViewStub, cellForItemAt: indexPath(for: section))
+    }
+
+    func whenAboutToDisplayCell(inSection section: CharacterDetailSection) {
+        sut.collectionView(collectionViewStub, willDisplay: UICollectionViewCell(), forItemAt: indexPath(for: section))
     }
 
     func whenRetrievingNumberOfCells(inSection section: CharacterDetailSection) -> Int {
@@ -118,5 +133,9 @@ private extension CharacterDetailDataSourceTests {
 
     func assertViewModelComicCellData(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(viewModelMock.comicCellDataCallCount, callCount, line: line)
+    }
+
+    func assertViewModelWillDisplayComicCell(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewModelMock.willDisplayComicCellCallCount, callCount, line: line)
     }
 }

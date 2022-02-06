@@ -74,6 +74,17 @@ class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
     }
 }
 
+extension CharacterDetailDataSource: UICollectionViewDelegate {
+    func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
+        case .comics:
+            return viewModel.willDisplayComicCell(at: indexPath)
+        default:
+            return
+        }
+    }
+}
+
 private extension CharacterDetailDataSource {
     func imageCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeue(cellOfType: CharacterImageCell.self, at: indexPath)

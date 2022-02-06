@@ -58,6 +58,7 @@ private extension CharacterDetailCoordinator {
         let viewController = CharacterDetailViewController.instantiate(
             viewModel: viewModel,
             dataSource: dataSource,
+            collectionViewDelegate: dataSource,
             layout: CharacterDetailLayout()
         )
         viewController.transitioningDelegate = self

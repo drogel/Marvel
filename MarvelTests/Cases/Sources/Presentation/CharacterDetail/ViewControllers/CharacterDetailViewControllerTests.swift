@@ -12,14 +12,17 @@ class CharacterDetailViewControllerTests: XCTestCase {
     private var sut: CharacterDetailViewController!
     private var viewModelMock: CharacterDetailViewModelMock!
     private var dataSourceMock: CollectionViewDataSourceMock!
+    private var delegateMock: CollectionViewDelegateMock!
 
     override func setUp() {
         super.setUp()
         dataSourceMock = CollectionViewDataSourceMock()
+        delegateMock = CollectionViewDelegateMock()
         viewModelMock = CharacterDetailViewModelMock()
         sut = CharacterDetailViewController.instantiate(
             viewModel: viewModelMock,
             dataSource: dataSourceMock,
+            collectionViewDelegate: delegateMock,
             layout: CharacterDetailLayout()
         )
     }

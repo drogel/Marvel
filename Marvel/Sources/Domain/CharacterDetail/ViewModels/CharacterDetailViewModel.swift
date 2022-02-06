@@ -55,6 +55,10 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
         comicsViewModel.comicCellData(at: indexPath)
     }
 
+    func willDisplayComicCell(at indexPath: IndexPath) {
+        comicsViewModel.willDisplayComicCell(at: indexPath)
+    }
+
     func dispose() {
         infoViewModel.dispose()
         comicsViewModel.dispose()

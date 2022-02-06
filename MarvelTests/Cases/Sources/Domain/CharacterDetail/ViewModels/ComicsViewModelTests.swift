@@ -126,6 +126,39 @@ class ComicsViewModelTests: XCTestCase {
         sut.start()
         assertImageURLBuilderBuild(callCount: 1)
     }
+
+    func test_givenDidStartSuccessfully_whenAboutToDisplayLastCell_fetchesComics() {
+        givenDidStartSuccessfully()
+        assertComicFetcherFetch(callCount: 1)
+        whenAboutToDisplayACell()
+        assertComicFetcherFetch(callCount: 2)
+    }
+
+    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_cancellsCancellable() {
+        givenDidStartSuccessfully()
+        assertComicFetcherFetchFirstCancellableDidCancel(callCount: 0)
+        whenAboutToDisplayACell()
+        assertComicFetcherFetchFirstCancellableDidCancel(callCount: 1)
+    }
+
+    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_queryIsAtCurrentComicsOffset() {
+        givenDidStartSuccessfully()
+        whenAboutToDisplayACell()
+        XCTAssertEqual(comicFetcherMock.mostRecentQuery?.offset, 1)
+    }
+
+    func test_whenAboutToDisplayACell_onlyFetchesComicsIfCellIsLast() {
+        assertComicFetcherFetch(callCount: 0)
+        whenAboutToDisplayACell()
+        assertComicFetcherFetch(callCount: 0)
+    }
+
+    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_comicCellsAreAppended() {
+        givenDidStartSuccessfully()
+        assertSutNumberOfComics(equals: 1)
+        whenAboutToDisplayACell()
+        assertSutNumberOfComics(equals: 2)
+    }
 }
 
 private class ComicsViewModelViewDelegateMock: ComicsViewModelViewDelegate {
@@ -264,5 +297,9 @@ private extension ComicsViewModelTests {
     func assertHasNoCellData(line: UInt = #line) {
         XCTAssertNil(whenRetrievingFirstCellData(), line: line)
         assertSutNumberOfComics(equals: 0, line: line)
+    }
+
+    func whenAboutToDisplayACell() {
+        sut.willDisplayComicCell(at: IndexPath(row: 0, section: 0))
     }
 }
