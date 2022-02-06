@@ -7,7 +7,9 @@
 
 import Foundation
 
-protocol CharacterDetailViewModelProtocol: CharacterDetailInfoViewModelProtocol, ComicsViewModelProtocol {}
+protocol CharacterDetailViewModelProtocol: CharacterDetailInfoViewModelProtocol, ComicsViewModelProtocol {
+    var comicsSectionTitle: String { get }
+}
 
 protocol CharacterDetailViewModelViewDelegate: AnyObject {
     func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol)
@@ -18,6 +20,10 @@ protocol CharacterDetailViewModelViewDelegate: AnyObject {
 
 class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
     weak var viewDelegate: CharacterDetailViewModelViewDelegate?
+
+    var comicsSectionTitle: String {
+        "comics".localized
+    }
 
     var imageCellData: CharacterImageData? {
         infoViewModel.imageCellData

@@ -40,6 +40,12 @@ class CharacterDetailDataSourceTests: XCTestCase {
         assertViewModelInfoCellData(callCount: 1)
     }
 
+    func test_givenViewDidLoad_whenRetrievingCellAtComicsSection_callsViewModelComicCellData() {
+        assertViewModelComicCellData(callCount: 0)
+        whenRetrievingCell(inSection: .comics)
+        assertViewModelComicCellData(callCount: 1)
+    }
+
     func test_collectionViewHasOneCellPerSectionInImageAndInfoSections() {
         XCTAssertEqual(whenRetrievingNumberOfCells(inSection: .image), 1)
         XCTAssertEqual(whenRetrievingNumberOfCells(inSection: .info), 1)
@@ -57,6 +63,13 @@ class CharacterDetailDataSourceTests: XCTestCase {
 private class CharacterDetailViewModelMock: CharacterDetailViewModelProtocol {
     var imageCellDataCallCount = 0
     var infoCellDataCallCount = 0
+    var comicsSectionTitleCallCount = 0
+    var comicCellDataCallCount = 0
+
+    var comicsSectionTitle: String {
+        comicsSectionTitleCallCount += 1
+        return ""
+    }
 
     var imageCellData: CharacterImageData? {
         imageCellDataCallCount += 1
@@ -73,7 +86,8 @@ private class CharacterDetailViewModelMock: CharacterDetailViewModelProtocol {
     }
 
     func comicCellData(at _: IndexPath) -> ComicCellData? {
-        nil
+        comicCellDataCallCount += 1
+        return nil
     }
 
     func start() {}
@@ -100,5 +114,9 @@ private extension CharacterDetailDataSourceTests {
 
     func assertViewModelInfoCellData(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(viewModelMock.infoCellDataCallCount, callCount, line: line)
+    }
+
+    func assertViewModelComicCellData(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewModelMock.comicCellDataCallCount, callCount, line: line)
     }
 }

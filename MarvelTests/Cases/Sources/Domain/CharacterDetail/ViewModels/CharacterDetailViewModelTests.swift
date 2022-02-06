@@ -143,6 +143,10 @@ class CharacterDetailViewModelTests: XCTestCase {
         sut.viewModelDidFinishLoading(comicsViewModelMock)
         assertViewDelegateDidFinishLoading(callCount: 0)
     }
+
+    func test_comicsSectionTitle_returnsComics() {
+        XCTAssertEqual(sut.comicsSectionTitle, "comics".localized)
+    }
 }
 
 private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModelViewDelegate {

@@ -96,8 +96,7 @@ private extension CharacterDetailDataSource {
 
     func comicsHeader(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeue(headerOfType: CollectionSectionHeader.self, at: indexPath)
-        // TODO: Add localization
-        header.configure(using: "Comics")
+        header.configure(using: viewModel.comicsSectionTitle)
         return header
     }
 }
