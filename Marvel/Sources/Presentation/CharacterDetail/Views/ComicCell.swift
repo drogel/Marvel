@@ -26,7 +26,8 @@ class ComicCell: UICollectionViewCell, Configurable {
         }
 
         enum Image {
-            static let cornerRadius: CGFloat = 5
+            static let maxHeight: CGFloat = 210
+            static let cornerRadius: CGFloat = 6
             static let aspectRatio: CGFloat = 1.544
         }
     }
@@ -105,7 +106,14 @@ private extension ComicCell {
 
     func setUpConstraints() {
         setUpMainStackViewConstraints()
+        setUpComicImageConstraints()
+    }
+
+    func setUpComicImageConstraints() {
         comicImageView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        NSLayoutConstraint.activate([
+            comicImageView.heightAnchor.constraint(lessThanOrEqualToConstant: Constants.Image.maxHeight),
+        ])
     }
 
     func setUpMainStackViewConstraints() {
