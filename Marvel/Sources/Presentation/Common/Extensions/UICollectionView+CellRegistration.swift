@@ -12,4 +12,12 @@ extension UICollectionView {
     func register<T: UICollectionViewCell>(cellOfType cellType: T.Type) {
         register(cellType, forCellWithReuseIdentifier: T.identifier)
     }
+
+    func register<T: UICollectionReusableView>(headerOfType headerType: T.Type) {
+        register(
+            headerType,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: T.identifier
+        )
+    }
 }

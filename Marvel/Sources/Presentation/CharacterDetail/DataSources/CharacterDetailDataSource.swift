@@ -41,6 +41,19 @@ class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
 
     func collectionView(
         _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind _: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
+        switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
+        case .comics:
+            return comicsHeader(in: collectionView, at: indexPath)
+        default:
+            return UICollectionReusableView()
+        }
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
@@ -57,6 +70,7 @@ class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
         collectionView.register(cellOfType: CharacterImageCell.self)
         collectionView.register(cellOfType: CharacterInfoCell.self)
         collectionView.register(cellOfType: ComicCell.self)
+        collectionView.register(headerOfType: CollectionSectionHeader.self)
     }
 }
 
@@ -78,5 +92,12 @@ private extension CharacterDetailDataSource {
         let cell = collectionView.dequeue(cellOfType: ComicCell.self, at: indexPath)
         cell.configure(using: comicCellData)
         return cell
+    }
+
+    func comicsHeader(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeue(headerOfType: CollectionSectionHeader.self, at: indexPath)
+        // TODO: Add localization
+        header.configure(using: "Comics")
+        return header
     }
 }
