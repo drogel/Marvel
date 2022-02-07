@@ -26,6 +26,6 @@ class CharactersClientService: CharactersService {
 
 private extension CharactersClientService {
     func components(for offset: Int) -> RequestComponents {
-        RequestComponents(path: charactersPath, queryParameters: ["offset": String(offset)])
+        RequestComponents(path: charactersPath).withOffsetQuery(offset)
     }
 }

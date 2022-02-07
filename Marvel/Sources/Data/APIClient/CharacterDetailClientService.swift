@@ -26,7 +26,7 @@ class CharacterDetailClientService: CharacterDetailService {
 
 private extension CharacterDetailClientService {
     func components(for identifier: Int) -> RequestComponents {
-        let characterDetailPath = charactersPath + "/" + String(identifier)
-        return RequestComponents(path: characterDetailPath)
+        let characterID = String(identifier)
+        return RequestComponents().appendingPathComponents([charactersPath, characterID])
     }
 }

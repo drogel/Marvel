@@ -31,7 +31,7 @@ class ComicsClientService: ComicsService {
 
 private extension ComicsClientService {
     func components(for characterID: Int, offset: Int) -> RequestComponents {
-        let characterDetailPath = charactersPath + "/" + String(characterID) + "/" + comicsPath
-        return RequestComponents(path: characterDetailPath, queryParameters: ["offset": String(offset)])
+        let components = RequestComponents().appendingPathComponents([charactersPath, String(characterID), comicsPath])
+        return components.withOffsetQuery(offset)
     }
 }

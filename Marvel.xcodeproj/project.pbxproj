@@ -21,6 +21,7 @@
 		0514465F27AFFAF500DA524E /* ComicsLayoutSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0514465E27AFFAF500DA524E /* ComicsLayoutSection.swift */; };
 		0514466127B0376F00DA524E /* CollectionSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0514466027B0376E00DA524E /* CollectionSectionHeader.swift */; };
 		0514466327B0548300DA524E /* CollectionViewDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0514466227B0548300DA524E /* CollectionViewDelegateMock.swift */; };
+		052A0A6D27B1C24A002CE6BB /* RequestComponentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052A0A6C27B1C24A002CE6BB /* RequestComponentsTests.swift */; };
 		05314CFB27AE8DE100A5A658 /* ImageURLBuilderStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05314CFA27AE8DE100A5A658 /* ImageURLBuilderStub.swift */; };
 		05314CFD27AE8EE100A5A658 /* ComicsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05314CFC27AE8EE100A5A658 /* ComicsViewModel.swift */; };
 		05314CFF27AE8F0300A5A658 /* ComicsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05314CFE27AE8F0300A5A658 /* ComicsViewModelTests.swift */; };
@@ -193,6 +194,7 @@
 		0514465E27AFFAF500DA524E /* ComicsLayoutSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsLayoutSection.swift; sourceTree = "<group>"; };
 		0514466027B0376E00DA524E /* CollectionSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionSectionHeader.swift; sourceTree = "<group>"; };
 		0514466227B0548300DA524E /* CollectionViewDelegateMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewDelegateMock.swift; sourceTree = "<group>"; };
+		052A0A6C27B1C24A002CE6BB /* RequestComponentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestComponentsTests.swift; sourceTree = "<group>"; };
 		05314CFA27AE8DE100A5A658 /* ImageURLBuilderStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageURLBuilderStub.swift; sourceTree = "<group>"; };
 		05314CFC27AE8EE100A5A658 /* ComicsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsViewModel.swift; sourceTree = "<group>"; };
 		05314CFE27AE8F0300A5A658 /* ComicsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsViewModelTests.swift; sourceTree = "<group>"; };
@@ -682,6 +684,7 @@
 			isa = PBXGroup;
 			children = (
 				05932C56279B540900549D7D /* NetworkServiceTests.swift */,
+				052A0A6C27B1C24A002CE6BB /* RequestComponentsTests.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1465,6 +1468,7 @@
 				054594812798B93C00A634AD /* DataWrapper+Stubs.swift in Sources */,
 				05B0855827AC57AA00A74DD0 /* CollectionViewDataSourceMock.swift in Sources */,
 				0559261027A85EB500026919 /* XCTestCase+FailureMessage.swift in Sources */,
+				052A0A6D27B1C24A002CE6BB /* RequestComponentsTests.swift in Sources */,
 				0571306B27A5B36A0009383E /* CharacterDetailClientServiceTests.swift in Sources */,
 				053B9D992799CADD00CCF1C2 /* CharacterData+Stubs.swift in Sources */,
 				05B0854E27AC457500A74DD0 /* UICollectionViewStub.swift in Sources */,
