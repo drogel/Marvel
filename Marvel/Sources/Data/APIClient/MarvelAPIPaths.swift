@@ -9,4 +9,5 @@ import Foundation
 
 enum MarvelAPIPaths: String {
     case characters
+    case comics
 }

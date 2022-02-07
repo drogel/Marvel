@@ -48,8 +48,12 @@ private extension CharacterDetailDependencyContainer {
     }
 
     var comicsDetailService: ComicsService {
-        // TODO: Inject the Marvel API Comics Service when ready
-        ComicsDebugService(dataLoader: jsonDataLoader)
+        switch dependencies.scheme {
+        case .debug:
+            return ComicsDebugService(dataLoader: jsonDataLoader)
+        case .release:
+            return ComicsClientService(networkService: dependencies.networkService, resultHandler: resultHandler)
+        }
     }
 
     var jsonDataLoader: JsonDecoderDataLoader {

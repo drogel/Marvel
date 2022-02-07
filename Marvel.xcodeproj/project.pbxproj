@@ -78,6 +78,9 @@
 		05484625279DE8C800C6EC66 /* CancellableMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05484624279DE8C800C6EC66 /* CancellableMock.swift */; };
 		05484627279E035600C6EC66 /* FillImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05484626279E035600C6EC66 /* FillImageView.swift */; };
 		05484629279E1B0D00C6EC66 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05484628279E1B0D00C6EC66 /* AlertPresenter.swift */; };
+		054D95A127B18D15007B54DA /* ComicsClientService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054D95A027B18D15007B54DA /* ComicsClientService.swift */; };
+		054D95A327B18D71007B54DA /* ComicsClientServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054D95A227B18D71007B54DA /* ComicsClientServiceTests.swift */; };
+		054D95A527B18DF8007B54DA /* ResultHandlerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054D95A427B18DF8007B54DA /* ResultHandlerMock.swift */; };
 		054ED2BD27A716C3000358A3 /* ResultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054ED2BC27A716C3000358A3 /* ResultHandler.swift */; };
 		0559261027A85EB500026919 /* XCTestCase+FailureMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */; };
 		0559261427A868BA00026919 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0559261627A868BA00026919 /* Localizable.strings */; };
@@ -249,6 +252,9 @@
 		05484624279DE8C800C6EC66 /* CancellableMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellableMock.swift; sourceTree = "<group>"; };
 		05484626279E035600C6EC66 /* FillImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillImageView.swift; sourceTree = "<group>"; };
 		05484628279E1B0D00C6EC66 /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
+		054D95A027B18D15007B54DA /* ComicsClientService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsClientService.swift; sourceTree = "<group>"; };
+		054D95A227B18D71007B54DA /* ComicsClientServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsClientServiceTests.swift; sourceTree = "<group>"; };
+		054D95A427B18DF8007B54DA /* ResultHandlerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultHandlerMock.swift; sourceTree = "<group>"; };
 		054ED2BC27A716C3000358A3 /* ResultHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultHandler.swift; sourceTree = "<group>"; };
 		0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FailureMessage.swift"; sourceTree = "<group>"; };
 		0559261527A868BA00026919 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -377,11 +383,12 @@
 		053B9DA0279A0BC800CCF1C2 /* APIClient */ = {
 			isa = PBXGroup;
 			children = (
-				054ED2BC27A716C3000358A3 /* ResultHandler.swift */,
 				0548461B279DC6F600C6EC66 /* CharacterDetailClientService.swift */,
 				05932C58279B5A0700549D7D /* CharactersClientService.swift */,
+				054D95A027B18D15007B54DA /* ComicsClientService.swift */,
 				05484621279DE69300C6EC66 /* MarvelAPIPaths.swift */,
 				0571306F27A5C1D30009383E /* NetworkErrorHandler.swift */,
+				054ED2BC27A716C3000358A3 /* ResultHandler.swift */,
 				0548461A279DC6E400C6EC66 /* Authentication */,
 				05932C43279B18AE00549D7D /* Network */,
 			);
@@ -393,6 +400,7 @@
 			children = (
 				0571306A27A5B36A0009383E /* CharacterDetailClientServiceTests.swift */,
 				0571306427A559F10009383E /* CharactersClientServiceTests.swift */,
+				054D95A227B18D71007B54DA /* ComicsClientServiceTests.swift */,
 				0571307127A5C3080009383E /* DataServicesNetworkErrorHandlerTests.swift */,
 				05BD40A127A9A5B100F2E513 /* URLComponentsBuilderTests.swift */,
 				0571306227A559C60009383E /* Authentication */,
@@ -647,6 +655,7 @@
 				0571306827A55C280009383E /* JSONParserMock.swift */,
 				0571307327A5C53E0009383E /* NetworkErrorHandlerMock.swift */,
 				0571306627A55B3A0009383E /* NetworkServiceMock.swift */,
+				054D95A427B18DF8007B54DA /* ResultHandlerMock.swift */,
 				0513D25027AEF9790040DF58 /* ViewModelMock.swift */,
 			);
 			path = Mocks;
@@ -1382,6 +1391,7 @@
 				053B9DA2279A0BE900CCF1C2 /* Authenticator.swift in Sources */,
 				0548461E279DC89C00C6EC66 /* CharacterDetailDependencyContainer.swift in Sources */,
 				05C14931279CA74000927467 /* Loadable.swift in Sources */,
+				054D95A127B18D15007B54DA /* ComicsClientService.swift in Sources */,
 				053BBD8E27ADA8390033640A /* DataLoaderDebugService.swift in Sources */,
 				0545945B27988CC200A634AD /* ViewModel.swift in Sources */,
 				05C1491A279C1C3B00927467 /* FetchImageView.swift in Sources */,
@@ -1447,6 +1457,7 @@
 				0513D25127AEF9790040DF58 /* ViewModelMock.swift in Sources */,
 				05BD40AD27A9B5C400F2E513 /* CharactersCoordinatorTests.swift in Sources */,
 				053BBD8227AD86840033640A /* ComicDataTests.swift in Sources */,
+				054D95A527B18DF8007B54DA /* ResultHandlerMock.swift in Sources */,
 				05932C57279B540900549D7D /* NetworkServiceTests.swift in Sources */,
 				05484607279D697000C6EC66 /* FetchCharacterDetailUseCaseTests.swift in Sources */,
 				0513D24927AEEA400040DF58 /* CharacterDetailViewModelTests.swift in Sources */,
@@ -1468,6 +1479,7 @@
 				054845FF279D66B200C6EC66 /* JsonDataLoaderStubs.swift in Sources */,
 				0545945827988C9B00A634AD /* CharactersViewModelTests.swift in Sources */,
 				05BD40A827A9B29400F2E513 /* UINavigationControllerMock.swift in Sources */,
+				054D95A327B18D71007B54DA /* ComicsClientServiceTests.swift in Sources */,
 				05B0855427AC554600A74DD0 /* CharacterDetailDataSourceTests.swift in Sources */,
 				05314CFB27AE8DE100A5A658 /* ImageURLBuilderStub.swift in Sources */,
 				0513D24B27AEEB3A0040DF58 /* CharacterDetailInfoViewModelMock.swift in Sources */,
