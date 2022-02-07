@@ -82,6 +82,7 @@ private extension CharactersViewModel {
     }
 
     func isLastCell(at indexPath: IndexPath) -> Bool {
+        // TODO: Also, don't fetch more characters if we reached the end of the character list
         indexPath.row == numberOfItems - 1
     }
 

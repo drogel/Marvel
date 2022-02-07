@@ -67,6 +67,7 @@ private extension ComicsViewModel {
     }
 
     func isLastCell(at indexPath: IndexPath) -> Bool {
+        // TODO: Also, don't fetch more comics if we reached the end of the comic list
         indexPath.row == numberOfComics - 1
     }
 

@@ -13,6 +13,7 @@ struct RequestComponents: Equatable {
 
     static var empty = RequestComponents(path: "")
 
+    // TODO: Implement ways to easily build paths and add offset values
     init(path: String, queryParameters: [String: String?] = [:]) {
         self.path = path
         self.queryParameters = queryParameters
