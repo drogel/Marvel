@@ -9,7 +9,6 @@ import Foundation
 @testable import Marvel_Debug
 
 class OffsetPagerPartialMock: OffsetPager {
-
     var isAtEndOfCurrentPageCallCount = 0
     var isThereMoreContentCallCount = 0
     var updateCallCount = 0

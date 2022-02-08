@@ -9,17 +9,17 @@ import Foundation
 @testable import Marvel_Debug
 
 class PagerStub: Pager {
-    func isAtEndOfCurrentPageWithMoreContent(_ offset: Int) -> Bool {
+    func isAtEndOfCurrentPageWithMoreContent(_: Int) -> Bool {
         true
     }
 
-    func isThereMoreContent(at offset: Int) -> Bool {
+    func isThereMoreContent(at _: Int) -> Bool {
         true
     }
 
-    func isAtEndOfCurrentPage(_ offset: Int) -> Bool {
+    func isAtEndOfCurrentPage(_: Int) -> Bool {
         true
     }
 
-    func update(currentPage: Page) { }
+    func update(currentPage _: Page) {}
 }

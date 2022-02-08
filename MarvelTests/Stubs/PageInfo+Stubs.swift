@@ -17,7 +17,7 @@ extension PageInfo {
         PageInfo<ContentType>(offset: 0, limit: 0, total: 0, count: 0, results: results)
     }
 
-    static func offsetAtEndWithMoreContent(results: [ContentType]) -> PageInfo<ContentType> {
-        PageInfo<ContentType>(offset: 1, limit: 1, total: 2, count: 1, results: results)
+    static func atFirstPageOfTwoTotal(results: [ContentType]) -> PageInfo<ContentType> {
+        PageInfo<ContentType>(offset: 0, limit: 1, total: 2, count: 1, results: results)
     }
 }

@@ -221,7 +221,7 @@ private class ComicFetcherSuccessfulStub: ComicFetcherMock {
         issueNumber: 1,
         thumbnail: ImageData(path: "", imageExtension: "")
     )
-    static let pageInfoStub = PageInfo<ComicData>.offsetAtEndWithMoreContent(
+    static let pageInfoStub = PageInfo<ComicData>.atFirstPageOfTwoTotal(
         results: [ComicFetcherSuccessfulStub.comicStub]
     )
 
