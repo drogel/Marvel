@@ -68,6 +68,10 @@ private class CharacterDetailContainerStub: CharacterDetailContainer {
     var imageURLBuilder: ImageURLBuilder {
         ImageURLBuilderStub()
     }
+
+    var pager: Pager {
+        PagerStub()
+    }
 }
 
 private class FetchCharacterDetailUseCaseStub: FetchCharacterDetailUseCase {

@@ -13,17 +13,20 @@ class ComicsViewModelTests: XCTestCase {
     private var viewDelegate: ComicsViewModelViewDelegateMock!
     private var comicFetcherMock: ComicFetcherMock!
     private var imageURLBuilderMock: ImageURLBuilderMock!
+    private var offsetPagerMock: OffsetPagerPartialMock!
 
     override func setUp() {
         super.setUp()
         comicFetcherMock = ComicFetcherMock()
         imageURLBuilderMock = ImageURLBuilderMock()
+        offsetPagerMock = OffsetPagerPartialMock()
         givenSut(with: comicFetcherMock)
     }
 
     override func tearDown() {
         sut = nil
         imageURLBuilderMock = nil
+        offsetPagerMock = nil
         comicFetcherMock = nil
         viewDelegate = nil
         super.tearDown()
@@ -76,6 +79,13 @@ class ComicsViewModelTests: XCTestCase {
         assertViewDelegateDidFinishLoading(callCount: 0)
         sut.start()
         assertViewDelegateDidFinishLoading(callCount: 1)
+    }
+
+    func test_givenViewDelegate_whenStartingFinishes_updatesPage() {
+        givenSutWithSuccessfulFetcher()
+        assertPagerUpdate(callCount: 0)
+        sut.start()
+        assertPagerUpdate(callCount: 1)
     }
 
     func test_givenViewDelegate_whenStartingFinishesSuccessfully_notifiesView() {
@@ -141,13 +151,20 @@ class ComicsViewModelTests: XCTestCase {
         assertComicFetcherFetchFirstCancellableDidCancel(callCount: 1)
     }
 
+    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_checksForMoreContent() {
+        givenDidStartSuccessfully()
+        assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: 0)
+        whenAboutToDisplayACell()
+        assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: 1)
+    }
+
     func test_givenDidStartSuccessfully_whenAboutToDisplayACell_queryIsAtCurrentComicsOffset() {
         givenDidStartSuccessfully()
         whenAboutToDisplayACell()
         XCTAssertEqual(comicFetcherMock.mostRecentQuery?.offset, 1)
     }
 
-    func test_whenAboutToDisplayACell_onlyFetchesComicsIfCellIsLast() {
+    func test_whenAboutToDisplayACell_onlyFetchesComicsIfCellIsLastInPage() {
         assertComicFetcherFetch(callCount: 0)
         whenAboutToDisplayACell()
         assertComicFetcherFetch(callCount: 0)
@@ -198,13 +215,15 @@ private class ComicFetcherMock: FetchComicsUseCase {
 }
 
 private class ComicFetcherSuccessfulStub: ComicFetcherMock {
-    static let comicDataStub = ComicData(
+    static let comicStub = ComicData(
         identifier: 0,
         title: "Test #1 Title #1123",
         issueNumber: 1,
         thumbnail: ImageData(path: "", imageExtension: "")
     )
-    static let pageInfoStub = PageInfo<ComicData>.zeroWith(results: [ComicFetcherSuccessfulStub.comicDataStub])
+    static let pageInfoStub = PageInfo<ComicData>.offsetAtEndWithMoreContent(
+        results: [ComicFetcherSuccessfulStub.comicStub]
+    )
 
     override func fetch(query: FetchComicsQuery, completion: @escaping (FetchComicsResult) -> Void) -> Cancellable? {
         let cancellable = super.fetch(query: query, completion: completion)
@@ -245,7 +264,8 @@ private extension ComicsViewModelTests {
         sut = ComicsViewModel(
             comicsFetcher: comicsFetcher,
             characterID: characterIDStub,
-            imageURLBuilder: imageURLBuilderMock
+            imageURLBuilder: imageURLBuilderMock,
+            pager: offsetPagerMock
         )
     }
 
@@ -264,6 +284,14 @@ private extension ComicsViewModelTests {
 
     func assertViewDelegateDidFinishLoading(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(viewDelegate.didFinishLoadingCallCount, callCount, line: line)
+    }
+
+    func assertPagerUpdate(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(offsetPagerMock.updateCallCount, callCount, line: line)
+    }
+
+    func assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(offsetPagerMock.isAtEndOfCurrentPageMoreContentCallCount, callCount, line: line)
     }
 
     func assertViewDelegateDidRetrieveData(callCount: Int, line: UInt = #line) {

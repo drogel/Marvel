@@ -49,7 +49,8 @@ private extension CharacterDetailCoordinator {
         let comicsViewModel = ComicsViewModel(
             comicsFetcher: container.fetchComicsUseCase,
             characterID: container.characterID,
-            imageURLBuilder: container.imageURLBuilder
+            imageURLBuilder: container.imageURLBuilder,
+            pager: container.pager
         )
         let viewModel = CharacterDetailViewModel(infoViewModel: infoViewModel, comicsViewModel: comicsViewModel)
         infoViewModel.viewDelegate = viewModel

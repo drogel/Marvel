@@ -12,6 +12,7 @@ protocol CharacterDetailContainer {
     var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase { get }
     var fetchComicsUseCase: FetchComicsUseCase { get }
     var imageURLBuilder: ImageURLBuilder { get }
+    var pager: Pager { get }
 }
 
 class CharacterDetailDependencyContainer: CharacterDetailContainer {
@@ -32,9 +33,9 @@ class CharacterDetailDependencyContainer: CharacterDetailContainer {
         FetchComicsServiceUseCase(service: comicsDetailService)
     }()
 
-    lazy var imageURLBuilder: ImageURLBuilder = {
-        ImageDataURLBuilder()
-    }()
+    lazy var imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()
+
+    lazy var pager: Pager = OffsetPager()
 }
 
 private extension CharacterDetailDependencyContainer {

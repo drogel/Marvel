@@ -31,12 +31,12 @@ class OffsetPagerTests: XCTestCase {
         XCTAssertTrue(sut.isThereMoreContent(at: 20))
         XCTAssertTrue(sut.isThereMoreContent(at: 21))
         XCTAssertTrue(sut.isThereMoreContent(at: 19))
-        XCTAssertTrue(sut.isThereMoreContent(at: 39))
     }
 
     func test_givenOffsetDidReachTotal_isThereMoreContent_returnsFalse() {
         givenSutWithFirstPageOfTwoTotalPages()
         XCTAssertFalse(sut.isThereMoreContent(at: 40))
+        XCTAssertFalse(sut.isThereMoreContent(at: 39))
         XCTAssertFalse(sut.isThereMoreContent(at: 41))
         XCTAssertFalse(sut.isThereMoreContent(at: 100))
     }
@@ -61,10 +61,37 @@ class OffsetPagerTests: XCTestCase {
     func test_givenNoPage_isAtEndOfCurrentPage_returnsFalse() {
         XCTAssertFalse(sut.isAtEndOfCurrentPage(0))
     }
+
+    func test_givenOffsetDoesNotReachLimit_isAtEndOfCurrentPageWithMoreContent_returnsFalse() {
+        givenSutWithFirstPageOfTwoTotalPages()
+        XCTAssertFalse(sut.isAtEndOfCurrentPageWithMoreContent(0))
+        XCTAssertFalse(sut.isAtEndOfCurrentPageWithMoreContent(18))
+    }
+
+    func test_givenOffsetDidReachLimit_isAtEndOfCurrentPageWithMoreContent_returnsTrue() {
+        givenSutWithFirstPageOfTwoTotalPages()
+        XCTAssertTrue(sut.isAtEndOfCurrentPageWithMoreContent(20))
+        XCTAssertTrue(sut.isAtEndOfCurrentPageWithMoreContent(19))
+    }
+
+    func test_givenNoPage_isAtEndOfCurrentPageWithMoreContent_returnsFalse() {
+        XCTAssertFalse(sut.isAtEndOfCurrentPageWithMoreContent(0))
+    }
+
+    func test_givenOffsetDidReachInLastPage_isAtEndOfCurrentPageWithMoreContent_returnsFalse() {
+        givenSutWithSecondPageOfTwoTotalPages()
+        XCTAssertFalse(sut.isAtEndOfCurrentPageWithMoreContent(39))
+        XCTAssertFalse(sut.isAtEndOfCurrentPageWithMoreContent(40))
+        XCTAssertFalse(sut.isAtEndOfCurrentPageWithMoreContent(50))
+    }
 }
 
 private extension OffsetPagerTests {
     func givenSutWithFirstPageOfTwoTotalPages() {
+        sut.update(currentPage: FirstPageOfTwoStub())
+    }
+
+    func givenSutWithSecondPageOfTwoTotalPages() {
         sut.update(currentPage: FirstPageOfTwoStub())
     }
 }
@@ -72,6 +99,13 @@ private extension OffsetPagerTests {
 private class FirstPageOfTwoStub: Page {
     let offset: Int? = 0
     let limit: Int? = 20
+    let total: Int? = 40
+    let count: Int? = 20
+}
+
+private class SecondPageOfTwoStub: Page {
+    let offset: Int? = 20
+    let limit: Int? = 40
     let total: Int? = 40
     let count: Int? = 20
 }

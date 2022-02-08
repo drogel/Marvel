@@ -26,6 +26,7 @@ class ComicsViewModel: ComicsViewModelProtocol {
     private let comicsFetcher: FetchComicsUseCase
     private let characterID: Int
     private let imageURLBuilder: ImageURLBuilder
+    private let pager: Pager
     private var cancellable: Cancellable?
     private var comics: [ComicCellData]
 
@@ -33,10 +34,11 @@ class ComicsViewModel: ComicsViewModelProtocol {
         comics.count
     }
 
-    init(comicsFetcher: FetchComicsUseCase, characterID: Int, imageURLBuilder: ImageURLBuilder) {
+    init(comicsFetcher: FetchComicsUseCase, characterID: Int, imageURLBuilder: ImageURLBuilder, pager: Pager) {
         self.comicsFetcher = comicsFetcher
         self.characterID = characterID
         self.imageURLBuilder = imageURLBuilder
+        self.pager = pager
         comics = []
     }
 
@@ -52,7 +54,7 @@ class ComicsViewModel: ComicsViewModelProtocol {
     }
 
     func willDisplayComicCell(at indexPath: IndexPath) {
-        guard isLastCell(at: indexPath) else { return }
+        guard shouldLoadMore(at: indexPath) else { return }
         loadMore()
     }
 
@@ -66,9 +68,8 @@ private extension ComicsViewModel {
         query(atOffset: 0)
     }
 
-    func isLastCell(at indexPath: IndexPath) -> Bool {
-        // TODO: Also, don't fetch more comics if we reached the end of the comic list
-        indexPath.row == numberOfComics - 1
+    func shouldLoadMore(at indexPath: IndexPath) -> Bool {
+        pager.isAtEndOfCurrentPageWithMoreContent(indexPath.row)
     }
 
     func query(atOffset offset: Int) -> FetchComicsQuery {
@@ -96,6 +97,7 @@ private extension ComicsViewModel {
 
     func handleSuccess(with pageInfo: PageInfo<ComicData>) {
         guard let comicsCellData = mapToCells(comicData: pageInfo.results) else { return }
+        pager.update(currentPage: pageInfo)
         comics.append(contentsOf: comicsCellData)
         viewDelegate?.viewModelDidRetrieveData(self)
     }
