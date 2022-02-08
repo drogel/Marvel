@@ -7,7 +7,14 @@
 
 import Foundation
 
-struct PageInfo<ContentType: DataObject>: DataObject {
+protocol Page {
+    var offset: Int? { get }
+    var limit: Int? { get }
+    var total: Int? { get }
+    var count: Int? { get }
+}
+
+struct PageInfo<ContentType: DataObject>: Page, DataObject {
     let offset: Int?
     let limit: Int?
     let total: Int?
