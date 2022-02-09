@@ -58,12 +58,6 @@ class CharactersViewControllerTests: XCTestCase {
         sut.collectionView(collectionViewStub, didSelectItemAt: indexPathStub)
         assertViewModelSelect(callCount: 1)
     }
-
-    func test_whenAboutToDisplayACell_notifiesViewModel() {
-        assertViewModelWillDisplayCell(callCount: 0)
-        sut.collectionView(collectionViewStub, willDisplay: UICollectionViewCell(), forItemAt: indexPathStub)
-        assertViewModelWillDisplayCell(callCount: 1)
-    }
 }
 
 private class CharactersViewModelMock: CharactersViewModelProtocol {

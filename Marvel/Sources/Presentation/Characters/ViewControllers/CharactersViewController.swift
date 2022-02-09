@@ -10,6 +10,10 @@ import UIKit
 class CharactersViewController: ViewController {
     typealias ViewModelProtocol = CharactersViewModelProtocol
 
+    private enum Constants {
+        static let scrollNearEndThreshold: CGFloat = 300
+    }
+
     private var viewModel: ViewModelProtocol!
     private var layout: UICollectionViewCompositionalLayout!
     private var collectionView: UICollectionView!
@@ -71,8 +75,10 @@ extension CharactersViewController: UICollectionViewDelegate {
         viewModel.select(at: indexPath)
     }
 
-    func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        viewModel.willDisplayCell(at: indexPath)
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if isScrollView(scrollView, scrollingNearEndWithThreshold: Constants.scrollNearEndThreshold) {
+            willDisplayCell(at: collectionView.contentOffset)
+        }
     }
 }
 
@@ -86,7 +92,6 @@ extension CharactersViewController: CharactersViewModelViewDelegate {
     }
 
     func viewModelDidUpdateItems(_: CharactersViewModelProtocol) {
-        // TODO: Properly reload the collection view to avoid loading more than one page
         collectionView.reloadData()
     }
 
@@ -130,5 +135,16 @@ private extension CharactersViewController {
 
     func registerSubviews(in collectionView: UICollectionView) {
         collectionView.register(cellOfType: CharacterCell.self)
+    }
+
+    func willDisplayCell(at contentOffset: CGPoint) {
+        guard let indexPath = collectionView.indexPathForCellAtBoundsEdge(of: contentOffset) else { return }
+        viewModel.willDisplayCell(at: indexPath)
+    }
+
+    func isScrollView(_ scrollView: UIScrollView, scrollingNearEndWithThreshold nearEndThreshold: CGFloat) -> Bool {
+        let scrollViewFrameHeight = scrollView.frame.size.height
+        let offsetDistanceToBottom = scrollView.offsetDistanceToBottom
+        return offsetDistanceToBottom < scrollViewFrameHeight + nearEndThreshold
     }
 }

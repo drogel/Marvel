@@ -158,6 +158,8 @@
 		05C1492D279CA5E100927467 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C1492C279CA5E100927467 /* SpinnerViewController.swift */; };
 		05C1492F279CA6FE00927467 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C1492E279CA6FE00927467 /* LoadingViewController.swift */; };
 		05C14931279CA74000927467 /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C14930279CA74000927467 /* Loadable.swift */; };
+		05CA01DA27B45C3A00B36B12 /* UIScrollView+Distances.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CA01D927B45C3900B36B12 /* UIScrollView+Distances.swift */; };
+		05CA01DC27B45F7100B36B12 /* UICollectionView+IndexPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CA01DB27B45F7100B36B12 /* UICollectionView+IndexPaths.swift */; };
 		05DAC2FC2797258A0062CC6F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC2FB2797258A0062CC6F /* AppDelegate.swift */; };
 		05DAC2FE2797258A0062CC6F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC2FD2797258A0062CC6F /* SceneDelegate.swift */; };
 		05DAC3002797258A0062CC6F /* CharactersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC2FF2797258A0062CC6F /* CharactersViewController.swift */; };
@@ -338,6 +340,8 @@
 		05C1492C279CA5E100927467 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 		05C1492E279CA6FE00927467 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		05C14930279CA74000927467 /* Loadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
+		05CA01D927B45C3900B36B12 /* UIScrollView+Distances.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Distances.swift"; sourceTree = "<group>"; };
+		05CA01DB27B45F7100B36B12 /* UICollectionView+IndexPaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+IndexPaths.swift"; sourceTree = "<group>"; };
 		05DAC2F82797258A0062CC6F /* Marvel Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Marvel Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		05DAC2FB2797258A0062CC6F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		05DAC2FD2797258A0062CC6F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -861,6 +865,8 @@
 				05DAC33927973A750062CC6F /* UICollectionReusableView+Identifiable.swift */,
 				0513D25227AEFCC30040DF58 /* UICollectionView+CellRegistration.swift */,
 				05B7DB66279CAFC2004320FF /* UICollectionView+Dequeue.swift */,
+				05CA01DB27B45F7100B36B12 /* UICollectionView+IndexPaths.swift */,
+				05CA01D927B45C3900B36B12 /* UIScrollView+Distances.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1418,6 +1424,7 @@
 				054D95A127B18D15007B54DA /* ComicsClientService.swift in Sources */,
 				053BBD8E27ADA8390033640A /* DataLoaderDebugService.swift in Sources */,
 				0545945B27988CC200A634AD /* ViewModel.swift in Sources */,
+				05CA01DA27B45C3A00B36B12 /* UIScrollView+Distances.swift in Sources */,
 				05C1491A279C1C3B00927467 /* FetchImageView.swift in Sources */,
 				05484629279E1B0D00C6EC66 /* AlertPresenter.swift in Sources */,
 				0514465D27AFF7C600DA524E /* ComicCell.swift in Sources */,
@@ -1454,6 +1461,7 @@
 				05B0856127AC5CB000A74DD0 /* CharacterInfoLayoutSection.swift in Sources */,
 				05459464279898A700A634AD /* CharactersService.swift in Sources */,
 				053BBD9127ADB7F30033640A /* FetchComicsUseCase.swift in Sources */,
+				05CA01DC27B45F7100B36B12 /* UICollectionView+IndexPaths.swift in Sources */,
 				05484627279E035600C6EC66 /* FillImageView.swift in Sources */,
 				05484603279D688A00C6EC66 /* FetchCharacterDetailUseCase.swift in Sources */,
 				054845FB279D659200C6EC66 /* CharacterDetailDebugService.swift in Sources */,
