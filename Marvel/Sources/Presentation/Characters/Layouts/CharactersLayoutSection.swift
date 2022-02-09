@@ -28,7 +28,7 @@ class CharactersLayoutSection: NSCollectionLayoutSection {
         )
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .estimated(Constants.itemHeight)
+            heightDimension: .absolute(Constants.itemHeight)
         )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         self.init(group: group)

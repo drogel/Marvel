@@ -13,13 +13,15 @@ class CharactersViewModelTests: XCTestCase {
     private var coordinatorDelegateMock: CharactersCoordinatorDelegateMock!
     private var charactersFetcherMock: CharactersFetcherMock!
     private var viewDelegateMock: CharactersViewModelViewDelegateMock!
+    private var offsetPagerMock: OffsetPagerPartialMock!
 
     override func setUp() {
         super.setUp()
         viewDelegateMock = CharactersViewModelViewDelegateMock()
         coordinatorDelegateMock = CharactersCoordinatorDelegateMock()
         charactersFetcherMock = CharactersFetcherMock()
-        sut = CharactersViewModel(charactersFetcher: charactersFetcherMock, imageURLBuilder: ImageURLBuilderStub())
+        offsetPagerMock = OffsetPagerPartialMock()
+        givenSut()
     }
 
     override func tearDown() {
@@ -130,26 +132,44 @@ class CharactersViewModelTests: XCTestCase {
         sut.start()
         XCTAssertEqual(viewDelegateMock.didFailCallCount, 1)
     }
+
+    func test_givenViewDelegate_whenStartingFinishes_updatesPage() {
+        givenSutWithSuccessfulFetcher()
+        assertPagerUpdate(callCount: 0)
+        sut.start()
+        assertPagerUpdate(callCount: 1)
+    }
+
+    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_checksForMoreContent() {
+        givenDidStartSuccessfully()
+        assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: 0)
+        whenWillDisplayCellIgnoringQuery(atIndex: 0)
+        assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: 1)
+    }
 }
 
 private extension CharactersViewModelTests {
     func givenSutWithSuccessfulFetcher() {
         charactersFetcherMock = CharactersFetcherSuccessfulStub()
-        givenSut(with: charactersFetcherMock)
+        givenSut()
     }
 
     func givenSutWithSuccessfulEmptyFetcher() {
         charactersFetcherMock = CharactersFetcherSuccessfulEmptyStub()
-        givenSut(with: charactersFetcherMock)
+        givenSut()
     }
 
     func givenSutWithFailingFetcher() {
         charactersFetcherMock = CharactersFetcherFailingStub()
-        givenSut(with: charactersFetcherMock)
+        givenSut()
     }
 
-    func givenSut(with _: FetchCharactersUseCase) {
-        sut = CharactersViewModel(charactersFetcher: charactersFetcherMock, imageURLBuilder: ImageURLBuilderStub())
+    func givenSut() {
+        sut = CharactersViewModel(
+            charactersFetcher: charactersFetcherMock,
+            imageURLBuilder: ImageURLBuilderStub(),
+            pager: offsetPagerMock
+        )
     }
 
     func givenViewDelegate() {
@@ -189,6 +209,14 @@ private extension CharactersViewModelTests {
         XCTAssertEqual(cancellableMock.didCancelCallCount, 1, line: line)
     }
 
+    func assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(offsetPagerMock.isAtEndOfCurrentPageMoreContentCallCount, callCount, line: line)
+    }
+
+    func assertPagerUpdate(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(offsetPagerMock.updateCallCount, callCount, line: line)
+    }
+
     func assert(numberOfItems: Int, line: UInt = #line) {
         XCTAssertEqual(sut.numberOfItems, numberOfItems, line: line)
     }
@@ -217,8 +245,8 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
 }
 
 private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
-    static let resultsStub = [CharacterData.aginar, CharacterData.aginar]
-    static let pageInfoStub = PageInfo<CharacterData>.zeroWith(results: resultsStub)
+    static let resultsStub = [CharacterData.aginar]
+    static let pageInfoStub = PageInfo<CharacterData>.atFirstPageOfTwoTotal(results: resultsStub)
 
     override func fetch(
         query: FetchCharactersQuery,

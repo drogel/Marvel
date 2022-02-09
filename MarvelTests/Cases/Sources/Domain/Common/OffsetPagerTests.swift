@@ -53,9 +53,7 @@ class OffsetPagerTests: XCTestCase {
 
     func test_givenOffsetDidReachLimit_isAtEndOfCurrentPage_returnsTrue() {
         givenSutWithFirstPageOfTwoTotalPages()
-        XCTAssertTrue(sut.isAtEndOfCurrentPage(20))
         XCTAssertTrue(sut.isAtEndOfCurrentPage(19))
-        XCTAssertTrue(sut.isAtEndOfCurrentPage(39))
     }
 
     func test_givenNoPage_isAtEndOfCurrentPage_returnsFalse() {
@@ -70,7 +68,6 @@ class OffsetPagerTests: XCTestCase {
 
     func test_givenOffsetDidReachLimit_isAtEndOfCurrentPageWithMoreContent_returnsTrue() {
         givenSutWithFirstPageOfTwoTotalPages()
-        XCTAssertTrue(sut.isAtEndOfCurrentPageWithMoreContent(20))
         XCTAssertTrue(sut.isAtEndOfCurrentPageWithMoreContent(19))
     }
 

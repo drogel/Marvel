@@ -31,10 +31,10 @@ class OffsetPager: Pager {
               let limit = currentPage.limit,
               let offset = currentPage.offset
         else { return false }
-        return index + 1 >= offset + limit
+        return index == offset + limit - 1
     }
 
-    func isAtEndOfCurrentPageWithMoreContent(_ offset: Int) -> Bool {
-        isAtEndOfCurrentPage(offset) && isThereMoreContent(at: offset)
+    func isAtEndOfCurrentPageWithMoreContent(_ index: Int) -> Bool {
+        isAtEndOfCurrentPage(index) && isThereMoreContent(at: index)
     }
 }

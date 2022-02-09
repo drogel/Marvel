@@ -52,7 +52,8 @@ private extension CharactersCoordinator {
         let charactersContainer = CharactersDependencyContainer(dependencies: dependencies)
         let viewModel = CharactersViewModel(
             charactersFetcher: charactersContainer.fetchCharactersUseCase,
-            imageURLBuilder: charactersContainer.imageURLBuilder
+            imageURLBuilder: charactersContainer.imageURLBuilder,
+            pager: charactersContainer.pager
         )
         let viewController = CharactersViewController.instantiate(viewModel: viewModel, layout: CharactersLayout())
         viewModel.coordinatorDelegate = self

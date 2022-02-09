@@ -86,6 +86,7 @@ extension CharactersViewController: CharactersViewModelViewDelegate {
     }
 
     func viewModelDidUpdateItems(_: CharactersViewModelProtocol) {
+        // TODO: Properly reload the collection view to avoid loading more than one page
         collectionView.reloadData()
     }
 
