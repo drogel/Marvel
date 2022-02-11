@@ -14,6 +14,7 @@ class CharactersViewModelTests: XCTestCase {
     private var charactersFetcherMock: CharactersFetcherMock!
     private var viewDelegateMock: CharactersViewModelViewDelegateMock!
     private var offsetPagerMock: OffsetPagerPartialMock!
+    private var methodCallRecorder: ViewDelegatePagerCallRecorder!
 
     override func setUp() {
         super.setUp()
@@ -28,6 +29,8 @@ class CharactersViewModelTests: XCTestCase {
         viewDelegateMock = nil
         charactersFetcherMock = nil
         coordinatorDelegateMock = nil
+        offsetPagerMock = nil
+        methodCallRecorder = nil
         sut = nil
         super.tearDown()
     }
@@ -146,11 +149,24 @@ class CharactersViewModelTests: XCTestCase {
         whenWillDisplayCellIgnoringQuery(atIndex: 0)
         assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: 1)
     }
+
+    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_updateNotificationsAreCalledInOrder() {
+        let expectedCalls: [ViewDelegatePagerCallRecorder.Method] = [
+            .isAtEndOfCurrentPageWithMoreContent,
+            .viewModelDidFinishLoading,
+            .viewModelDidUpdateItems,
+            .update,
+        ]
+        givenSuccessfulCharactersFetcher()
+        givenSutWithCallRecorder()
+        whenWillDisplayCellIgnoringQuery(atIndex: 0)
+        XCTAssertEqual(methodCallRecorder.methodsCalled, expectedCalls)
+    }
 }
 
 private extension CharactersViewModelTests {
     func givenSutWithSuccessfulFetcher() {
-        charactersFetcherMock = CharactersFetcherSuccessfulStub()
+        givenSuccessfulCharactersFetcher()
         givenSut()
     }
 
@@ -164,12 +180,24 @@ private extension CharactersViewModelTests {
         givenSut()
     }
 
+    func givenSuccessfulCharactersFetcher() {
+        charactersFetcherMock = CharactersFetcherSuccessfulStub()
+    }
+
     func givenSut() {
-        sut = CharactersViewModel(
-            charactersFetcher: charactersFetcherMock,
-            imageURLBuilder: ImageURLBuilderStub(),
-            pager: offsetPagerMock
-        )
+        givenSut(pager: offsetPagerMock)
+    }
+
+    func givenSut(pager: Pager) {
+        sut = CharactersViewModel(charactersFetcher: charactersFetcherMock,
+                                  imageURLBuilder: ImageURLBuilderStub(),
+                                  pager: pager)
+    }
+
+    func givenSutWithCallRecorder() {
+        methodCallRecorder = ViewDelegatePagerCallRecorder()
+        givenSut(pager: methodCallRecorder)
+        sut.viewDelegate = methodCallRecorder
     }
 
     func givenViewDelegate() {
@@ -300,5 +328,49 @@ private class CharactersViewModelViewDelegateMock: CharactersViewModelViewDelega
 
     func viewModel(_: CharactersViewModelProtocol, didFailWithError _: String) {
         didFailCallCount += 1
+    }
+}
+
+private class ViewDelegatePagerCallRecorder: CharactersViewModelViewDelegate, Pager {
+    enum Method: String, CustomDebugStringConvertible {
+        case isAtEndOfCurrentPageWithMoreContent
+        case viewModelDidFinishLoading
+        case viewModelDidUpdateItems
+        case update
+
+        var debugDescription: String {
+            rawValue
+        }
+    }
+
+    var methodsCalled: [Method] = []
+
+    func viewModelDidStartLoading(_: CharactersViewModelProtocol) {}
+
+    func viewModelDidFinishLoading(_: CharactersViewModelProtocol) {
+        methodsCalled.append(.viewModelDidFinishLoading)
+    }
+
+    func viewModelDidUpdateItems(_: CharactersViewModelProtocol) {
+        methodsCalled.append(.viewModelDidUpdateItems)
+    }
+
+    func viewModel(_: CharactersViewModelProtocol, didFailWithError _: String) {}
+
+    func isThereMoreContent(at _: Int) -> Bool {
+        true
+    }
+
+    func isAtEndOfCurrentPage(_: Int) -> Bool {
+        true
+    }
+
+    func isAtEndOfCurrentPageWithMoreContent(_: Int) -> Bool {
+        methodsCalled.append(.isAtEndOfCurrentPageWithMoreContent)
+        return true
+    }
+
+    func update(currentPage _: Page) {
+        methodsCalled.append(.update)
     }
 }

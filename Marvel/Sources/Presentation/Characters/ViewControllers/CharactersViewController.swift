@@ -75,10 +75,8 @@ extension CharactersViewController: UICollectionViewDelegate {
         viewModel.select(at: indexPath)
     }
 
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if isScrollView(scrollView, scrollingNearEndWithThreshold: Constants.scrollNearEndThreshold) {
-            willDisplayCell(at: collectionView.contentOffset)
-        }
+    func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        viewModel.willDisplayCell(at: indexPath)
     }
 }
 
@@ -135,16 +133,5 @@ private extension CharactersViewController {
 
     func registerSubviews(in collectionView: UICollectionView) {
         collectionView.register(cellOfType: CharacterCell.self)
-    }
-
-    func willDisplayCell(at contentOffset: CGPoint) {
-        guard let indexPath = collectionView.indexPathForCellAtBoundsEdge(of: contentOffset) else { return }
-        viewModel.willDisplayCell(at: indexPath)
-    }
-
-    func isScrollView(_ scrollView: UIScrollView, scrollingNearEndWithThreshold nearEndThreshold: CGFloat) -> Bool {
-        let scrollViewFrameHeight = scrollView.frame.size.height
-        let offsetDistanceToBottom = scrollView.offsetDistanceToBottom
-        return offsetDistanceToBottom < scrollViewFrameHeight + nearEndThreshold
     }
 }

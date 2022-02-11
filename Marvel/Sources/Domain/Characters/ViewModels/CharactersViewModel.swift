@@ -110,8 +110,8 @@ private extension CharactersViewModel {
 
     func handleSuccess(with pageInfo: PageInfo<CharacterData>) {
         guard let newCells = mapToCells(characterData: pageInfo.results), newCells.hasElements else { return }
-        pager.update(currentPage: pageInfo)
         updateCells(using: newCells)
+        pager.update(currentPage: pageInfo)
     }
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {
