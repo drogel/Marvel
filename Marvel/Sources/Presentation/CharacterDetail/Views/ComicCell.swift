@@ -85,7 +85,6 @@ class ComicCell: UICollectionViewCell, Configurable {
     func configure(using item: ComicCellData) {
         titleLabel.text = item.title
         subtitleLabel.text = String(item.issueNumber)
-        // TODO: Rescale image based on frame. Current comic images are larger than needed
         comicImageView.loadImage(from: item.imageURL)
     }
 }

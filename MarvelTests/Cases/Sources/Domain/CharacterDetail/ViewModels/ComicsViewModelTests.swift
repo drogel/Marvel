@@ -130,11 +130,11 @@ class ComicsViewModelTests: XCTestCase {
         assertHasNoCellData()
     }
 
-    func test_givenDidStartSuccessfully_callsImageURLBuilderBuild() {
+    func test_givenDidStartSuccessfully_callsImageURLBuilderBuildWithVariant() {
         givenSutWithSuccessfulFetcher()
-        assertImageURLBuilderBuild(callCount: 0)
+        assertImageURLBuilderBuildVariant(callCount: 0)
         sut.start()
-        assertImageURLBuilderBuild(callCount: 1)
+        assertImageURLBuilderBuildVariant(callCount: 1)
     }
 
     func test_givenDidStartSuccessfully_whenAboutToDisplayLastCell_fetchesComics() {
@@ -175,6 +175,13 @@ class ComicsViewModelTests: XCTestCase {
         assertSutNumberOfComics(equals: 1)
         whenAboutToDisplayACell()
         assertSutNumberOfComics(equals: 2)
+    }
+
+    func test_givenDidStartSuccessfully_whenRetrievingComicCells_imageURLBuiltExpectedVariant() throws {
+        givenDidStartSuccessfully()
+        let expectedImageVariant: ImageVariant = .portraitLarge
+        let actualUsedVariant = try XCTUnwrap(imageURLBuilderMock.mostRecentImageVariant)
+        XCTAssertEqual(actualUsedVariant, expectedImageVariant)
     }
 }
 
@@ -318,8 +325,8 @@ private extension ComicsViewModelTests {
         XCTAssertEqual(sut.numberOfComics, expectedNumberOfComics, line: line)
     }
 
-    func assertImageURLBuilderBuild(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(imageURLBuilderMock.buildURLCallCount, callCount, line: line)
+    func assertImageURLBuilderBuildVariant(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(imageURLBuilderMock.buildURLVariantCallCount, callCount, line: line)
     }
 
     func assertHasNoCellData(line: UInt = #line) {

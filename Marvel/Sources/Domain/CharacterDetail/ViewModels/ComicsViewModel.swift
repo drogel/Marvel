@@ -125,7 +125,7 @@ private extension ComicsViewModel {
 
     func buildImageURL(from comicData: ComicData) -> URL? {
         guard let thumbnail = comicData.thumbnail else { return nil }
-        return imageURLBuilder.buildURL(from: thumbnail)
+        return imageURLBuilder.buildURL(from: thumbnail, variant: .portraitLarge)
     }
 
     func handleFailure() {

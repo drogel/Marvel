@@ -12,10 +12,11 @@ class ImageDataURLBuilderTests: XCTestCase {
     private var sut: ImageDataURLBuilder!
     private var imageDataStub: ImageData!
     private let imageDataSchemeStub = "http://"
-    private let imageDataPathStub = "test.com/test"
+    private let imageDataDomainStub = "test.com"
+    private let imageDataPathStub = "/test"
     private let imageDataExtensionStub = "jpg"
     private var imageDataFullPathStub: String {
-        imageDataSchemeStub + imageDataPathStub
+        imageDataSchemeStub + imageDataDomainStub + imageDataPathStub
     }
 
     override func setUp() {
@@ -31,10 +32,10 @@ class ImageDataURLBuilderTests: XCTestCase {
     }
 
     func test_whenBuildingURL_returnsHTTPSImageDataPathWithAppendedExtension() {
-        let acutalURL = whenBuildingURLFromImageDataStub()
+        let actualURL = whenBuildingURLFromImageDataStub()
         let expectedURLScheme = "https://"
-        let expectedURL = expectedURLScheme + imageDataPathStub + "." + imageDataExtensionStub
-        XCTAssertEqual(acutalURL.absoluteString, expectedURL)
+        let expectedURL = expectedURLScheme + imageDataDomainStub + imageDataPathStub + "." + imageDataExtensionStub
+        XCTAssertEqual(actualURL.absoluteString, expectedURL)
     }
 
     func test_whenBuildingURLWithoutExtension_returnsNil() {
@@ -42,10 +43,20 @@ class ImageDataURLBuilderTests: XCTestCase {
         let actualURL = sut.buildURL(from: imageDataWithoutExtension)
         XCTAssertNil(actualURL)
     }
+
+    func test_givenAVariant_whenBuildingURL_returnsURLWithAppendedVariant() {
+        let actualURL = whenBuildingURL(withVariant: .landscapeLarge)
+        let expectedPath = imageDataPathStub + "/" + ImageVariant.landscapeLarge.rawValue + "." + imageDataExtensionStub
+        XCTAssertEqual(actualURL.path, expectedPath)
+    }
 }
 
 private extension ImageDataURLBuilderTests {
     func whenBuildingURLFromImageDataStub() -> URL {
         try! XCTUnwrap(sut.buildURL(from: imageDataStub))
+    }
+
+    func whenBuildingURL(withVariant variant: ImageVariant) -> URL {
+        try! XCTUnwrap(sut.buildURL(from: imageDataStub, variant: variant))
     }
 }

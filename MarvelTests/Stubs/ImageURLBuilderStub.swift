@@ -11,7 +11,7 @@ import Foundation
 class ImageURLBuilderStub: ImageURLBuilder {
     let urlStub = URL(string: "https://example.com")!
 
-    func buildURL(from _: ImageData, variant _: ImageVariantDescriptor) -> URL? {
+    func buildURL(from _: ImageData, variant _: ImageVariant) -> URL? {
         urlStub
     }
 
