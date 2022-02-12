@@ -15,6 +15,7 @@ class CharactersViewModelTests: XCTestCase {
     private var viewDelegateMock: CharactersViewModelViewDelegateMock!
     private var offsetPagerMock: OffsetPagerPartialMock!
     private var methodCallRecorder: ViewDelegatePagerCallRecorder!
+    private var imageURLBuilderMock: ImageURLBuilderMock!
 
     override func setUp() {
         super.setUp()
@@ -22,6 +23,7 @@ class CharactersViewModelTests: XCTestCase {
         coordinatorDelegateMock = CharactersCoordinatorDelegateMock()
         charactersFetcherMock = CharactersFetcherMock()
         offsetPagerMock = OffsetPagerPartialMock()
+        imageURLBuilderMock = ImageURLBuilderMock()
         givenSut()
     }
 
@@ -30,6 +32,7 @@ class CharactersViewModelTests: XCTestCase {
         charactersFetcherMock = nil
         coordinatorDelegateMock = nil
         offsetPagerMock = nil
+        imageURLBuilderMock = nil
         methodCallRecorder = nil
         sut = nil
         super.tearDown()
@@ -162,6 +165,13 @@ class CharactersViewModelTests: XCTestCase {
         whenWillDisplayCellIgnoringQuery(atIndex: 0)
         XCTAssertEqual(methodCallRecorder.methodsCalled, expectedCalls)
     }
+
+    func test_givenDidStartSuccessfully_whenRetrievingCharacters_imageURLBuiltExpectedVariant() throws {
+        givenDidStartSuccessfully()
+        let expectedImageVariant: ImageVariant = .detail
+        let actualUsedVariant = try XCTUnwrap(imageURLBuilderMock.mostRecentImageVariant)
+        XCTAssertEqual(actualUsedVariant, expectedImageVariant)
+    }
 }
 
 private extension CharactersViewModelTests {
@@ -189,9 +199,11 @@ private extension CharactersViewModelTests {
     }
 
     func givenSut(pager: Pager) {
-        sut = CharactersViewModel(charactersFetcher: charactersFetcherMock,
-                                  imageURLBuilder: ImageURLBuilderStub(),
-                                  pager: pager)
+        sut = CharactersViewModel(
+            charactersFetcher: charactersFetcherMock,
+            imageURLBuilder: imageURLBuilderMock,
+            pager: pager
+        )
     }
 
     func givenSutWithCallRecorder() {

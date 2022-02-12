@@ -143,7 +143,7 @@ private extension CharactersViewModel {
 
     func buildImageURL(from data: CharacterData) -> URL? {
         guard let imageData = data.thumbnail else { return nil }
-        return imageURLBuilder.buildURL(from: imageData)
+        return imageURLBuilder.buildURL(from: imageData, variant: .detail)
     }
 
     func updateCells(using newCells: [CharacterCellData]) {
