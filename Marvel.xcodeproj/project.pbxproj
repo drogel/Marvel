@@ -21,6 +21,7 @@
 		0514465F27AFFAF500DA524E /* ComicsLayoutSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0514465E27AFFAF500DA524E /* ComicsLayoutSection.swift */; };
 		0514466127B0376F00DA524E /* CollectionSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0514466027B0376E00DA524E /* CollectionSectionHeader.swift */; };
 		0514466327B0548300DA524E /* CollectionViewDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0514466227B0548300DA524E /* CollectionViewDelegateMock.swift */; };
+		0520444F27B7CE380036B2D0 /* ImageDataURLBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520444E27B7CE380036B2D0 /* ImageDataURLBuilderTests.swift */; };
 		052A0A6D27B1C24A002CE6BB /* RequestComponentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052A0A6C27B1C24A002CE6BB /* RequestComponentsTests.swift */; };
 		05314CFB27AE8DE100A5A658 /* ImageURLBuilderStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05314CFA27AE8DE100A5A658 /* ImageURLBuilderStub.swift */; };
 		05314CFD27AE8EE100A5A658 /* ComicsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05314CFC27AE8EE100A5A658 /* ComicsViewModel.swift */; };
@@ -200,6 +201,7 @@
 		0514465E27AFFAF500DA524E /* ComicsLayoutSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsLayoutSection.swift; sourceTree = "<group>"; };
 		0514466027B0376E00DA524E /* CollectionSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionSectionHeader.swift; sourceTree = "<group>"; };
 		0514466227B0548300DA524E /* CollectionViewDelegateMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewDelegateMock.swift; sourceTree = "<group>"; };
+		0520444E27B7CE380036B2D0 /* ImageDataURLBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDataURLBuilderTests.swift; sourceTree = "<group>"; };
 		052A0A6C27B1C24A002CE6BB /* RequestComponentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestComponentsTests.swift; sourceTree = "<group>"; };
 		05314CFA27AE8DE100A5A658 /* ImageURLBuilderStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageURLBuilderStub.swift; sourceTree = "<group>"; };
 		05314CFC27AE8EE100A5A658 /* ComicsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsViewModel.swift; sourceTree = "<group>"; };
@@ -381,6 +383,7 @@
 		0535F55627B2DD2A006F8AC4 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				0520444E27B7CE380036B2D0 /* ImageDataURLBuilderTests.swift */,
 				0535F55727B2DD44006F8AC4 /* OffsetPagerTests.swift */,
 			);
 			path = Common;
@@ -1524,6 +1527,7 @@
 				0548460F279D6E8400C6EC66 /* CharacterDetailInfoViewModelTests.swift in Sources */,
 				0571307227A5C3080009383E /* DataServicesNetworkErrorHandlerTests.swift in Sources */,
 				054594772798A7E000A634AD /* JsonDataLoaderTests.swift in Sources */,
+				0520444F27B7CE380036B2D0 /* ImageDataURLBuilderTests.swift in Sources */,
 				0571307427A5C53E0009383E /* NetworkErrorHandlerMock.swift in Sources */,
 				054845FD279D667200C6EC66 /* CharacterDetailDebugServiceTests.swift in Sources */,
 				0513D24D27AEEB840040DF58 /* ComicsViewModelMock.swift in Sources */,
