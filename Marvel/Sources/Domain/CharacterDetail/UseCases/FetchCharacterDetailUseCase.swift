@@ -20,7 +20,7 @@ struct FetchCharacterDetailQuery {
 
 typealias FetchCharacterDetailUseCaseError = CharacterDetailServiceError
 
-typealias FetchCharacterDetailResult = Result<PageInfo, FetchCharacterDetailUseCaseError>
+typealias FetchCharacterDetailResult = Result<PageInfo<CharacterData>, FetchCharacterDetailUseCaseError>
 
 class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {
     private let service: CharacterDetailService
@@ -50,7 +50,7 @@ private extension FetchCharacterDetailServiceUseCase {
         }
     }
 
-    func buildResult(from dataWrapper: DataWrapper) -> FetchCharacterDetailResult {
+    func buildResult(from dataWrapper: DataWrapper<CharacterData>) -> FetchCharacterDetailResult {
         guard let pageInfo = dataWrapper.data else { return .failure(.emptyData) }
         return .success(pageInfo)
     }

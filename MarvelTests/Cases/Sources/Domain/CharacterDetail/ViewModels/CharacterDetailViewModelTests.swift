@@ -2,7 +2,7 @@
 //  CharacterDetailViewModelTests.swift
 //  MarvelTests
 //
-//  Created by Diego Rogel on 23/1/22.
+//  Created by Diego Rogel on 5/2/22.
 //
 
 @testable import Marvel_Debug
@@ -10,23 +10,23 @@ import XCTest
 
 class CharacterDetailViewModelTests: XCTestCase {
     private var sut: CharacterDetailViewModel!
-    private var characterFetcherMock: CharacterFetcherMock!
-    private var characterIDStub: Int!
+    private var infoViewModelMock: CharacterDetailInfoViewModelMock!
+    private var comicsViewModelMock: ComicsViewModelMock!
     private var viewDelegateMock: CharacterDetailViewModelViewDelegateMock!
 
     override func setUp() {
         super.setUp()
-        characterFetcherMock = CharacterFetcherMock()
-        characterIDStub = 123_456
+        infoViewModelMock = CharacterDetailInfoViewModelMock()
+        comicsViewModelMock = ComicsViewModelMock()
         viewDelegateMock = CharacterDetailViewModelViewDelegateMock()
-        givenSut(with: characterFetcherMock)
+        sut = CharacterDetailViewModel(infoViewModel: infoViewModelMock, comicsViewModel: comicsViewModelMock)
     }
 
     override func tearDown() {
-        characterIDStub = nil
-        characterFetcherMock = nil
-        viewDelegateMock = nil
         sut = nil
+        comicsViewModelMock = nil
+        viewDelegateMock = nil
+        infoViewModelMock = nil
         super.tearDown()
     }
 
@@ -34,54 +34,132 @@ class CharacterDetailViewModelTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is ViewModel)
     }
 
-    func test_givenViewDelegate_whenStarting_notifiesLoadingToViewDelegate() {
-        givenViewDelegate()
-        sut.start()
-        XCTAssertEqual(viewDelegateMock.didStartLoadingCallCount, 1)
+    func test_conformsToCharacterDetailViewModelProtocol() {
+        XCTAssertTrue((sut as AnyObject) is CharacterDetailViewModelProtocol)
     }
 
-    func test_givenCharacterFetcher_whenStrating_fetchesCharacter() {
-        sut.start()
-        XCTAssertEqual(characterFetcherMock.fetchCallCount, 1)
+    func test_conformsToSubViewModels() {
+        XCTAssertTrue((sut as AnyObject) is CharacterDetailInfoViewModelProtocol)
+        XCTAssertTrue((sut as AnyObject) is ComicsViewModelProtocol)
     }
 
-    func test_givenCharacterFetcher_whenStrating_fetchesCharacterWithProvidedID() {
-        sut.start()
-        XCTAssertEqual(characterFetcherMock.fetchCallCount(withID: characterIDStub), 1)
+    func test_conformsToSubViewModelDelegates() {
+        XCTAssertTrue((sut as AnyObject) is CharacterDetailInfoViewModelViewDelegate)
+        XCTAssertTrue((sut as AnyObject) is ComicsViewModelViewDelegate)
     }
 
-    func test_givenSuccessfulCharacterFetcher_whenStartingCompletes_notifiesViewWithData() {
-        givenSutWithSuccessfulFetcher()
-        givenViewDelegate()
+    func test_whenStarting_callsStartOnAllSubViewModels() {
+        assertInfoViewModelStart(callCount: 0)
+        assertComicsViewModelStart(callCount: 0)
         sut.start()
-        XCTAssertEqual(viewDelegateMock.didRetrieveCharacterCallCount, 1)
+        assertInfoViewModelStart(callCount: 1)
+        assertComicsViewModelStart(callCount: 1)
     }
 
-    func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesFinishLoadToViewDelegate() {
-        givenSutWithSuccessfulFetcher()
-        givenViewDelegate()
-        sut.start()
-        XCTAssertEqual(viewDelegateMock.didFinishLoadingCallCount, 1)
-    }
-
-    func test_givenDidStartSuccessfully_whenDisposing_cancellsRequests() {
-        givenDidStartSuccessfully()
+    func test_whenDisposing_callsDisposeOnAllSubViewModels() {
+        assertInfoViewModelDispose(callCount: 0)
+        assertComicsViewModelDispose(callCount: 0)
         sut.dispose()
-        assertCancelledRequests()
+        assertInfoViewModelDispose(callCount: 1)
+        assertComicsViewModelDispose(callCount: 1)
     }
 
-    func test_givenStartFailed_notifiesViewDelegate() {
-        givenSutWithFailingFetcher()
+    func test_imageCellData_delegatesToInfoViewModel() {
+        assertInfoViewModelImageCellData(callCount: 0)
+        _ = sut.imageCellData
+        assertInfoViewModelImageCellData(callCount: 1)
+    }
+
+    func test_infoCellData_delegatesToInfoViewModel() {
+        assertInfoViewModelInfoCellData(callCount: 0)
+        _ = sut.infoCellData
+        assertInfoViewModelInfoCellData(callCount: 1)
+    }
+
+    func test_numberOfComics_delegatesToComicsViewModel() {
+        assertComicsViewModelNumberOfComics(callCount: 0)
+        _ = sut.numberOfComics
+        assertComicsViewModelNumberOfComics(callCount: 1)
+    }
+
+    func test_comicCellData_delegatesToComicsViewModel() {
+        assertComicsViewModelComicCellData(callCount: 0)
+        _ = sut.comicCellData(at: IndexPath(row: 0, section: 0))
+        assertComicsViewModelComicCellData(callCount: 1)
+    }
+
+    func test_givenViewDelegate_whenInfoStartsLoading_notifiesView() {
         givenViewDelegate()
-        sut.start()
-        XCTAssertEqual(viewDelegateMock.didFailCallCount, 1)
+        assertViewDelegateDidStartLoading(callCount: 0)
+        sut.viewModelDidStartLoading(infoViewModelMock)
+        assertViewDelegateDidStartLoading(callCount: 1)
+    }
+
+    func test_givenViewDelegate_whenInfoFinishesLoading_notifiesView() {
+        givenViewDelegate()
+        assertViewDelegateDidFinishLoading(callCount: 0)
+        sut.viewModelDidFinishLoading(infoViewModelMock)
+        assertViewDelegateDidFinishLoading(callCount: 1)
+    }
+
+    func test_givenViewDelegate_whenInfoRetrievesData_notifiesView() {
+        givenViewDelegate()
+        assertViewDelegateDidRetrieveCharacterInfo(callCount: 0)
+        sut.viewModelDidRetrieveData(infoViewModelMock)
+        assertViewDelegateDidRetrieveCharacterInfo(callCount: 1)
+    }
+
+    func test_givenViewDelegate_whenComicsAreRetrieved_notifiesView() {
+        givenViewDelegate()
+        assertViewDelegateDidRetrieveComics(callCount: 0)
+        sut.viewModelDidRetrieveData(comicsViewModelMock)
+        assertViewDelegateDidRetrieveComics(callCount: 1)
+    }
+
+    func test_givenViewDelegate_whenInfoFails_notifiesView() {
+        givenViewDelegate()
+        assertViewDelegateDidFail(callCount: 0)
+        sut.viewModel(infoViewModelMock, didFailWithError: "")
+        assertViewDelegateDidFail(callCount: 1)
+    }
+
+    func test_givenViewDelegate_whenComicsFail_failsSilently() {
+        givenViewDelegate()
+        assertViewDelegateDidFail(callCount: 0)
+        sut.viewModelDidFailRetrievingData(comicsViewModelMock)
+        assertViewDelegateDidFail(callCount: 0)
+    }
+
+    func test_givenViewDelegate_whenComicsStartLoading_doesNothing() {
+        givenViewDelegate()
+        assertViewDelegateDidStartLoading(callCount: 0)
+        sut.viewModelDidStartLoading(comicsViewModelMock)
+        assertViewDelegateDidStartLoading(callCount: 0)
+    }
+
+    func test_givenViewDelegate_whenComicsFinishLoading_doesNothing() {
+        givenViewDelegate()
+        assertViewDelegateDidFinishLoading(callCount: 0)
+        sut.viewModelDidFinishLoading(comicsViewModelMock)
+        assertViewDelegateDidFinishLoading(callCount: 0)
+    }
+
+    func test_comicsSectionTitle_returnsComics() {
+        XCTAssertEqual(sut.comicsSectionTitle, "comics".localized)
+    }
+
+    func test_whenAboutToDisplayAComicCell_delegatesToComicsViewModel() {
+        assertComicsViewModelWillDisplayCell(callCount: 0)
+        whenAboutToDisplayAComicCell()
+        assertComicsViewModelWillDisplayCell(callCount: 1)
     }
 }
 
 private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModelViewDelegate {
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
-    var didRetrieveCharacterCallCount = 0
+    var didRetrieveCharacterInfoCallCount = 0
+    var didRetrieveComicsCallCount = 0
     var didFailCallCount = 0
 
     func viewModelDidStartLoading(_: CharacterDetailViewModelProtocol) {
@@ -92,8 +170,12 @@ private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModel
         didFinishLoadingCallCount += 1
     }
 
-    func viewModel(_: CharacterDetailViewModelProtocol, didRetrieve _: CharacterDetailData) {
-        didRetrieveCharacterCallCount += 1
+    func viewModelDidRetrieveCharacterInfo(_: CharacterDetailViewModelProtocol) {
+        didRetrieveCharacterInfoCallCount += 1
+    }
+
+    func viewModelDidRetrieveComics(_: CharacterDetailViewModelProtocol) {
+        didRetrieveComicsCallCount += 1
     }
 
     func viewModel(_: CharacterDetailViewModelProtocol, didFailWithError _: String) {
@@ -101,82 +183,69 @@ private class CharacterDetailViewModelViewDelegateMock: CharacterDetailViewModel
     }
 }
 
-private class CharacterFetcherMock: FetchCharacterDetailUseCase {
-    var fetchCallCount = 0
-    var fetchCallCountsForID: [Int: Int] = [:]
-    var cancellable: CancellableMock?
-
-    func fetch(
-        query: FetchCharacterDetailQuery,
-        completion _: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Cancellable? {
-        fetchCallCount += 1
-        fetchCallCountsForID[query.characterID] = fetchCallCountsForID[query.characterID] ?? 0 + 1
-        cancellable = CancellableMock()
-        return cancellable
-    }
-
-    func fetchCallCount(withID identifier: Int) -> Int {
-        guard let fetchCallCountForID = fetchCallCountsForID[identifier] else { return 0 }
-        return fetchCallCountForID
-    }
-}
-
-private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
-    static let resultsStub = [CharacterData.aginar]
-    static let pageInfoStub = PageInfo.zeroWith(results: resultsStub)
-
-    override func fetch(
-        query: FetchCharacterDetailQuery,
-        completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Cancellable? {
-        let result = super.fetch(query: query, completion: completion)
-        completion(.success(Self.pageInfoStub))
-        return result
-    }
-}
-
-private class CharacterFetcherFailingStub: CharacterFetcherMock {
-    override func fetch(
-        query: FetchCharacterDetailQuery,
-        completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Cancellable? {
-        let result = super.fetch(query: query, completion: completion)
-        completion(.failure(.unauthorized))
-        return result
-    }
-}
-
 private extension CharacterDetailViewModelTests {
     func givenViewDelegate() {
+        viewDelegateMock = CharacterDetailViewModelViewDelegateMock()
         sut.viewDelegate = viewDelegateMock
     }
 
-    func givenSutWithSuccessfulFetcher() {
-        characterFetcherMock = CharacterFetcherSuccessfulStub()
-        givenSut(with: characterFetcherMock)
+    func whenAboutToDisplayAComicCell() {
+        sut.willDisplayComicCell(at: IndexPath(row: 0, section: 0))
     }
 
-    func givenSut(with characterFetcherMock: CharacterFetcherMock) {
-        sut = CharacterDetailViewModel(characterFetcher: characterFetcherMock, characterID: characterIDStub)
+    func assertInfoViewModelStart(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(infoViewModelMock.startCallCount, callCount, line: line)
     }
 
-    func givenDidStartSuccessfully() {
-        givenSutWithSuccessfulFetcher()
-        sut.start()
+    func assertComicsViewModelStart(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(comicsViewModelMock.startCallCount, callCount, line: line)
     }
 
-    func givenSutWithFailingFetcher() {
-        characterFetcherMock = CharacterFetcherFailingStub()
-        givenSut(with: characterFetcherMock)
+    func assertInfoViewModelDispose(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(infoViewModelMock.disposeCallCount, callCount, line: line)
     }
 
-    func retrieveFetcherMockCancellableMock() -> CancellableMock {
-        try! XCTUnwrap(characterFetcherMock.cancellable)
+    func assertComicsViewModelDispose(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(comicsViewModelMock.disposeCallCount, callCount, line: line)
     }
 
-    func assertCancelledRequests(line _: UInt = #line) {
-        let cancellableMock = retrieveFetcherMockCancellableMock()
-        XCTAssertEqual(cancellableMock.didCancelCallCount, 1)
+    func assertInfoViewModelImageCellData(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(infoViewModelMock.imageCellDataCallCount, callCount, line: line)
+    }
+
+    func assertInfoViewModelInfoCellData(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(infoViewModelMock.infoCellDataCallCount, callCount, line: line)
+    }
+
+    func assertComicsViewModelNumberOfComics(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(comicsViewModelMock.numberOfComicsCallCount, callCount, line: line)
+    }
+
+    func assertComicsViewModelComicCellData(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(comicsViewModelMock.comicsCellDataCallCount, callCount, line: line)
+    }
+
+    func assertComicsViewModelWillDisplayCell(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(comicsViewModelMock.willDisplayComicCellCallCount, callCount, line: line)
+    }
+
+    func assertViewDelegateDidStartLoading(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewDelegateMock.didStartLoadingCallCount, callCount, line: line)
+    }
+
+    func assertViewDelegateDidFinishLoading(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewDelegateMock.didFinishLoadingCallCount, callCount, line: line)
+    }
+
+    func assertViewDelegateDidRetrieveCharacterInfo(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewDelegateMock.didRetrieveCharacterInfoCallCount, callCount, line: line)
+    }
+
+    func assertViewDelegateDidRetrieveComics(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewDelegateMock.didRetrieveComicsCallCount, callCount, line: line)
+    }
+
+    func assertViewDelegateDidFail(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewDelegateMock.didFailCallCount, callCount, line: line)
     }
 }

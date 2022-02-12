@@ -60,6 +60,18 @@ private class CharacterDetailContainerStub: CharacterDetailContainer {
     var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase {
         FetchCharacterDetailUseCaseStub()
     }
+
+    var fetchComicsUseCase: FetchComicsUseCase {
+        FetchComicsUseCaseStub()
+    }
+
+    var imageURLBuilder: ImageURLBuilder {
+        ImageURLBuilderStub()
+    }
+
+    var pager: Pager {
+        PagerStub()
+    }
 }
 
 private class FetchCharacterDetailUseCaseStub: FetchCharacterDetailUseCase {
@@ -67,6 +79,12 @@ private class FetchCharacterDetailUseCaseStub: FetchCharacterDetailUseCase {
         query _: FetchCharacterDetailQuery,
         completion _: @escaping (FetchCharacterDetailResult) -> Void
     ) -> Cancellable? {
+        nil
+    }
+}
+
+private class FetchComicsUseCaseStub: FetchComicsUseCase {
+    func fetch(query _: FetchComicsQuery, completion _: @escaping (FetchComicsResult) -> Void) -> Cancellable? {
         nil
     }
 }

@@ -93,7 +93,7 @@ class CharacterDetailClientServiceTests: XCTestCase {
 }
 
 private extension CharacterDetailClientServiceTests {
-    static let dataWrapperResponseStub = DataWrapper.withNilData
+    static let dataWrapperResponseStub = DataWrapper<CharacterData>.withNilData
 
     func givenSutWithNetworkServiceMock() {
         networkServiceMock = NetworkServiceMock()
@@ -116,7 +116,7 @@ private extension CharacterDetailClientServiceTests {
     }
 
     func givenSut(with networkService: NetworkService) {
-        let resultHandler = CharactersClientServiceResultHandler(parser: jsonParserMock, errorHandler: errorHandler)
+        let resultHandler = ClientResultHandler(parser: jsonParserMock, errorHandler: errorHandler)
         sut = CharacterDetailClientService(client: networkService, resultHandler: resultHandler)
     }
 
@@ -125,7 +125,7 @@ private extension CharacterDetailClientServiceTests {
     }
 
     func givenSuccesfulParser() {
-        jsonParserMock = JSONParserSuccessfulStub<DataWrapper>(dataStub: Self.dataWrapperResponseStub)
+        jsonParserMock = JSONParserSuccessfulStub<DataWrapper<CharacterData>>(dataStub: Self.dataWrapperResponseStub)
     }
 
     func givenErrorHandlerMock() {

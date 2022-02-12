@@ -7,10 +7,17 @@
 
 import Foundation
 
-struct PageInfo: Codable, Equatable {
+protocol Page {
+    var offset: Int? { get }
+    var limit: Int? { get }
+    var total: Int? { get }
+    var count: Int? { get }
+}
+
+struct PageInfo<ContentType: DataObject>: Page, DataObject {
     let offset: Int?
     let limit: Int?
     let total: Int?
     let count: Int?
-    let results: [CharacterData]?
+    let results: [ContentType]?
 }

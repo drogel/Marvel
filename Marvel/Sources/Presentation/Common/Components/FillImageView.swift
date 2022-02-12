@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class CharacterImageView: FetchImageView {
+class FillImageView: FetchImageView {
     override init(image: UIImage? = nil) {
         super.init(image: image)
         setUp()
@@ -25,7 +25,7 @@ class CharacterImageView: FetchImageView {
     }
 }
 
-private extension CharacterImageView {
+private extension FillImageView {
     func setUp() {
         contentMode = .scaleAspectFill
         backgroundColor = .tertiarySystemGroupedBackground

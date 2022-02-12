@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct DataWrapper: Codable, Equatable {
+struct DataWrapper<ContentType: DataObject>: DataObject {
     let code: Int?
     let status: String?
     let copyright: String?
-    let data: PageInfo?
+    let data: PageInfo<ContentType>?
 }

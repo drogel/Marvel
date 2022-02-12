@@ -22,16 +22,20 @@ class JsonDataLoaderTests: XCTestCase {
     }
 
     func test_givenJsonNotFound_returnsNil() {
-        let result: DecodableMock? = sut.load(fromFileNamed: "ThereIsNoJSONWithThisFileName")
+        let result: DataObjectMock? = sut.load(fromFileNamed: "ThereIsNoJSONWithThisFileName")
         XCTAssertNil(result)
     }
 
     func test_givenValidDebugJson_returnsData() {
         let fileName = DebugDataFileName.charactersFileName.rawValue
-        let result: DataWrapper? = sut.load(fromFileNamed: fileName)
+        let result: DataWrapper<CharacterData>? = sut.load(fromFileNamed: fileName)
         XCTAssertNotNil(result)
         XCTAssertEqual(result?.code, 200)
     }
 }
 
-private class DecodableMock: Decodable {}
+private class DataObjectMock: DataObject {
+    static func == (_: DataObjectMock, _: DataObjectMock) -> Bool {
+        true
+    }
+}

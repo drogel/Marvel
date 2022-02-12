@@ -24,6 +24,8 @@ class CharactersDependenciesAdapter: CharactersDependencies {
 
 protocol CharactersContainer {
     var fetchCharactersUseCase: FetchCharactersUseCase { get }
+    var imageURLBuilder: ImageURLBuilder { get }
+    var pager: Pager { get }
 }
 
 class CharactersDependencyContainer: CharactersContainer {
@@ -36,6 +38,10 @@ class CharactersDependencyContainer: CharactersContainer {
     lazy var fetchCharactersUseCase: FetchCharactersUseCase = {
         FetchCharactersServiceUseCase(service: charactersService)
     }()
+
+    lazy var imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()
+
+    lazy var pager: Pager = OffsetPager()
 }
 
 private extension CharactersDependencyContainer {
@@ -56,7 +62,7 @@ private extension CharactersDependencyContainer {
         DataServicesNetworkErrorHandler()
     }
 
-    var resultHandler: CharactersResultHandler {
-        CharactersClientServiceResultHandler(parser: parser, errorHandler: errorHandler)
+    var resultHandler: ResultHandler {
+        ClientResultHandler(parser: parser, errorHandler: errorHandler)
     }
 }

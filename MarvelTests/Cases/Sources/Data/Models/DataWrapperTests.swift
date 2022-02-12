@@ -9,7 +9,11 @@
 import XCTest
 
 class DataWrapperTests: XCTestCase {
-    typealias ParseableObjectType = DataWrapper
+    typealias ParseableObjectType = DataWrapper<CharacterData>
+
+    var parseableObjectJSONFileName: String {
+        "DataWrapper"
+    }
 
     func test_givenDataWrapperFromJson_parsesExpectedValues() {
         runParsingTest()
@@ -17,7 +21,7 @@ class DataWrapperTests: XCTestCase {
 }
 
 extension DataWrapperTests: ParsingTestCaseTemplate {
-    func buildExpectedObject() -> DataWrapper {
-        DataWrapper(code: 200, status: "Ok", copyright: "© 2022 MARVEL", data: nil)
+    func buildExpectedObject() -> DataWrapper<CharacterData> {
+        DataWrapper<CharacterData>(code: 200, status: "Ok", copyright: "© 2022 MARVEL", data: nil)
     }
 }

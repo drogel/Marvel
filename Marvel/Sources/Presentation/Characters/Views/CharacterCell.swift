@@ -36,7 +36,7 @@ class CharacterCell: UICollectionViewCell, Configurable {
         }
     }
 
-    private lazy var characterImageView = CharacterImageView()
+    private lazy var characterImageView = FillImageView()
 
     private lazy var infoView: UIView = {
         let view = UIView()
@@ -64,7 +64,7 @@ class CharacterCell: UICollectionViewCell, Configurable {
 
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = .boldSystemFont(ofSize: Constants.Description.labelFontSize)
+        label.font = .systemFont(ofSize: Constants.Description.labelFontSize)
         label.textColor = .systemGray
         label.numberOfLines = Constants.Description.maxLines
         return label
@@ -112,26 +112,17 @@ private extension CharacterCell {
     }
 
     func setUpInfoConstraints() {
-        let inset = Constants.Info.stackViewInset
+        NSLayoutConstraint.fit(infoStackView, in: infoView, inset: Constants.Info.stackViewInset)
         NSLayoutConstraint.activate([
             infoView.heightAnchor.constraint(equalToConstant: Constants.Info.height),
             infoView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             infoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             infoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            infoStackView.topAnchor.constraint(equalTo: infoView.topAnchor, constant: inset),
-            infoStackView.leadingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: inset),
-            infoStackView.trailingAnchor.constraint(equalTo: infoView.trailingAnchor, constant: -inset),
-            infoStackView.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -inset),
         ])
     }
 
     func setUpCharacterImageConstraints() {
-        NSLayoutConstraint.activate([
-            characterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            characterImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            characterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            characterImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-        ])
+        NSLayoutConstraint.fit(characterImageView, in: contentView)
     }
 
     func setUpCellStyle() {

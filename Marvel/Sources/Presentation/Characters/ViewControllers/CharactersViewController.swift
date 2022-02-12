@@ -8,14 +8,18 @@
 import UIKit
 
 class CharactersViewController: ViewController {
-    typealias ViewModel = CharactersViewModelProtocol
+    typealias ViewModelProtocol = CharactersViewModelProtocol
 
-    private var viewModel: ViewModel!
+    private enum Constants {
+        static let scrollNearEndThreshold: CGFloat = 300
+    }
+
+    private var viewModel: ViewModelProtocol!
     private var layout: UICollectionViewCompositionalLayout!
     private var collectionView: UICollectionView!
 
     static func instantiate(
-        viewModel: ViewModel,
+        viewModel: ViewModelProtocol,
         layout: UICollectionViewCompositionalLayout
     ) -> CharactersViewController {
         let viewController = instantiate(viewModel: viewModel)
@@ -23,7 +27,7 @@ class CharactersViewController: ViewController {
         return viewController
     }
 
-    static func instantiate(viewModel: ViewModel) -> Self {
+    static func instantiate(viewModel: ViewModelProtocol) -> Self {
         let viewController = Self()
         viewController.viewModel = viewModel
         return viewController
@@ -124,15 +128,10 @@ private extension CharactersViewController {
 
     func configureConstraints(of collectionView: UICollectionView) {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+        NSLayoutConstraint.fit(collectionView, in: view)
     }
 
     func registerSubviews(in collectionView: UICollectionView) {
-        collectionView.register(CharacterCell.self, forCellWithReuseIdentifier: CharacterCell.identifier)
+        collectionView.register(cellOfType: CharacterCell.self)
     }
 }

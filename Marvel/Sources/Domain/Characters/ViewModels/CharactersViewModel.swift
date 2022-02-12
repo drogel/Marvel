@@ -41,12 +41,14 @@ class CharactersViewModel: CharactersViewModelProtocol {
 
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
+    private let pager: Pager
     private var cells: [CharacterCellData]
     private var charactersCancellable: Cancellable?
 
-    init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()) {
+    init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder, pager: Pager) {
         self.charactersFetcher = charactersFetcher
         self.imageURLBuilder = imageURLBuilder
+        self.pager = pager
         cells = []
     }
 
@@ -67,7 +69,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     }
 
     func willDisplayCell(at indexPath: IndexPath) {
-        guard isLastCell(at: indexPath) else { return }
+        guard shouldLoadMore(at: indexPath) else { return }
         loadMore()
     }
 
@@ -81,8 +83,8 @@ private extension CharactersViewModel {
         FetchCharactersQuery(offset: 0)
     }
 
-    func isLastCell(at indexPath: IndexPath) -> Bool {
-        indexPath.row == numberOfItems - 1
+    func shouldLoadMore(at indexPath: IndexPath) -> Bool {
+        pager.isAtEndOfCurrentPageWithMoreContent(indexPath.row)
     }
 
     func loadMore() {
@@ -106,9 +108,10 @@ private extension CharactersViewModel {
         }
     }
 
-    func handleSuccess(with pageInfo: PageInfo) {
+    func handleSuccess(with pageInfo: PageInfo<CharacterData>) {
         guard let newCells = mapToCells(characterData: pageInfo.results), newCells.hasElements else { return }
         updateCells(using: newCells)
+        pager.update(currentPage: pageInfo)
     }
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {

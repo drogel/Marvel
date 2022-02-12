@@ -11,16 +11,26 @@ import XCTest
 class CharacterDetailViewControllerTests: XCTestCase {
     private var sut: CharacterDetailViewController!
     private var viewModelMock: CharacterDetailViewModelMock!
+    private var dataSourceMock: CollectionViewDataSourceMock!
+    private var delegateMock: CollectionViewDelegateMock!
 
     override func setUp() {
         super.setUp()
+        dataSourceMock = CollectionViewDataSourceMock()
+        delegateMock = CollectionViewDelegateMock()
         viewModelMock = CharacterDetailViewModelMock()
-        sut = CharacterDetailViewController.instantiate(viewModel: viewModelMock)
+        sut = CharacterDetailViewController.instantiate(
+            viewModel: viewModelMock,
+            dataSource: dataSourceMock,
+            collectionViewDelegate: delegateMock,
+            layout: CharacterDetailLayout()
+        )
     }
 
     override func tearDown() {
         sut = nil
         viewModelMock = nil
+        dataSourceMock = nil
         super.tearDown()
     }
 
@@ -35,20 +45,15 @@ class CharacterDetailViewControllerTests: XCTestCase {
         sut.viewDidDisappear(false)
         assertViewModelDispose(callCount: 1)
     }
-}
 
-private class CharacterDetailViewModelMock: CharacterDetailViewModelProtocol {
-    var startCallCount = 0
-    var disposeCallCount = 0
-
-    func start() {
-        startCallCount += 1
-    }
-
-    func dispose() {
-        disposeCallCount += 1
+    func test_whenViewDidLoad_registersSubviewsInCollectionView() {
+        assertDataSourceRegisterSubviews(callCount: 0)
+        sut.loadViewIfNeeded()
+        assertDataSourceRegisterSubviews(callCount: 1)
     }
 }
+
+private class CharacterDetailViewModelMock: ViewModelMock {}
 
 private extension CharacterDetailViewControllerTests {
     func assertViewModelStart(callCount: Int, line: UInt = #line) {
@@ -57,5 +62,9 @@ private extension CharacterDetailViewControllerTests {
 
     func assertViewModelDispose(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(viewModelMock.disposeCallCount, callCount, line: line)
+    }
+
+    func assertDataSourceRegisterSubviews(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(dataSourceMock.registerSubviewsCallCount, callCount, line: line)
     }
 }

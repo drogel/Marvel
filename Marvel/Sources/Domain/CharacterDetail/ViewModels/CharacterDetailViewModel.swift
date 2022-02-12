@@ -2,103 +2,95 @@
 //  CharacterDetailViewModel.swift
 //  Marvel
 //
-//  Created by Diego Rogel on 23/1/22.
+//  Created by Diego Rogel on 5/2/22.
 //
 
 import Foundation
 
-protocol CharacterDetailViewModelProtocol: ViewModel {}
+protocol CharacterDetailViewModelProtocol: CharacterDetailInfoViewModelProtocol, ComicsViewModelProtocol {
+    var comicsSectionTitle: String { get }
+}
 
 protocol CharacterDetailViewModelViewDelegate: AnyObject {
     func viewModelDidStartLoading(_ viewModel: CharacterDetailViewModelProtocol)
     func viewModelDidFinishLoading(_ viewModel: CharacterDetailViewModelProtocol)
-    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didRetrieve characterDetail: CharacterDetailData)
+    func viewModelDidRetrieveCharacterInfo(_ viewModel: CharacterDetailViewModelProtocol)
+    func viewModelDidRetrieveComics(_ viewModel: CharacterDetailViewModelProtocol)
     func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String)
 }
 
 class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
-    private enum Messages {
-        static let noSuchCharacter = "character_not_found".localized
-        static let noAPIKeys = "api_keys_not_found".localized
-        static let noConnection = "no_internet".localized
-    }
-
     weak var viewDelegate: CharacterDetailViewModelViewDelegate?
 
-    private let characterFetcher: FetchCharacterDetailUseCase
-    private let imageURLBuilder: ImageURLBuilder
-    private let characterID: Int
-    private var characterCancellable: Cancellable?
+    var comicsSectionTitle: String {
+        "comics".localized
+    }
 
-    init(
-        characterFetcher: FetchCharacterDetailUseCase,
-        characterID: Int,
-        imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()
-    ) {
-        self.characterFetcher = characterFetcher
-        self.imageURLBuilder = imageURLBuilder
-        self.characterID = characterID
+    var imageCellData: CharacterImageData? {
+        infoViewModel.imageCellData
+    }
+
+    var infoCellData: CharacterInfoData? {
+        infoViewModel.infoCellData
+    }
+
+    var numberOfComics: Int {
+        comicsViewModel.numberOfComics
+    }
+
+    private var infoViewModel: CharacterDetailInfoViewModelProtocol
+    private var comicsViewModel: ComicsViewModelProtocol
+
+    init(infoViewModel: CharacterDetailInfoViewModelProtocol, comicsViewModel: ComicsViewModelProtocol) {
+        self.infoViewModel = infoViewModel
+        self.comicsViewModel = comicsViewModel
     }
 
     func start() {
-        viewDelegate?.viewModelDidStartLoading(self)
-        let query = FetchCharacterDetailQuery(characterID: characterID)
-        loadCharacter(with: query)
+        infoViewModel.start()
+        comicsViewModel.start()
+    }
+
+    func comicCellData(at indexPath: IndexPath) -> ComicCellData? {
+        comicsViewModel.comicCellData(at: indexPath)
+    }
+
+    func willDisplayComicCell(at indexPath: IndexPath) {
+        comicsViewModel.willDisplayComicCell(at: indexPath)
     }
 
     func dispose() {
-        characterCancellable?.cancel()
+        infoViewModel.dispose()
+        comicsViewModel.dispose()
     }
 }
 
-private extension CharacterDetailViewModel {
-    func loadCharacter(with query: FetchCharacterDetailQuery) {
-        characterCancellable?.cancel()
-        characterCancellable = characterFetcher.fetch(query: query, completion: handleFetchCharacterResult)
+extension CharacterDetailViewModel: CharacterDetailInfoViewModelViewDelegate {
+    func viewModelDidStartLoading(_: CharacterDetailInfoViewModelProtocol) {
+        viewDelegate?.viewModelDidStartLoading(self)
     }
 
-    func handleFetchCharacterResult(_ result: FetchCharacterDetailResult) {
+    func viewModelDidFinishLoading(_: CharacterDetailInfoViewModelProtocol) {
         viewDelegate?.viewModelDidFinishLoading(self)
-        switch result {
-        case let .success(pageInfo):
-            handleSuccess(with: pageInfo)
-        case let .failure(error):
-            handleFailure(with: error)
-        }
     }
 
-    func handleSuccess(with pageInfo: PageInfo) {
-        guard let characterDetail = mapToCharacterDetail(characterData: pageInfo.results) else { return }
-        viewDelegate?.viewModel(self, didRetrieve: characterDetail)
+    func viewModelDidRetrieveData(_: CharacterDetailInfoViewModelProtocol) {
+        viewDelegate?.viewModelDidRetrieveCharacterInfo(self)
     }
 
-    func handleFailure(with error: FetchCharacterDetailUseCaseError) {
-        let message = message(for: error)
+    func viewModel(_: CharacterDetailInfoViewModelProtocol, didFailWithError message: String) {
         viewDelegate?.viewModel(self, didFailWithError: message)
     }
+}
 
-    func message(for error: FetchCharacterDetailUseCaseError) -> String {
-        switch error {
-        case .noConnection:
-            return Messages.noConnection
-        case .emptyData:
-            return Messages.noSuchCharacter
-        case .unauthorized:
-            return Messages.noAPIKeys
-        }
+extension CharacterDetailViewModel: ComicsViewModelViewDelegate {
+    func viewModelDidStartLoading(_: ComicsViewModelProtocol) {}
+
+    func viewModelDidFinishLoading(_: ComicsViewModelProtocol) {}
+
+    func viewModelDidRetrieveData(_: ComicsViewModelProtocol) {
+        viewDelegate?.viewModelDidRetrieveComics(self)
     }
 
-    func mapToCharacterDetail(characterData: [CharacterData]?) -> CharacterDetailData? {
-        guard let firstCharacterData = characterData?.first,
-              let name = firstCharacterData.name,
-              let description = firstCharacterData.description
-        else { return nil }
-        let imageURL = imageURL(for: firstCharacterData)
-        return CharacterDetailData(name: name, description: description, imageURL: imageURL)
-    }
-
-    func imageURL(for characterData: CharacterData) -> URL? {
-        guard let thumbnail = characterData.thumbnail else { return nil }
-        return imageURLBuilder.buildURL(from: thumbnail)
-    }
+    func viewModelDidFailRetrievingData(_: ComicsViewModelProtocol) {}
 }

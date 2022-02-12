@@ -44,15 +44,15 @@ class FetchCharacterDetailUseCaseTests: XCTestCase {
     }
 
     func test_givenSuccessfulService_whenFetching_completesWithPageInfo() {
-        givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper.empty)
+        givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>.empty)
         let completionResult = whenRetrievingResultFromFetchingCharacter()
         assertIsSuccess(completionResult) {
-            XCTAssertEqual($0, PageInfo.empty)
+            XCTAssertEqual($0, PageInfo<CharacterData>.empty)
         }
     }
 
     func test_givenSuccessfulServiceWithNoData_whenFetching_completesWithFailure() {
-        givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper.withNilData)
+        givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>.withNilData)
         let completionResult = whenRetrievingResultFromFetchingCharacter()
         assertIsFailure(completionResult)
     }
@@ -76,9 +76,9 @@ private class CharacterDetailServiceFailureStub: CharacterDetailService {
 }
 
 private class CharacterDetailServiceSuccessStub: CharacterDetailService {
-    private let dataWrapperStub: DataWrapper
+    private let dataWrapperStub: DataWrapper<CharacterData>
 
-    init(dataWrapperStub: DataWrapper) {
+    init(dataWrapperStub: DataWrapper<CharacterData>) {
         self.dataWrapperStub = dataWrapperStub
     }
 
@@ -106,7 +106,7 @@ private extension FetchCharacterDetailUseCaseTests {
         sut = FetchCharacterDetailServiceUseCase(service: CharacterDetailServiceFailureStub())
     }
 
-    func givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper) {
+    func givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>) {
         let service = CharacterDetailServiceSuccessStub(dataWrapperStub: stubbingDataWrapper)
         sut = FetchCharacterDetailServiceUseCase(service: service)
     }

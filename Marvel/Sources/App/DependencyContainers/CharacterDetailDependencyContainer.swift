@@ -10,6 +10,9 @@ import Foundation
 protocol CharacterDetailContainer {
     var characterID: Int { get }
     var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase { get }
+    var fetchComicsUseCase: FetchComicsUseCase { get }
+    var imageURLBuilder: ImageURLBuilder { get }
+    var pager: Pager { get }
 }
 
 class CharacterDetailDependencyContainer: CharacterDetailContainer {
@@ -25,16 +28,37 @@ class CharacterDetailDependencyContainer: CharacterDetailContainer {
     lazy var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase = {
         FetchCharacterDetailServiceUseCase(service: characterDetailService)
     }()
+
+    lazy var fetchComicsUseCase: FetchComicsUseCase = {
+        FetchComicsServiceUseCase(service: comicsDetailService)
+    }()
+
+    lazy var imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()
+
+    lazy var pager: Pager = OffsetPager()
 }
 
 private extension CharacterDetailDependencyContainer {
     var characterDetailService: CharacterDetailService {
         switch dependencies.scheme {
         case .debug:
-            return CharacterDetailDebugService(dataLoader: JsonDecoderDataLoader(parser: parser))
+            return CharacterDetailDebugService(dataLoader: jsonDataLoader)
         case .release:
             return CharacterDetailClientService(client: dependencies.networkService, resultHandler: resultHandler)
         }
+    }
+
+    var comicsDetailService: ComicsService {
+        switch dependencies.scheme {
+        case .debug:
+            return ComicsDebugService(dataLoader: jsonDataLoader)
+        case .release:
+            return ComicsClientService(networkService: dependencies.networkService, resultHandler: resultHandler)
+        }
+    }
+
+    var jsonDataLoader: JsonDecoderDataLoader {
+        JsonDecoderDataLoader(parser: parser)
     }
 
     var parser: JSONParser {
@@ -45,7 +69,7 @@ private extension CharacterDetailDependencyContainer {
         DataServicesNetworkErrorHandler()
     }
 
-    var resultHandler: CharactersResultHandler {
-        CharactersClientServiceResultHandler(parser: parser, errorHandler: errorHandler)
+    var resultHandler: ResultHandler {
+        ClientResultHandler(parser: parser, errorHandler: errorHandler)
     }
 }

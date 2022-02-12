@@ -50,7 +50,11 @@ private extension CharactersCoordinator {
 
     func createCharactersViewController() -> UIViewController {
         let charactersContainer = CharactersDependencyContainer(dependencies: dependencies)
-        let viewModel = CharactersViewModel(charactersFetcher: charactersContainer.fetchCharactersUseCase)
+        let viewModel = CharactersViewModel(
+            charactersFetcher: charactersContainer.fetchCharactersUseCase,
+            imageURLBuilder: charactersContainer.imageURLBuilder,
+            pager: charactersContainer.pager
+        )
         let viewController = CharactersViewController.instantiate(viewModel: viewModel, layout: CharactersLayout())
         viewModel.coordinatorDelegate = self
         viewModel.viewDelegate = viewController

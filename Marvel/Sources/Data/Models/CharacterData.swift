@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CharacterData: Codable, Equatable {
+struct CharacterData: DataObject {
     let identifier: Int?
     let name: String?
     let description: String?
