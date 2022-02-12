@@ -1,5 +1,5 @@
 //
-//  ComicsViewModel.swift
+//  ComicsPresentationModel.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 5/2/22.
@@ -7,21 +7,21 @@
 
 import Foundation
 
-protocol ComicsViewModelProtocol: ViewModel {
+protocol ComicsPresentationModelProtocol: PresentationModel {
     var numberOfComics: Int { get }
     func comicCellData(at indexPath: IndexPath) -> ComicCellData?
     func willDisplayComicCell(at indexPath: IndexPath)
 }
 
-protocol ComicsViewModelViewDelegate: AnyObject {
-    func viewModelDidStartLoading(_ viewModel: ComicsViewModelProtocol)
-    func viewModelDidFinishLoading(_ viewModel: ComicsViewModelProtocol)
-    func viewModelDidRetrieveData(_ viewModel: ComicsViewModelProtocol)
-    func viewModelDidFailRetrievingData(_ viewModel: ComicsViewModelProtocol)
+protocol ComicsPresentationModelViewDelegate: AnyObject {
+    func modelDidStartLoading(_ presentationModel: ComicsPresentationModelProtocol)
+    func modelDidFinishLoading(_ presentationModel: ComicsPresentationModelProtocol)
+    func modelDidRetrieveData(_ presentationModel: ComicsPresentationModelProtocol)
+    func modelDidFailRetrievingData(_ presentationModel: ComicsPresentationModelProtocol)
 }
 
-class ComicsViewModel: ComicsViewModelProtocol {
-    weak var viewDelegate: ComicsViewModelViewDelegate?
+class ComicsPresentationModel: ComicsPresentationModelProtocol {
+    weak var viewDelegate: ComicsPresentationModelViewDelegate?
 
     private let comicsFetcher: FetchComicsUseCase
     private let characterID: Int
@@ -43,7 +43,7 @@ class ComicsViewModel: ComicsViewModelProtocol {
     }
 
     func start() {
-        viewDelegate?.viewModelDidStartLoading(self)
+        viewDelegate?.modelDidStartLoading(self)
         loadComics(with: startingQuery)
     }
 
@@ -63,7 +63,7 @@ class ComicsViewModel: ComicsViewModelProtocol {
     }
 }
 
-private extension ComicsViewModel {
+private extension ComicsPresentationModel {
     var startingQuery: FetchComicsQuery {
         query(atOffset: 0)
     }
@@ -86,7 +86,7 @@ private extension ComicsViewModel {
     }
 
     func handle(result: FetchComicsResult) {
-        viewDelegate?.viewModelDidFinishLoading(self)
+        viewDelegate?.modelDidFinishLoading(self)
         switch result {
         case let .success(pageInfo):
             handleSuccess(with: pageInfo)
@@ -99,7 +99,7 @@ private extension ComicsViewModel {
         guard let comicsCellData = mapToCells(comicData: pageInfo.results) else { return }
         pager.update(currentPage: pageInfo)
         comics.append(contentsOf: comicsCellData)
-        viewDelegate?.viewModelDidRetrieveData(self)
+        viewDelegate?.modelDidRetrieveData(self)
     }
 
     func mapToCells(comicData: [ComicData]?) -> [ComicCellData]? {
@@ -129,7 +129,7 @@ private extension ComicsViewModel {
     }
 
     func handleFailure() {
-        viewDelegate?.viewModelDidFailRetrievingData(self)
+        viewDelegate?.modelDidFailRetrievingData(self)
     }
 
     func removeIssueNumber(from comicTitle: String) -> String {

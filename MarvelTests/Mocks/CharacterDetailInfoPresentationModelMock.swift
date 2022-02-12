@@ -1,5 +1,5 @@
 //
-//  CharacterDetailInfoViewModelMock.swift
+//  CharacterDetailInfoPresentationModelMock.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 5/2/22.
@@ -8,7 +8,7 @@
 import Foundation
 @testable import Marvel_Debug
 
-class CharacterDetailInfoViewModelMock: CharacterDetailInfoViewModelProtocol {
+class CharacterDetailInfoPresentationModelMock: CharacterInfoPresentationModelProtocol {
     var startCallCount = 0
     var disposeCallCount = 0
     var imageCellDataCallCount = 0

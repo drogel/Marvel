@@ -8,68 +8,68 @@
 import UIKit
 
 class CharacterDetailViewController: ViewController {
-    typealias ViewModelProtocol = ViewModel
+    typealias PresentationModelProtocol = PresentationModel
 
     private enum Constants {
         static let collectionContentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
     }
 
-    private var viewModel: ViewModelProtocol!
+    private var presentationModel: PresentationModelProtocol!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
     private var collectionViewDelegate: UICollectionViewDelegate!
     private var layout: UICollectionViewCompositionalLayout!
 
     static func instantiate(
-        viewModel: ViewModelProtocol,
+        presentationModel: PresentationModelProtocol,
         dataSource: CollectionViewDataSource,
         collectionViewDelegate: UICollectionViewDelegate,
         layout: UICollectionViewCompositionalLayout
     ) -> Self {
-        let viewController = instantiate(viewModel: viewModel)
+        let viewController = instantiate(presentationModel: presentationModel)
         viewController.dataSource = dataSource
         viewController.collectionViewDelegate = collectionViewDelegate
         viewController.layout = layout
         return viewController
     }
 
-    static func instantiate(viewModel: ViewModelProtocol) -> Self {
+    static func instantiate(presentationModel: PresentationModelProtocol) -> Self {
         let viewController = Self()
-        viewController.viewModel = viewModel
+        viewController.presentationModel = presentationModel
         return viewController
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
-        viewModel.start()
+        presentationModel.start()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        viewModel.dispose()
+        presentationModel.dispose()
     }
 }
 
-extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
-    func viewModelDidStartLoading(_: CharacterDetailViewModelProtocol) {
+extension CharacterDetailViewController: CharacterDetailPresentationModelViewDelegate {
+    func modelDidStartLoading(_: CharacterDetailPresentationModelProtocol) {
         startLoading()
     }
 
-    func viewModelDidFinishLoading(_: CharacterDetailViewModelProtocol) {
+    func modelDidFinishLoading(_: CharacterDetailPresentationModelProtocol) {
         stopLoading()
     }
 
-    func viewModelDidRetrieveCharacterInfo(_: CharacterDetailViewModelProtocol) {
+    func modelDidRetrieveCharacterInfo(_: CharacterDetailPresentationModelProtocol) {
         reload()
     }
 
-    func viewModelDidRetrieveComics(_: CharacterDetailViewModelProtocol) {
+    func modelDidRetrieveComics(_: CharacterDetailPresentationModelProtocol) {
         reload()
     }
 
-    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String) {
-        showErrorAlert(message: message, retryButtonAction: viewModel.start)
+    func model(_ presentationModel: CharacterDetailPresentationModelProtocol, didFailWithError message: String) {
+        showErrorAlert(message: message, retryButtonAction: presentationModel.start)
     }
 }
 

@@ -8,28 +8,28 @@
 import UIKit
 
 class CharactersViewController: ViewController {
-    typealias ViewModelProtocol = CharactersViewModelProtocol
+    typealias PresentationModelProtocol = CharactersPresentationModelProtocol
 
     private enum Constants {
         static let scrollNearEndThreshold: CGFloat = 300
     }
 
-    private var viewModel: ViewModelProtocol!
+    private var presentationModel: PresentationModelProtocol!
     private var layout: UICollectionViewCompositionalLayout!
     private var collectionView: UICollectionView!
 
     static func instantiate(
-        viewModel: ViewModelProtocol,
+        presentationModel: PresentationModelProtocol,
         layout: UICollectionViewCompositionalLayout
     ) -> CharactersViewController {
-        let viewController = instantiate(viewModel: viewModel)
+        let viewController = instantiate(presentationModel: presentationModel)
         viewController.layout = layout
         return viewController
     }
 
-    static func instantiate(viewModel: ViewModelProtocol) -> Self {
+    static func instantiate(presentationModel: PresentationModelProtocol) -> Self {
         let viewController = Self()
-        viewController.viewModel = viewModel
+        viewController.presentationModel = presentationModel
         return viewController
     }
 
@@ -41,29 +41,29 @@ class CharactersViewController: ViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        viewModel.start()
+        presentationModel.start()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        viewModel.dispose()
+        presentationModel.dispose()
     }
 }
 
 extension CharactersViewController: UICollectionViewDataSource {
     func numberOfSections(in _: UICollectionView) -> Int {
-        return 1
+        1
     }
 
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        return viewModel.numberOfItems
+        presentationModel.numberOfItems
     }
 
     func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        guard let cellData = viewModel.cellData(at: indexPath) else { return UICollectionViewCell() }
+        guard let cellData = presentationModel.cellData(at: indexPath) else { return UICollectionViewCell() }
         let cell = collectionView.dequeue(cellOfType: CharacterCell.self, at: indexPath)
         cell.configure(using: cellData)
         return cell
@@ -72,29 +72,29 @@ extension CharactersViewController: UICollectionViewDataSource {
 
 extension CharactersViewController: UICollectionViewDelegate {
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        viewModel.select(at: indexPath)
+        presentationModel.select(at: indexPath)
     }
 
     func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        viewModel.willDisplayCell(at: indexPath)
+        presentationModel.willDisplayCell(at: indexPath)
     }
 }
 
-extension CharactersViewController: CharactersViewModelViewDelegate {
-    func viewModelDidStartLoading(_: CharactersViewModelProtocol) {
+extension CharactersViewController: CharactersPresentationModelViewDelegate {
+    func modelDidStartLoading(_: CharactersPresentationModelProtocol) {
         startLoading()
     }
 
-    func viewModelDidFinishLoading(_: CharactersViewModelProtocol) {
+    func modelDidFinishLoading(_: CharactersPresentationModelProtocol) {
         stopLoading()
     }
 
-    func viewModelDidUpdateItems(_: CharactersViewModelProtocol) {
+    func modelDidUpdateItems(_: CharactersPresentationModelProtocol) {
         collectionView.reloadData()
     }
 
-    func viewModel(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String) {
-        showErrorAlert(message: message, retryButtonAction: viewModel.start)
+    func model(_ presentationModel: CharactersPresentationModelProtocol, didFailWithError message: String) {
+        showErrorAlert(message: message, retryButtonAction: presentationModel.start)
     }
 }
 

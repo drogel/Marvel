@@ -10,57 +10,57 @@ import XCTest
 
 class CharactersViewControllerTests: XCTestCase {
     private var sut: CharactersViewController!
-    private var viewModelMock: CharactersViewModelMock!
+    private var presentationModelMock: CharactersPresentationModelMock!
 
     override func setUp() {
         super.setUp()
-        viewModelMock = CharactersViewModelMock()
-        sut = CharactersViewController.instantiate(viewModel: viewModelMock, layout: CharactersLayout())
+        presentationModelMock = CharactersPresentationModelMock()
+        sut = CharactersViewController.instantiate(presentationModel: presentationModelMock, layout: CharactersLayout())
     }
 
     override func tearDown() {
         sut = nil
-        viewModelMock = nil
+        presentationModelMock = nil
         super.tearDown()
     }
 
-    func test_whenViewDidAppear_callsViewModelStart() {
-        assertViewModelStart(callCount: 0)
+    func test_whenViewDidAppear_callsPresentationModelStart() {
+        assertPresentationModelStart(callCount: 0)
         sut.viewDidAppear(false)
-        assertViewModelStart(callCount: 1)
+        assertPresentationModelStart(callCount: 1)
     }
 
-    func test_whenViewDidDisappear_callsViewModelDispose() {
-        assertViewModelDispose(callCount: 0)
+    func test_whenViewDidDisappear_callsPresentationModelDispose() {
+        assertPresentationModelDispose(callCount: 0)
         sut.viewDidDisappear(false)
-        assertViewModelDispose(callCount: 1)
+        assertPresentationModelDispose(callCount: 1)
     }
 
     func test_numberOfSections_returnsOneSection() {
         XCTAssertEqual(sut.numberOfSections(in: collectionViewStub), 1)
     }
 
-    func test_numberOfItems_returnsViewModelNumberOfItems() {
+    func test_numberOfItems_returnsPresentationModelNumberOfItems() {
         XCTAssertEqual(
             sut.collectionView(collectionViewStub, numberOfItemsInSection: 0),
-            viewModelMock.numberOfItems
+            presentationModelMock.numberOfItems
         )
     }
 
-    func test_whenDequeueingCells_retrievesViewModelCellData() {
-        assertViewModelCellData(callCount: 0)
+    func test_whenDequeueingCells_retrievesPresentationModelCellData() {
+        assertPresentationModelCellData(callCount: 0)
         _ = sut.collectionView(collectionViewStub, cellForItemAt: indexPathStub)
-        assertViewModelCellData(callCount: 1)
+        assertPresentationModelCellData(callCount: 1)
     }
 
-    func test_whenSelectingACell_notifiesViewModel() {
-        assertViewModelSelect(callCount: 0)
+    func test_whenSelectingACell_notifiesPresentationModel() {
+        assertPresentationModelSelect(callCount: 0)
         sut.collectionView(collectionViewStub, didSelectItemAt: indexPathStub)
-        assertViewModelSelect(callCount: 1)
+        assertPresentationModelSelect(callCount: 1)
     }
 }
 
-private class CharactersViewModelMock: CharactersViewModelProtocol {
+private class CharactersPresentationModelMock: CharactersPresentationModelProtocol {
     var numberOfItemsCallCount = 0
     var willDisplayCellCallCount = 0
     var selectCallCount = 0
@@ -104,23 +104,23 @@ private extension CharactersViewControllerTests {
         IndexPath(row: 0, section: 0)
     }
 
-    func assertViewModelStart(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.startCallCount, callCount, line: line)
+    func assertPresentationModelStart(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(presentationModelMock.startCallCount, callCount, line: line)
     }
 
-    func assertViewModelDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.disposeCallCount, callCount, line: line)
+    func assertPresentationModelDispose(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(presentationModelMock.disposeCallCount, callCount, line: line)
     }
 
-    func assertViewModelCellData(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.cellDataCallCount, callCount, line: line)
+    func assertPresentationModelCellData(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(presentationModelMock.cellDataCallCount, callCount, line: line)
     }
 
-    func assertViewModelSelect(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.selectCallCount, callCount, line: line)
+    func assertPresentationModelSelect(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(presentationModelMock.selectCallCount, callCount, line: line)
     }
 
-    func assertViewModelWillDisplayCell(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.willDisplayCellCallCount, callCount, line: line)
+    func assertPresentationModelWillDisplayCell(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(presentationModelMock.willDisplayCellCallCount, callCount, line: line)
     }
 }

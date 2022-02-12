@@ -20,10 +20,10 @@ enum CharacterDetailSection: Int, CaseIterable {
 }
 
 class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
-    private let viewModel: CharacterDetailViewModelProtocol!
+    private let presentationModel: CharacterDetailPresentationModelProtocol!
 
-    init(viewModel: CharacterDetailViewModelProtocol) {
-        self.viewModel = viewModel
+    init(presentationModel: CharacterDetailPresentationModelProtocol) {
+        self.presentationModel = presentationModel
     }
 
     func numberOfSections(in _: UICollectionView) -> Int {
@@ -33,7 +33,7 @@ class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
     func collectionView(_: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch CharacterDetailSection.fromSectionIndex(section) {
         case .comics:
-            return viewModel.numberOfComics
+            return presentationModel.numberOfComics
         default:
             return 1
         }
@@ -78,7 +78,7 @@ extension CharacterDetailDataSource: UICollectionViewDelegate {
     func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
         case .comics:
-            return viewModel.willDisplayComicCell(at: indexPath)
+            return presentationModel.willDisplayComicCell(at: indexPath)
         default:
             return
         }
@@ -88,18 +88,18 @@ extension CharacterDetailDataSource: UICollectionViewDelegate {
 private extension CharacterDetailDataSource {
     func imageCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeue(cellOfType: CharacterImageCell.self, at: indexPath)
-        cell.configure(using: viewModel.imageCellData)
+        cell.configure(using: presentationModel.imageCellData)
         return cell
     }
 
     func infoCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeue(cellOfType: CharacterInfoCell.self, at: indexPath)
-        cell.configure(using: viewModel.infoCellData)
+        cell.configure(using: presentationModel.infoCellData)
         return cell
     }
 
     func comicCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let comicCellData = viewModel.comicCellData(at: indexPath) else { return UICollectionViewCell() }
+        guard let comicCellData = presentationModel.comicCellData(at: indexPath) else { return UICollectionViewCell() }
         let cell = collectionView.dequeue(cellOfType: ComicCell.self, at: indexPath)
         cell.configure(using: comicCellData)
         return cell
@@ -107,7 +107,7 @@ private extension CharacterDetailDataSource {
 
     func comicsHeader(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeue(headerOfType: CollectionSectionHeader.self, at: indexPath)
-        header.configure(using: viewModel.comicsSectionTitle)
+        header.configure(using: presentationModel.comicsSectionTitle)
         return header
     }
 }

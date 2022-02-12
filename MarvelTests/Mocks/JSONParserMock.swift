@@ -32,6 +32,6 @@ class JSONParserSuccessfulStub<Stub: Decodable>: JSONParserMock {
 
 class JSONParserFailingStub: JSONParserMock {
     override func parse<T>(data: Data) -> T? where T: Decodable {
-        return super.parse(data: data)
+        super.parse(data: data)
     }
 }

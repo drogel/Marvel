@@ -1,5 +1,5 @@
 //
-//  ComicsViewModelTests.swift
+//  ComicsPresentationModelTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 5/2/22.
@@ -8,9 +8,9 @@
 @testable import Marvel_Debug
 import XCTest
 
-class ComicsViewModelTests: XCTestCase {
-    private var sut: ComicsViewModel!
-    private var viewDelegate: ComicsViewModelViewDelegateMock!
+class ComicsPresentationModelTests: XCTestCase {
+    private var sut: ComicsPresentationModel!
+    private var viewDelegate: ComicsPresentationModelViewDelegateMock!
     private var comicFetcherMock: ComicFetcherMock!
     private var imageURLBuilderMock: ImageURLBuilderMock!
     private var offsetPagerMock: OffsetPagerPartialMock!
@@ -32,12 +32,12 @@ class ComicsViewModelTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_conformsToComicsViewModelProtocol() {
-        XCTAssertTrue((sut as AnyObject) is ComicsViewModelProtocol)
+    func test_conformsToComicsPresentationModelProtocol() {
+        XCTAssertTrue((sut as AnyObject) is ComicsPresentationModelProtocol)
     }
 
-    func test_conformsToViewModel() {
-        XCTAssertTrue((sut as AnyObject) is ViewModel)
+    func test_conformsToPresentationModel() {
+        XCTAssertTrue((sut as AnyObject) is PresentationModel)
     }
 
     func test_givenViewDelegate_whenStarting_notifiesLoading() {
@@ -59,14 +59,14 @@ class ComicsViewModelTests: XCTestCase {
         XCTAssertEqual(comicFetcherMock.mostRecentQuery, expectedQuery)
     }
 
-    func test_givenViewModelStarted_whenDisposing_cancellsCancellable() {
+    func test_givenPresentationModelStarted_whenDisposing_cancellsCancellable() {
         sut.start()
         assertComicFetcherFetchLastCancellableDidCancel(callCount: 0)
         sut.dispose()
         assertComicFetcherFetchLastCancellableDidCancel(callCount: 1)
     }
 
-    func test_givenViewModelStarted_whenStartingAgain_cancellsCancellable() {
+    func test_givenPresentationModelStarted_whenStartingAgain_cancellsCancellable() {
         sut.start()
         assertComicFetcherFetchFirstCancellableDidCancel(callCount: 0)
         sut.start()
@@ -185,25 +185,25 @@ class ComicsViewModelTests: XCTestCase {
     }
 }
 
-private class ComicsViewModelViewDelegateMock: ComicsViewModelViewDelegate {
+private class ComicsPresentationModelViewDelegateMock: ComicsPresentationModelViewDelegate {
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
     var didRetrieveDataCallCount = 0
     var didFailRetrievingDataCallCount = 0
 
-    func viewModelDidStartLoading(_: ComicsViewModelProtocol) {
+    func modelDidStartLoading(_: ComicsPresentationModelProtocol) {
         didStartLoadingCallCount += 1
     }
 
-    func viewModelDidFinishLoading(_: ComicsViewModelProtocol) {
+    func modelDidFinishLoading(_: ComicsPresentationModelProtocol) {
         didFinishLoadingCallCount += 1
     }
 
-    func viewModelDidRetrieveData(_: ComicsViewModelProtocol) {
+    func modelDidRetrieveData(_: ComicsPresentationModelProtocol) {
         didRetrieveDataCallCount += 1
     }
 
-    func viewModelDidFailRetrievingData(_: ComicsViewModelProtocol) {
+    func modelDidFailRetrievingData(_: ComicsPresentationModelProtocol) {
         didFailRetrievingDataCallCount += 1
     }
 }
@@ -247,13 +247,13 @@ private class ComicFetcherFailureStub: ComicFetcherMock {
     }
 }
 
-private extension ComicsViewModelTests {
+private extension ComicsPresentationModelTests {
     var characterIDStub: Int {
         12345
     }
 
     func givenViewDelegate() {
-        viewDelegate = ComicsViewModelViewDelegateMock()
+        viewDelegate = ComicsPresentationModelViewDelegateMock()
         sut.viewDelegate = viewDelegate
     }
 
@@ -268,7 +268,7 @@ private extension ComicsViewModelTests {
     }
 
     func givenSut(with comicsFetcher: ComicFetcherMock) {
-        sut = ComicsViewModel(
+        sut = ComicsPresentationModel(
             comicsFetcher: comicsFetcher,
             characterID: characterIDStub,
             imageURLBuilder: imageURLBuilderMock,

@@ -1,5 +1,5 @@
 //
-//  CharacterDetailInfoViewModelTests.swift
+//  CharacterInfoPresentationModelTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 23/1/22.
@@ -8,18 +8,18 @@
 @testable import Marvel_Debug
 import XCTest
 
-class CharacterDetailInfoViewModelTests: XCTestCase {
-    private var sut: CharacterDetailInfoViewModel!
+class CharacterInfoPresentationModelTests: XCTestCase {
+    private var sut: CharacterInfoPresentationModel!
     private var characterFetcherMock: CharacterFetcherMock!
     private var characterIDStub: Int!
-    private var viewDelegateMock: CharacterDetailInfoViewModelDelegateMock!
+    private var viewDelegateMock: CharacterInfoViewDelegateMock!
     private var imageURLBuilderMock: ImageURLBuilderMock!
 
     override func setUp() {
         super.setUp()
         characterFetcherMock = CharacterFetcherMock()
         characterIDStub = 123_456
-        viewDelegateMock = CharacterDetailInfoViewModelDelegateMock()
+        viewDelegateMock = CharacterInfoViewDelegateMock()
         imageURLBuilderMock = ImageURLBuilderMock()
         givenSut(with: characterFetcherMock)
     }
@@ -33,8 +33,8 @@ class CharacterDetailInfoViewModelTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_conformsToViewModel() {
-        XCTAssertTrue((sut as AnyObject) is ViewModel)
+    func test_conformsToPresentationModel() {
+        XCTAssertTrue((sut as AnyObject) is PresentationModel)
     }
 
     func test_givenViewDelegate_whenStarting_notifiesLoadingToViewDelegate() {
@@ -99,25 +99,25 @@ class CharacterDetailInfoViewModelTests: XCTestCase {
     }
 }
 
-private class CharacterDetailInfoViewModelDelegateMock: CharacterDetailInfoViewModelViewDelegate {
+private class CharacterInfoViewDelegateMock: CharacterInfoPresentationModelViewDelegate {
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
     var didRetrieveDataCallCount = 0
     var didFailCallCount = 0
 
-    func viewModelDidStartLoading(_: CharacterDetailInfoViewModelProtocol) {
+    func modelDidStartLoading(_: CharacterInfoPresentationModelProtocol) {
         didStartLoadingCallCount += 1
     }
 
-    func viewModelDidFinishLoading(_: CharacterDetailInfoViewModelProtocol) {
+    func modelDidFinishLoading(_: CharacterInfoPresentationModelProtocol) {
         didFinishLoadingCallCount += 1
     }
 
-    func viewModelDidRetrieveData(_: CharacterDetailInfoViewModelProtocol) {
+    func modelDidRetrieveData(_: CharacterInfoPresentationModelProtocol) {
         didRetrieveDataCallCount += 1
     }
 
-    func viewModel(_: CharacterDetailInfoViewModelProtocol, didFailWithError _: String) {
+    func model(_: CharacterInfoPresentationModelProtocol, didFailWithError _: String) {
         didFailCallCount += 1
     }
 }
@@ -168,7 +168,7 @@ private class CharacterFetcherFailingStub: CharacterFetcherMock {
     }
 }
 
-private extension CharacterDetailInfoViewModelTests {
+private extension CharacterInfoPresentationModelTests {
     func givenViewDelegate() {
         sut.viewDelegate = viewDelegateMock
     }
@@ -179,7 +179,7 @@ private extension CharacterDetailInfoViewModelTests {
     }
 
     func givenSut(with characterFetcherMock: CharacterFetcherMock) {
-        sut = CharacterDetailInfoViewModel(
+        sut = CharacterInfoPresentationModel(
             characterFetcher: characterFetcherMock,
             characterID: characterIDStub,
             imageURLBuilder: imageURLBuilderMock

@@ -1,5 +1,5 @@
 //
-//  CharacterDetailInfoViewModel.swift
+//  CharacterInfoPresentationModel.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 23/1/22.
@@ -7,26 +7,26 @@
 
 import Foundation
 
-protocol CharacterDetailInfoViewModelProtocol: ViewModel {
+protocol CharacterInfoPresentationModelProtocol: PresentationModel {
     var imageCellData: CharacterImageData? { get }
     var infoCellData: CharacterInfoData? { get }
 }
 
-protocol CharacterDetailInfoViewModelViewDelegate: AnyObject {
-    func viewModelDidStartLoading(_ viewModel: CharacterDetailInfoViewModelProtocol)
-    func viewModelDidFinishLoading(_ viewModel: CharacterDetailInfoViewModelProtocol)
-    func viewModelDidRetrieveData(_ viewModel: CharacterDetailInfoViewModelProtocol)
-    func viewModel(_ viewModel: CharacterDetailInfoViewModelProtocol, didFailWithError message: String)
+protocol CharacterInfoPresentationModelViewDelegate: AnyObject {
+    func modelDidStartLoading(_ presentationModel: CharacterInfoPresentationModelProtocol)
+    func modelDidFinishLoading(_ presentationModel: CharacterInfoPresentationModelProtocol)
+    func modelDidRetrieveData(_ presentationModel: CharacterInfoPresentationModelProtocol)
+    func model(_ presentationModel: CharacterInfoPresentationModelProtocol, didFailWithError message: String)
 }
 
-class CharacterDetailInfoViewModel: CharacterDetailInfoViewModelProtocol {
+class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
     private enum Messages {
         static let noSuchCharacter = "character_not_found".localized
         static let noAPIKeys = "api_keys_not_found".localized
         static let noConnection = "no_internet".localized
     }
 
-    weak var viewDelegate: CharacterDetailInfoViewModelViewDelegate?
+    weak var viewDelegate: CharacterInfoPresentationModelViewDelegate?
 
     var imageCellData: CharacterImageData? {
         characterDetailData?.image
@@ -53,7 +53,7 @@ class CharacterDetailInfoViewModel: CharacterDetailInfoViewModelProtocol {
     }
 
     func start() {
-        viewDelegate?.viewModelDidStartLoading(self)
+        viewDelegate?.modelDidStartLoading(self)
         let query = FetchCharacterDetailQuery(characterID: characterID)
         loadCharacter(with: query)
     }
@@ -63,14 +63,14 @@ class CharacterDetailInfoViewModel: CharacterDetailInfoViewModelProtocol {
     }
 }
 
-private extension CharacterDetailInfoViewModel {
+private extension CharacterInfoPresentationModel {
     func loadCharacter(with query: FetchCharacterDetailQuery) {
         characterCancellable?.cancel()
         characterCancellable = characterFetcher.fetch(query: query, completion: handleFetchCharacterResult)
     }
 
     func handleFetchCharacterResult(_ result: FetchCharacterDetailResult) {
-        viewDelegate?.viewModelDidFinishLoading(self)
+        viewDelegate?.modelDidFinishLoading(self)
         switch result {
         case let .success(pageInfo):
             handleSuccess(with: pageInfo)
@@ -82,12 +82,12 @@ private extension CharacterDetailInfoViewModel {
     func handleSuccess(with pageInfo: PageInfo<CharacterData>) {
         guard let characterDetail = mapToCharacterDetail(characterData: pageInfo.results) else { return }
         characterDetailData = characterDetail
-        viewDelegate?.viewModelDidRetrieveData(self)
+        viewDelegate?.modelDidRetrieveData(self)
     }
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {
         let message = message(for: error)
-        viewDelegate?.viewModel(self, didFailWithError: message)
+        viewDelegate?.model(self, didFailWithError: message)
     }
 
     func message(for error: FetchCharacterDetailUseCaseError) -> String {

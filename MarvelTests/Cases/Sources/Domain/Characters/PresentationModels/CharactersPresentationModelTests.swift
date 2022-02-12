@@ -1,5 +1,5 @@
 //
-//  CharactersViewModelTests.swift
+//  CharactersPresentationModelTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 19/1/22.
@@ -8,18 +8,18 @@
 @testable import Marvel_Debug
 import XCTest
 
-class CharactersViewModelTests: XCTestCase {
-    private var sut: CharactersViewModel!
+class CharactersPresentationModelTests: XCTestCase {
+    private var sut: CharactersPresentationModel!
     private var coordinatorDelegateMock: CharactersCoordinatorDelegateMock!
     private var charactersFetcherMock: CharactersFetcherMock!
-    private var viewDelegateMock: CharactersViewModelViewDelegateMock!
+    private var viewDelegateMock: CharactersPresentationModelDelegateMock!
     private var offsetPagerMock: OffsetPagerPartialMock!
     private var methodCallRecorder: ViewDelegatePagerCallRecorder!
     private var imageURLBuilderMock: ImageURLBuilderMock!
 
     override func setUp() {
         super.setUp()
-        viewDelegateMock = CharactersViewModelViewDelegateMock()
+        viewDelegateMock = CharactersPresentationModelDelegateMock()
         coordinatorDelegateMock = CharactersCoordinatorDelegateMock()
         charactersFetcherMock = CharactersFetcherMock()
         offsetPagerMock = OffsetPagerPartialMock()
@@ -38,12 +38,12 @@ class CharactersViewModelTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_conformsToViewModel() {
-        XCTAssertTrue((sut as AnyObject) is ViewModel)
+    func test_conformsToPresentationModel() {
+        XCTAssertTrue((sut as AnyObject) is PresentationModel)
     }
 
-    func test_conformsToCharactersViewModel() {
-        XCTAssertTrue((sut as AnyObject) is CharactersViewModelProtocol)
+    func test_conformsToCharactersPresentationModel() {
+        XCTAssertTrue((sut as AnyObject) is CharactersPresentationModelProtocol)
     }
 
     func test_givenDidStartSuccessfullyAndACoordinatorDelegate_whenSelecting_notifiesDelegate() {
@@ -156,8 +156,8 @@ class CharactersViewModelTests: XCTestCase {
     func test_givenDidStartSuccessfully_whenAboutToDisplayACell_updateNotificationsAreCalledInOrder() {
         let expectedCalls: [ViewDelegatePagerCallRecorder.Method] = [
             .isAtEndOfCurrentPageWithMoreContent,
-            .viewModelDidFinishLoading,
-            .viewModelDidUpdateItems,
+            .modelDidFinishLoading,
+            .modelDidUpdateItems,
             .update,
         ]
         givenSuccessfulCharactersFetcher()
@@ -174,7 +174,7 @@ class CharactersViewModelTests: XCTestCase {
     }
 }
 
-private extension CharactersViewModelTests {
+private extension CharactersPresentationModelTests {
     func givenSutWithSuccessfulFetcher() {
         givenSuccessfulCharactersFetcher()
         givenSut()
@@ -199,7 +199,7 @@ private extension CharactersViewModelTests {
     }
 
     func givenSut(pager: Pager) {
-        sut = CharactersViewModel(
+        sut = CharactersPresentationModel(
             charactersFetcher: charactersFetcherMock,
             imageURLBuilder: imageURLBuilderMock,
             pager: pager
@@ -262,10 +262,10 @@ private extension CharactersViewModelTests {
     }
 }
 
-private class CharactersCoordinatorDelegateMock: CharactersViewModelCoordinatorDelegate {
+private class CharactersCoordinatorDelegateMock: CharactersPresentationModelCoordinatorDelegate {
     var didSelectCallCount = 0
 
-    func viewModel(_: CharactersViewModelProtocol, didSelectCharacterWith _: Int) {
+    func model(_: CharactersPresentationModelProtocol, didSelectCharacterWith _: Int) {
         didSelectCallCount += 1
     }
 }
@@ -320,34 +320,34 @@ private class CharactersFetcherFailingStub: CharactersFetcherMock {
     }
 }
 
-private class CharactersViewModelViewDelegateMock: CharactersViewModelViewDelegate {
+private class CharactersPresentationModelDelegateMock: CharactersPresentationModelViewDelegate {
     var didUpdateCallCount = 0
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
     var didFailCallCount = 0
 
-    func viewModelDidUpdateItems(_: CharactersViewModelProtocol) {
+    func modelDidUpdateItems(_: CharactersPresentationModelProtocol) {
         didUpdateCallCount += 1
     }
 
-    func viewModelDidStartLoading(_: CharactersViewModelProtocol) {
+    func modelDidStartLoading(_: CharactersPresentationModelProtocol) {
         didStartLoadingCallCount += 1
     }
 
-    func viewModelDidFinishLoading(_: CharactersViewModelProtocol) {
+    func modelDidFinishLoading(_: CharactersPresentationModelProtocol) {
         didFinishLoadingCallCount += 1
     }
 
-    func viewModel(_: CharactersViewModelProtocol, didFailWithError _: String) {
+    func model(_: CharactersPresentationModelProtocol, didFailWithError _: String) {
         didFailCallCount += 1
     }
 }
 
-private class ViewDelegatePagerCallRecorder: CharactersViewModelViewDelegate, Pager {
+private class ViewDelegatePagerCallRecorder: CharactersPresentationModelViewDelegate, Pager {
     enum Method: String, CustomDebugStringConvertible {
         case isAtEndOfCurrentPageWithMoreContent
-        case viewModelDidFinishLoading
-        case viewModelDidUpdateItems
+        case modelDidFinishLoading
+        case modelDidUpdateItems
         case update
 
         var debugDescription: String {
@@ -357,17 +357,17 @@ private class ViewDelegatePagerCallRecorder: CharactersViewModelViewDelegate, Pa
 
     var methodsCalled: [Method] = []
 
-    func viewModelDidStartLoading(_: CharactersViewModelProtocol) {}
+    func modelDidStartLoading(_: CharactersPresentationModelProtocol) {}
 
-    func viewModelDidFinishLoading(_: CharactersViewModelProtocol) {
-        methodsCalled.append(.viewModelDidFinishLoading)
+    func modelDidFinishLoading(_: CharactersPresentationModelProtocol) {
+        methodsCalled.append(.modelDidFinishLoading)
     }
 
-    func viewModelDidUpdateItems(_: CharactersViewModelProtocol) {
-        methodsCalled.append(.viewModelDidUpdateItems)
+    func modelDidUpdateItems(_: CharactersPresentationModelProtocol) {
+        methodsCalled.append(.modelDidUpdateItems)
     }
 
-    func viewModel(_: CharactersViewModelProtocol, didFailWithError _: String) {}
+    func model(_: CharactersPresentationModelProtocol, didFailWithError _: String) {}
 
     func isThereMoreContent(at _: Int) -> Bool {
         true

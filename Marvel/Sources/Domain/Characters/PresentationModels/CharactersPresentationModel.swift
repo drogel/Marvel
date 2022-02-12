@@ -1,5 +1,5 @@
 //
-//  CharactersViewModel.swift
+//  CharactersPresentationModel.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 18/1/22.
@@ -7,36 +7,36 @@
 
 import Foundation
 
-protocol CharactersViewModelProtocol: ViewModel {
+protocol CharactersPresentationModelProtocol: PresentationModel {
     var numberOfItems: Int { get }
     func willDisplayCell(at indexPath: IndexPath)
     func select(at indexPath: IndexPath)
     func cellData(at indexPath: IndexPath) -> CharacterCellData?
 }
 
-protocol CharactersViewModelCoordinatorDelegate: AnyObject {
-    func viewModel(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int)
+protocol CharactersPresentationModelCoordinatorDelegate: AnyObject {
+    func model(_ presentationModel: CharactersPresentationModelProtocol, didSelectCharacterWith characterID: Int)
 }
 
-protocol CharactersViewModelViewDelegate: AnyObject {
-    func viewModelDidStartLoading(_ viewModel: CharactersViewModelProtocol)
-    func viewModelDidFinishLoading(_ viewModel: CharactersViewModelProtocol)
-    func viewModelDidUpdateItems(_ viewModel: CharactersViewModelProtocol)
-    func viewModel(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String)
+protocol CharactersPresentationModelViewDelegate: AnyObject {
+    func modelDidStartLoading(_ presentationModel: CharactersPresentationModelProtocol)
+    func modelDidFinishLoading(_ presentationModel: CharactersPresentationModelProtocol)
+    func modelDidUpdateItems(_ presentationModel: CharactersPresentationModelProtocol)
+    func model(_ presentationModel: CharactersPresentationModelProtocol, didFailWithError message: String)
 }
 
-class CharactersViewModel: CharactersViewModelProtocol {
+class CharactersPresentationModel: CharactersPresentationModelProtocol {
     private enum Messages {
         static let noCharacters = "server_not_responding".localized
         static let noAPIKeys = "api_keys_not_found".localized
         static let noConnection = "no_internet".localized
     }
 
-    weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
-    weak var viewDelegate: CharactersViewModelViewDelegate?
+    weak var coordinatorDelegate: CharactersPresentationModelCoordinatorDelegate?
+    weak var viewDelegate: CharactersPresentationModelViewDelegate?
 
     var numberOfItems: Int {
-        return cells.count
+        cells.count
     }
 
     private let charactersFetcher: FetchCharactersUseCase
@@ -53,7 +53,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     }
 
     func start() {
-        viewDelegate?.viewModelDidStartLoading(self)
+        viewDelegate?.modelDidStartLoading(self)
         loadCharacters(with: startingQuery)
     }
 
@@ -65,7 +65,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
 
     func select(at indexPath: IndexPath) {
         guard let data = cellData(at: indexPath) else { return }
-        coordinatorDelegate?.viewModel(self, didSelectCharacterWith: data.identifier)
+        coordinatorDelegate?.model(self, didSelectCharacterWith: data.identifier)
     }
 
     func willDisplayCell(at indexPath: IndexPath) {
@@ -78,7 +78,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     }
 }
 
-private extension CharactersViewModel {
+private extension CharactersPresentationModel {
     var startingQuery: FetchCharactersQuery {
         FetchCharactersQuery(offset: 0)
     }
@@ -99,7 +99,7 @@ private extension CharactersViewModel {
     }
 
     func handleFetchCharactersResult(_ result: FetchCharactersResult) {
-        viewDelegate?.viewModelDidFinishLoading(self)
+        viewDelegate?.modelDidFinishLoading(self)
         switch result {
         case let .success(pageInfo):
             handleSuccess(with: pageInfo)
@@ -116,7 +116,7 @@ private extension CharactersViewModel {
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {
         let message = message(for: error)
-        viewDelegate?.viewModel(self, didFailWithError: message)
+        viewDelegate?.model(self, didFailWithError: message)
     }
 
     func message(for error: FetchCharacterDetailUseCaseError) -> String {
@@ -148,6 +148,6 @@ private extension CharactersViewModel {
 
     func updateCells(using newCells: [CharacterCellData]) {
         cells.append(contentsOf: newCells)
-        viewDelegate?.viewModelDidUpdateItems(self)
+        viewDelegate?.modelDidUpdateItems(self)
     }
 }
