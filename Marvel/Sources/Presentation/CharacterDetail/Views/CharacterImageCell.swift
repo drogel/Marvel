@@ -39,6 +39,7 @@ private extension CharacterImageCell {
     func setUp() {
         setUpSubviews()
         setUpConstraints()
+        setUpContentView()
     }
 
     func setUpSubviews() {
@@ -47,5 +48,9 @@ private extension CharacterImageCell {
 
     func setUpConstraints() {
         NSLayoutConstraint.fit(characterImageView, in: contentView)
+    }
+
+    func setUpContentView() {
+        contentView.clipsToBounds = true
     }
 }

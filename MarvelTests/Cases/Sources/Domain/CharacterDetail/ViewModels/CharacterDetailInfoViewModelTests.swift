@@ -13,18 +13,21 @@ class CharacterDetailInfoViewModelTests: XCTestCase {
     private var characterFetcherMock: CharacterFetcherMock!
     private var characterIDStub: Int!
     private var viewDelegateMock: CharacterDetailInfoViewModelDelegateMock!
+    private var imageURLBuilderMock: ImageURLBuilderMock!
 
     override func setUp() {
         super.setUp()
         characterFetcherMock = CharacterFetcherMock()
         characterIDStub = 123_456
         viewDelegateMock = CharacterDetailInfoViewModelDelegateMock()
+        imageURLBuilderMock = ImageURLBuilderMock()
         givenSut(with: characterFetcherMock)
     }
 
     override func tearDown() {
         characterIDStub = nil
         characterFetcherMock = nil
+        imageURLBuilderMock = nil
         viewDelegateMock = nil
         sut = nil
         super.tearDown()
@@ -88,6 +91,11 @@ class CharacterDetailInfoViewModelTests: XCTestCase {
     func test_givenStartFailed_notifiesViewDelegate() {
         givenStartFailed()
         XCTAssertEqual(viewDelegateMock.didFailCallCount, 1)
+    }
+
+    func test_givenDidStartSuccessfully_whenRetrievingCharacterImage_imageURLBuiltExpectedVariant() {
+        givenStartCompletedSuccessfully()
+        XCTAssertNil(imageURLBuilderMock.mostRecentImageVariant)
     }
 }
 
@@ -174,7 +182,7 @@ private extension CharacterDetailInfoViewModelTests {
         sut = CharacterDetailInfoViewModel(
             characterFetcher: characterFetcherMock,
             characterID: characterIDStub,
-            imageURLBuilder: ImageURLBuilderStub()
+            imageURLBuilder: imageURLBuilderMock
         )
     }
 
