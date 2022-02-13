@@ -17,7 +17,7 @@ class FetchComicsUseCaseTests: XCTestCase {
         super.setUp()
         serviceMock = ComicsServiceMock()
         query = FetchComicsQuery(characterID: 123_456, offset: 0)
-        sut = FetchComicsServiceUseCase(service: serviceMock)
+        givenSut(with: serviceMock)
     }
 
     override func tearDown() {
@@ -47,7 +47,7 @@ class FetchComicsUseCaseTests: XCTestCase {
         givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<ComicData>.empty)
         let completionResult = whenRetrievingResultFromFetchingCharacter()
         assertIsSuccess(completionResult) {
-            XCTAssertEqual($0, PageData<ComicData>.empty)
+            XCTAssertEqual($0, ContentPage<Comic>.empty)
         }
     }
 
@@ -115,12 +115,21 @@ private extension FetchComicsUseCaseTests {
     }
 
     func givenSutWithFailureServiceStub() {
-        sut = FetchComicsServiceUseCase(service: ComicsServiceFailureStub())
+        let service = ComicsServiceFailureStub()
+        givenSut(with: service)
     }
 
     func givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<ComicData>) {
         let service = ComicsServiceSuccessStub(dataWrapperStub: stubbingDataWrapper)
-        sut = FetchComicsServiceUseCase(service: service)
+        givenSut(with: service)
+    }
+
+    func givenSut(with service: ComicsService) {
+        sut = FetchComicsServiceUseCase(
+            service: service,
+            comicMapper: ComicDataMapper(imageMapper: ImageDataMapper()),
+            pageMapper: PageDataMapper()
+        )
     }
 
     func whenRetrievingResultFromFetchingCharacter() -> FetchComicsResult {

@@ -62,7 +62,7 @@ class CharactersPresentationModelTests: XCTestCase {
         givenSutWithSuccessfulFetcher()
         assert(numberOfItems: 0)
         sut.start()
-        let expectedNumberOfItems = CharactersFetcherSuccessfulStub.resultsStub.count
+        let expectedNumberOfItems = CharactersFetcherSuccessfulStub.charactersStub.count
         assert(numberOfItems: expectedNumberOfItems)
     }
 
@@ -110,8 +110,8 @@ class CharactersPresentationModelTests: XCTestCase {
 
     func test_givenDidStartSuccessfully_whenWillDisplayCell_fetchesCharactersFromLoadedCharactersCountOffset() {
         givenDidStartSuccessfully()
-        let mostRecentQuery = whenWillDisplayCell(atIndex: CharactersFetcherSuccessfulStub.resultsStub.count - 1)
-        XCTAssertEqual(mostRecentQuery.offset, CharactersFetcherSuccessfulStub.resultsStub.count)
+        let mostRecentQuery = whenWillDisplayCell(atIndex: CharactersFetcherSuccessfulStub.charactersStub.count - 1)
+        XCTAssertEqual(mostRecentQuery.offset, CharactersFetcherSuccessfulStub.charactersStub.count)
     }
 
     func test_givenStartFailed_whenWillDisplayCell_doesNotFetch() {
@@ -285,15 +285,15 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
 }
 
 private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
-    static let resultsStub = [CharacterData.aginar]
-    static let pageDataStub = PageData<CharacterData>.atFirstPageOfTwoTotal(results: resultsStub)
+    static let charactersStub = [Character.aginar]
+    static let contentPageStub = ContentPage<Character>.atFirstPageOfTwoTotal(contents: charactersStub)
 
     override func fetch(
         query: FetchCharactersQuery,
         completion: @escaping (FetchCharactersResult) -> Void
     ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
-        completion(.success(Self.pageDataStub))
+        completion(.success(Self.contentPageStub))
         return result
     }
 }
@@ -304,7 +304,7 @@ private class CharactersFetcherSuccessfulEmptyStub: CharactersFetcherMock {
         completion: @escaping (FetchCharactersResult) -> Void
     ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
-        completion(.success(PageData<CharacterData>.empty))
+        completion(.success(ContentPage<Character>.empty))
         return result
     }
 }
@@ -382,7 +382,7 @@ private class ViewDelegatePagerCallRecorder: CharactersPresentationModelViewDele
         return true
     }
 
-    func update(currentPage _: Pageable) {
+    func update(currentPage _: Page) {
         methodsCalled.append(.update)
     }
 }

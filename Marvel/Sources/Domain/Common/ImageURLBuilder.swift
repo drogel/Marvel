@@ -22,25 +22,24 @@ enum ImageVariant: String {
 }
 
 protocol ImageURLBuilder {
-    func buildURL(from imageData: ImageData, variant: ImageVariant) -> URL?
-    func buildURL(from imageData: ImageData) -> URL?
+    func buildURL(from imageData: Image, variant: ImageVariant) -> URL?
+    func buildURL(from imageData: Image) -> URL?
 }
 
-class ImageDataURLBuilder: ImageURLBuilder {
-    func buildURL(from imageData: ImageData, variant: ImageVariant) -> URL? {
-        guard let insecureURL = buildInsecureURL(from: imageData, variant: variant) else { return nil }
+class SecureImageURLBuilder: ImageURLBuilder {
+    func buildURL(from image: Image, variant: ImageVariant) -> URL? {
+        guard let insecureURL = buildInsecureURL(from: image, variant: variant) else { return nil }
         return buildSecureURL(from: insecureURL)
     }
 
-    func buildURL(from imageData: ImageData) -> URL? {
-        buildURL(from: imageData, variant: .fullSize)
+    func buildURL(from image: Image) -> URL? {
+        buildURL(from: image, variant: .fullSize)
     }
 }
 
-private extension ImageDataURLBuilder {
-    func buildInsecureURL(from imageData: ImageData, variant: ImageVariant) -> URL? {
-        guard let path = imageData.path, let imageExtension = imageData.imageExtension else { return nil }
-        let fullURL = path + variantPath(for: variant) + "." + imageExtension
+private extension SecureImageURLBuilder {
+    func buildInsecureURL(from image: Image, variant: ImageVariant) -> URL? {
+        let fullURL = image.path + variantPath(for: variant) + "." + image.imageExtension
         return URL(string: fullURL)
     }
 

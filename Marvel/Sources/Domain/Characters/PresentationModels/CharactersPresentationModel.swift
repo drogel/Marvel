@@ -101,17 +101,18 @@ private extension CharactersPresentationModel {
     func handleFetchCharactersResult(_ result: FetchCharactersResult) {
         viewDelegate?.modelDidFinishLoading(self)
         switch result {
-        case let .success(pageData):
-            handleSuccess(with: pageData)
+        case let .success(contentPage):
+            handleSuccess(with: contentPage)
         case let .failure(error):
             handleFailure(with: error)
         }
     }
 
-    func handleSuccess(with pageData: PageData<CharacterData>) {
-        guard let newCells = mapToCells(characterData: pageData.results), newCells.hasElements else { return }
+    func handleSuccess(with contentPage: ContentPage<Character>) {
+        let newCells = mapToCells(characters: contentPage.contents)
+        guard newCells.hasElements else { return }
         updateCells(using: newCells)
-        pager.update(currentPage: pageData)
+        pager.update(currentPage: contentPage)
     }
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {
@@ -130,20 +131,20 @@ private extension CharactersPresentationModel {
         }
     }
 
-    func mapToCells(characterData: [CharacterData]?) -> [CharacterCellData]? {
-        characterData?.compactMap { data in
-            guard let identifier = data.identifier,
-                  let name = data.name,
-                  let description = data.description
-            else { return nil }
-            let imageURL = buildImageURL(from: data)
-            return CharacterCellData(identifier: identifier, name: name, description: description, imageURL: imageURL)
+    func mapToCells(characters: [Character]) -> [CharacterCellData] {
+        characters.map { character in
+            let imageURL = buildImageURL(from: character)
+            return CharacterCellData(
+                identifier: character.identifier,
+                name: character.name,
+                description: character.description,
+                imageURL: imageURL
+            )
         }
     }
 
-    func buildImageURL(from data: CharacterData) -> URL? {
-        guard let imageData = data.thumbnail else { return nil }
-        return imageURLBuilder.buildURL(from: imageData, variant: .detail)
+    func buildImageURL(from character: Character) -> URL? {
+        imageURLBuilder.buildURL(from: character.image, variant: .detail)
     }
 
     func updateCells(using newCells: [CharacterCellData]) {

@@ -222,19 +222,19 @@ private class ComicFetcherMock: FetchComicsUseCase {
 }
 
 private class ComicFetcherSuccessfulStub: ComicFetcherMock {
-    static let comicStub = ComicData(
+    static let comicStub = Comic(
         identifier: 0,
         title: "Test #1 Title #1123",
         issueNumber: 1,
-        thumbnail: ImageData(path: "", imageExtension: "")
+        image: Image(path: "", imageExtension: "")
     )
-    static let pageDataStub = PageData<ComicData>.atFirstPageOfTwoTotal(
-        results: [ComicFetcherSuccessfulStub.comicStub]
+    static let contentPageStub = ContentPage<Comic>.atFirstPageOfTwoTotal(
+        contents: [ComicFetcherSuccessfulStub.comicStub]
     )
 
     override func fetch(query: FetchComicsQuery, completion: @escaping (FetchComicsResult) -> Void) -> Cancellable? {
         let cancellable = super.fetch(query: query, completion: completion)
-        completion(.success(Self.pageDataStub))
+        completion(.success(Self.contentPageStub))
         return cancellable
     }
 }

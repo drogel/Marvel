@@ -11,11 +11,11 @@ import Foundation
 class ImageURLBuilderStub: ImageURLBuilder {
     let urlStub = URL(string: "https://example.com")!
 
-    func buildURL(from _: ImageData, variant _: ImageVariant) -> URL? {
+    func buildURL(from _: Image, variant _: ImageVariant) -> URL? {
         urlStub
     }
 
-    func buildURL(from _: ImageData) -> URL? {
+    func buildURL(from _: Image) -> URL? {
         urlStub
     }
 }

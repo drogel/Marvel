@@ -17,7 +17,7 @@ class FetchCharacterDetailUseCaseTests: XCTestCase {
         super.setUp()
         serviceMock = CharacterDetailServiceMock()
         query = FetchCharacterDetailQuery(characterID: 123_456)
-        sut = FetchCharacterDetailServiceUseCase(service: serviceMock)
+        givenSut(with: serviceMock)
     }
 
     override func tearDown() {
@@ -47,7 +47,7 @@ class FetchCharacterDetailUseCaseTests: XCTestCase {
         givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>.empty)
         let completionResult = whenRetrievingResultFromFetchingCharacter()
         assertIsSuccess(completionResult) {
-            XCTAssertEqual($0, PageData<CharacterData>.empty)
+            XCTAssertEqual($0, ContentPage<Character>.empty)
         }
     }
 
@@ -103,12 +103,21 @@ private extension FetchCharacterDetailUseCaseTests {
     }
 
     func givenSutWithFailureServiceStub() {
-        sut = FetchCharacterDetailServiceUseCase(service: CharacterDetailServiceFailureStub())
+        let service = CharacterDetailServiceFailureStub()
+        givenSut(with: service)
     }
 
     func givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>) {
         let service = CharacterDetailServiceSuccessStub(dataWrapperStub: stubbingDataWrapper)
-        sut = FetchCharacterDetailServiceUseCase(service: service)
+        givenSut(with: service)
+    }
+
+    func givenSut(with service: CharacterDetailService) {
+        sut = FetchCharacterDetailServiceUseCase(
+            service: service,
+            characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
+            pageMapper: PageDataMapper()
+        )
     }
 
     func whenRetrievingResultFromFetchingCharacter() -> FetchCharacterDetailResult {

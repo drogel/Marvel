@@ -13,12 +13,12 @@ class ImageURLBuilderMock: ImageURLBuilder {
     var buildURLVariantCallCount = 0
     var mostRecentImageVariant: ImageVariant?
 
-    func buildURL(from _: ImageData) -> URL? {
+    func buildURL(from _: Image) -> URL? {
         buildURLCallCount += 1
         return nil
     }
 
-    func buildURL(from _: ImageData, variant: ImageVariant) -> URL? {
+    func buildURL(from _: Image, variant: ImageVariant) -> URL? {
         mostRecentImageVariant = variant
         buildURLVariantCallCount += 1
         return nil

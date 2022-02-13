@@ -43,7 +43,7 @@ class CharactersDependencyContainer: CharactersContainer {
         )
     }()
 
-    lazy var imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()
+    lazy var imageURLBuilder: ImageURLBuilder = SecureImageURLBuilder()
 
     lazy var pager: Pager = OffsetPager()
 }

@@ -72,15 +72,15 @@ private extension CharacterInfoPresentationModel {
     func handleFetchCharacterResult(_ result: FetchCharacterDetailResult) {
         viewDelegate?.modelDidFinishLoading(self)
         switch result {
-        case let .success(pageData):
-            handleSuccess(with: pageData)
+        case let .success(contentPage):
+            handleSuccess(with: contentPage)
         case let .failure(error):
             handleFailure(with: error)
         }
     }
 
-    func handleSuccess(with pageData: PageData<CharacterData>) {
-        guard let characterDetail = mapToCharacterDetail(characterData: pageData.results) else { return }
+    func handleSuccess(with contentPage: ContentPage<Character>) {
+        guard let characterDetail = mapToCharacterDetail(characters: contentPage.contents) else { return }
         characterDetailData = characterDetail
         viewDelegate?.modelDidRetrieveData(self)
     }
@@ -101,25 +101,23 @@ private extension CharacterInfoPresentationModel {
         }
     }
 
-    func mapToCharacterDetail(characterData: [CharacterData]?) -> CharacterDetailData? {
-        guard let firstCharacterData = characterData?.first,
-              let characterInfoData = infoData(from: firstCharacterData)
-        else { return nil }
-        let characterImageData = imageData(from: firstCharacterData)
+    // TODO: Rename CharacterDetailData and CharacterInfoData
+    func mapToCharacterDetail(characters: [Character]) -> CharacterDetailData? {
+        guard let firstCharacter = characters.first else { return nil }
+        let characterInfoData = infoData(from: firstCharacter)
+        let characterImageData = imageData(from: firstCharacter)
         return CharacterDetailData(image: characterImageData, info: characterInfoData)
     }
 
-    func imageData(from characterData: CharacterData) -> CharacterImageData {
-        CharacterImageData(imageURL: imageURL(for: characterData))
+    func imageData(from character: Character) -> CharacterImageData {
+        CharacterImageData(imageURL: imageURL(for: character))
     }
 
-    func infoData(from characterData: CharacterData) -> CharacterInfoData? {
-        guard let name = characterData.name, let description = characterData.description else { return nil }
-        return CharacterInfoData(name: name, description: description)
+    func infoData(from character: Character) -> CharacterInfoData {
+        CharacterInfoData(name: character.name, description: character.description)
     }
 
-    func imageURL(for characterData: CharacterData) -> URL? {
-        guard let thumbnail = characterData.thumbnail else { return nil }
-        return imageURLBuilder.buildURL(from: thumbnail)
+    func imageURL(for character: Character) -> URL? {
+        imageURLBuilder.buildURL(from: character.image)
     }
 }

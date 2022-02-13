@@ -24,7 +24,7 @@ class OffsetPagerPartialMock: OffsetPager {
         return super.isThereMoreContent(at: index)
     }
 
-    override func update(currentPage: Pageable) {
+    override func update(currentPage: Page) {
         updateCallCount += 1
         super.update(currentPage: currentPage)
     }

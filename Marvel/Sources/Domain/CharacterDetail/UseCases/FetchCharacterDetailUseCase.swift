@@ -20,13 +20,17 @@ struct FetchCharacterDetailQuery {
 
 typealias FetchCharacterDetailUseCaseError = CharacterDetailServiceError
 
-typealias FetchCharacterDetailResult = Result<PageData<CharacterData>, FetchCharacterDetailUseCaseError>
+typealias FetchCharacterDetailResult = Result<ContentPage<Character>, FetchCharacterDetailUseCaseError>
 
 class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {
     private let service: CharacterDetailService
+    private let characterMapper: CharacterMapper
+    private let pageMapper: PageMapper
 
-    init(service: CharacterDetailService) {
+    init(service: CharacterDetailService, characterMapper: CharacterMapper, pageMapper: PageMapper) {
         self.service = service
+        self.characterMapper = characterMapper
+        self.pageMapper = pageMapper
     }
 
     func fetch(
@@ -50,8 +54,29 @@ private extension FetchCharacterDetailServiceUseCase {
         }
     }
 
-    func buildResult(from dataWrapper: DataWrapper<CharacterData>) -> FetchCharacterDetailResult {
-        guard let pageData = dataWrapper.data else { return .failure(.emptyData) }
-        return .success(pageData)
+    func buildResult(from dataWrapper: DataWrapper<CharacterData>) -> FetchCharactersResult {
+        guard let contentPage = mapToCharactersPage(dataWrapper.data) else { return .failure(.emptyData) }
+        return .success(contentPage)
+    }
+
+    // TODO: Remove this duplication in FetchCharactersUseCase
+    func mapToCharactersPage(_ pageData: PageData<CharacterData>?) -> ContentPage<Character>? {
+        let characters = mapToCharacters(pageData?.results)
+        guard let pageData = pageData,
+              let pageDataCount = pageData.count,
+              let pageInfo = pageMapper.mapToPageInfo(pageData),
+              pageDataCount == characters.count
+        else { return nil }
+        return ContentPage(
+            offset: pageInfo.offset,
+            limit: pageInfo.limit,
+            total: pageInfo.total,
+            contents: characters
+        )
+    }
+
+    func mapToCharacters(_ charactersData: [CharacterData]?) -> [Character] {
+        guard let charactersData = charactersData else { return [] }
+        return charactersData.compactMap(characterMapper.mapToCharacter)
     }
 }

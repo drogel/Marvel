@@ -47,7 +47,7 @@ class FetchCharactersUseCaseTests: XCTestCase {
         givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>.empty)
         let completionResult = whenRetrievingResultFromFetchingCharacters()
         assertIsSuccess(completionResult) {
-            XCTAssertEqual($0, PageData<CharacterData>.empty)
+            XCTAssertEqual($0, ContentPage<Character>.empty)
         }
     }
 

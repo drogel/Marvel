@@ -26,14 +26,22 @@ class CharacterDetailDependencyContainer: CharacterDetailContainer {
     }
 
     lazy var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase = {
-        FetchCharacterDetailServiceUseCase(service: characterDetailService)
+        FetchCharacterDetailServiceUseCase(
+            service: characterDetailService,
+            characterMapper: CharacterDataMapper(imageMapper: imageMapper),
+            pageMapper: pageMapper
+        )
     }()
 
     lazy var fetchComicsUseCase: FetchComicsUseCase = {
-        FetchComicsServiceUseCase(service: comicsDetailService)
+        FetchComicsServiceUseCase(
+            service: comicsDetailService,
+            comicMapper: ComicDataMapper(imageMapper: imageMapper),
+            pageMapper: pageMapper
+        )
     }()
 
-    lazy var imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()
+    lazy var imageURLBuilder: ImageURLBuilder = SecureImageURLBuilder()
 
     lazy var pager: Pager = OffsetPager()
 }
@@ -71,5 +79,13 @@ private extension CharacterDetailDependencyContainer {
 
     var resultHandler: ResultHandler {
         ClientResultHandler(parser: parser, errorHandler: errorHandler)
+    }
+
+    var pageMapper: PageMapper {
+        PageDataMapper()
+    }
+
+    var imageMapper: ImageMapper {
+        ImageDataMapper()
     }
 }

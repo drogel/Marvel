@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct Comic {
+struct Comic: Equatable {
     let identifier: Int
     let title: String
     let issueNumber: Int
-    let thumbnail: Image
+    let image: Image
 }

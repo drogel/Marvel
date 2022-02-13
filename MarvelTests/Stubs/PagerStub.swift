@@ -21,5 +21,5 @@ class PagerStub: Pager {
         true
     }
 
-    func update(currentPage _: Pageable) {}
+    func update(currentPage _: Page) {}
 }

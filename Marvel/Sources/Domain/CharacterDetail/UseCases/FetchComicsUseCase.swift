@@ -21,13 +21,17 @@ struct FetchComicsQuery: Equatable {
 
 typealias FetchComicsUseCaseError = ComicsServiceError
 
-typealias FetchComicsResult = Result<PageData<ComicData>, FetchComicsUseCaseError>
+typealias FetchComicsResult = Result<ContentPage<Comic>, FetchComicsUseCaseError>
 
 class FetchComicsServiceUseCase: FetchComicsUseCase {
     private let service: ComicsService
+    private let comicMapper: ComicMapper
+    private let pageMapper: PageMapper
 
-    init(service: ComicsService) {
+    init(service: ComicsService, comicMapper: ComicMapper, pageMapper: PageMapper) {
         self.service = service
+        self.comicMapper = comicMapper
+        self.pageMapper = pageMapper
     }
 
     func fetch(
@@ -52,7 +56,22 @@ private extension FetchComicsServiceUseCase {
     }
 
     func buildResult(from dataWrapper: DataWrapper<ComicData>) -> FetchComicsResult {
-        guard let pageData = dataWrapper.data else { return .failure(.emptyData) }
-        return .success(pageData)
+        guard let contentPage = mapToComicsPage(dataWrapper.data) else { return .failure(.emptyData) }
+        return .success(contentPage)
+    }
+
+    func mapToComicsPage(_ pageData: PageData<ComicData>?) -> ContentPage<Comic>? {
+        let comics = mapToComics(pageData?.results)
+        guard let pageData = pageData,
+              let pageDataCount = pageData.count,
+              let pageInfo = pageMapper.mapToPageInfo(pageData),
+              pageDataCount == comics.count
+        else { return nil }
+        return ContentPage(offset: pageInfo.offset, limit: pageInfo.limit, total: pageInfo.total, contents: comics)
+    }
+
+    func mapToComics(_ comicsData: [ComicData]?) -> [Comic] {
+        guard let comicsData = comicsData else { return [] }
+        return comicsData.compactMap(comicMapper.mapToComic)
     }
 }

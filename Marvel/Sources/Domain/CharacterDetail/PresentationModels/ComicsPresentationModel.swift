@@ -88,29 +88,29 @@ private extension ComicsPresentationModel {
     func handle(result: FetchComicsResult) {
         viewDelegate?.modelDidFinishLoading(self)
         switch result {
-        case let .success(pageData):
-            handleSuccess(with: pageData)
+        case let .success(contentPage):
+            handleSuccess(with: contentPage)
         case .failure:
             handleFailure()
         }
     }
 
-    func handleSuccess(with pageData: PageData<ComicData>) {
-        guard let comicsCellData = mapToCells(comicData: pageData.results) else { return }
-        pager.update(currentPage: pageData)
+    func handleSuccess(with contentPage: ContentPage<Comic>) {
+        guard let comicsCellData = mapToCells(comics: contentPage.contents) else { return }
+        pager.update(currentPage: contentPage)
         comics.append(contentsOf: comicsCellData)
         viewDelegate?.modelDidRetrieveData(self)
     }
 
-    func mapToCells(comicData: [ComicData]?) -> [ComicCellData]? {
-        comicData?.compactMap(comicCell)
+    // TODO: Rename ComicCellData
+    func mapToCells(comics: [Comic]) -> [ComicCellData]? {
+        comics.compactMap(comicCell)
     }
 
-    func comicCell(from comicData: ComicData) -> ComicCellData? {
-        guard let dataTitle = comicData.title, let dataIssueNumber = comicData.issueNumber else { return nil }
-        let imageURL = buildImageURL(from: comicData)
-        let title = buildTitle(from: dataTitle)
-        let issueNumber = buildIssueNumber(from: dataIssueNumber)
+    func comicCell(from comic: Comic) -> ComicCellData? {
+        let imageURL = buildImageURL(from: comic)
+        let title = buildTitle(from: comic.title)
+        let issueNumber = buildIssueNumber(from: comic.issueNumber)
         return ComicCellData(title: title, issueNumber: issueNumber, imageURL: imageURL)
     }
 
@@ -123,9 +123,8 @@ private extension ComicsPresentationModel {
         return String(format: "issue_number %@".localized, issueNumberString)
     }
 
-    func buildImageURL(from comicData: ComicData) -> URL? {
-        guard let thumbnail = comicData.thumbnail else { return nil }
-        return imageURLBuilder.buildURL(from: thumbnail, variant: .portraitLarge)
+    func buildImageURL(from comic: Comic) -> URL? {
+        imageURLBuilder.buildURL(from: comic.image, variant: .portraitLarge)
     }
 
     func handleFailure() {
