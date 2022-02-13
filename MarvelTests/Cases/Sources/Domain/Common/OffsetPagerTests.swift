@@ -93,14 +93,14 @@ private extension OffsetPagerTests {
     }
 }
 
-private class FirstPageOfTwoStub: Page {
+private class FirstPageOfTwoStub: Pageable {
     let offset: Int? = 0
     let limit: Int? = 20
     let total: Int? = 40
     let count: Int? = 20
 }
 
-private class SecondPageOfTwoStub: Page {
+private class SecondPageOfTwoStub: Pageable {
     let offset: Int? = 20
     let limit: Int? = 40
     let total: Int? = 40

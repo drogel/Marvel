@@ -7,14 +7,16 @@
 
 import Foundation
 
-protocol Page {
+// TODO: Remove Pageable from here when migration to domain entities is finished.
+// We will only need play PafeInfos for parsing then.
+protocol Pageable {
     var offset: Int? { get }
     var limit: Int? { get }
     var total: Int? { get }
     var count: Int? { get }
 }
 
-struct PageInfo<ContentType: DataObject>: Page, DataObject {
+struct PageInfo<ContentType: DataObject>: Pageable, DataObject {
     let offset: Int?
     let limit: Int?
     let total: Int?

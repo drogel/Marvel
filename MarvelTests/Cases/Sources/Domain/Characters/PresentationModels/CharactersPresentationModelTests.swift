@@ -382,7 +382,7 @@ private class ViewDelegatePagerCallRecorder: CharactersPresentationModelViewDele
         return true
     }
 
-    func update(currentPage _: Page) {
+    func update(currentPage _: Pageable) {
         methodsCalled.append(.update)
     }
 }

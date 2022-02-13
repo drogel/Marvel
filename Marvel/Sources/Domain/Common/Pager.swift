@@ -11,13 +11,13 @@ protocol Pager {
     func isThereMoreContent(at offset: Int) -> Bool
     func isAtEndOfCurrentPage(_ offset: Int) -> Bool
     func isAtEndOfCurrentPageWithMoreContent(_ offset: Int) -> Bool
-    func update(currentPage: Page)
+    func update(currentPage: Pageable)
 }
 
 class OffsetPager: Pager {
-    private var currentPage: Page?
+    private var currentPage: Pageable?
 
-    func update(currentPage: Page) {
+    func update(currentPage: Pageable) {
         self.currentPage = currentPage
     }
 
