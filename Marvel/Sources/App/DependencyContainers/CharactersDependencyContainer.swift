@@ -36,7 +36,11 @@ class CharactersDependencyContainer: CharactersContainer {
     }
 
     lazy var fetchCharactersUseCase: FetchCharactersUseCase = {
-        FetchCharactersServiceUseCase(service: charactersService)
+        FetchCharactersServiceUseCase(
+            service: charactersService,
+            characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
+            pageMapper: PageDataMapper()
+        )
     }()
 
     lazy var imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()

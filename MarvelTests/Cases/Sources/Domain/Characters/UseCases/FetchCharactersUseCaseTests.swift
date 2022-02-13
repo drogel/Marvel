@@ -17,7 +17,7 @@ class FetchCharactersUseCaseTests: XCTestCase {
         super.setUp()
         serviceMock = CharactersServiceMock()
         query = FetchCharactersQuery(offset: 0)
-        sut = FetchCharactersServiceUseCase(service: serviceMock)
+        givenSut(with: serviceMock)
     }
 
     override func tearDown() {
@@ -103,12 +103,21 @@ private extension FetchCharactersUseCaseTests {
     }
 
     func givenSutWithFailureServiceStub() {
-        sut = FetchCharactersServiceUseCase(service: CharactersServiceFailureStub())
+        let service = CharactersServiceFailureStub()
+        givenSut(with: service)
     }
 
     func givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>) {
         let service = CharactersServiceSuccessStub(dataWrapperStub: stubbingDataWrapper)
-        sut = FetchCharactersServiceUseCase(service: service)
+        givenSut(with: service)
+    }
+
+    func givenSut(with service: CharactersService) {
+        sut = FetchCharactersServiceUseCase(
+            service: service,
+            characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
+            pageMapper: PageDataMapper()
+        )
     }
 
     func whenRetrievingResultFromFetchingCharacters() -> FetchCharactersResult {

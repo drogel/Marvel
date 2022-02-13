@@ -21,9 +21,13 @@ typealias FetchCharactersResult = Result<PageData<CharacterData>, FetchCharacter
 
 class FetchCharactersServiceUseCase: FetchCharactersUseCase {
     private let service: CharactersService
+    private let characterMapper: CharacterMapper
+    private let pageMapper: PageMapper
 
-    init(service: CharactersService) {
+    init(service: CharactersService, characterMapper: CharacterMapper, pageMapper: PageMapper) {
         self.service = service
+        self.characterMapper = characterMapper
+        self.pageMapper = pageMapper
     }
 
     func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
@@ -47,5 +51,25 @@ private extension FetchCharactersServiceUseCase {
     func buildResult(from dataWrapper: DataWrapper<CharacterData>) -> FetchCharactersResult {
         guard let pageData = dataWrapper.data else { return .failure(.emptyData) }
         return .success(pageData)
+    }
+
+    func mapToCharactersPage(_ pageData: PageData<CharacterData>?) -> ContentPage<Character>? {
+        let characters = mapToCharacters(pageData?.results)
+        guard let pageData = pageData,
+              let pageDataCount = pageData.count,
+              let pageInfo = pageMapper.mapToPageInfo(pageData),
+              pageDataCount == characters.count
+        else { return nil }
+        return ContentPage(
+            offset: pageInfo.offset,
+            limit: pageInfo.limit,
+            total: pageInfo.total,
+            contents: characters
+        )
+    }
+
+    func mapToCharacters(_ charactersData: [CharacterData]?) -> [Character] {
+        guard let charactersData = charactersData else { return [] }
+        return charactersData.compactMap(characterMapper.mapToCharacter)
     }
 }
