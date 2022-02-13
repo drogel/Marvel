@@ -145,14 +145,14 @@ private class CharacterFetcherMock: FetchCharacterDetailUseCase {
 
 private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
     static let resultsStub = [CharacterData.aginar]
-    static let pageInfoStub = PageInfo<CharacterData>.zeroWith(results: resultsStub)
+    static let pageDataStub = PageData<CharacterData>.zeroWith(results: resultsStub)
 
     override func fetch(
         query: FetchCharacterDetailQuery,
         completion: @escaping (FetchCharacterDetailResult) -> Void
     ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
-        completion(.success(Self.pageInfoStub))
+        completion(.success(Self.pageDataStub))
         return result
     }
 }

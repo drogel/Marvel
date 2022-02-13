@@ -72,15 +72,15 @@ private extension CharacterInfoPresentationModel {
     func handleFetchCharacterResult(_ result: FetchCharacterDetailResult) {
         viewDelegate?.modelDidFinishLoading(self)
         switch result {
-        case let .success(pageInfo):
-            handleSuccess(with: pageInfo)
+        case let .success(pageData):
+            handleSuccess(with: pageData)
         case let .failure(error):
             handleFailure(with: error)
         }
     }
 
-    func handleSuccess(with pageInfo: PageInfo<CharacterData>) {
-        guard let characterDetail = mapToCharacterDetail(characterData: pageInfo.results) else { return }
+    func handleSuccess(with pageData: PageData<CharacterData>) {
+        guard let characterDetail = mapToCharacterDetail(characterData: pageData.results) else { return }
         characterDetailData = characterDetail
         viewDelegate?.modelDidRetrieveData(self)
     }

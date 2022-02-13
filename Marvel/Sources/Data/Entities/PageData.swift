@@ -1,5 +1,5 @@
 //
-//  PageInfo.swift
+//  PageData.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 19/1/22.
@@ -16,7 +16,7 @@ protocol Pageable {
     var count: Int? { get }
 }
 
-struct PageInfo<ContentType: DataObject>: Pageable, DataObject {
+struct PageData<ContentType: DataObject>: Pageable, DataObject {
     let offset: Int?
     let limit: Int?
     let total: Int?

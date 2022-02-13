@@ -21,7 +21,7 @@ struct FetchComicsQuery: Equatable {
 
 typealias FetchComicsUseCaseError = ComicsServiceError
 
-typealias FetchComicsResult = Result<PageInfo<ComicData>, FetchComicsUseCaseError>
+typealias FetchComicsResult = Result<PageData<ComicData>, FetchComicsUseCaseError>
 
 class FetchComicsServiceUseCase: FetchComicsUseCase {
     private let service: ComicsService
@@ -52,7 +52,7 @@ private extension FetchComicsServiceUseCase {
     }
 
     func buildResult(from dataWrapper: DataWrapper<ComicData>) -> FetchComicsResult {
-        guard let pageInfo = dataWrapper.data else { return .failure(.emptyData) }
-        return .success(pageInfo)
+        guard let pageData = dataWrapper.data else { return .failure(.emptyData) }
+        return .success(pageData)
     }
 }

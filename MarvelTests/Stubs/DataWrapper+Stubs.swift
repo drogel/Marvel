@@ -10,7 +10,7 @@ import Foundation
 
 extension DataWrapper {
     static var empty: DataWrapper<ContentType> {
-        DataWrapper(code: 0, status: "", copyright: "", data: PageInfo<ContentType>.empty)
+        DataWrapper(code: 0, status: "", copyright: "", data: PageData<ContentType>.empty)
     }
 
     static var withNilData: DataWrapper<ContentType> {

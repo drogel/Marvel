@@ -21,6 +21,10 @@ class ImageDataMapperTests: XCTestCase {
         super.tearDown()
     }
 
+    func test_conformsToImageMapper() {
+        XCTAssertTrue((sut as AnyObject) is ImageMapper)
+    }
+
     func test_givenValidImageData_mapsToExpectedImage() throws {
         let imageData = ImageData(path: "/test", imageExtension: "jpg")
         let expectedImage = buildExpectedMappedImage(from: imageData)

@@ -13,7 +13,13 @@ protocol Page {
     var total: Int { get }
 }
 
-struct ContentPage<Content>: Page {
+struct PageInfo: Page, Equatable {
+    let offset: Int
+    let limit: Int
+    let total: Int
+}
+
+struct ContentPage<Content: Equatable>: Page, Equatable {
     let offset: Int
     let limit: Int
     let total: Int

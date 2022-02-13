@@ -88,16 +88,16 @@ private extension ComicsPresentationModel {
     func handle(result: FetchComicsResult) {
         viewDelegate?.modelDidFinishLoading(self)
         switch result {
-        case let .success(pageInfo):
-            handleSuccess(with: pageInfo)
+        case let .success(pageData):
+            handleSuccess(with: pageData)
         case .failure:
             handleFailure()
         }
     }
 
-    func handleSuccess(with pageInfo: PageInfo<ComicData>) {
-        guard let comicsCellData = mapToCells(comicData: pageInfo.results) else { return }
-        pager.update(currentPage: pageInfo)
+    func handleSuccess(with pageData: PageData<ComicData>) {
+        guard let comicsCellData = mapToCells(comicData: pageData.results) else { return }
+        pager.update(currentPage: pageData)
         comics.append(contentsOf: comicsCellData)
         viewDelegate?.modelDidRetrieveData(self)
     }

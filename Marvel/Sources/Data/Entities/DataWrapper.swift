@@ -11,5 +11,5 @@ struct DataWrapper<ContentType: DataObject>: DataObject {
     let code: Int?
     let status: String?
     let copyright: String?
-    let data: PageInfo<ContentType>?
+    let data: PageData<ContentType>?
 }

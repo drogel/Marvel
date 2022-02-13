@@ -286,14 +286,14 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
 
 private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
     static let resultsStub = [CharacterData.aginar]
-    static let pageInfoStub = PageInfo<CharacterData>.atFirstPageOfTwoTotal(results: resultsStub)
+    static let pageDataStub = PageData<CharacterData>.atFirstPageOfTwoTotal(results: resultsStub)
 
     override func fetch(
         query: FetchCharactersQuery,
         completion: @escaping (FetchCharactersResult) -> Void
     ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
-        completion(.success(Self.pageInfoStub))
+        completion(.success(Self.pageDataStub))
         return result
     }
 }
@@ -304,7 +304,7 @@ private class CharactersFetcherSuccessfulEmptyStub: CharactersFetcherMock {
         completion: @escaping (FetchCharactersResult) -> Void
     ) -> Cancellable? {
         let result = super.fetch(query: query, completion: completion)
-        completion(.success(PageInfo<CharacterData>.empty))
+        completion(.success(PageData<CharacterData>.empty))
         return result
     }
 }

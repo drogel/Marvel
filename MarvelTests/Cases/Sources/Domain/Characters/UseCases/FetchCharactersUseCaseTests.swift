@@ -43,11 +43,11 @@ class FetchCharactersUseCaseTests: XCTestCase {
         assertIsFailure(completionResult)
     }
 
-    func test_givenSuccessfulService_whenFetching_completesWithPageInfo() {
+    func test_givenSuccessfulService_whenFetching_completesWithPageData() {
         givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>.empty)
         let completionResult = whenRetrievingResultFromFetchingCharacters()
         assertIsSuccess(completionResult) {
-            XCTAssertEqual($0, PageInfo<CharacterData>.empty)
+            XCTAssertEqual($0, PageData<CharacterData>.empty)
         }
     }
 

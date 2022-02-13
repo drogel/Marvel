@@ -24,6 +24,10 @@ class CharacterDataMapperTests: XCTestCase {
         super.tearDown()
     }
 
+    func test_conformsToCharacterMapper() {
+        XCTAssertTrue((sut as AnyObject) is CharacterMapper)
+    }
+
     func test_givenValidCharacterData_mapsToExpectedCharacter() throws {
         let characterData = CharacterData.aginar
         let expectedCharacter = buildExpectedMappedCharacter(from: characterData)

@@ -1,5 +1,5 @@
 //
-//  PageInfoTests.swift
+//  PageDataTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 19/1/22.
@@ -8,20 +8,20 @@
 @testable import Marvel_Debug
 import XCTest
 
-class PageInfoTests: XCTestCase {
-    typealias ParseableObjectType = PageInfo<CharacterData>
+class PageDataTests: XCTestCase {
+    typealias ParseableObjectType = PageData<CharacterData>
 
     var parseableObjectJSONFileName: String {
-        "PageInfo"
+        "PageData"
     }
 
-    func test_givenPageInfoFromJson_parsesExpectedValues() {
+    func test_givenPageDataFromJson_parsesExpectedValues() {
         runParsingTest()
     }
 }
 
-extension PageInfoTests: ParsingTestCaseTemplate {
-    func buildExpectedObject() -> PageInfo<CharacterData> {
-        PageInfo<CharacterData>(offset: 0, limit: 20, total: 1559, count: 20, results: nil)
+extension PageDataTests: ParsingTestCaseTemplate {
+    func buildExpectedObject() -> PageData<CharacterData> {
+        PageData<CharacterData>(offset: 0, limit: 20, total: 1559, count: 20, results: nil)
     }
 }

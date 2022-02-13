@@ -101,17 +101,17 @@ private extension CharactersPresentationModel {
     func handleFetchCharactersResult(_ result: FetchCharactersResult) {
         viewDelegate?.modelDidFinishLoading(self)
         switch result {
-        case let .success(pageInfo):
-            handleSuccess(with: pageInfo)
+        case let .success(pageData):
+            handleSuccess(with: pageData)
         case let .failure(error):
             handleFailure(with: error)
         }
     }
 
-    func handleSuccess(with pageInfo: PageInfo<CharacterData>) {
-        guard let newCells = mapToCells(characterData: pageInfo.results), newCells.hasElements else { return }
+    func handleSuccess(with pageData: PageData<CharacterData>) {
+        guard let newCells = mapToCells(characterData: pageData.results), newCells.hasElements else { return }
         updateCells(using: newCells)
-        pager.update(currentPage: pageInfo)
+        pager.update(currentPage: pageData)
     }
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {
