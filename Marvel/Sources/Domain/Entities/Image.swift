@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Image {
+struct Image: Equatable {
     let path: String
     let imageExtension: String
 }

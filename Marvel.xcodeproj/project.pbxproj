@@ -95,6 +95,10 @@
 		056B1FC127B9371A000EBC83 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B1FC027B9371A000EBC83 /* Image.swift */; };
 		056B1FC327B93733000EBC83 /* Comic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B1FC227B93733000EBC83 /* Comic.swift */; };
 		056B1FC727B93947000EBC83 /* ContentPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B1FC627B93947000EBC83 /* ContentPage.swift */; };
+		056B1FCA27B93E58000EBC83 /* CharacterMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B1FC927B93E58000EBC83 /* CharacterMapper.swift */; };
+		056B1FCD27B93ECB000EBC83 /* CharacterDataMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B1FCC27B93ECB000EBC83 /* CharacterDataMapperTests.swift */; };
+		056B1FCF27B940A3000EBC83 /* ImageMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B1FCE27B940A3000EBC83 /* ImageMapper.swift */; };
+		056B1FD127B940CB000EBC83 /* ImageDataMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B1FD027B940CB000EBC83 /* ImageDataMapperTests.swift */; };
 		0571306527A559F10009383E /* CharactersClientServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0571306427A559F10009383E /* CharactersClientServiceTests.swift */; };
 		0571306727A55B3A0009383E /* NetworkServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0571306627A55B3A0009383E /* NetworkServiceMock.swift */; };
 		0571306927A55C280009383E /* JSONParserMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0571306827A55C280009383E /* JSONParserMock.swift */; };
@@ -280,6 +284,10 @@
 		056B1FC027B9371A000EBC83 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		056B1FC227B93733000EBC83 /* Comic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comic.swift; sourceTree = "<group>"; };
 		056B1FC627B93947000EBC83 /* ContentPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPage.swift; sourceTree = "<group>"; };
+		056B1FC927B93E58000EBC83 /* CharacterMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterMapper.swift; sourceTree = "<group>"; };
+		056B1FCC27B93ECB000EBC83 /* CharacterDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDataMapperTests.swift; sourceTree = "<group>"; };
+		056B1FCE27B940A3000EBC83 /* ImageMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMapper.swift; sourceTree = "<group>"; };
+		056B1FD027B940CB000EBC83 /* ImageDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDataMapperTests.swift; sourceTree = "<group>"; };
 		0571306427A559F10009383E /* CharactersClientServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersClientServiceTests.swift; sourceTree = "<group>"; };
 		0571306627A55B3A0009383E /* NetworkServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceMock.swift; sourceTree = "<group>"; };
 		0571306827A55C280009383E /* JSONParserMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONParserMock.swift; sourceTree = "<group>"; };
@@ -468,6 +476,7 @@
 		0545945427988C7F00A634AD /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				056B1FCB27B93EB2000EBC83 /* Mappers */,
 				05484604279D695000C6EC66 /* CharacterDetail */,
 				0545945527988C8400A634AD /* Characters */,
 				0535F55627B2DD2A006F8AC4 /* Common */,
@@ -712,6 +721,24 @@
 			path = Entities;
 			sourceTree = "<group>";
 		};
+		056B1FC827B93E51000EBC83 /* Mappers */ = {
+			isa = PBXGroup;
+			children = (
+				056B1FC927B93E58000EBC83 /* CharacterMapper.swift */,
+				056B1FCE27B940A3000EBC83 /* ImageMapper.swift */,
+			);
+			path = Mappers;
+			sourceTree = "<group>";
+		};
+		056B1FCB27B93EB2000EBC83 /* Mappers */ = {
+			isa = PBXGroup;
+			children = (
+				056B1FCC27B93ECB000EBC83 /* CharacterDataMapperTests.swift */,
+				056B1FD027B940CB000EBC83 /* ImageDataMapperTests.swift */,
+			);
+			path = Mappers;
+			sourceTree = "<group>";
+		};
 		0571306227A559C60009383E /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
@@ -772,12 +799,12 @@
 			children = (
 				053B9DA5279A0E8E00CCF1C2 /* APIClient */,
 				0545946C27989A0700A634AD /* DebugServices */,
-				0585AFA027975E8000586ABD /* Models */,
+				0585AFA027975E8000586ABD /* Entities */,
 			);
 			path = Data;
 			sourceTree = "<group>";
 		};
-		0585AFA027975E8000586ABD /* Models */ = {
+		0585AFA027975E8000586ABD /* Entities */ = {
 			isa = PBXGroup;
 			children = (
 				057D72F927986D33005ED888 /* CharacterDataTests.swift */,
@@ -786,7 +813,7 @@
 				057D730127986F9D005ED888 /* ImageDataTests.swift */,
 				057D72F127986BA7005ED888 /* PageInfoTests.swift */,
 			);
-			path = Models;
+			path = Entities;
 			sourceTree = "<group>";
 		};
 		0585AFA327975E9400586ABD /* Cases */ = {
@@ -1142,6 +1169,7 @@
 		05DAC32F279739920062CC6F /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				056B1FC827B93E51000EBC83 /* Mappers */,
 				05484600279D686A00C6EC66 /* CharacterDetail */,
 				05DAC34D27974D7C0062CC6F /* Characters */,
 				05932C55279B2B1500549D7D /* Common */,
@@ -1409,6 +1437,7 @@
 				0545947227989DC500A634AD /* JsonDecoderDataLoader.swift in Sources */,
 				05484612279D779E00C6EC66 /* CharacterDetailData.swift in Sources */,
 				053B9D9E2799E38000CCF1C2 /* Configurable.swift in Sources */,
+				056B1FCF27B940A3000EBC83 /* ImageMapper.swift in Sources */,
 				05932C59279B5A0700549D7D /* CharactersClientService.swift in Sources */,
 				05B0854827AC439800A74DD0 /* OptionalString+NilOrEmpty.swift in Sources */,
 				05932C5E279B5DDD00549D7D /* JSONParser.swift in Sources */,
@@ -1459,6 +1488,7 @@
 				05C1491C279C2C8200927467 /* ImageURLBuilder.swift in Sources */,
 				053BBD8427AD99130033640A /* DataObject.swift in Sources */,
 				056B1FC127B9371A000EBC83 /* Image.swift in Sources */,
+				056B1FCA27B93E58000EBC83 /* CharacterMapper.swift in Sources */,
 				05C1492D279CA5E100927467 /* SpinnerViewController.swift in Sources */,
 				0548460C279D6D8B00C6EC66 /* CharacterInfoPresentationModel.swift in Sources */,
 				05314CFD27AE8EE100A5A658 /* ComicsPresentationModel.swift in Sources */,
@@ -1551,6 +1581,8 @@
 				054594752798A11000A634AD /* XCTestCase+ResultAssertions.swift in Sources */,
 				054594832798B94400A634AD /* PageInfo+Stubs.swift in Sources */,
 				05BD40AA27A9B4AC00F2E513 /* CoordinatorDelegateMock.swift in Sources */,
+				056B1FD127B940CB000EBC83 /* ImageDataMapperTests.swift in Sources */,
+				056B1FCD27B93ECB000EBC83 /* CharacterDataMapperTests.swift in Sources */,
 				05484609279D69E600C6EC66 /* CancellableStubs.swift in Sources */,
 				0513D24527AEC6280040DF58 /* ImageURLBuilderMock.swift in Sources */,
 				0585AFAC2797625D00586ABD /* ParsingTester.swift in Sources */,
