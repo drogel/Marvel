@@ -34,11 +34,7 @@ class CharacterDetailDependencyContainer: CharacterDetailContainer {
     }()
 
     lazy var fetchComicsUseCase: FetchComicsUseCase = {
-        FetchComicsServiceUseCase(
-            service: comicsDetailService,
-            comicMapper: ComicDataMapper(imageMapper: imageMapper),
-            pageMapper: pageMapper
-        )
+        FetchComicsServiceUseCase(service: comicsDetailService)
     }()
 
     lazy var imageURLBuilder: ImageURLBuilder = SecureImageURLBuilder()
@@ -50,19 +46,49 @@ private extension CharacterDetailDependencyContainer {
     var characterDetailService: CharacterDetailService {
         switch dependencies.scheme {
         case .debug:
-            return CharacterDetailDebugService(dataLoader: jsonDataLoader)
+            return characterDetailDebugService
         case .release:
-            return CharacterDetailClientService(client: dependencies.networkService, resultHandler: resultHandler)
+            return characterDetailReleaseService
         }
     }
 
     var comicsDetailService: ComicsService {
         switch dependencies.scheme {
         case .debug:
-            return ComicsDebugService(dataLoader: jsonDataLoader)
+            return comicsDebugService
         case .release:
-            return ComicsClientService(networkService: dependencies.networkService, resultHandler: resultHandler)
+            return comicsReleaseService
         }
+    }
+
+    var characterDetailDebugService: CharacterDetailService {
+        CharacterDetailDebugService(
+            dataLoader: jsonDataLoader,
+            characterMapper: characterMapper,
+            pageMapper: pageMapper
+        )
+    }
+
+    var characterDetailReleaseService: CharacterDetailService {
+        CharacterDetailClientService(
+            client: dependencies.networkService,
+            resultHandler: resultHandler,
+            characterMapper: characterMapper,
+            pageMapper: pageMapper
+        )
+    }
+
+    var comicsDebugService: ComicsService {
+        ComicsDebugService(dataLoader: jsonDataLoader, comicMapper: comicMapper, pageMapper: pageMapper)
+    }
+
+    var comicsReleaseService: ComicsService {
+        ComicsClientService(
+            networkService: dependencies.networkService,
+            resultHandler: resultHandler,
+            comicMapper: comicMapper,
+            pageMapper: pageMapper
+        )
     }
 
     var jsonDataLoader: JsonDecoderDataLoader {
@@ -83,6 +109,14 @@ private extension CharacterDetailDependencyContainer {
 
     var pageMapper: PageMapper {
         PageDataMapper()
+    }
+
+    var comicMapper: ComicMapper {
+        ComicDataMapper(imageMapper: imageMapper)
+    }
+
+    var characterMapper: CharacterMapper {
+        CharacterDataMapper(imageMapper: imageMapper)
     }
 
     var imageMapper: ImageMapper {

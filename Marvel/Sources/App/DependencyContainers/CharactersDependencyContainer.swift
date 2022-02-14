@@ -36,11 +36,7 @@ class CharactersDependencyContainer: CharactersContainer {
     }
 
     lazy var fetchCharactersUseCase: FetchCharactersUseCase = {
-        FetchCharactersServiceUseCase(
-            service: charactersService,
-            characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
-            pageMapper: PageDataMapper()
-        )
+        FetchCharactersServiceUseCase(service: charactersService)
     }()
 
     lazy var imageURLBuilder: ImageURLBuilder = SecureImageURLBuilder()
@@ -52,10 +48,27 @@ private extension CharactersDependencyContainer {
     var charactersService: CharactersService {
         switch dependencies.scheme {
         case .debug:
-            return CharactersDebugService(dataLoader: JsonDecoderDataLoader(parser: parser))
+            return charactersDebugService
         case .release:
-            return CharactersClientService(client: dependencies.networkService, resultHandler: resultHandler)
+            return charactersClientService
         }
+    }
+
+    var charactersClientService: CharactersService {
+        CharactersClientService(
+            client: dependencies.networkService,
+            resultHandler: resultHandler,
+            characterMapper: characterMapper,
+            pageMapper: pageMapper
+        )
+    }
+
+    var charactersDebugService: CharactersService {
+        CharactersDebugService(
+            dataLoader: JsonDecoderDataLoader(parser: parser),
+            characterMapper: characterMapper,
+            pageMapper: pageMapper
+        )
     }
 
     var parser: JSONParser {
@@ -68,5 +81,13 @@ private extension CharactersDependencyContainer {
 
     var resultHandler: ResultHandler {
         ClientResultHandler(parser: parser, errorHandler: errorHandler)
+    }
+
+    var characterMapper: CharacterMapper {
+        CharacterDataMapper(imageMapper: ImageDataMapper())
+    }
+
+    var pageMapper: PageMapper {
+        PageDataMapper()
     }
 }

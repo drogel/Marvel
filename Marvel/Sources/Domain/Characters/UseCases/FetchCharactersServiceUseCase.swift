@@ -21,55 +21,12 @@ typealias FetchCharactersResult = Result<ContentPage<Character>, FetchCharacters
 
 class FetchCharactersServiceUseCase: FetchCharactersUseCase {
     private let service: CharactersService
-    private let characterMapper: CharacterMapper
-    private let pageMapper: PageMapper
 
-    init(service: CharactersService, characterMapper: CharacterMapper, pageMapper: PageMapper) {
+    init(service: CharactersService) {
         self.service = service
-        self.characterMapper = characterMapper
-        self.pageMapper = pageMapper
     }
 
     func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
-        service.characters(from: query.offset) { [weak self] result in
-            guard let self = self else { return }
-            self.handle(result, completion: completion)
-        }
-    }
-}
-
-private extension FetchCharactersServiceUseCase {
-    func handle(_ result: CharactersServiceResult, completion: @escaping (FetchCharactersResult) -> Void) {
-        switch result {
-        case let .success(dataWrapper):
-            completion(buildResult(from: dataWrapper))
-        case let .failure(error):
-            completion(.failure(error))
-        }
-    }
-
-    func buildResult(from dataWrapper: DataWrapper<CharacterData>) -> FetchCharactersResult {
-        guard let contentPage = mapToCharactersPage(dataWrapper.data) else { return .failure(.emptyData) }
-        return .success(contentPage)
-    }
-
-    func mapToCharactersPage(_ pageData: PageData<CharacterData>?) -> ContentPage<Character>? {
-        let characters = mapToCharacters(pageData?.results)
-        guard let pageData = pageData,
-              let pageDataCount = pageData.count,
-              let pageInfo = pageMapper.mapToPageInfo(pageData),
-              pageDataCount == characters.count
-        else { return nil }
-        return ContentPage(
-            offset: pageInfo.offset,
-            limit: pageInfo.limit,
-            total: pageInfo.total,
-            contents: characters
-        )
-    }
-
-    func mapToCharacters(_ charactersData: [CharacterData]?) -> [Character] {
-        guard let charactersData = charactersData else { return [] }
-        return charactersData.compactMap(characterMapper.mapToCharacter)
+        service.characters(from: query.offset, completion: completion)
     }
 }
