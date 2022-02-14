@@ -40,9 +40,7 @@ class ComicsDebugServiceTests: XCTestCase {
     func test_givenSutDataLoader_whenRetrievingComics_completesWithSuccess() {
         givenSutWithDataLoader()
         let completionResult = whenRetrievingResult()
-        assertIsSuccess(completionResult) {
-            XCTAssertEqual($0.code, jsonDataLoaderCode)
-        }
+        assertIsSuccess(completionResult)
     }
 }
 
@@ -50,11 +48,19 @@ private extension ComicsDebugServiceTests {
     func givenSutWithDataLoader() {
         let jsonDataLoader = JsonDataLoaderStub<ComicData>()
         jsonDataLoaderCode = jsonDataLoader.codeStub
-        sut = ComicsDebugService(dataLoader: jsonDataLoader)
+        givenSut(with: jsonDataLoader)
     }
 
     func givenSutWithEmptyDataLoader() {
-        sut = ComicsDebugService(dataLoader: JsonDataLoaderEmptyStub())
+        givenSut(with: JsonDataLoaderEmptyStub())
+    }
+
+    func givenSut(with dataLoader: JsonDataLoader) {
+        sut = ComicsDebugService(
+            dataLoader: dataLoader,
+            comicMapper: ComicDataMapper(imageMapper: ImageDataMapper()),
+            pageMapper: PageDataMapper()
+        )
     }
 
     func whenRetrievingResult() -> ComicsServiceResult {

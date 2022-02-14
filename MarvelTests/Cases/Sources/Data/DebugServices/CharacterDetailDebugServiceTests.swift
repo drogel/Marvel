@@ -41,9 +41,7 @@ class CharacterDetailDebugServiceTests: XCTestCase {
     func test_givenSutDataLoader_whenRetrievingCharacterDetail_completesWithSuccess() {
         givenSutWithDataLoader()
         let completionResult = whenRetrievingResultFromCharacterDetail()
-        assertIsSuccess(completionResult) {
-            XCTAssertEqual($0.code, jsonDataLoaderCode)
-        }
+        assertIsSuccess(completionResult)
     }
 }
 
@@ -51,11 +49,20 @@ private extension CharacterDetailDebugServiceTests {
     func givenSutWithDataLoader() {
         let jsonDataLoader = JsonDataLoaderStub<CharacterData>()
         jsonDataLoaderCode = jsonDataLoader.codeStub
-        sut = CharacterDetailDebugService(dataLoader: jsonDataLoader)
+        givenSut(with: jsonDataLoader)
     }
 
     func givenSutWithEmptyDataLoader() {
-        sut = CharacterDetailDebugService(dataLoader: JsonDataLoaderEmptyStub())
+        let jsonDataLoader = JsonDataLoaderEmptyStub()
+        givenSut(with: jsonDataLoader)
+    }
+
+    func givenSut(with dataLoader: JsonDataLoader) {
+        sut = CharacterDetailDebugService(
+            dataLoader: dataLoader,
+            characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
+            pageMapper: PageDataMapper()
+        )
     }
 
     func whenRetrievingResultFromCharacterDetail() -> CharacterDetailServiceResult {

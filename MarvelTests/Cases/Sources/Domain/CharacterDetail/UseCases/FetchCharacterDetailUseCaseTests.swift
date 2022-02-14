@@ -44,17 +44,11 @@ class FetchCharacterDetailUseCaseTests: XCTestCase {
     }
 
     func test_givenSuccessfulService_whenFetching_completesWithPageData() {
-        givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>.empty)
+        givenSutWithSuccessfulServiceStub(stubbingPage: ContentPage<Character>.empty)
         let completionResult = whenRetrievingResultFromFetchingCharacter()
         assertIsSuccess(completionResult) {
             XCTAssertEqual($0, ContentPage<Character>.empty)
         }
-    }
-
-    func test_givenSuccessfulServiceWithNoData_whenFetching_completesWithFailure() {
-        givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>.withNilData)
-        let completionResult = whenRetrievingResultFromFetchingCharacter()
-        assertIsFailure(completionResult)
     }
 }
 
@@ -76,14 +70,14 @@ private class CharacterDetailServiceFailureStub: CharacterDetailService {
 }
 
 private class CharacterDetailServiceSuccessStub: CharacterDetailService {
-    private let dataWrapperStub: DataWrapper<CharacterData>
+    private let pageStub: ContentPage<Character>
 
-    init(dataWrapperStub: DataWrapper<CharacterData>) {
-        self.dataWrapperStub = dataWrapperStub
+    init(pageStub: ContentPage<Character>) {
+        self.pageStub = pageStub
     }
 
     func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
-        completion(.success(dataWrapperStub))
+        completion(.success(pageStub))
         return CancellableStub()
     }
 }
@@ -107,8 +101,8 @@ private extension FetchCharacterDetailUseCaseTests {
         givenSut(with: service)
     }
 
-    func givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>) {
-        let service = CharacterDetailServiceSuccessStub(dataWrapperStub: stubbingDataWrapper)
+    func givenSutWithSuccessfulServiceStub(stubbingPage: ContentPage<Character>) {
+        let service = CharacterDetailServiceSuccessStub(pageStub: stubbingPage)
         givenSut(with: service)
     }
 
