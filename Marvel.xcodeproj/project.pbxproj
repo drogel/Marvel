@@ -490,7 +490,6 @@
 		0545945427988C7F00A634AD /* Domain */ = {
 			isa = PBXGroup;
 			children = (
-				056B1FCB27B93EB2000EBC83 /* Mappers */,
 				05484604279D695000C6EC66 /* CharacterDetail */,
 				0545945527988C8400A634AD /* Characters */,
 				0535F55627B2DD2A006F8AC4 /* Common */,
@@ -785,7 +784,6 @@
 				054594652798993B00A634AD /* DebugServices */,
 				0585AF9B27975DBC00586ABD /* Entities */,
 				05932C5C279B5DCE00549D7D /* Parsers */,
-				054594622798986200A634AD /* Services */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -821,6 +819,7 @@
 				053B9DA5279A0E8E00CCF1C2 /* APIClient */,
 				0545946C27989A0700A634AD /* DebugServices */,
 				0585AFA027975E8000586ABD /* Entities */,
+				058A04E027BACC0900B10374 /* Parsers */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -891,6 +890,14 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		058A04E027BACC0900B10374 /* Parsers */ = {
+			isa = PBXGroup;
+			children = (
+				056B1FCB27B93EB2000EBC83 /* Mappers */,
+			);
+			path = Parsers;
+			sourceTree = "<group>";
+		};
 		05932C43279B18AE00549D7D /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -959,6 +966,7 @@
 		05932C5C279B5DCE00549D7D /* Parsers */ = {
 			isa = PBXGroup;
 			children = (
+				056B1FC827B93E51000EBC83 /* Mappers */,
 				05932C5D279B5DDD00549D7D /* JSONParser.swift */,
 			);
 			path = Parsers;
@@ -1190,11 +1198,11 @@
 		05DAC32F279739920062CC6F /* Domain */ = {
 			isa = PBXGroup;
 			children = (
-				056B1FC827B93E51000EBC83 /* Mappers */,
 				05484600279D686A00C6EC66 /* CharacterDetail */,
 				05DAC34D27974D7C0062CC6F /* Characters */,
 				05932C55279B2B1500549D7D /* Common */,
 				056B1FBD27B93630000EBC83 /* Entities */,
+				054594622798986200A634AD /* Services */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
