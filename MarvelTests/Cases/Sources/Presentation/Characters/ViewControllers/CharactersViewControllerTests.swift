@@ -81,7 +81,7 @@ private class CharactersPresentationModelMock: CharactersPresentationModelProtoc
         selectCallCount += 1
     }
 
-    func cellData(at _: IndexPath) -> CharacterCellData? {
+    func cellData(at _: IndexPath) -> CharacterCellModel? {
         cellDataCallCount += 1
         return nil
     }

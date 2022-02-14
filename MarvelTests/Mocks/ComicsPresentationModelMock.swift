@@ -24,7 +24,7 @@ class ComicsPresentationModelMock: ComicsPresentationModelProtocol {
         startCallCount += 1
     }
 
-    func comicCellData(at _: IndexPath) -> ComicCellData? {
+    func comicCellData(at _: IndexPath) -> ComicCellModel? {
         comicsCellDataCallCount += 1
         return nil
     }

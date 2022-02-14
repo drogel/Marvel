@@ -86,9 +86,9 @@ class CharacterDetailPresentationModelTests: XCTestCase {
     }
 
     func test_comicCellData_delegatesToComicsPresentationModel() {
-        assertComicsPresentationModelComicCellData(callCount: 0)
+        assertComicsPresentationModelComicCellModel(callCount: 0)
         _ = sut.comicCellData(at: IndexPath(row: 0, section: 0))
-        assertComicsPresentationModelComicCellData(callCount: 1)
+        assertComicsPresentationModelComicCellModel(callCount: 1)
     }
 
     func test_givenViewDelegate_whenInfoStartsLoading_notifiesView() {
@@ -224,7 +224,7 @@ private extension CharacterDetailPresentationModelTests {
         XCTAssertEqual(comicsPresentationModelMock.numberOfComicsCallCount, callCount, line: line)
     }
 
-    func assertComicsPresentationModelComicCellData(callCount: Int, line: UInt = #line) {
+    func assertComicsPresentationModelComicCellModel(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(comicsPresentationModelMock.comicsCellDataCallCount, callCount, line: line)
     }
 

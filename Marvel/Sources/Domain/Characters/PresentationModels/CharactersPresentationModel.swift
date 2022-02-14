@@ -11,7 +11,7 @@ protocol CharactersPresentationModelProtocol: PresentationModel {
     var numberOfItems: Int { get }
     func willDisplayCell(at indexPath: IndexPath)
     func select(at indexPath: IndexPath)
-    func cellData(at indexPath: IndexPath) -> CharacterCellData?
+    func cellData(at indexPath: IndexPath) -> CharacterCellModel?
 }
 
 protocol CharactersPresentationModelCoordinatorDelegate: AnyObject {
@@ -42,7 +42,7 @@ class CharactersPresentationModel: CharactersPresentationModelProtocol {
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
-    private var cells: [CharacterCellData]
+    private var cells: [CharacterCellModel]
     private var charactersCancellable: Cancellable?
 
     init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder, pager: Pager) {
@@ -57,7 +57,7 @@ class CharactersPresentationModel: CharactersPresentationModelProtocol {
         loadCharacters(with: startingQuery)
     }
 
-    func cellData(at indexPath: IndexPath) -> CharacterCellData? {
+    func cellData(at indexPath: IndexPath) -> CharacterCellModel? {
         let row = indexPath.row
         guard cells.indices.contains(row) else { return nil }
         return cells[row]
@@ -131,10 +131,10 @@ private extension CharactersPresentationModel {
         }
     }
 
-    func mapToCells(characters: [Character]) -> [CharacterCellData] {
+    func mapToCells(characters: [Character]) -> [CharacterCellModel] {
         characters.map { character in
             let imageURL = buildImageURL(from: character)
-            return CharacterCellData(
+            return CharacterCellModel(
                 identifier: character.identifier,
                 name: character.name,
                 description: character.description,
@@ -147,7 +147,7 @@ private extension CharactersPresentationModel {
         imageURLBuilder.buildURL(from: character.image, variant: .detail)
     }
 
-    func updateCells(using newCells: [CharacterCellData]) {
+    func updateCells(using newCells: [CharacterCellModel]) {
         cells.append(contentsOf: newCells)
         viewDelegate?.modelDidUpdateItems(self)
     }

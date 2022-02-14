@@ -1,5 +1,5 @@
 //
-//  CharacterDetailDataSource.swift
+//  CharacterDetailModelSource.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 3/2/22.
@@ -19,7 +19,7 @@ enum CharacterDetailSection: Int, CaseIterable {
     }
 }
 
-class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
+class CharacterDetailModelSource: NSObject, CollectionViewDataSource {
     private let presentationModel: CharacterDetailPresentationModelProtocol!
 
     init(presentationModel: CharacterDetailPresentationModelProtocol) {
@@ -74,7 +74,7 @@ class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
     }
 }
 
-extension CharacterDetailDataSource: UICollectionViewDelegate {
+extension CharacterDetailModelSource: UICollectionViewDelegate {
     func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
         case .comics:
@@ -85,7 +85,7 @@ extension CharacterDetailDataSource: UICollectionViewDelegate {
     }
 }
 
-private extension CharacterDetailDataSource {
+private extension CharacterDetailModelSource {
     func imageCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeue(cellOfType: CharacterImageCell.self, at: indexPath)
         cell.configure(using: presentationModel.imageCellData)

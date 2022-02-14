@@ -9,7 +9,7 @@ import Foundation
 
 protocol ComicsPresentationModelProtocol: PresentationModel {
     var numberOfComics: Int { get }
-    func comicCellData(at indexPath: IndexPath) -> ComicCellData?
+    func comicCellData(at indexPath: IndexPath) -> ComicCellModel?
     func willDisplayComicCell(at indexPath: IndexPath)
 }
 
@@ -28,7 +28,7 @@ class ComicsPresentationModel: ComicsPresentationModelProtocol {
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
     private var cancellable: Cancellable?
-    private var comics: [ComicCellData]
+    private var comics: [ComicCellModel]
 
     var numberOfComics: Int {
         comics.count
@@ -47,7 +47,7 @@ class ComicsPresentationModel: ComicsPresentationModelProtocol {
         loadComics(with: startingQuery)
     }
 
-    func comicCellData(at indexPath: IndexPath) -> ComicCellData? {
+    func comicCellData(at indexPath: IndexPath) -> ComicCellModel? {
         let row = indexPath.row
         guard comics.indices.contains(row) else { return nil }
         return comics[row]
@@ -102,16 +102,15 @@ private extension ComicsPresentationModel {
         viewDelegate?.modelDidRetrieveData(self)
     }
 
-    // TODO: Rename ComicCellData
-    func mapToCells(comics: [Comic]) -> [ComicCellData]? {
+    func mapToCells(comics: [Comic]) -> [ComicCellModel]? {
         comics.compactMap(comicCell)
     }
 
-    func comicCell(from comic: Comic) -> ComicCellData? {
+    func comicCell(from comic: Comic) -> ComicCellModel? {
         let imageURL = buildImageURL(from: comic)
         let title = buildTitle(from: comic.title)
         let issueNumber = buildIssueNumber(from: comic.issueNumber)
-        return ComicCellData(title: title, issueNumber: issueNumber, imageURL: imageURL)
+        return ComicCellModel(title: title, issueNumber: issueNumber, imageURL: imageURL)
     }
 
     func buildTitle(from title: String) -> String {

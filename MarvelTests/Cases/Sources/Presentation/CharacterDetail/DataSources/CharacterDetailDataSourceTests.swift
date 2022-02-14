@@ -1,5 +1,5 @@
 //
-//  CharacterDetailDataSourceTests.swift
+//  CharacterDetailModelSourceTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 3/2/22.
@@ -8,8 +8,8 @@
 @testable import Marvel_Debug
 import XCTest
 
-class CharacterDetailDataSourceTests: XCTestCase {
-    private var sut: CharacterDetailDataSource!
+class CharacterDetailModelSourceTests: XCTestCase {
+    private var sut: CharacterDetailModelSource!
     private var presentationModelMock: CharacterDetailPresentationModelMock!
     private var collectionViewStub: UICollectionViewStub!
 
@@ -17,7 +17,7 @@ class CharacterDetailDataSourceTests: XCTestCase {
         super.setUp()
         collectionViewStub = UICollectionViewStub()
         presentationModelMock = CharacterDetailPresentationModelMock()
-        sut = CharacterDetailDataSource(presentationModel: presentationModelMock)
+        sut = CharacterDetailModelSource(presentationModel: presentationModelMock)
         sut.registerSubviews(in: collectionViewStub)
     }
 
@@ -40,10 +40,10 @@ class CharacterDetailDataSourceTests: XCTestCase {
         assertPresentationModelInfoCellData(callCount: 1)
     }
 
-    func test_givenViewDidLoad_whenRetrievingCellAtComicsSection_callsPresentationModelComicCellData() {
-        assertPresentationModelComicCellData(callCount: 0)
+    func test_givenViewDidLoad_whenRetrievingCellAtComicsSection_callsPresentationModelComicCellModel() {
+        assertPresentationModelComicCellModel(callCount: 0)
         whenRetrievingCell(inSection: .comics)
-        assertPresentationModelComicCellData(callCount: 1)
+        assertPresentationModelComicCellModel(callCount: 1)
     }
 
     func test_collectionViewHasOneCellPerSectionInImageAndInfoSections() {
@@ -78,12 +78,12 @@ private class CharacterDetailPresentationModelMock: CharacterDetailPresentationM
         return ""
     }
 
-    var imageCellData: CharacterImageData? {
+    var imageCellData: CharacterImageModel? {
         imageCellDataCallCount += 1
         return nil
     }
 
-    var infoCellData: CharacterInfoData? {
+    var infoCellData: CharacterInfoModel? {
         infoCellDataCallCount += 1
         return nil
     }
@@ -92,7 +92,7 @@ private class CharacterDetailPresentationModelMock: CharacterDetailPresentationM
         0
     }
 
-    func comicCellData(at _: IndexPath) -> ComicCellData? {
+    func comicCellData(at _: IndexPath) -> ComicCellModel? {
         comicCellDataCallCount += 1
         return nil
     }
@@ -106,7 +106,7 @@ private class CharacterDetailPresentationModelMock: CharacterDetailPresentationM
     func dispose() {}
 }
 
-private extension CharacterDetailDataSourceTests {
+private extension CharacterDetailModelSourceTests {
     func indexPath(for section: CharacterDetailSection) -> IndexPath {
         IndexPath(row: 0, section: section.rawValue)
     }
@@ -131,7 +131,7 @@ private extension CharacterDetailDataSourceTests {
         XCTAssertEqual(presentationModelMock.infoCellDataCallCount, callCount, line: line)
     }
 
-    func assertPresentationModelComicCellData(callCount: Int, line: UInt = #line) {
+    func assertPresentationModelComicCellModel(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(presentationModelMock.comicCellDataCallCount, callCount, line: line)
     }
 

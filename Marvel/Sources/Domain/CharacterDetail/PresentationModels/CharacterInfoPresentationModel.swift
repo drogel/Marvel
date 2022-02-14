@@ -8,8 +8,8 @@
 import Foundation
 
 protocol CharacterInfoPresentationModelProtocol: PresentationModel {
-    var imageCellData: CharacterImageData? { get }
-    var infoCellData: CharacterInfoData? { get }
+    var imageCellData: CharacterImageModel? { get }
+    var infoCellData: CharacterInfoModel? { get }
 }
 
 protocol CharacterInfoPresentationModelViewDelegate: AnyObject {
@@ -28,18 +28,18 @@ class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
 
     weak var viewDelegate: CharacterInfoPresentationModelViewDelegate?
 
-    var imageCellData: CharacterImageData? {
+    var imageCellData: CharacterImageModel? {
         characterDetailData?.image
     }
 
-    var infoCellData: CharacterInfoData? {
+    var infoCellData: CharacterInfoModel? {
         characterDetailData?.info
     }
 
     private let characterFetcher: FetchCharacterDetailUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let characterID: Int
-    private var characterDetailData: CharacterDetailData?
+    private var characterDetailData: CharacterDetailModel?
     private var characterCancellable: Cancellable?
 
     init(
@@ -101,20 +101,19 @@ private extension CharacterInfoPresentationModel {
         }
     }
 
-    // TODO: Rename CharacterDetailData and CharacterInfoData
-    func mapToCharacterDetail(characters: [Character]) -> CharacterDetailData? {
+    func mapToCharacterDetail(characters: [Character]) -> CharacterDetailModel? {
         guard let firstCharacter = characters.first else { return nil }
         let characterInfoData = infoData(from: firstCharacter)
-        let characterImageData = imageData(from: firstCharacter)
-        return CharacterDetailData(image: characterImageData, info: characterInfoData)
+        let characterImageModel = imageData(from: firstCharacter)
+        return CharacterDetailModel(image: characterImageModel, info: characterInfoData)
     }
 
-    func imageData(from character: Character) -> CharacterImageData {
-        CharacterImageData(imageURL: imageURL(for: character))
+    func imageData(from character: Character) -> CharacterImageModel {
+        CharacterImageModel(imageURL: imageURL(for: character))
     }
 
-    func infoData(from character: Character) -> CharacterInfoData {
-        CharacterInfoData(name: character.name, description: character.description)
+    func infoData(from character: Character) -> CharacterInfoModel {
+        CharacterInfoModel(name: character.name, description: character.description)
     }
 
     func imageURL(for character: Character) -> URL? {

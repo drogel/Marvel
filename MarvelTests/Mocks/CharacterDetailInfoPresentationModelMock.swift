@@ -14,12 +14,12 @@ class CharacterDetailInfoPresentationModelMock: CharacterInfoPresentationModelPr
     var imageCellDataCallCount = 0
     var infoCellDataCallCount = 0
 
-    var imageCellData: CharacterImageData? {
+    var imageCellData: CharacterImageModel? {
         imageCellDataCallCount += 1
         return nil
     }
 
-    var infoCellData: CharacterInfoData? {
+    var infoCellData: CharacterInfoModel? {
         infoCellDataCallCount += 1
         return nil
     }

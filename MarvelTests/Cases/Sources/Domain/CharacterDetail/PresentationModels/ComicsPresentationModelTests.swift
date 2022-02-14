@@ -281,7 +281,7 @@ private extension ComicsPresentationModelTests {
         sut.start()
     }
 
-    func whenRetrievingFirstCellData() -> ComicCellData? {
+    func whenRetrievingFirstCellData() -> ComicCellModel? {
         sut.comicCellData(at: IndexPath(row: 0, section: 0))
     }
 

@@ -28,11 +28,11 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
         "comics".localized
     }
 
-    var imageCellData: CharacterImageData? {
+    var imageCellData: CharacterImageModel? {
         infoPresentationModel.imageCellData
     }
 
-    var infoCellData: CharacterInfoData? {
+    var infoCellData: CharacterInfoModel? {
         infoPresentationModel.infoCellData
     }
 
@@ -56,7 +56,7 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
         comicsPresentationModel.start()
     }
 
-    func comicCellData(at indexPath: IndexPath) -> ComicCellData? {
+    func comicCellData(at indexPath: IndexPath) -> ComicCellModel? {
         comicsPresentationModel.comicCellData(at: indexPath)
     }
 

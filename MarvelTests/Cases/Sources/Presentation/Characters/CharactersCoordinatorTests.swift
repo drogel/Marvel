@@ -61,7 +61,7 @@ private class CharactersPresentationModelStub: CharactersPresentationModelProtoc
 
     func select(at _: IndexPath) {}
 
-    func cellData(at _: IndexPath) -> CharacterCellData? {
+    func cellData(at _: IndexPath) -> CharacterCellModel? {
         nil
     }
 
