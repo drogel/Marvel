@@ -28,9 +28,9 @@ class CharacterImageCell: UICollectionViewCell {
 }
 
 extension CharacterImageCell: Configurable {
-    typealias Item = CharacterImageData?
+    typealias Item = CharacterImageModel?
 
-    func configure(using item: CharacterImageData?) {
+    func configure(using item: CharacterImageModel?) {
         characterImageView.loadImage(from: item?.imageURL)
     }
 }

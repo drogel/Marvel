@@ -56,9 +56,9 @@ class CharacterInfoCell: UICollectionViewCell {
 }
 
 extension CharacterInfoCell: Configurable {
-    typealias Item = CharacterInfoData?
+    typealias Item = CharacterInfoModel?
 
-    func configure(using item: CharacterInfoData?) {
+    func configure(using item: CharacterInfoModel?) {
         nameLabel.text = item?.name
         configure(description: item?.description)
     }

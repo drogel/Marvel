@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ViewModelInstantiable {
-    associatedtype ViewModelProtocol
-    static func instantiate(viewModel: ViewModelProtocol) -> Self
+protocol PresentationModelInstantiable {
+    associatedtype PresentationModelProtocol
+    static func instantiate(presentationModel: PresentationModelProtocol) -> Self
 }

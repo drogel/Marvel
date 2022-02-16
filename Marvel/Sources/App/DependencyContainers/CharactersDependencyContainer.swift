@@ -39,7 +39,7 @@ class CharactersDependencyContainer: CharactersContainer {
         FetchCharactersServiceUseCase(service: charactersService)
     }()
 
-    lazy var imageURLBuilder: ImageURLBuilder = ImageDataURLBuilder()
+    lazy var imageURLBuilder: ImageURLBuilder = SecureImageURLBuilder()
 
     lazy var pager: Pager = OffsetPager()
 }
@@ -48,21 +48,36 @@ private extension CharactersDependencyContainer {
     var charactersService: CharactersService {
         switch dependencies.scheme {
         case .debug:
-            return CharactersDebugService(dataLoader: JsonDecoderDataLoader(parser: parser))
+            return charactersDebugService
         case .release:
-            return CharactersClientService(client: dependencies.networkService, resultHandler: resultHandler)
+            return charactersClientService
         }
+    }
+
+    var charactersClientService: CharactersService {
+        CharactersClientService(
+            client: dependencies.networkService,
+            resultHandler: resultHandler,
+            dataResultHandler: dataResultHandler
+        )
+    }
+
+    var charactersDebugService: CharactersService {
+        CharactersDebugService(
+            dataLoader: JsonDecoderDataLoader(parser: parser),
+            dataResultHandler: dataResultHandler
+        )
     }
 
     var parser: JSONParser {
         JSONDecoderParser()
     }
 
-    var errorHandler: NetworkErrorHandler {
-        DataServicesNetworkErrorHandler()
+    var resultHandler: NetworkResultHandler {
+        ClientResultHandler(parser: parser, errorHandler: DataServicesNetworkErrorHandler())
     }
 
-    var resultHandler: ResultHandler {
-        ClientResultHandler(parser: parser, errorHandler: errorHandler)
+    var dataResultHandler: CharacterDataResultHandler {
+        CharacterDataResultHandlerFactory.createWithDataMappers()
     }
 }

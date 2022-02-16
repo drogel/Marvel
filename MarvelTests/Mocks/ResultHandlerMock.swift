@@ -8,7 +8,7 @@
 import Foundation
 @testable import Marvel_Debug
 
-class ResultHandlerMock: ResultHandler {
+class ResultHandlerMock: NetworkResultHandler {
     var handleCallCount = 0
 
     func handle<T: DataObject>(

@@ -22,15 +22,14 @@ class OffsetPager: Pager {
     }
 
     func isThereMoreContent(at index: Int) -> Bool {
-        guard let currentPage = currentPage, let total = currentPage.total else { return false }
-        return index < total - 1
+        guard let currentPage = currentPage else { return false }
+        return index < currentPage.total - 1
     }
 
     func isAtEndOfCurrentPage(_ index: Int) -> Bool {
-        guard let currentPage = currentPage,
-              let limit = currentPage.limit,
-              let offset = currentPage.offset
-        else { return false }
+        guard let currentPage = currentPage else { return false }
+        let limit = currentPage.limit
+        let offset = currentPage.offset
         return index == offset + limit - 1
     }
 

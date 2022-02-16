@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class ComicCell: UICollectionViewCell, Configurable {
-    typealias Item = ComicCellData
+    typealias Item = ComicCellModel
 
     private enum Constants {
         static let mainStackViewSpacing: CGFloat = 8
@@ -82,7 +82,7 @@ class ComicCell: UICollectionViewCell, Configurable {
         comicImageView.clear()
     }
 
-    func configure(using item: ComicCellData) {
+    func configure(using item: ComicCellModel) {
         titleLabel.text = item.title
         subtitleLabel.text = String(item.issueNumber)
         comicImageView.loadImage(from: item.imageURL)

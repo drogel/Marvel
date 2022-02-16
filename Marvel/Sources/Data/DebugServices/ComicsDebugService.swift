@@ -10,12 +10,16 @@ import Foundation
 class ComicsDebugService: ComicsService {
     private let comicsFileName: DebugDataFileName = .comicsFileName
     private let dataLoader: DataLoaderDebugService
+    private let dataResultHandler: ComicDataResultHandler
 
-    init(dataLoader: JsonDataLoader) {
+    init(dataLoader: JsonDataLoader, dataResultHandler: ComicDataResultHandler) {
         self.dataLoader = JsonDataLoaderDebugService(dataLoader: dataLoader, fileName: comicsFileName)
+        self.dataResultHandler = dataResultHandler
     }
 
     func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Cancellable? {
-        dataLoader.loadData(completion: completion)
+        dataLoader.loadData { [weak self] result in
+            self?.dataResultHandler.completeWithServiceResult(result, completion: completion)
+        }
     }
 }

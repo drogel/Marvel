@@ -10,40 +10,40 @@ import XCTest
 
 class CharacterDetailDataSourceTests: XCTestCase {
     private var sut: CharacterDetailDataSource!
-    private var viewModelMock: CharacterDetailViewModelMock!
+    private var presentationModelMock: CharacterDetailPresentationModelMock!
     private var collectionViewStub: UICollectionViewStub!
 
     override func setUp() {
         super.setUp()
         collectionViewStub = UICollectionViewStub()
-        viewModelMock = CharacterDetailViewModelMock()
-        sut = CharacterDetailDataSource(viewModel: viewModelMock)
+        presentationModelMock = CharacterDetailPresentationModelMock()
+        sut = CharacterDetailDataSource(presentationModel: presentationModelMock)
         sut.registerSubviews(in: collectionViewStub)
     }
 
     override func tearDown() {
         sut = nil
         collectionViewStub = nil
-        viewModelMock = nil
+        presentationModelMock = nil
         super.tearDown()
     }
 
-    func test_givenViewDidLoad_whenRetrievingCellAtImageSection_callsViewModelImageCellData() {
-        assertViewModelImageCellData(callCount: 0)
+    func test_givenViewDidLoad_whenRetrievingCellAtImageSection_callsPresentationModelImageCellData() {
+        assertPresentationModelImageCellData(callCount: 0)
         whenRetrievingCell(inSection: .image)
-        assertViewModelImageCellData(callCount: 1)
+        assertPresentationModelImageCellData(callCount: 1)
     }
 
-    func test_givenViewDidLoad_whenRetrievingCellAtInfoSection_callsViewModelInfoCellData() {
-        assertViewModelInfoCellData(callCount: 0)
+    func test_givenViewDidLoad_whenRetrievingCellAtInfoSection_callsPresentationModelInfoCellData() {
+        assertPresentationModelInfoCellData(callCount: 0)
         whenRetrievingCell(inSection: .info)
-        assertViewModelInfoCellData(callCount: 1)
+        assertPresentationModelInfoCellData(callCount: 1)
     }
 
-    func test_givenViewDidLoad_whenRetrievingCellAtComicsSection_callsViewModelComicCellData() {
-        assertViewModelComicCellData(callCount: 0)
+    func test_givenViewDidLoad_whenRetrievingCellAtComicsSection_callsPresentationModelComicCellModel() {
+        assertPresentationModelComicCellModel(callCount: 0)
         whenRetrievingCell(inSection: .comics)
-        assertViewModelComicCellData(callCount: 1)
+        assertPresentationModelComicCellModel(callCount: 1)
     }
 
     func test_collectionViewHasOneCellPerSectionInImageAndInfoSections() {
@@ -51,22 +51,22 @@ class CharacterDetailDataSourceTests: XCTestCase {
         XCTAssertEqual(whenRetrievingNumberOfCells(inSection: .info), 1)
     }
 
-    func test_collectionViewComicsSectionHasComicsViewModelItemsCount() {
-        XCTAssertEqual(whenRetrievingNumberOfCells(inSection: .comics), viewModelMock.numberOfComics)
+    func test_collectionViewComicsSectionHasComicsPresentationModelItemsCount() {
+        XCTAssertEqual(whenRetrievingNumberOfCells(inSection: .comics), presentationModelMock.numberOfComics)
     }
 
     func test_numberOfSections_equalsCharacterDetailSectionCasesCount() {
         XCTAssertEqual(sut.numberOfSections(in: collectionViewStub), CharacterDetailSection.allCases.count)
     }
 
-    func test_whenAboutToDisplayAComicCell_notifiesViewModel() {
-        assertViewModelWillDisplayComicCell(callCount: 0)
+    func test_whenAboutToDisplayAComicCell_notifiesPresentationModel() {
+        assertPresentationModelWillDisplayComicCell(callCount: 0)
         whenAboutToDisplayCell(inSection: .comics)
-        assertViewModelWillDisplayComicCell(callCount: 1)
+        assertPresentationModelWillDisplayComicCell(callCount: 1)
     }
 }
 
-private class CharacterDetailViewModelMock: CharacterDetailViewModelProtocol {
+private class CharacterDetailPresentationModelMock: CharacterDetailPresentationModelProtocol {
     var imageCellDataCallCount = 0
     var infoCellDataCallCount = 0
     var comicsSectionTitleCallCount = 0
@@ -78,12 +78,12 @@ private class CharacterDetailViewModelMock: CharacterDetailViewModelProtocol {
         return ""
     }
 
-    var imageCellData: CharacterImageData? {
+    var imageCellData: CharacterImageModel? {
         imageCellDataCallCount += 1
         return nil
     }
 
-    var infoCellData: CharacterInfoData? {
+    var infoCellData: CharacterInfoModel? {
         infoCellDataCallCount += 1
         return nil
     }
@@ -92,7 +92,7 @@ private class CharacterDetailViewModelMock: CharacterDetailViewModelProtocol {
         0
     }
 
-    func comicCellData(at _: IndexPath) -> ComicCellData? {
+    func comicCellData(at _: IndexPath) -> ComicCellModel? {
         comicCellDataCallCount += 1
         return nil
     }
@@ -123,19 +123,19 @@ private extension CharacterDetailDataSourceTests {
         sut.collectionView(collectionViewStub, numberOfItemsInSection: section.rawValue)
     }
 
-    func assertViewModelImageCellData(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.imageCellDataCallCount, callCount, line: line)
+    func assertPresentationModelImageCellData(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(presentationModelMock.imageCellDataCallCount, callCount, line: line)
     }
 
-    func assertViewModelInfoCellData(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.infoCellDataCallCount, callCount, line: line)
+    func assertPresentationModelInfoCellData(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(presentationModelMock.infoCellDataCallCount, callCount, line: line)
     }
 
-    func assertViewModelComicCellData(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.comicCellDataCallCount, callCount, line: line)
+    func assertPresentationModelComicCellModel(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(presentationModelMock.comicCellDataCallCount, callCount, line: line)
     }
 
-    func assertViewModelWillDisplayComicCell(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.willDisplayComicCellCallCount, callCount, line: line)
+    func assertPresentationModelWillDisplayComicCell(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(presentationModelMock.willDisplayComicCellCallCount, callCount, line: line)
     }
 }

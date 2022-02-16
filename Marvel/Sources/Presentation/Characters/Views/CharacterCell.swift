@@ -8,7 +8,7 @@
 import UIKit
 
 class CharacterCell: UICollectionViewCell, Configurable {
-    typealias Item = CharacterCellData
+    typealias Item = CharacterCellModel
 
     private enum Constants {
         static let nameLabelFontSize: CGFloat = 20
@@ -84,7 +84,7 @@ class CharacterCell: UICollectionViewCell, Configurable {
         characterImageView.clear()
     }
 
-    func configure(using item: CharacterCellData) {
+    func configure(using item: CharacterCellModel) {
         nameLabel.text = item.name
         configureDescription(using: item)
         characterImageView.loadImage(from: item.imageURL)
@@ -144,7 +144,7 @@ private extension CharacterCell {
         layer.rasterizationScale = UIScreen.main.scale
     }
 
-    func configureDescription(using configurator: CharacterCellData) {
+    func configureDescription(using configurator: CharacterCellModel) {
         descriptionLabel.text = configurator.description
         descriptionLabel.isHidden = configurator.description.isEmpty
     }
