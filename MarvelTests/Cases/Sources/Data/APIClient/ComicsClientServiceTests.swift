@@ -57,7 +57,12 @@ class ComicsClientServiceTests: XCTestCase {
 
 private extension ComicsClientServiceTests {
     func givenSut(with networkService: NetworkService) {
-        sut = ComicsClientService(networkService: networkService, resultHandler: resultHandlerMock)
+        sut = ComicsClientService(
+            networkService: networkService,
+            resultHandler: resultHandlerMock,
+            comicMapper: ComicDataMapper(imageMapper: ImageDataMapper()),
+            pageMapper: PageDataMapper()
+        )
     }
 
     func givenSutWithSuccessfulNetworkService() {

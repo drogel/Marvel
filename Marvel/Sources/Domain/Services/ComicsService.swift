@@ -9,7 +9,7 @@ import Foundation
 
 typealias ComicsServiceError = DataServiceError
 
-typealias ComicsServiceResult = Result<DataWrapper<ComicData>, ComicsServiceError>
+typealias ComicsServiceResult = Result<ContentPage<Comic>, ComicsServiceError>
 
 protocol ComicsService {
     func comics(

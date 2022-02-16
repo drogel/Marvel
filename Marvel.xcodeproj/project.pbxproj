@@ -479,32 +479,13 @@
 			path = Configuration;
 			sourceTree = "<group>";
 		};
-		0545945127988A3500A634AD /* UseCases */ = {
-			isa = PBXGroup;
-			children = (
-				0545945227988A4700A634AD /* FetchCharactersServiceUseCase.swift */,
-			);
-			path = UseCases;
-			sourceTree = "<group>";
-		};
 		0545945427988C7F00A634AD /* Domain */ = {
 			isa = PBXGroup;
 			children = (
-				05484604279D695000C6EC66 /* CharacterDetail */,
-				0545945527988C8400A634AD /* Characters */,
+				05484605279D695A00C6EC66 /* UseCases */,
 				0535F55627B2DD2A006F8AC4 /* Common */,
 			);
 			path = Domain;
-			sourceTree = "<group>";
-		};
-		0545945527988C8400A634AD /* Characters */ = {
-			isa = PBXGroup;
-			children = (
-				053B9D972799C8D400CCF1C2 /* Models */,
-				0545947C2798B1FB00A634AD /* UseCases */,
-				0545945627988C8E00A634AD /* PresentationModels */,
-			);
-			path = Characters;
 			sourceTree = "<group>";
 		};
 		0545945627988C8E00A634AD /* PresentationModels */ = {
@@ -513,14 +494,6 @@
 				0545945727988C9B00A634AD /* CharactersPresentationModelTests.swift */,
 			);
 			path = PresentationModels;
-			sourceTree = "<group>";
-		};
-		0545945927988CBA00A634AD /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				0545945A27988CC200A634AD /* PresentationModel.swift */,
-			);
-			path = Protocols;
 			sourceTree = "<group>";
 		};
 		054594622798986200A634AD /* Services */ = {
@@ -584,14 +557,6 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		0545947C2798B1FB00A634AD /* UseCases */ = {
-			isa = PBXGroup;
-			children = (
-				0545947D2798B21200A634AD /* FetchCharactersUseCaseTests.swift */,
-			);
-			path = UseCases;
-			sourceTree = "<group>";
-		};
 		0545947F2798B93000A634AD /* Stubs */ = {
 			isa = PBXGroup;
 			children = (
@@ -610,39 +575,21 @@
 			path = Stubs;
 			sourceTree = "<group>";
 		};
-		05484600279D686A00C6EC66 /* CharacterDetail */ = {
-			isa = PBXGroup;
-			children = (
-				05484610279D779100C6EC66 /* Models */,
-				05484601279D687A00C6EC66 /* UseCases */,
-				0548460A279D6D8100C6EC66 /* PresentationModels */,
-			);
-			path = CharacterDetail;
-			sourceTree = "<group>";
-		};
 		05484601279D687A00C6EC66 /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
 				05484602279D688A00C6EC66 /* FetchCharacterDetailUseCase.swift */,
+				0545945227988A4700A634AD /* FetchCharactersServiceUseCase.swift */,
 				053BBD9027ADB7F30033640A /* FetchComicsUseCase.swift */,
 			);
 			path = UseCases;
-			sourceTree = "<group>";
-		};
-		05484604279D695000C6EC66 /* CharacterDetail */ = {
-			isa = PBXGroup;
-			children = (
-				05484613279D77AE00C6EC66 /* Models */,
-				05484605279D695A00C6EC66 /* UseCases */,
-				0548460D279D6E7100C6EC66 /* PresentationModels */,
-			);
-			path = CharacterDetail;
 			sourceTree = "<group>";
 		};
 		05484605279D695A00C6EC66 /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
 				05484606279D697000C6EC66 /* FetchCharacterDetailUseCaseTests.swift */,
+				0545947D2798B21200A634AD /* FetchCharactersUseCaseTests.swift */,
 				053BBD9227ADB8B10033640A /* FetchComicsUseCaseTests.swift */,
 			);
 			path = UseCases;
@@ -922,11 +869,12 @@
 		05932C52279B29F300549D7D /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				05B0855527AC569F00A74DD0 /* CollectionViewDataSource.swift */,
 				053B9D9D2799E38000CCF1C2 /* Configurable.swift */,
 				05DAC33627973A2A0062CC6F /* Identifiable.swift */,
 				05484616279D865800C6EC66 /* Instantiable.swift */,
 				05C14930279CA74000927467 /* Loadable.swift */,
-				05B0855527AC569F00A74DD0 /* CollectionViewDataSource.swift */,
+				0545945A27988CC200A634AD /* PresentationModel.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -958,7 +906,6 @@
 			children = (
 				05C1491B279C2C8200927467 /* ImageURLBuilder.swift */,
 				0535F55427B2DA92006F8AC4 /* Pager.swift */,
-				0545945927988CBA00A634AD /* Protocols */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1072,6 +1019,8 @@
 			children = (
 				05BD40A527A9B17800F2E513 /* CharacterDetailCoordinatorTests.swift */,
 				05B0855227AC552E00A74DD0 /* DataSources */,
+				05484613279D77AE00C6EC66 /* Models */,
+				0548460D279D6E7100C6EC66 /* PresentationModels */,
 				059CD7AD27AAE4A400523EE3 /* ViewControllers */,
 			);
 			path = CharacterDetail;
@@ -1081,6 +1030,8 @@
 			isa = PBXGroup;
 			children = (
 				05BD40AC27A9B5C400F2E513 /* CharactersCoordinatorTests.swift */,
+				053B9D972799C8D400CCF1C2 /* Models */,
+				0545945627988C8E00A634AD /* PresentationModels */,
 				059CD7B027AAE69A00523EE3 /* ViewControllers */,
 			);
 			path = Characters;
@@ -1198,8 +1149,7 @@
 		05DAC32F279739920062CC6F /* Domain */ = {
 			isa = PBXGroup;
 			children = (
-				05484600279D686A00C6EC66 /* CharacterDetail */,
-				05DAC34D27974D7C0062CC6F /* Characters */,
+				05484601279D687A00C6EC66 /* UseCases */,
 				05932C55279B2B1500549D7D /* Common */,
 				056B1FBD27B93630000EBC83 /* Entities */,
 				054594622798986200A634AD /* Services */,
@@ -1255,6 +1205,8 @@
 			children = (
 				05C14926279C6F5B00927467 /* CharactersCoordinator.swift */,
 				05DAC34127973E3C0062CC6F /* Layouts */,
+				053B9D962799C89600CCF1C2 /* Models */,
+				05DAC34E27974D800062CC6F /* PresentationModels */,
 				05DAC331279739B20062CC6F /* ViewControllers */,
 				05DAC332279739BB0062CC6F /* Views */,
 			);
@@ -1285,6 +1237,8 @@
 				0548461F279DC98800C6EC66 /* CharacterDetailCoordinator.swift */,
 				05B0854F27AC528500A74DD0 /* DataSources */,
 				05B0855927AC592B00A74DD0 /* Layouts */,
+				05484610279D779100C6EC66 /* Models */,
+				0548460A279D6D8100C6EC66 /* PresentationModels */,
 				05DAC34A27974CAA0062CC6F /* ViewControllers */,
 				059CD7B327AAFCD100523EE3 /* Views */,
 			);
@@ -1297,16 +1251,6 @@
 				05DAC34B27974CE30062CC6F /* CharacterDetailViewController.swift */,
 			);
 			path = ViewControllers;
-			sourceTree = "<group>";
-		};
-		05DAC34D27974D7C0062CC6F /* Characters */ = {
-			isa = PBXGroup;
-			children = (
-				053B9D962799C89600CCF1C2 /* Models */,
-				0545945127988A3500A634AD /* UseCases */,
-				05DAC34E27974D800062CC6F /* PresentationModels */,
-			);
-			path = Characters;
 			sourceTree = "<group>";
 		};
 		05DAC34E27974D800062CC6F /* PresentationModels */ = {

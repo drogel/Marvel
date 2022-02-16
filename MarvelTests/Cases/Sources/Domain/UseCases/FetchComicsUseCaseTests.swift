@@ -44,17 +44,11 @@ class FetchComicsUseCaseTests: XCTestCase {
     }
 
     func test_givenSuccessfulService_whenFetching_completesWithPageData() {
-        givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<ComicData>.empty)
+        givenSutWithSuccessfulServiceStub(stubbingPage: ContentPage<Comic>.empty)
         let completionResult = whenRetrievingResultFromFetchingCharacter()
         assertIsSuccess(completionResult) {
             XCTAssertEqual($0, ContentPage<Comic>.empty)
         }
-    }
-
-    func test_givenSuccessfulServiceWithNoData_whenFetching_completesWithFailure() {
-        givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<ComicData>.withNilData)
-        let completionResult = whenRetrievingResultFromFetchingCharacter()
-        assertIsFailure(completionResult)
     }
 }
 
@@ -84,18 +78,14 @@ private class ComicsServiceFailureStub: ComicsService {
 }
 
 private class ComicsServiceSuccessStub: ComicsService {
-    private let dataWrapperStub: DataWrapper<ComicData>
+    private let pageStub: ContentPage<Comic>
 
-    init(dataWrapperStub: DataWrapper<ComicData>) {
-        self.dataWrapperStub = dataWrapperStub
+    init(pageStub: ContentPage<Comic>) {
+        self.pageStub = pageStub
     }
 
-    func comics(
-        for _: Int,
-        from _: Int,
-        completion: @escaping (ComicsServiceResult) -> Void
-    ) -> Cancellable? {
-        completion(.success(dataWrapperStub))
+    func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Cancellable? {
+        completion(.success(pageStub))
         return CancellableStub()
     }
 }
@@ -119,17 +109,13 @@ private extension FetchComicsUseCaseTests {
         givenSut(with: service)
     }
 
-    func givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<ComicData>) {
-        let service = ComicsServiceSuccessStub(dataWrapperStub: stubbingDataWrapper)
+    func givenSutWithSuccessfulServiceStub(stubbingPage: ContentPage<Comic>) {
+        let service = ComicsServiceSuccessStub(pageStub: stubbingPage)
         givenSut(with: service)
     }
 
     func givenSut(with service: ComicsService) {
-        sut = FetchComicsServiceUseCase(
-            service: service,
-            comicMapper: ComicDataMapper(imageMapper: ImageDataMapper()),
-            pageMapper: PageDataMapper()
-        )
+        sut = FetchComicsServiceUseCase(service: service)
     }
 
     func whenRetrievingResultFromFetchingCharacter() -> FetchComicsResult {
