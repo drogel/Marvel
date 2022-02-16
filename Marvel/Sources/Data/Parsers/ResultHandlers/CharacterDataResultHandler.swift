@@ -1,48 +1,31 @@
 //
-//  CharactersClientService.swift
+//  CharacterDataResultHandler.swift
 //  Marvel
 //
-//  Created by Diego Rogel on 21/1/22.
+//  Created by Diego Rogel on 16/2/22.
 //
 
 import Foundation
 
-class CharactersClientService: CharactersService {
-    private let charactersPath = MarvelAPIPaths.characters.rawValue
-    private let client: NetworkService
-    private let resultHandler: ResultHandler
+protocol CharacterDataResultHandler {
+    func completeWithServiceResult(
+        _ handlerResult: DataServiceResult<CharacterData>,
+        completion: @escaping (Result<ContentPage<Character>, DataServiceError>) -> Void
+    )
+}
+
+class CharacterDataServiceResultHandler: CharacterDataResultHandler {
     private let characterMapper: CharacterMapper
     private let pageMapper: PageMapper
 
-    init(
-        client: NetworkService,
-        resultHandler: ResultHandler,
-        characterMapper: CharacterMapper,
-        pageMapper: PageMapper
-    ) {
-        self.client = client
-        self.resultHandler = resultHandler
+    init(characterMapper: CharacterMapper, pageMapper: PageMapper) {
         self.characterMapper = characterMapper
         self.pageMapper = pageMapper
     }
 
-    func characters(from offset: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
-        client.request(endpoint: components(for: offset)) { [weak self] result in
-            self?.resultHandler.handle(result: result) { handlerResult in
-                self?.completeWithServiceResult(handlerResult, completion: completion)
-            }
-        }
-    }
-}
-
-private extension CharactersClientService {
-    func components(for offset: Int) -> RequestComponents {
-        RequestComponents(path: charactersPath).withOffsetQuery(offset)
-    }
-
     func completeWithServiceResult(
         _ handlerResult: DataServiceResult<CharacterData>,
-        completion: @escaping (CharacterDetailServiceResult) -> Void
+        completion: @escaping (Result<ContentPage<Character>, CharactersServiceError>) -> Void
     ) {
         switch handlerResult {
         case let .success(dataWrapper):
@@ -51,7 +34,9 @@ private extension CharactersClientService {
             completion(.failure(error))
         }
     }
+}
 
+private extension CharacterDataServiceResultHandler {
     func completeHandlerSuccess(
         dataWrapper: DataWrapper<CharacterData>,
         completion: @escaping (CharacterDetailServiceResult) -> Void

@@ -10,14 +10,14 @@ import Foundation
 class ComicsClientService: ComicsService {
     private let charactersPath = MarvelAPIPaths.characters.rawValue
     private let comicsPath = MarvelAPIPaths.comics.rawValue
-    private let resultHandler: ResultHandler
+    private let resultHandler: NetworkResultHandler
     private let networkService: NetworkService
     private let comicMapper: ComicMapper
     private let pageMapper: PageMapper
 
     init(
         networkService: NetworkService,
-        resultHandler: ResultHandler,
+        resultHandler: NetworkResultHandler,
         comicMapper: ComicMapper,
         pageMapper: PageMapper
     ) {

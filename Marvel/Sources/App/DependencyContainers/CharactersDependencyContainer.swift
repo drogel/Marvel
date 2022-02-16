@@ -79,7 +79,7 @@ private extension CharactersDependencyContainer {
         DataServicesNetworkErrorHandler()
     }
 
-    var resultHandler: ResultHandler {
+    var resultHandler: NetworkResultHandler {
         ClientResultHandler(parser: parser, errorHandler: errorHandler)
     }
 

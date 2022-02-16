@@ -119,9 +119,11 @@ private extension CharacterDetailClientServiceTests {
         let resultHandler = ClientResultHandler(parser: jsonParserMock, errorHandler: errorHandler)
         sut = CharacterDetailClientService(
             client: networkService,
-            resultHandler: resultHandler,
-            characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
-            pageMapper: PageDataMapper()
+            networkResultHandler: resultHandler,
+            dataResultHandler: CharacterDataServiceResultHandler(
+                characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
+                pageMapper: PageDataMapper()
+            )
         )
     }
 

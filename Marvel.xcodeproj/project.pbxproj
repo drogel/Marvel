@@ -87,7 +87,7 @@
 		054D95A127B18D15007B54DA /* ComicsClientService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054D95A027B18D15007B54DA /* ComicsClientService.swift */; };
 		054D95A327B18D71007B54DA /* ComicsClientServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054D95A227B18D71007B54DA /* ComicsClientServiceTests.swift */; };
 		054D95A527B18DF8007B54DA /* ResultHandlerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054D95A427B18DF8007B54DA /* ResultHandlerMock.swift */; };
-		054ED2BD27A716C3000358A3 /* ResultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054ED2BC27A716C3000358A3 /* ResultHandler.swift */; };
+		054ED2BD27A716C3000358A3 /* NetworkResultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054ED2BC27A716C3000358A3 /* NetworkResultHandler.swift */; };
 		0559261027A85EB500026919 /* XCTestCase+FailureMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */; };
 		0559261427A868BA00026919 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0559261627A868BA00026919 /* Localizable.strings */; };
 		0559261B27A86B2700026919 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0559261A27A86B2700026919 /* String+Localized.swift */; };
@@ -138,6 +138,7 @@
 		05932C59279B5A0700549D7D /* CharactersClientService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C58279B5A0700549D7D /* CharactersClientService.swift */; };
 		05932C5E279B5DDD00549D7D /* JSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C5D279B5DDD00549D7D /* JSONParser.swift */; };
 		05932C60279B611700549D7D /* AuthenticatedNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05932C5F279B611700549D7D /* AuthenticatedNetworkService.swift */; };
+		05967A3127BD74AA006D0613 /* CharacterDataResultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05967A3027BD74AA006D0613 /* CharacterDataResultHandler.swift */; };
 		059CD7AF27AAE4B300523EE3 /* CharacterDetailViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059CD7AE27AAE4B300523EE3 /* CharacterDetailViewControllerTests.swift */; };
 		059CD7B227AAE6A700523EE3 /* CharactersViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059CD7B127AAE6A700523EE3 /* CharactersViewControllerTests.swift */; };
 		059CD7B527AAFD3C00523EE3 /* CharacterImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059CD7B427AAFD3C00523EE3 /* CharacterImageCell.swift */; };
@@ -282,7 +283,7 @@
 		054D95A027B18D15007B54DA /* ComicsClientService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsClientService.swift; sourceTree = "<group>"; };
 		054D95A227B18D71007B54DA /* ComicsClientServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsClientServiceTests.swift; sourceTree = "<group>"; };
 		054D95A427B18DF8007B54DA /* ResultHandlerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultHandlerMock.swift; sourceTree = "<group>"; };
-		054ED2BC27A716C3000358A3 /* ResultHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultHandler.swift; sourceTree = "<group>"; };
+		054ED2BC27A716C3000358A3 /* NetworkResultHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkResultHandler.swift; sourceTree = "<group>"; };
 		0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FailureMessage.swift"; sourceTree = "<group>"; };
 		0559261527A868BA00026919 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0559261927A869CD00026919 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -334,6 +335,7 @@
 		05932C58279B5A0700549D7D /* CharactersClientService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersClientService.swift; sourceTree = "<group>"; };
 		05932C5D279B5DDD00549D7D /* JSONParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONParser.swift; sourceTree = "<group>"; };
 		05932C5F279B611700549D7D /* AuthenticatedNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedNetworkService.swift; sourceTree = "<group>"; };
+		05967A3027BD74AA006D0613 /* CharacterDataResultHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDataResultHandler.swift; sourceTree = "<group>"; };
 		059CD7AE27AAE4B300523EE3 /* CharacterDetailViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailViewControllerTests.swift; sourceTree = "<group>"; };
 		059CD7B127AAE6A700523EE3 /* CharactersViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersViewControllerTests.swift; sourceTree = "<group>"; };
 		059CD7B427AAFD3C00523EE3 /* CharacterImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterImageCell.swift; sourceTree = "<group>"; };
@@ -434,14 +436,12 @@
 		053B9DA0279A0BC800CCF1C2 /* APIClient */ = {
 			isa = PBXGroup;
 			children = (
-				0548461B279DC6F600C6EC66 /* CharacterDetailClientService.swift */,
-				05932C58279B5A0700549D7D /* CharactersClientService.swift */,
-				054D95A027B18D15007B54DA /* ComicsClientService.swift */,
 				05484621279DE69300C6EC66 /* MarvelAPIPaths.swift */,
 				0571306F27A5C1D30009383E /* NetworkErrorHandler.swift */,
-				054ED2BC27A716C3000358A3 /* ResultHandler.swift */,
+				054ED2BC27A716C3000358A3 /* NetworkResultHandler.swift */,
 				0548461A279DC6E400C6EC66 /* Authentication */,
 				05932C43279B18AE00549D7D /* Network */,
+				05967A2E27BD747B006D0613 /* Services */,
 			);
 			path = APIClient;
 			sourceTree = "<group>";
@@ -913,10 +913,29 @@
 		05932C5C279B5DCE00549D7D /* Parsers */ = {
 			isa = PBXGroup;
 			children = (
+				05967A2F27BD749D006D0613 /* ResultHandlers */,
 				056B1FC827B93E51000EBC83 /* Mappers */,
 				05932C5D279B5DDD00549D7D /* JSONParser.swift */,
 			);
 			path = Parsers;
+			sourceTree = "<group>";
+		};
+		05967A2E27BD747B006D0613 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0548461B279DC6F600C6EC66 /* CharacterDetailClientService.swift */,
+				05932C58279B5A0700549D7D /* CharactersClientService.swift */,
+				054D95A027B18D15007B54DA /* ComicsClientService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		05967A2F27BD749D006D0613 /* ResultHandlers */ = {
+			isa = PBXGroup;
+			children = (
+				05967A3027BD74AA006D0613 /* CharacterDataResultHandler.swift */,
+			);
+			path = ResultHandlers;
 			sourceTree = "<group>";
 		};
 		059CD7AD27AAE4A400523EE3 /* ViewControllers */ = {
@@ -1407,6 +1426,7 @@
 				053B9D932799C76300CCF1C2 /* CharacterCellModel.swift in Sources */,
 				05932C4C279B1AF000549D7D /* URLSessionDataTask+Cancellable.swift in Sources */,
 				05C14925279C64E700927467 /* AppScheme.swift in Sources */,
+				05967A3127BD74AA006D0613 /* CharacterDataResultHandler.swift in Sources */,
 				0545947227989DC500A634AD /* JsonDecoderDataLoader.swift in Sources */,
 				05484612279D779E00C6EC66 /* CharacterDetailModel.swift in Sources */,
 				053B9D9E2799E38000CCF1C2 /* Configurable.swift in Sources */,
@@ -1480,7 +1500,7 @@
 				0548461C279DC6F600C6EC66 /* CharacterDetailClientService.swift in Sources */,
 				056B1FD327B95ADF000EBC83 /* PageMapper.swift in Sources */,
 				05932C49279B19A700549D7D /* NetworkService.swift in Sources */,
-				054ED2BD27A716C3000358A3 /* ResultHandler.swift in Sources */,
+				054ED2BD27A716C3000358A3 /* NetworkResultHandler.swift in Sources */,
 				0585AF9D27975DDB00586ABD /* DataWrapper.swift in Sources */,
 				05B0856127AC5CB000A74DD0 /* CharacterInfoLayoutSection.swift in Sources */,
 				05459464279898A700A634AD /* CharactersService.swift in Sources */,

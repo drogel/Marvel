@@ -1,5 +1,5 @@
 //
-//  CharactersResultHandler.swift
+//  NetworkResultHandler.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 30/1/22.
@@ -9,14 +9,14 @@ import Foundation
 
 typealias DataServiceResult<T: DataObject> = Result<DataWrapper<T>, DataServiceError>
 
-protocol ResultHandler {
+protocol NetworkResultHandler {
     func handle<T: DataObject>(
         result: Result<Data?, NetworkError>,
         completion: @escaping (DataServiceResult<T>) -> Void
     )
 }
 
-class ClientResultHandler: ResultHandler {
+class ClientResultHandler: NetworkResultHandler {
     private let parser: JSONParser
     private let errorHandler: NetworkErrorHandler
 

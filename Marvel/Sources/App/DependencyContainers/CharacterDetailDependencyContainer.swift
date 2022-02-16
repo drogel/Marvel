@@ -68,9 +68,8 @@ private extension CharacterDetailDependencyContainer {
     var characterDetailReleaseService: CharacterDetailService {
         CharacterDetailClientService(
             client: dependencies.networkService,
-            resultHandler: resultHandler,
-            characterMapper: characterMapper,
-            pageMapper: pageMapper
+            networkResultHandler: resultHandler,
+            dataResultHandler: dataResultHandler
         )
     }
 
@@ -99,8 +98,12 @@ private extension CharacterDetailDependencyContainer {
         DataServicesNetworkErrorHandler()
     }
 
-    var resultHandler: ResultHandler {
+    var resultHandler: NetworkResultHandler {
         ClientResultHandler(parser: parser, errorHandler: errorHandler)
+    }
+
+    var dataResultHandler: CharacterDataResultHandler {
+        CharacterDataServiceResultHandler(characterMapper: characterMapper, pageMapper: pageMapper)
     }
 
     var pageMapper: PageMapper {

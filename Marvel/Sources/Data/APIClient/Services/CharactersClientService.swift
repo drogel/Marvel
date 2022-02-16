@@ -1,22 +1,22 @@
 //
-//  CharacterDetailClientService.swift
+//  CharactersClientService.swift
 //  Marvel
 //
-//  Created by Diego Rogel on 23/1/22.
+//  Created by Diego Rogel on 21/1/22.
 //
 
 import Foundation
 
-class CharacterDetailClientService: CharacterDetailService {
+class CharactersClientService: CharactersService {
     private let charactersPath = MarvelAPIPaths.characters.rawValue
     private let client: NetworkService
-    private let resultHandler: ResultHandler
+    private let resultHandler: NetworkResultHandler
     private let characterMapper: CharacterMapper
     private let pageMapper: PageMapper
 
     init(
         client: NetworkService,
-        resultHandler: ResultHandler,
+        resultHandler: NetworkResultHandler,
         characterMapper: CharacterMapper,
         pageMapper: PageMapper
     ) {
@@ -26,8 +26,8 @@ class CharacterDetailClientService: CharacterDetailService {
         self.pageMapper = pageMapper
     }
 
-    func character(with identifier: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
-        client.request(endpoint: components(for: identifier)) { [weak self] result in
+    func characters(from offset: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
+        client.request(endpoint: components(for: offset)) { [weak self] result in
             self?.resultHandler.handle(result: result) { handlerResult in
                 self?.completeWithServiceResult(handlerResult, completion: completion)
             }
@@ -35,10 +35,9 @@ class CharacterDetailClientService: CharacterDetailService {
     }
 }
 
-private extension CharacterDetailClientService {
-    func components(for identifier: Int) -> RequestComponents {
-        let characterID = String(identifier)
-        return RequestComponents().appendingPathComponents([charactersPath, characterID])
+private extension CharactersClientService {
+    func components(for offset: Int) -> RequestComponents {
+        RequestComponents(path: charactersPath).withOffsetQuery(offset)
     }
 
     func completeWithServiceResult(
