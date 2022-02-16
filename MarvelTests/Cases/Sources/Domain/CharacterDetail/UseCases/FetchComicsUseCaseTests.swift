@@ -84,8 +84,7 @@ private class ComicsServiceSuccessStub: ComicsService {
         self.pageStub = pageStub
     }
 
-    func comics( for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void
-    ) -> Cancellable? {
+    func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Cancellable? {
         completion(.success(pageStub))
         return CancellableStub()
     }
@@ -116,7 +115,7 @@ private extension FetchComicsUseCaseTests {
     }
 
     func givenSut(with service: ComicsService) {
-        sut = FetchComicsServiceUseCase( service: service )
+        sut = FetchComicsServiceUseCase(service: service)
     }
 
     func whenRetrievingResultFromFetchingCharacter() -> FetchComicsResult {

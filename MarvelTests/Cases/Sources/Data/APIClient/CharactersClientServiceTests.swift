@@ -62,7 +62,7 @@ class CharactersClientServiceTests: XCTestCase {
         givenSutWithSuccessfulNetworkService()
         let result = whenRetrievingCharacters()
         assertIsSuccess(result) {
-            XCTAssertEqual($0, Self.dataWrapperResponseStub)
+            XCTAssertEqual($0, ContentPage<Character>.empty)
         }
     }
 
@@ -97,7 +97,7 @@ class CharactersClientServiceTests: XCTestCase {
 }
 
 private extension CharactersClientServiceTests {
-    static let dataWrapperResponseStub = DataWrapper<CharacterData>.withNilData
+    static let dataWrapperResponseStub = DataWrapper<CharacterData>.empty
 
     func givenSutWithNetworkServiceMock() {
         networkServiceMock = NetworkServiceMock()

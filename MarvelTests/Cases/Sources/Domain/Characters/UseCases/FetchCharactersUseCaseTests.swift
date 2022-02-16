@@ -44,17 +44,11 @@ class FetchCharactersUseCaseTests: XCTestCase {
     }
 
     func test_givenSuccessfulService_whenFetching_completesWithPageData() {
-        givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>.empty)
+        givenSutWithSuccessfulServiceStub(stubbingContentPage: ContentPage<Character>.empty)
         let completionResult = whenRetrievingResultFromFetchingCharacters()
         assertIsSuccess(completionResult) {
             XCTAssertEqual($0, ContentPage<Character>.empty)
         }
-    }
-
-    func test_givenSuccessfulServiceWithNoData_whenFetching_completesWithFailure() {
-        givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>.withNilData)
-        let completionResult = whenRetrievingResultFromFetchingCharacters()
-        assertIsFailure(completionResult)
     }
 }
 
@@ -76,14 +70,14 @@ private class CharactersServiceFailureStub: CharactersService {
 }
 
 private class CharactersServiceSuccessStub: CharactersService {
-    private let dataWrapperStub: DataWrapper<CharacterData>
+    private let contentPage: ContentPage<Character>
 
-    init(dataWrapperStub: DataWrapper<CharacterData>) {
-        self.dataWrapperStub = dataWrapperStub
+    init(contentPageStub: ContentPage<Character>) {
+        contentPage = contentPageStub
     }
 
     func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
-        completion(.success(dataWrapperStub))
+        completion(.success(contentPage))
         return CancellableStub()
     }
 }
@@ -107,17 +101,13 @@ private extension FetchCharactersUseCaseTests {
         givenSut(with: service)
     }
 
-    func givenSutWithSuccessfulServiceStub(stubbingDataWrapper: DataWrapper<CharacterData>) {
-        let service = CharactersServiceSuccessStub(dataWrapperStub: stubbingDataWrapper)
+    func givenSutWithSuccessfulServiceStub(stubbingContentPage contentPage: ContentPage<Character>) {
+        let service = CharactersServiceSuccessStub(contentPageStub: contentPage)
         givenSut(with: service)
     }
 
     func givenSut(with service: CharactersService) {
-        sut = FetchCharactersServiceUseCase(
-            service: service,
-            characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
-            pageMapper: PageDataMapper()
-        )
+        sut = FetchCharactersServiceUseCase(service: service)
     }
 
     func whenRetrievingResultFromFetchingCharacters() -> FetchCharactersResult {

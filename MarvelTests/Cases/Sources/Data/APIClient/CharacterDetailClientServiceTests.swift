@@ -58,7 +58,7 @@ class CharacterDetailClientServiceTests: XCTestCase {
         givenSutWithSuccessfulNetworkService()
         let result = whenRetrievingCharacter()
         assertIsSuccess(result) {
-            XCTAssertEqual($0, Self.dataWrapperResponseStub)
+            XCTAssertEqual($0, ContentPage<Character>.empty)
         }
     }
 
@@ -93,7 +93,7 @@ class CharacterDetailClientServiceTests: XCTestCase {
 }
 
 private extension CharacterDetailClientServiceTests {
-    static let dataWrapperResponseStub = DataWrapper<CharacterData>.withNilData
+    static let dataWrapperResponseStub = DataWrapper<CharacterData>.empty
 
     func givenSutWithNetworkServiceMock() {
         networkServiceMock = NetworkServiceMock()
@@ -117,7 +117,12 @@ private extension CharacterDetailClientServiceTests {
 
     func givenSut(with networkService: NetworkService) {
         let resultHandler = ClientResultHandler(parser: jsonParserMock, errorHandler: errorHandler)
-        sut = CharacterDetailClientService(client: networkService, resultHandler: resultHandler)
+        sut = CharacterDetailClientService(
+            client: networkService,
+            resultHandler: resultHandler,
+            characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
+            pageMapper: PageDataMapper()
+        )
     }
 
     func givenFailingParser() {
