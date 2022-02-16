@@ -60,8 +60,7 @@ private extension ComicsClientServiceTests {
         sut = ComicsClientService(
             networkService: networkService,
             resultHandler: resultHandlerMock,
-            comicMapper: ComicDataMapper(imageMapper: ImageDataMapper()),
-            pageMapper: PageDataMapper()
+            dataResultHandler: ComicDataResultHandlerFactory.createWithDataMappers()
         )
     }
 

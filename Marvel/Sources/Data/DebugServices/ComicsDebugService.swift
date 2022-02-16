@@ -10,58 +10,16 @@ import Foundation
 class ComicsDebugService: ComicsService {
     private let comicsFileName: DebugDataFileName = .comicsFileName
     private let dataLoader: DataLoaderDebugService
-    private let comicMapper: ComicMapper
-    private let pageMapper: PageMapper
+    private let dataResultHandler: ComicDataResultHandler
 
-    init(dataLoader: JsonDataLoader, comicMapper: ComicMapper, pageMapper: PageMapper) {
+    init(dataLoader: JsonDataLoader, dataResultHandler: ComicDataResultHandler) {
         self.dataLoader = JsonDataLoaderDebugService(dataLoader: dataLoader, fileName: comicsFileName)
-        self.comicMapper = comicMapper
-        self.pageMapper = pageMapper
+        self.dataResultHandler = dataResultHandler
     }
 
     func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Cancellable? {
         dataLoader.loadData { [weak self] result in
-            self?.completeWithServiceResult(result, completion: completion)
+            self?.dataResultHandler.completeWithServiceResult(result, completion: completion)
         }
-    }
-}
-
-private extension ComicsDebugService {
-    func completeWithServiceResult(
-        _ handlerResult: DataServiceResult<ComicData>,
-        completion: @escaping (ComicsServiceResult) -> Void
-    ) {
-        switch handlerResult {
-        case let .success(dataWrapper):
-            completeHandlerSuccess(dataWrapper: dataWrapper, completion: completion)
-        case let .failure(error):
-            completion(.failure(error))
-        }
-    }
-
-    func completeHandlerSuccess(
-        dataWrapper: DataWrapper<ComicData>,
-        completion: @escaping (ComicsServiceResult) -> Void
-    ) {
-        guard let contentPage = mapToComicsPage(dataWrapper.data) else {
-            completion(.failure(.emptyData))
-            return
-        }
-        completion(.success(contentPage))
-    }
-
-    func mapToComicsPage(_ pageData: PageData<ComicData>?) -> ContentPage<Comic>? {
-        let comics = mapToComics(pageData?.results)
-        guard let pageData = pageData,
-              let pageDataCount = pageData.count,
-              let pageInfo = pageMapper.mapToPageInfo(pageData),
-              pageDataCount == comics.count
-        else { return nil }
-        return ContentPage(offset: pageInfo.offset, limit: pageInfo.limit, total: pageInfo.total, contents: comics)
-    }
-
-    func mapToComics(_ comicsData: [ComicData]?) -> [Comic] {
-        guard let comicsData = comicsData else { return [] }
-        return comicsData.compactMap(comicMapper.mapToComic)
     }
 }

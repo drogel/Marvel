@@ -55,8 +55,7 @@ private extension ComicsDebugServiceTests {
     func givenSut(with dataLoader: JsonDataLoader) {
         sut = ComicsDebugService(
             dataLoader: dataLoader,
-            comicMapper: ComicDataMapper(imageMapper: ImageDataMapper()),
-            pageMapper: PageDataMapper()
+            dataResultHandler: ComicDataResultHandlerFactory.createWithDataMappers()
         )
     }
 

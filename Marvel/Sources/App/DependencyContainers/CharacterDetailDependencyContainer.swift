@@ -60,7 +60,7 @@ private extension CharacterDetailDependencyContainer {
     var characterDetailDebugService: CharacterDetailService {
         CharacterDetailDebugService(
             dataLoader: jsonDataLoader,
-            dataResultHandler: dataResultHandler
+            dataResultHandler: characterDataResultHandler
         )
     }
 
@@ -68,20 +68,19 @@ private extension CharacterDetailDependencyContainer {
         CharacterDetailClientService(
             client: dependencies.networkService,
             networkResultHandler: resultHandler,
-            dataResultHandler: dataResultHandler
+            dataResultHandler: characterDataResultHandler
         )
     }
 
     var comicsDebugService: ComicsService {
-        ComicsDebugService(dataLoader: jsonDataLoader, comicMapper: comicMapper, pageMapper: pageMapper)
+        ComicsDebugService(dataLoader: jsonDataLoader, dataResultHandler: comicDataResultHandler)
     }
 
     var comicsReleaseService: ComicsService {
         ComicsClientService(
             networkService: dependencies.networkService,
             resultHandler: resultHandler,
-            comicMapper: comicMapper,
-            pageMapper: pageMapper
+            dataResultHandler: comicDataResultHandler
         )
     }
 
@@ -93,31 +92,15 @@ private extension CharacterDetailDependencyContainer {
         JSONDecoderParser()
     }
 
-    var errorHandler: NetworkErrorHandler {
-        DataServicesNetworkErrorHandler()
-    }
-
     var resultHandler: NetworkResultHandler {
-        ClientResultHandler(parser: parser, errorHandler: errorHandler)
+        ClientResultHandler(parser: parser, errorHandler: DataServicesNetworkErrorHandler())
     }
 
-    var dataResultHandler: CharacterDataResultHandler {
+    var characterDataResultHandler: CharacterDataResultHandler {
         CharacterDataResultHandlerFactory.createWithDataMappers()
     }
 
-    var pageMapper: PageMapper {
-        PageDataMapper()
-    }
-
-    var comicMapper: ComicMapper {
-        ComicDataMapper(imageMapper: imageMapper)
-    }
-
-    var characterMapper: CharacterMapper {
-        CharacterDataMapper(imageMapper: imageMapper)
-    }
-
-    var imageMapper: ImageMapper {
-        ImageDataMapper()
+    var comicDataResultHandler: ComicDataResultHandler {
+        ComicDataResultHandlerFactory.createWithDataMappers()
     }
 }
