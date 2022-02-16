@@ -56,8 +56,7 @@ private extension CharactersDebugServiceTests {
     func givenSut(with dataLoader: JsonDataLoader) {
         sut = CharactersDebugService(
             dataLoader: dataLoader,
-            characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
-            pageMapper: PageDataMapper()
+            dataResultHandler: CharacterDataResultHandlerFactory.createWithDataMappers()
         )
     }
 

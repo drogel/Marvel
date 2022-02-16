@@ -60,8 +60,7 @@ private extension CharacterDetailDependencyContainer {
     var characterDetailDebugService: CharacterDetailService {
         CharacterDetailDebugService(
             dataLoader: jsonDataLoader,
-            characterMapper: characterMapper,
-            pageMapper: pageMapper
+            dataResultHandler: dataResultHandler
         )
     }
 

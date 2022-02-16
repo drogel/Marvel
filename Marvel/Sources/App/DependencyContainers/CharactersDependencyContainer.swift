@@ -58,16 +58,14 @@ private extension CharactersDependencyContainer {
         CharactersClientService(
             client: dependencies.networkService,
             resultHandler: resultHandler,
-            characterMapper: characterMapper,
-            pageMapper: pageMapper
+            dataResultHandler: dataResultHandler
         )
     }
 
     var charactersDebugService: CharactersService {
         CharactersDebugService(
             dataLoader: JsonDecoderDataLoader(parser: parser),
-            characterMapper: characterMapper,
-            pageMapper: pageMapper
+            dataResultHandler: dataResultHandler
         )
     }
 
@@ -75,19 +73,11 @@ private extension CharactersDependencyContainer {
         JSONDecoderParser()
     }
 
-    var errorHandler: NetworkErrorHandler {
-        DataServicesNetworkErrorHandler()
-    }
-
     var resultHandler: NetworkResultHandler {
-        ClientResultHandler(parser: parser, errorHandler: errorHandler)
+        ClientResultHandler(parser: parser, errorHandler: DataServicesNetworkErrorHandler())
     }
 
-    var characterMapper: CharacterMapper {
-        CharacterDataMapper(imageMapper: ImageDataMapper())
-    }
-
-    var pageMapper: PageMapper {
-        PageDataMapper()
+    var dataResultHandler: CharacterDataResultHandler {
+        CharacterDataResultHandlerFactory.createWithDataMappers()
     }
 }

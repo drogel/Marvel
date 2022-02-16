@@ -133,12 +133,10 @@ private extension CharactersClientServiceTests {
 
     func givenSut(with networkService: NetworkService) {
         let resultHandler = ClientResultHandler(parser: jsonParserMock, errorHandler: errorHandler)
-        // TODO: Remove duplication when it comes to these mapper injections
         sut = CharactersClientService(
             client: networkService,
             resultHandler: resultHandler,
-            characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
-            pageMapper: PageDataMapper()
+            dataResultHandler: CharacterDataResultHandlerFactory.createWithDataMappers()
         )
     }
 
