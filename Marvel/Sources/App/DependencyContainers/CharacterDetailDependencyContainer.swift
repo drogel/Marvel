@@ -26,11 +26,7 @@ class CharacterDetailDependencyContainer: CharacterDetailContainer {
     }
 
     lazy var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase = {
-        FetchCharacterDetailServiceUseCase(
-            service: characterDetailService,
-            characterMapper: CharacterDataMapper(imageMapper: imageMapper),
-            pageMapper: pageMapper
-        )
+        FetchCharacterDetailServiceUseCase(service: characterDetailService)
     }()
 
     lazy var fetchComicsUseCase: FetchComicsUseCase = {

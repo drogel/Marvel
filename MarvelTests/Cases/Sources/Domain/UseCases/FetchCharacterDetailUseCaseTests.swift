@@ -107,11 +107,7 @@ private extension FetchCharacterDetailUseCaseTests {
     }
 
     func givenSut(with service: CharacterDetailService) {
-        sut = FetchCharacterDetailServiceUseCase(
-            service: service,
-            characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
-            pageMapper: PageDataMapper()
-        )
+        sut = FetchCharacterDetailServiceUseCase(service: service)
     }
 
     func whenRetrievingResultFromFetchingCharacter() -> FetchCharacterDetailResult {

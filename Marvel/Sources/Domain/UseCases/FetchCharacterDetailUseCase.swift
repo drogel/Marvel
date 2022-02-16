@@ -24,13 +24,9 @@ typealias FetchCharacterDetailResult = Result<ContentPage<Character>, FetchChara
 
 class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {
     private let service: CharacterDetailService
-    private let characterMapper: CharacterMapper
-    private let pageMapper: PageMapper
 
-    init(service: CharacterDetailService, characterMapper: CharacterMapper, pageMapper: PageMapper) {
+    init(service: CharacterDetailService) {
         self.service = service
-        self.characterMapper = characterMapper
-        self.pageMapper = pageMapper
     }
 
     func fetch(
