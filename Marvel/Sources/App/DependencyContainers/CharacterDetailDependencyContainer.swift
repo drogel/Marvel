@@ -103,7 +103,7 @@ private extension CharacterDetailDependencyContainer {
     }
 
     var dataResultHandler: CharacterDataResultHandler {
-        CharacterDataServiceResultHandler(characterMapper: characterMapper, pageMapper: pageMapper)
+        CharacterDataResultHandlerFactory.createWithDataMappers()
     }
 
     var pageMapper: PageMapper {

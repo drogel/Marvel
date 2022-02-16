@@ -7,6 +7,16 @@
 
 import Foundation
 
+enum CharacterDataResultHandlerFactory {
+    static func createWithDataMappers() -> CharacterDataResultHandler {
+        CharacterDataServiceResultHandler(characterMapper: characterMapper, pageMapper: PageDataMapper())
+    }
+
+    private static var characterMapper: CharacterMapper {
+        CharacterDataMapper(imageMapper: ImageDataMapper())
+    }
+}
+
 protocol CharacterDataResultHandler {
     func completeWithServiceResult(
         _ handlerResult: DataServiceResult<CharacterData>,

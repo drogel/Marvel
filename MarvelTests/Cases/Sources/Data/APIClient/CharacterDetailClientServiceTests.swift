@@ -120,10 +120,7 @@ private extension CharacterDetailClientServiceTests {
         sut = CharacterDetailClientService(
             client: networkService,
             networkResultHandler: resultHandler,
-            dataResultHandler: CharacterDataServiceResultHandler(
-                characterMapper: CharacterDataMapper(imageMapper: ImageDataMapper()),
-                pageMapper: PageDataMapper()
-            )
+            dataResultHandler: CharacterDataResultHandlerFactory.createWithDataMappers()
         )
     }
 
