@@ -5,7 +5,7 @@
 
 ## About
 
-The purpose of this project is to develop a non-trivial app using MVVM+C, and including a bunch of unit tests.
+The purpose of this project is to develop a non-trivial app using MVP+C, and including a bunch of unit tests.
 
 The app leverages the [Marvel API](https://developer.marvel.com/) to display descriptions and images of the 1000+ characters in the Marvel universe.
 
@@ -14,7 +14,7 @@ This project has been built using UIKit and no third party dependencies.
 ## Features
 
 - **Characters list**: displays a paginated list of characters and their thumbnails.
-- **Character detail**: displays a picture of a character and its full description.
+- **Character detail**: displays a picture of a character, its full description, and the comics it appears in.
 
 <p align="center">
   <img src="./Etc/Characters.png" height="512">
@@ -25,9 +25,9 @@ This project has been built using UIKit and no third party dependencies.
 
 ### Architecture
 
-This app has been developed using an MVVM+C architectural pattern, which is a combination of the Model-View-ViewModel architecture, plus the Coordinator pattern. In this implementation, the binding between the Views and the ViewModels is done via delegation. The app has three major layers: 
+This app has been developed using an MVP+C architectural pattern, which is a combination of the Model-View-PresentationModel architecture, plus the Coordinator pattern. In this implementation, the binding between the Views and the PresentationModels is done via delegation. The app has three major layers:
 - The **Presentation** layer, which contains the views and other UIKit-related units.
-- The **Domain** layer, which contains the business logic and use cases.
+- The **Domain** layer, which contains the entities and use cases.
 - The **Data** layer, which contains the networking and local data handling, as well as the models and authentication logic needed to connect to the Marvel API.
 
 It also has an App layer - that takes care of wiring up app-level dependencies and managing app lifecycle and navigations. Every layer has its corresponding folder in the project file structure. There is an additional folder - Common - that contains general-purpose extensions and protocols.
