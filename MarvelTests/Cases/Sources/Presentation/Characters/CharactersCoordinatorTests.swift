@@ -37,7 +37,7 @@ class CharactersCoordinatorTests: XCTestCase {
     }
 
     func test_whenCharacterSelected_presentsCharacterDetailViewController() {
-        sut.viewModel(CharactersViewModelStub(), didSelectCharacterWith: 0)
+        sut.model(CharactersPresentationModelStub(), didSelectCharacterWith: 0)
         XCTAssertTrue(navigationController.mostRecentPresentedViewController is CharacterDetailViewController)
     }
 }
@@ -52,7 +52,7 @@ private class CharactersDependenciesStub: CharactersDependencies {
     }
 }
 
-private class CharactersViewModelStub: CharactersViewModelProtocol {
+private class CharactersPresentationModelStub: CharactersPresentationModelProtocol {
     var numberOfItems: Int {
         0
     }
@@ -61,7 +61,7 @@ private class CharactersViewModelStub: CharactersViewModelProtocol {
 
     func select(at _: IndexPath) {}
 
-    func cellData(at _: IndexPath) -> CharacterCellData? {
+    func cellData(at _: IndexPath) -> CharacterCellModel? {
         nil
     }
 

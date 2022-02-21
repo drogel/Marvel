@@ -9,7 +9,11 @@ import Foundation
 @testable import Marvel_Debug
 
 extension DataWrapper {
-    static let empty = DataWrapper(code: 0, status: "", copyright: "", data: PageInfo.empty)
+    static var empty: DataWrapper<ContentType> {
+        DataWrapper(code: 0, status: "", copyright: "", data: PageData<ContentType>.empty)
+    }
 
-    static let withNilData = DataWrapper(code: 0, status: "", copyright: "", data: nil)
+    static var withNilData: DataWrapper<ContentType> {
+        DataWrapper<ContentType>(code: 0, status: "", copyright: "", data: nil)
+    }
 }

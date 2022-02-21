@@ -26,8 +26,8 @@ class CharactersCoordinator: Coordinator {
     }
 }
 
-extension CharactersCoordinator: CharactersViewModelCoordinatorDelegate {
-    func viewModel(_: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int) {
+extension CharactersCoordinator: CharactersPresentationModelCoordinatorDelegate {
+    func model(_: CharactersPresentationModelProtocol, didSelectCharacterWith characterID: Int) {
         let characterDetailContainer = CharacterDetailDependencyContainer(
             dependencies: dependencies,
             characterID: characterID
@@ -50,10 +50,17 @@ private extension CharactersCoordinator {
 
     func createCharactersViewController() -> UIViewController {
         let charactersContainer = CharactersDependencyContainer(dependencies: dependencies)
-        let viewModel = CharactersViewModel(charactersFetcher: charactersContainer.fetchCharactersUseCase)
-        let viewController = CharactersViewController.instantiate(viewModel: viewModel, layout: CharactersLayout())
-        viewModel.coordinatorDelegate = self
-        viewModel.viewDelegate = viewController
+        let presentationModel = CharactersPresentationModel(
+            charactersFetcher: charactersContainer.fetchCharactersUseCase,
+            imageURLBuilder: charactersContainer.imageURLBuilder,
+            pager: charactersContainer.pager
+        )
+        let viewController = CharactersViewController.instantiate(
+            presentationModel: presentationModel,
+            layout: CharactersLayout()
+        )
+        presentationModel.coordinatorDelegate = self
+        presentationModel.viewDelegate = viewController
         return viewController
     }
 }

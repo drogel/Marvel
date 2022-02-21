@@ -10,4 +10,5 @@ import Foundation
 enum DebugDataFileName: String {
     case charactersFileName = "CharactersResponse"
     case characterDetailFileName = "CharacterDetailResponse"
+    case comicsFileName = "ComicsResponse"
 }

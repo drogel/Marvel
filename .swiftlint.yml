@@ -1,9 +1,14 @@
 disabled_rules:
   - trailing_comma
+  - weak_delegate
 
 line_length: 
   warning: 120
   error: 120
+
+file_length:
+  warning: 300
+  error: 300
 
 nesting:
   type_level:

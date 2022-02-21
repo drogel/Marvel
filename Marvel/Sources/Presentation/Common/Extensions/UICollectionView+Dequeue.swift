@@ -9,9 +9,21 @@ import Foundation
 import UIKit
 
 extension UICollectionView {
-    func dequeue<T: UICollectionViewCell>(cellOfType _: T.Type, at indexPath: IndexPath) -> T {
+    func dequeue<T: UICollectionReusableView>(cellOfType _: T.Type, at indexPath: IndexPath) -> T {
         guard let cell = dequeueReusableCell(withReuseIdentifier: T.identifier, for: indexPath) as? T else {
             fatalError("Failed dequeuing a cell with identifier \(T.identifier) and type \(String(describing: T.self))")
+        }
+        return cell
+    }
+
+    func dequeue<T: UICollectionReusableView>(headerOfType _: T.Type, at indexPath: IndexPath) -> T {
+        guard let cell = dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: T.identifier,
+            for: indexPath
+        ) as? T
+        else {
+            fatalError("Failed dequeuing header with identifier \(T.identifier) and type \(String(describing: T.self))")
         }
         return cell
     }

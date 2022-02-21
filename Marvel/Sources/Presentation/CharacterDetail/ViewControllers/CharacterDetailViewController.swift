@@ -8,172 +8,106 @@
 import UIKit
 
 class CharacterDetailViewController: ViewController {
-    typealias ViewModel = CharacterDetailViewModelProtocol
+    typealias PresentationModelProtocol = PresentationModel
 
     private enum Constants {
-        static let imageHeightMultiplier = 0.618
-
-        enum Info {
-            static let spacing: CGFloat = 8
-            static let nameFontSize: CGFloat = 28
-            static let descriptionFontSize: CGFloat = 12
-            static let inset: CGFloat = 20
-        }
+        static let collectionContentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
     }
 
-    private var viewModel: ViewModel!
+    private var presentationModel: PresentationModelProtocol!
+    private var collectionView: UICollectionView!
+    private var dataSource: CollectionViewDataSource!
+    private var collectionViewDelegate: UICollectionViewDelegate!
+    private var layout: UICollectionViewCompositionalLayout!
 
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        return scrollView
-    }()
+    static func instantiate(
+        presentationModel: PresentationModelProtocol,
+        dataSource: CollectionViewDataSource,
+        collectionViewDelegate: UICollectionViewDelegate,
+        layout: UICollectionViewCompositionalLayout
+    ) -> Self {
+        let viewController = instantiate(presentationModel: presentationModel)
+        viewController.dataSource = dataSource
+        viewController.collectionViewDelegate = collectionViewDelegate
+        viewController.layout = layout
+        return viewController
+    }
 
-    private lazy var mainStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        return stackView
-    }()
-
-    private lazy var infoBackgroundView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var infoStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.spacing = Constants.Info.spacing
-        stackView.axis = .vertical
-        return stackView
-    }()
-
-    private lazy var characterImageView = CharacterImageView()
-
-    private lazy var nameLabel: UILabel = {
-        let label = UILabel()
-        label.font = .boldSystemFont(ofSize: Constants.Info.nameFontSize)
-        return label
-    }()
-
-    private lazy var descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = .boldSystemFont(ofSize: Constants.Info.descriptionFontSize)
-        label.textColor = .systemGray
-        label.numberOfLines = 0
-        return label
-    }()
-
-    static func instantiate(viewModel: ViewModel) -> Self {
+    static func instantiate(presentationModel: PresentationModelProtocol) -> Self {
         let viewController = Self()
-        viewController.viewModel = viewModel
+        viewController.presentationModel = presentationModel
         return viewController
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
-        viewModel.start()
+        presentationModel.start()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        characterImageView.clear()
-        viewModel.dispose()
+        presentationModel.dispose()
     }
 }
 
-extension CharacterDetailViewController: Configurable {
-    typealias Item = CharacterDetailData
-
-    func configure(using item: CharacterDetailData) {
-        nameLabel.text = item.name
-        descriptionLabel.text = item.description
-        characterImageView.loadImage(from: item.imageURL)
-    }
-}
-
-extension CharacterDetailViewController: CharacterDetailViewModelViewDelegate {
-    func viewModelDidStartLoading(_: CharacterDetailViewModelProtocol) {
+extension CharacterDetailViewController: CharacterDetailPresentationModelViewDelegate {
+    func modelDidStartLoading(_: CharacterDetailPresentationModelProtocol) {
         startLoading()
     }
 
-    func viewModelDidFinishLoading(_: CharacterDetailViewModelProtocol) {
+    func modelDidFinishLoading(_: CharacterDetailPresentationModelProtocol) {
         stopLoading()
     }
 
-    func viewModel(_: CharacterDetailViewModelProtocol, didRetrieve characterDetail: CharacterDetailData) {
-        configure(using: characterDetail)
+    func modelDidRetrieveCharacterInfo(_: CharacterDetailPresentationModelProtocol) {
+        reload()
     }
 
-    func viewModel(_ viewModel: CharacterDetailViewModelProtocol, didFailWithError message: String) {
-        showErrorAlert(message: message, retryButtonAction: viewModel.start)
+    func modelDidRetrieveComics(_: CharacterDetailPresentationModelProtocol) {
+        reload()
+    }
+
+    func model(_ presentationModel: CharacterDetailPresentationModelProtocol, didFailWithError message: String) {
+        showErrorAlert(message: message, retryButtonAction: presentationModel.start)
     }
 }
 
 private extension CharacterDetailViewController {
     func setUp() {
-        setUpBackground()
-        setUpSubviews()
-        setUpConstraints()
+        setUpCollectionView()
     }
 
-    func setUpBackground() {
-        view.backgroundColor = .systemBackground
+    func setUpCollectionView() {
+        let collectionView = createCollectionView()
+        setSubview(collectionView)
+        configureDataSource(of: collectionView)
+        configureConstraints(of: collectionView)
     }
 
-    func setUpSubviews() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(mainStackView)
-        mainStackView.addArrangedSubview(characterImageView)
-        mainStackView.addArrangedSubview(infoBackgroundView)
-        infoBackgroundView.addSubview(infoStackView)
-        infoStackView.addArrangedSubview(nameLabel)
-        infoStackView.addArrangedSubview(descriptionLabel)
+    func createCollectionView() -> UICollectionView {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.contentInset = Constants.collectionContentInset
+        return collectionView
     }
 
-    func setUpConstraints() {
-        setUpScrollViewConstraints()
-        setUpMainStackViewViewConstraints()
-        setUpInfoStackViewConstraints()
-        setUpCharacterImageViewConstraints()
+    func setSubview(_ collectionView: UICollectionView) {
+        self.collectionView = collectionView
+        view.addSubview(collectionView)
     }
 
-    func setUpScrollViewConstraints() {
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+    func configureDataSource(of collectionView: UICollectionView) {
+        collectionView.dataSource = dataSource
+        collectionView.delegate = collectionViewDelegate
+        dataSource.registerSubviews(in: collectionView)
     }
 
-    func setUpMainStackViewViewConstraints() {
-        NSLayoutConstraint.activate([
-            mainStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            mainStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            mainStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            mainStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            mainStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-        ])
+    func configureConstraints(of collectionView: UICollectionView) {
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.fit(collectionView, in: view)
     }
 
-    func setUpInfoStackViewConstraints() {
-        let inset = Constants.Info.inset
-        NSLayoutConstraint.activate([
-            infoStackView.leadingAnchor.constraint(equalTo: infoBackgroundView.leadingAnchor, constant: inset),
-            infoStackView.topAnchor.constraint(equalTo: infoBackgroundView.topAnchor, constant: inset),
-            infoStackView.trailingAnchor.constraint(equalTo: infoBackgroundView.trailingAnchor, constant: -inset),
-            infoStackView.bottomAnchor.constraint(equalTo: infoBackgroundView.bottomAnchor, constant: -inset),
-        ])
-    }
-
-    func setUpCharacterImageViewConstraints() {
-        let multiplier = Constants.imageHeightMultiplier
-        NSLayoutConstraint.activate([
-            characterImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: multiplier),
-        ])
+    func reload() {
+        collectionView.reloadData()
     }
 }

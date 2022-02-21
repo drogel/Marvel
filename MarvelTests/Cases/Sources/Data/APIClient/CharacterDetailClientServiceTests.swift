@@ -58,7 +58,7 @@ class CharacterDetailClientServiceTests: XCTestCase {
         givenSutWithSuccessfulNetworkService()
         let result = whenRetrievingCharacter()
         assertIsSuccess(result) {
-            XCTAssertEqual($0, Self.dataWrapperResponseStub)
+            XCTAssertEqual($0, ContentPage<Character>.empty)
         }
     }
 
@@ -93,7 +93,7 @@ class CharacterDetailClientServiceTests: XCTestCase {
 }
 
 private extension CharacterDetailClientServiceTests {
-    static let dataWrapperResponseStub = DataWrapper.withNilData
+    static let dataWrapperResponseStub = DataWrapper<CharacterData>.empty
 
     func givenSutWithNetworkServiceMock() {
         networkServiceMock = NetworkServiceMock()
@@ -116,8 +116,12 @@ private extension CharacterDetailClientServiceTests {
     }
 
     func givenSut(with networkService: NetworkService) {
-        let resultHandler = CharactersClientServiceResultHandler(parser: jsonParserMock, errorHandler: errorHandler)
-        sut = CharacterDetailClientService(client: networkService, resultHandler: resultHandler)
+        let resultHandler = ClientResultHandler(parser: jsonParserMock, errorHandler: errorHandler)
+        sut = CharacterDetailClientService(
+            client: networkService,
+            networkResultHandler: resultHandler,
+            dataResultHandler: CharacterDataResultHandlerFactory.createWithDataMappers()
+        )
     }
 
     func givenFailingParser() {
@@ -125,7 +129,7 @@ private extension CharacterDetailClientServiceTests {
     }
 
     func givenSuccesfulParser() {
-        jsonParserMock = JSONParserSuccessfulStub<DataWrapper>(dataStub: Self.dataWrapperResponseStub)
+        jsonParserMock = JSONParserSuccessfulStub<DataWrapper<CharacterData>>(dataStub: Self.dataWrapperResponseStub)
     }
 
     func givenErrorHandlerMock() {

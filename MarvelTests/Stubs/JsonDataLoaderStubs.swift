@@ -14,10 +14,15 @@ class JsonDataLoaderEmptyStub: JsonDataLoader {
     }
 }
 
-class JsonDataLoaderStub: JsonDataLoader {
-    static let codeStub = 200
+class JsonDataLoaderStub<D: DataObject>: JsonDataLoader {
+    let dataWrapperStub = DataWrapper<D>(
+        code: 200,
+        status: "",
+        copyright: "",
+        data: PageData<D>.empty
+    )
 
     func load<T>(fromFileNamed _: String) -> T? {
-        DataWrapper(code: Self.codeStub, status: nil, copyright: nil, data: nil) as? T
+        dataWrapperStub as? T
     }
 }

@@ -8,28 +8,18 @@
 import Foundation
 
 class CharactersDebugService: CharactersService {
-    private let dataLoader: JsonDataLoader
-    private let charactersFileName = DebugDataFileName.charactersFileName.rawValue
+    private let charactersFileName: DebugDataFileName = .charactersFileName
+    private let dataLoader: DataLoaderDebugService
+    private let dataResultHandler: CharacterDataResultHandler
 
-    init(dataLoader: JsonDataLoader) {
-        self.dataLoader = dataLoader
+    init(dataLoader: JsonDataLoader, dataResultHandler: CharacterDataResultHandler) {
+        self.dataLoader = JsonDataLoaderDebugService(dataLoader: dataLoader, fileName: charactersFileName)
+        self.dataResultHandler = dataResultHandler
     }
 
     func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.retrieveCharacters(completion: completion)
+        dataLoader.loadData { [weak self] result in
+            self?.dataResultHandler.completeWithServiceResult(result, completion: completion)
         }
-        return nil
-    }
-}
-
-private extension CharactersDebugService {
-    func retrieveCharacters(completion: @escaping (CharactersServiceResult) -> Void) {
-        guard let characters: DataWrapper = dataLoader.load(fromFileNamed: charactersFileName) else {
-            completion(.failure(.emptyData))
-            return
-        }
-        completion(.success(characters))
     }
 }

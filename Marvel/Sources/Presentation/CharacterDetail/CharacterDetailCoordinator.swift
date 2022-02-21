@@ -41,13 +41,32 @@ private extension CharacterDetailCoordinator {
     }
 
     func createCharacterDetailViewController() -> UIViewController {
-        let viewModel = CharacterDetailViewModel(
+        let infoPresentationModel = CharacterInfoPresentationModel(
             characterFetcher: container.fetchCharacterDetailUseCase,
-            characterID: container.characterID
+            characterID: container.characterID,
+            imageURLBuilder: container.imageURLBuilder
         )
-        let viewController = CharacterDetailViewController.instantiate(viewModel: viewModel)
+        let comicsPresentationModel = ComicsPresentationModel(
+            comicsFetcher: container.fetchComicsUseCase,
+            characterID: container.characterID,
+            imageURLBuilder: container.imageURLBuilder,
+            pager: container.pager
+        )
+        let presentationModel = CharacterDetailPresentationModel(
+            infoPresentationModel: infoPresentationModel,
+            comicsPresentationModel: comicsPresentationModel
+        )
+        infoPresentationModel.viewDelegate = presentationModel
+        comicsPresentationModel.viewDelegate = presentationModel
+        let dataSource = CharacterDetailDataSource(presentationModel: presentationModel)
+        let viewController = CharacterDetailViewController.instantiate(
+            presentationModel: presentationModel,
+            dataSource: dataSource,
+            collectionViewDelegate: dataSource,
+            layout: CharacterDetailLayout()
+        )
         viewController.transitioningDelegate = self
-        viewModel.viewDelegate = viewController
+        presentationModel.viewDelegate = viewController
         return viewController
     }
 }

@@ -8,5 +8,7 @@
 import UIKit
 
 extension UICollectionReusableView: Identifiable {
-    static let identifier = String(describing: self)
+    static var identifier: String {
+        String(describing: self)
+    }
 }

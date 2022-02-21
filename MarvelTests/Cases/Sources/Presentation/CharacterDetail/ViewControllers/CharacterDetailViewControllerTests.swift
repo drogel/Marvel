@@ -10,52 +10,61 @@ import XCTest
 
 class CharacterDetailViewControllerTests: XCTestCase {
     private var sut: CharacterDetailViewController!
-    private var viewModelMock: CharacterDetailViewModelMock!
+    private var presentationModelMock: CharacterDetailPresentationModelMock!
+    private var dataSourceMock: CollectionViewDataSourceMock!
+    private var delegateMock: CollectionViewDelegateMock!
 
     override func setUp() {
         super.setUp()
-        viewModelMock = CharacterDetailViewModelMock()
-        sut = CharacterDetailViewController.instantiate(viewModel: viewModelMock)
+        dataSourceMock = CollectionViewDataSourceMock()
+        delegateMock = CollectionViewDelegateMock()
+        presentationModelMock = CharacterDetailPresentationModelMock()
+        sut = CharacterDetailViewController.instantiate(
+            presentationModel: presentationModelMock,
+            dataSource: dataSourceMock,
+            collectionViewDelegate: delegateMock,
+            layout: CharacterDetailLayout()
+        )
     }
 
     override func tearDown() {
         sut = nil
-        viewModelMock = nil
+        presentationModelMock = nil
+        dataSourceMock = nil
         super.tearDown()
     }
 
-    func test_whenViewDidLoad_callsViewModelStart() {
-        assertViewModelStart(callCount: 0)
+    func test_whenViewDidLoad_callsPresentationModelStart() {
+        assertPresentationModelStart(callCount: 0)
         sut.loadViewIfNeeded()
-        assertViewModelStart(callCount: 1)
+        assertPresentationModelStart(callCount: 1)
     }
 
-    func test_whenViewDidDisappear_callsViewModelDispose() {
-        assertViewModelDispose(callCount: 0)
+    func test_whenViewDidDisappear_callsPresentationModelDispose() {
+        assertPresentationModelDispose(callCount: 0)
         sut.viewDidDisappear(false)
-        assertViewModelDispose(callCount: 1)
+        assertPresentationModelDispose(callCount: 1)
+    }
+
+    func test_whenViewDidLoad_registersSubviewsInCollectionView() {
+        assertDataSourceRegisterSubviews(callCount: 0)
+        sut.loadViewIfNeeded()
+        assertDataSourceRegisterSubviews(callCount: 1)
     }
 }
 
-private class CharacterDetailViewModelMock: CharacterDetailViewModelProtocol {
-    var startCallCount = 0
-    var disposeCallCount = 0
-
-    func start() {
-        startCallCount += 1
-    }
-
-    func dispose() {
-        disposeCallCount += 1
-    }
-}
+private class CharacterDetailPresentationModelMock: PresentationModelMock {}
 
 private extension CharacterDetailViewControllerTests {
-    func assertViewModelStart(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.startCallCount, callCount, line: line)
+    func assertPresentationModelStart(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(presentationModelMock.startCallCount, callCount, line: line)
     }
 
-    func assertViewModelDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.disposeCallCount, callCount, line: line)
+    func assertPresentationModelDispose(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(presentationModelMock.disposeCallCount, callCount, line: line)
+    }
+
+    func assertDataSourceRegisterSubviews(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(dataSourceMock.registerSubviewsCallCount, callCount, line: line)
     }
 }
