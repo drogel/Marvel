@@ -442,6 +442,7 @@
 				0571306F27A5C1D30009383E /* NetworkErrorHandler.swift */,
 				054ED2BC27A716C3000358A3 /* NetworkResultHandler.swift */,
 				0548461A279DC6E400C6EC66 /* Authentication */,
+				056B1FC827B93E51000EBC83 /* Mappers */,
 				05932C43279B18AE00549D7D /* Network */,
 				05967A2E27BD747B006D0613 /* Services */,
 			);
@@ -916,7 +917,6 @@
 			isa = PBXGroup;
 			children = (
 				05967A2F27BD749D006D0613 /* ResultHandlers */,
-				056B1FC827B93E51000EBC83 /* Mappers */,
 				05932C5D279B5DDD00549D7D /* JSONParser.swift */,
 			);
 			path = Parsers;
