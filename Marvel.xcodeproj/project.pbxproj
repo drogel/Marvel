@@ -48,6 +48,8 @@
 		053BBD8E27ADA8390033640A /* DataLoaderDebugService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD8D27ADA8390033640A /* DataLoaderDebugService.swift */; };
 		053BBD9127ADB7F30033640A /* FetchComicsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD9027ADB7F30033640A /* FetchComicsUseCase.swift */; };
 		053BBD9327ADB8B10033640A /* FetchComicsUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053BBD9227ADB8B10033640A /* FetchComicsUseCaseTests.swift */; };
+		05416F8327D2958D0051C82B /* CharactersDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05416F8227D2958D0051C82B /* CharactersDataSource.swift */; };
+		05416F8627D298D50051C82B /* CharactersDiffableDataSourceFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05416F8527D298D50051C82B /* CharactersDiffableDataSourceFactoryTests.swift */; };
 		0545945027988A1400A634AD /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545944F27988A1400A634AD /* Cancellable.swift */; };
 		0545945327988A4700A634AD /* FetchCharactersServiceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945227988A4700A634AD /* FetchCharactersServiceUseCase.swift */; };
 		0545945827988C9B00A634AD /* CharactersPresentationModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545945727988C9B00A634AD /* CharactersPresentationModelTests.swift */; };
@@ -243,6 +245,8 @@
 		053BBD8D27ADA8390033640A /* DataLoaderDebugService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoaderDebugService.swift; sourceTree = "<group>"; };
 		053BBD9027ADB7F30033640A /* FetchComicsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchComicsUseCase.swift; sourceTree = "<group>"; };
 		053BBD9227ADB8B10033640A /* FetchComicsUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchComicsUseCaseTests.swift; sourceTree = "<group>"; };
+		05416F8227D2958D0051C82B /* CharactersDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersDataSource.swift; sourceTree = "<group>"; };
+		05416F8527D298D50051C82B /* CharactersDiffableDataSourceFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersDiffableDataSourceFactoryTests.swift; sourceTree = "<group>"; };
 		0545944D2798872700A634AD /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		0545944E2798872D00A634AD /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		0545944F27988A1400A634AD /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
@@ -470,6 +474,22 @@
 				0545947127989DC500A634AD /* JsonDecoderDataLoader.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		05416F8127D295740051C82B /* DataSources */ = {
+			isa = PBXGroup;
+			children = (
+				05416F8227D2958D0051C82B /* CharactersDataSource.swift */,
+			);
+			path = DataSources;
+			sourceTree = "<group>";
+		};
+		05416F8427D298C10051C82B /* DataSources */ = {
+			isa = PBXGroup;
+			children = (
+				05416F8527D298D50051C82B /* CharactersDiffableDataSourceFactoryTests.swift */,
+			);
+			path = DataSources;
 			sourceTree = "<group>";
 		};
 		0545944C2798871C00A634AD /* Configuration */ = {
@@ -1052,6 +1072,7 @@
 			isa = PBXGroup;
 			children = (
 				05BD40AC27A9B5C400F2E513 /* CharactersCoordinatorTests.swift */,
+				05416F8427D298C10051C82B /* DataSources */,
 				053B9D972799C8D400CCF1C2 /* Models */,
 				0545945627988C8E00A634AD /* PresentationModels */,
 				059CD7B027AAE69A00523EE3 /* ViewControllers */,
@@ -1226,6 +1247,7 @@
 			isa = PBXGroup;
 			children = (
 				05C14926279C6F5B00927467 /* CharactersCoordinator.swift */,
+				05416F8127D295740051C82B /* DataSources */,
 				05DAC34127973E3C0062CC6F /* Layouts */,
 				053B9D962799C89600CCF1C2 /* Models */,
 				05DAC34E27974D800062CC6F /* PresentationModels */,
@@ -1508,6 +1530,7 @@
 				0585AF9D27975DDB00586ABD /* DataWrapper.swift in Sources */,
 				05B0856127AC5CB000A74DD0 /* CharacterInfoLayoutSection.swift in Sources */,
 				05459464279898A700A634AD /* CharactersService.swift in Sources */,
+				05416F8327D2958D0051C82B /* CharactersDataSource.swift in Sources */,
 				056B1FC327B93733000EBC83 /* Comic.swift in Sources */,
 				053BBD9127ADB7F30033640A /* FetchComicsUseCase.swift in Sources */,
 				05484627279E035600C6EC66 /* FillImageView.swift in Sources */,
@@ -1563,6 +1586,7 @@
 				05484615279D77BE00C6EC66 /* CharacterInfoModelTests.swift in Sources */,
 				0585AFA227975E9100586ABD /* DataWrapperTests.swift in Sources */,
 				054845FF279D66B200C6EC66 /* JsonDataLoaderStubs.swift in Sources */,
+				05416F8627D298D50051C82B /* CharactersDiffableDataSourceFactoryTests.swift in Sources */,
 				0545945827988C9B00A634AD /* CharactersPresentationModelTests.swift in Sources */,
 				05BD40A827A9B29400F2E513 /* UINavigationControllerMock.swift in Sources */,
 				054D95A327B18D71007B54DA /* ComicsClientServiceTests.swift in Sources */,
