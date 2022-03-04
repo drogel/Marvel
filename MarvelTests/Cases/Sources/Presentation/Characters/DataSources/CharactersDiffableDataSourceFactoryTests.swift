@@ -26,6 +26,9 @@ class CharactersDiffableDataSourceFactoryTests: XCTestCase {
     }
 
     func test_whenCreating_returnsDiffableDataSource() {
-        XCTAssertTrue(sut.create(collectionView: UICollectionViewStub()) is CharactersDataSource)
+        let collectionViewStub = UICollectionViewStub()
+        let presentationModelMock = CharactersPresentationModelMock()
+        let dataSource = sut.create(collectionView: collectionViewStub, presentationModel: presentationModelMock)
+        XCTAssertTrue(dataSource is CharactersDataSource)
     }
 }

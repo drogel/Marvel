@@ -13,17 +13,26 @@ enum CharactersSection {
 }
 
 protocol CharactersDataSourceFactory {
-    func create(collectionView: UICollectionView) -> UICollectionViewDataSource
+    func create(
+        collectionView: UICollectionView,
+        presentationModel: CharactersPresentationModelProtocol
+    ) -> UICollectionViewDataSource
 }
 
 class CharactersDiffableDataSourceFactory: CharactersDataSourceFactory {
-    func create(collectionView: UICollectionView) -> UICollectionViewDataSource {
-        CharactersDataSource(collectionView: collectionView)
+    func create(
+        collectionView: UICollectionView,
+        presentationModel: CharactersPresentationModelProtocol
+    ) -> UICollectionViewDataSource {
+        CharactersDataSource(collectionView: collectionView, presentationModel: presentationModel)
     }
 }
 
 class CharactersDataSource: UICollectionViewDiffableDataSource<CharactersSection, CharacterCellModel> {
-    init(collectionView: UICollectionView) {
+    private let presentationModel: CharactersPresentationModelProtocol
+
+    init(collectionView: UICollectionView, presentationModel: CharactersPresentationModelProtocol) {
+        self.presentationModel = presentationModel
         super.init(collectionView: collectionView, cellProvider: Self.provideCell)
     }
 }
