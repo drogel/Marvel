@@ -9,9 +9,10 @@ import Foundation
 
 protocol CharactersPresentationModelProtocol: PresentationModel {
     var numberOfItems: Int { get }
+    var cellModels: [CharacterCellModel] { get }
     func willDisplayCell(at indexPath: IndexPath)
     func select(at indexPath: IndexPath)
-    func cellData(at indexPath: IndexPath) -> CharacterCellModel?
+    func cellModel(at indexPath: IndexPath) -> CharacterCellModel?
 }
 
 protocol CharactersPresentationModelCoordinatorDelegate: AnyObject {
@@ -36,20 +37,21 @@ class CharactersPresentationModel: CharactersPresentationModelProtocol {
     weak var viewDelegate: CharactersPresentationModelViewDelegate?
 
     var numberOfItems: Int {
-        cells.count
+        cellModels.count
     }
+
+    private(set) var cellModels: [CharacterCellModel]
 
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
-    private var cells: [CharacterCellModel]
     private var charactersCancellable: Cancellable?
 
     init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder, pager: Pager) {
         self.charactersFetcher = charactersFetcher
         self.imageURLBuilder = imageURLBuilder
         self.pager = pager
-        cells = []
+        cellModels = []
     }
 
     func start() {
@@ -57,14 +59,14 @@ class CharactersPresentationModel: CharactersPresentationModelProtocol {
         loadCharacters(with: startingQuery)
     }
 
-    func cellData(at indexPath: IndexPath) -> CharacterCellModel? {
+    func cellModel(at indexPath: IndexPath) -> CharacterCellModel? {
         let row = indexPath.row
-        guard cells.indices.contains(row) else { return nil }
-        return cells[row]
+        guard cellModels.indices.contains(row) else { return nil }
+        return cellModels[row]
     }
 
     func select(at indexPath: IndexPath) {
-        guard let data = cellData(at: indexPath) else { return }
+        guard let data = cellModel(at: indexPath) else { return }
         coordinatorDelegate?.model(self, didSelectCharacterWith: data.identifier)
     }
 
@@ -88,8 +90,8 @@ private extension CharactersPresentationModel {
     }
 
     func loadMore() {
-        guard cells.hasElements else { return start() }
-        let query = FetchCharactersQuery(offset: cells.count)
+        guard cellModels.hasElements else { return start() }
+        let query = FetchCharactersQuery(offset: cellModels.count)
         loadCharacters(with: query)
     }
 
@@ -148,7 +150,7 @@ private extension CharactersPresentationModel {
     }
 
     func updateCells(using newCells: [CharacterCellModel]) {
-        cells.append(contentsOf: newCells)
+        cellModels.append(contentsOf: newCells)
         viewDelegate?.modelDidUpdateItems(self)
     }
 }

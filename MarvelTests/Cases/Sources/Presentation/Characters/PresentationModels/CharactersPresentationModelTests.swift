@@ -87,19 +87,19 @@ class CharactersPresentationModelTests: XCTestCase {
     }
 
     func test_whenRetrievingCellData_returnsNilIfDidNotFetchYet() {
-        XCTAssertNil(sut.cellData(at: IndexPath(item: 0, section: 0)))
+        XCTAssertNil(sut.cellModel(at: IndexPath(item: 0, section: 0)))
     }
 
     func test_givenDidStartSuccessfully_whenRetrievingCellDataAtValidIndex_returnsData() throws {
         givenDidStartSuccessfully()
-        let actual = try XCTUnwrap(sut.cellData(at: IndexPath(item: 0, section: 0)))
+        let actual = try XCTUnwrap(sut.cellModel(at: IndexPath(item: 0, section: 0)))
         XCTAssertEqual(actual.name, "Aginar")
         XCTAssertEqual(actual.description, "")
     }
 
     func test_givenDidStartSuccessfully_whenRetrievingCellDataAtInvalidIndex_returnsNil() {
         givenDidStartSuccessfully()
-        XCTAssertNil(sut.cellData(at: IndexPath(row: -1, section: 0)))
+        XCTAssertNil(sut.cellModel(at: IndexPath(row: -1, section: 0)))
     }
 
     func test_whenWillDisplayCellFromIndexZero_doesNotFetch() {
@@ -171,6 +171,13 @@ class CharactersPresentationModelTests: XCTestCase {
         let expectedImageVariant: ImageVariant = .detail
         let actualUsedVariant = try XCTUnwrap(imageURLBuilderMock.mostRecentImageVariant)
         XCTAssertEqual(actualUsedVariant, expectedImageVariant)
+    }
+
+    func test_givenDidStartSuccessfully_whenRetrievingCharacters_returnsExpectedCellModels() throws {
+        givenDidStartSuccessfully()
+        let expectedCellModels = buildExpectedCellModels(from: CharactersFetcherSuccessfulStub.charactersStub)
+        let actualCellModels = sut.cellModels
+        XCTAssertEqual(expectedCellModels, actualCellModels)
     }
 }
 
@@ -259,6 +266,18 @@ private extension CharactersPresentationModelTests {
 
     func assert(numberOfItems: Int, line: UInt = #line) {
         XCTAssertEqual(sut.numberOfItems, numberOfItems, line: line)
+    }
+
+    func buildExpectedCellModels(from characters: [Character]) -> [CharacterCellModel] {
+        characters.map { character in
+            let imageURL = imageURLBuilderMock.buildURL(from: character.image)
+            return CharacterCellModel(
+                identifier: character.identifier,
+                name: character.name,
+                description: character.description,
+                imageURL: imageURL
+            )
+        }
     }
 }
 

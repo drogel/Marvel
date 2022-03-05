@@ -28,12 +28,16 @@ class CharactersDiffableDataSourceFactory: CharactersDataSourceFactory {
     }
 }
 
-class CharactersDataSource: UICollectionViewDiffableDataSource<CharactersSection, CharacterCellModel> {
+class CharactersDataSource: UICollectionViewDiffableDataSource<CharactersSection, CharacterCellModel>, DataSource {
     private let presentationModel: CharactersPresentationModelProtocol
 
     init(collectionView: UICollectionView, presentationModel: CharactersPresentationModelProtocol) {
         self.presentationModel = presentationModel
         super.init(collectionView: collectionView, cellProvider: Self.provideCell)
+    }
+
+    func applySnapshot() {
+        // TODO: Implement
     }
 }
 

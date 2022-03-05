@@ -63,7 +63,7 @@ extension CharactersViewController: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        guard let cellData = presentationModel.cellData(at: indexPath) else { return UICollectionViewCell() }
+        guard let cellData = presentationModel.cellModel(at: indexPath) else { return UICollectionViewCell() }
         let cell = collectionView.dequeue(cellOfType: CharacterCell.self, at: indexPath)
         cell.configure(using: cellData)
         return cell
