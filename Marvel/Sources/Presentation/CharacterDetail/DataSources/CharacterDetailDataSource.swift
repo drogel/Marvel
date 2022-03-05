@@ -72,6 +72,10 @@ class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
         collectionView.register(cellOfType: ComicCell.self)
         collectionView.register(headerOfType: CollectionSectionHeader.self)
     }
+
+    func applySnapshot() {
+        // TODO: Implement when we migrate this data source to UICollectionViewDiffableDataSource
+    }
 }
 
 extension CharacterDetailDataSource: UICollectionViewDelegate {

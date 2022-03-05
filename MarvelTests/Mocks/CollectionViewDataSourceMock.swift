@@ -8,8 +8,10 @@
 import Foundation
 @testable import Marvel_Debug
 import UIKit
+import XCTest
 
 class CollectionViewDataSourceMock: NSObject, CollectionViewDataSource {
+    var applySnapshotCallCount = 0
     var registerSubviewsCallCount = 0
     var numberOfItemsInSectionCallCount = 0
     var cellForItemAtCallCount = 0
@@ -26,5 +28,17 @@ class CollectionViewDataSourceMock: NSObject, CollectionViewDataSource {
     func collectionView(_: UICollectionView, cellForItemAt _: IndexPath) -> UICollectionViewCell {
         cellForItemAtCallCount += 1
         return UICollectionViewCell()
+    }
+
+    func applySnapshot() {
+        applySnapshotCallCount += 1
+    }
+
+    func assertRegisterSubviews(callCount: Int, line _: UInt = #line) {
+        XCTAssertEqual(registerSubviewsCallCount, callCount)
+    }
+
+    func assertApplySnapshot(callCount: Int, line _: UInt = #line) {
+        XCTAssertEqual(applySnapshotCallCount, callCount)
     }
 }

@@ -5,7 +5,6 @@
 //  Created by Diego Rogel on 4/3/22.
 //
 
-import Foundation
 import UIKit
 
 enum CharactersSection {
@@ -16,19 +15,21 @@ protocol CharactersDataSourceFactory {
     func create(
         collectionView: UICollectionView,
         presentationModel: CharactersPresentationModelProtocol
-    ) -> UICollectionViewDataSource
+    ) -> CollectionViewDataSource
 }
 
 class CharactersDiffableDataSourceFactory: CharactersDataSourceFactory {
     func create(
         collectionView: UICollectionView,
         presentationModel: CharactersPresentationModelProtocol
-    ) -> UICollectionViewDataSource {
+    ) -> CollectionViewDataSource {
         CharactersDataSource(collectionView: collectionView, presentationModel: presentationModel)
     }
 }
 
-class CharactersDataSource: UICollectionViewDiffableDataSource<CharactersSection, CharacterCellModel>, DataSource {
+typealias CharactersDiffableDataSource = UICollectionViewDiffableDataSource<CharactersSection, CharacterCellModel>
+
+class CharactersDataSource: CharactersDiffableDataSource, CollectionViewDataSource {
     private let presentationModel: CharactersPresentationModelProtocol
 
     init(collectionView: UICollectionView, presentationModel: CharactersPresentationModelProtocol) {
@@ -36,8 +37,17 @@ class CharactersDataSource: UICollectionViewDiffableDataSource<CharactersSection
         super.init(collectionView: collectionView, cellProvider: Self.provideCell)
     }
 
+    func registerSubviews(in collectionView: UICollectionView) {
+        // TODO: Use the new iOS 14+ API to configure and register cells
+        collectionView.register(cellOfType: CharacterCell.self)
+    }
+
     func applySnapshot() {
-        // TODO: Implement
+        // TODO: Add tests for this kind of operations
+        var snapshot = Snapshot()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(presentationModel.cellModels, toSection: .main)
+        apply(snapshot)
     }
 }
 

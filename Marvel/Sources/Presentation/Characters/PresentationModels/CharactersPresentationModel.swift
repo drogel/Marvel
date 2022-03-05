@@ -8,11 +8,9 @@
 import Foundation
 
 protocol CharactersPresentationModelProtocol: PresentationModel {
-    var numberOfItems: Int { get }
     var cellModels: [CharacterCellModel] { get }
     func willDisplayCell(at indexPath: IndexPath)
     func select(at indexPath: IndexPath)
-    func cellModel(at indexPath: IndexPath) -> CharacterCellModel?
 }
 
 protocol CharactersPresentationModelCoordinatorDelegate: AnyObject {
@@ -36,10 +34,6 @@ class CharactersPresentationModel: CharactersPresentationModelProtocol {
     weak var coordinatorDelegate: CharactersPresentationModelCoordinatorDelegate?
     weak var viewDelegate: CharactersPresentationModelViewDelegate?
 
-    var numberOfItems: Int {
-        cellModels.count
-    }
-
     private(set) var cellModels: [CharacterCellModel]
 
     private let charactersFetcher: FetchCharactersUseCase
@@ -57,12 +51,6 @@ class CharactersPresentationModel: CharactersPresentationModelProtocol {
     func start() {
         viewDelegate?.modelDidStartLoading(self)
         loadCharacters(with: startingQuery)
-    }
-
-    func cellModel(at indexPath: IndexPath) -> CharacterCellModel? {
-        let row = indexPath.row
-        guard cellModels.indices.contains(row) else { return nil }
-        return cellModels[row]
     }
 
     func select(at indexPath: IndexPath) {
@@ -95,9 +83,17 @@ private extension CharactersPresentationModel {
         loadCharacters(with: query)
     }
 
+    func cellModel(at indexPath: IndexPath) -> CharacterCellModel? {
+        let row = indexPath.row
+        guard cellModels.indices.contains(row) else { return nil }
+        return cellModels[row]
+    }
+
     func loadCharacters(with query: FetchCharactersQuery) {
         charactersCancellable?.cancel()
-        charactersCancellable = charactersFetcher.fetch(query: query, completion: handleFetchCharactersResult)
+        charactersCancellable = charactersFetcher.fetch(query: query) { [weak self] result in
+            self?.handleFetchCharactersResult(result)
+        }
     }
 
     func handleFetchCharactersResult(_ result: FetchCharactersResult) {

@@ -9,4 +9,5 @@ import UIKit
 
 protocol CollectionViewDataSource: NSObject, UICollectionViewDataSource {
     func registerSubviews(in collectionView: UICollectionView)
+    func applySnapshot()
 }

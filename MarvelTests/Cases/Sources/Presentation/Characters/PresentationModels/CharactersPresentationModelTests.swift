@@ -87,19 +87,14 @@ class CharactersPresentationModelTests: XCTestCase {
     }
 
     func test_whenRetrievingCellData_returnsNilIfDidNotFetchYet() {
-        XCTAssertNil(sut.cellModel(at: IndexPath(item: 0, section: 0)))
+        XCTAssertTrue(sut.cellModels.isEmpty)
     }
 
     func test_givenDidStartSuccessfully_whenRetrievingCellDataAtValidIndex_returnsData() throws {
         givenDidStartSuccessfully()
-        let actual = try XCTUnwrap(sut.cellModel(at: IndexPath(item: 0, section: 0)))
+        let actual = try XCTUnwrap(sut.cellModels.first)
         XCTAssertEqual(actual.name, "Aginar")
         XCTAssertEqual(actual.description, "")
-    }
-
-    func test_givenDidStartSuccessfully_whenRetrievingCellDataAtInvalidIndex_returnsNil() {
-        givenDidStartSuccessfully()
-        XCTAssertNil(sut.cellModel(at: IndexPath(row: -1, section: 0)))
     }
 
     func test_whenWillDisplayCellFromIndexZero_doesNotFetch() {
@@ -265,7 +260,7 @@ private extension CharactersPresentationModelTests {
     }
 
     func assert(numberOfItems: Int, line: UInt = #line) {
-        XCTAssertEqual(sut.numberOfItems, numberOfItems, line: line)
+        XCTAssertEqual(sut.cellModels.count, numberOfItems, line: line)
     }
 
     func buildExpectedCellModels(from characters: [Character]) -> [CharacterCellModel] {

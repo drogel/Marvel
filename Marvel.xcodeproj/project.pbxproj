@@ -179,7 +179,6 @@
 		05C1492D279CA5E100927467 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C1492C279CA5E100927467 /* SpinnerViewController.swift */; };
 		05C1492F279CA6FE00927467 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C1492E279CA6FE00927467 /* LoadingViewController.swift */; };
 		05C14931279CA74000927467 /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C14930279CA74000927467 /* Loadable.swift */; };
-		05C723D527D3C2FC00051914 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C723D427D3C2FC00051914 /* DataSource.swift */; };
 		05C723D727D3C3FB00051914 /* UICollectionViewDiffableDataSource+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C723D627D3C3FB00051914 /* UICollectionViewDiffableDataSource+Snapshot.swift */; };
 		05DAC2FC2797258A0062CC6F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC2FB2797258A0062CC6F /* AppDelegate.swift */; };
 		05DAC2FE2797258A0062CC6F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC2FD2797258A0062CC6F /* SceneDelegate.swift */; };
@@ -382,7 +381,6 @@
 		05C1492C279CA5E100927467 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 		05C1492E279CA6FE00927467 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		05C14930279CA74000927467 /* Loadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
-		05C723D427D3C2FC00051914 /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		05C723D627D3C3FB00051914 /* UICollectionViewDiffableDataSource+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionViewDiffableDataSource+Snapshot.swift"; sourceTree = "<group>"; };
 		05DAC2F82797258A0062CC6F /* Marvel Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Marvel Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		05DAC2FB2797258A0062CC6F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -901,7 +899,6 @@
 			children = (
 				05B0855527AC569F00A74DD0 /* CollectionViewDataSource.swift */,
 				053B9D9D2799E38000CCF1C2 /* Configurable.swift */,
-				05C723D427D3C2FC00051914 /* DataSource.swift */,
 				05DAC33627973A2A0062CC6F /* Identifiable.swift */,
 				05484616279D865800C6EC66 /* Instantiable.swift */,
 				05C14930279CA74000927467 /* Loadable.swift */,
@@ -1504,7 +1501,6 @@
 				0545945B27988CC200A634AD /* PresentationModel.swift in Sources */,
 				05C1491A279C1C3B00927467 /* FetchImageView.swift in Sources */,
 				05484629279E1B0D00C6EC66 /* AlertPresenter.swift in Sources */,
-				05C723D527D3C2FC00051914 /* DataSource.swift in Sources */,
 				0514465D27AFF7C600DA524E /* ComicCell.swift in Sources */,
 				0513D24727AEEA2C0040DF58 /* CharacterDetailPresentationModel.swift in Sources */,
 				0514466127B0376F00DA524E /* CollectionSectionHeader.swift in Sources */,

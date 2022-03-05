@@ -17,13 +17,17 @@ class CharactersViewController: ViewController {
     private var presentationModel: PresentationModelProtocol!
     private var layout: UICollectionViewCompositionalLayout!
     private var collectionView: UICollectionView!
+    private var dataSource: CollectionViewDataSource!
+    private var dataSourceFactory: CharactersDataSourceFactory!
 
     static func instantiate(
         presentationModel: PresentationModelProtocol,
-        layout: UICollectionViewCompositionalLayout
+        layout: UICollectionViewCompositionalLayout,
+        dataSourceFactory: CharactersDataSourceFactory
     ) -> CharactersViewController {
         let viewController = instantiate(presentationModel: presentationModel)
         viewController.layout = layout
+        viewController.dataSourceFactory = dataSourceFactory
         return viewController
     }
 
@@ -35,8 +39,7 @@ class CharactersViewController: ViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpNavigationController()
-        setUpCollectionView()
+        setUp()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -47,26 +50,6 @@ class CharactersViewController: ViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         presentationModel.dispose()
-    }
-}
-
-extension CharactersViewController: UICollectionViewDataSource {
-    func numberOfSections(in _: UICollectionView) -> Int {
-        1
-    }
-
-    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        presentationModel.numberOfItems
-    }
-
-    func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
-        guard let cellData = presentationModel.cellModel(at: indexPath) else { return UICollectionViewCell() }
-        let cell = collectionView.dequeue(cellOfType: CharacterCell.self, at: indexPath)
-        cell.configure(using: cellData)
-        return cell
     }
 }
 
@@ -90,7 +73,7 @@ extension CharactersViewController: CharactersPresentationModelViewDelegate {
     }
 
     func modelDidUpdateItems(_: CharactersPresentationModelProtocol) {
-        collectionView.reloadData()
+        dataSource.applySnapshot()
     }
 
     func model(_ presentationModel: CharactersPresentationModelProtocol, didFailWithError message: String) {
@@ -99,6 +82,11 @@ extension CharactersViewController: CharactersPresentationModelViewDelegate {
 }
 
 private extension CharactersViewController {
+    func setUp() {
+        setUpNavigationController()
+        setUpCollectionView()
+    }
+
     func setUpNavigationController() {
         navigationController?.navigationBar.prefersLargeTitles = true
         title = "characters".localized
@@ -122,7 +110,8 @@ private extension CharactersViewController {
     }
 
     func configureDataSource(of collectionView: UICollectionView) {
-        collectionView.dataSource = self
+        dataSource = dataSourceFactory.create(collectionView: collectionView, presentationModel: presentationModel)
+        collectionView.dataSource = dataSource
         collectionView.delegate = self
     }
 
@@ -132,6 +121,6 @@ private extension CharactersViewController {
     }
 
     func registerSubviews(in collectionView: UICollectionView) {
-        collectionView.register(cellOfType: CharacterCell.self)
+        dataSource.registerSubviews(in: collectionView)
     }
 }

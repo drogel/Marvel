@@ -18,6 +18,7 @@ class CharactersDebugService: CharactersService {
     }
 
     func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
+        // TODO: Prevent loading if characters was previously called
         dataLoader.loadData { [weak self] result in
             self?.dataResultHandler.completeWithServiceResult(result, completion: completion)
         }
