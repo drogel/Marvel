@@ -7,7 +7,8 @@
 
 import UIKit
 
-protocol CollectionViewDataSource: NSObject, UICollectionViewDataSource {
+protocol CollectionViewDataSource {
+    func setDataSource(of collectionView: UICollectionView)
     func registerSubviews(in collectionView: UICollectionView)
     func applySnapshot()
 }

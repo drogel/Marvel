@@ -111,7 +111,7 @@ private extension CharactersViewController {
 
     func configureDataSource(of collectionView: UICollectionView) {
         dataSource = dataSourceFactory.create(collectionView: collectionView, presentationModel: presentationModel)
-        collectionView.dataSource = dataSource
+        dataSource.setDataSource(of: collectionView)
         collectionView.delegate = self
     }
 

@@ -97,8 +97,8 @@ private extension CharacterDetailViewController {
     }
 
     func configureDataSource(of collectionView: UICollectionView) {
-        collectionView.dataSource = dataSource
         collectionView.delegate = collectionViewDelegate
+        dataSource.setDataSource(of: collectionView)
         dataSource.registerSubviews(in: collectionView)
     }
 

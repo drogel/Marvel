@@ -51,11 +51,21 @@ class CharacterDetailViewControllerTests: XCTestCase {
         sut.loadViewIfNeeded()
         assertDataSourceRegisterSubviews(callCount: 1)
     }
+
+    func test_whenViewDidLoad_dataSourceIsSet() {
+        dataSourceMock.assertSetDataSource(callCount: 0)
+        sut.loadViewIfNeeded()
+        dataSourceMock.assertSetDataSource(callCount: 1)
+    }
 }
 
 private class CharacterDetailPresentationModelMock: PresentationModelMock {}
 
 private extension CharacterDetailViewControllerTests {
+    func givenViewDidLoad() {
+        sut.loadViewIfNeeded()
+    }
+
     func assertPresentationModelStart(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(presentationModelMock.startCallCount, callCount, line: line)
     }

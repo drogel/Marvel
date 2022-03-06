@@ -19,11 +19,15 @@ enum CharacterDetailSection: Int, CaseIterable {
     }
 }
 
-class CharacterDetailDataSource: NSObject, CollectionViewDataSource {
+class CharacterDetailDataSource: NSObject, CollectionViewDataSource, UICollectionViewDataSource {
     private let presentationModel: CharacterDetailPresentationModelProtocol!
 
     init(presentationModel: CharacterDetailPresentationModelProtocol) {
         self.presentationModel = presentationModel
+    }
+
+    func setDataSource(of collectionView: UICollectionView) {
+        collectionView.dataSource = self
     }
 
     func numberOfSections(in _: UICollectionView) -> Int {

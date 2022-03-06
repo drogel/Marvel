@@ -27,38 +27,48 @@ class CharactersDiffableDataSourceFactory: CharactersDataSourceFactory {
     }
 }
 
-typealias CharactersDiffableDataSource = UICollectionViewDiffableDataSource<CharactersSection, CharacterCellModel>
+typealias CharactersDiffableDataSource = UICollectionViewDiffableDataSource<CharactersSection, CharacterCell.Item>
 
-class CharactersDataSource: CharactersDiffableDataSource, CollectionViewDataSource {
+class CharactersDataSource: CollectionViewDataSource {
     private let presentationModel: CharactersPresentationModelProtocol
+    private let collectionView: UICollectionView
+    private let cellRegistration = CellRegistration<CharacterCell>(handler: CharactersDataSource.configureCell)
+    private lazy var diffableDataSource = CharactersDiffableDataSource(
+        collectionView: collectionView,
+        cellProvider: provideCell
+    )
 
     init(collectionView: UICollectionView, presentationModel: CharactersPresentationModelProtocol) {
         self.presentationModel = presentationModel
-        super.init(collectionView: collectionView, cellProvider: Self.provideCell)
+        self.collectionView = collectionView
     }
 
-    func registerSubviews(in collectionView: UICollectionView) {
-        // TODO: Use the new iOS 14+ API to configure and register cells
-        collectionView.register(cellOfType: CharacterCell.self)
+    func setDataSource(of collectionView: UICollectionView) {
+        collectionView.dataSource = diffableDataSource
+    }
+
+    func registerSubviews(in _: UICollectionView) {
+        // TODO: Remove this when fully migrated to the new iOS 14+ API to configure and register cells
     }
 
     func applySnapshot() {
-        // TODO: Add tests for this kind of operations
-        var snapshot = Snapshot()
+        var snapshot = CharactersDiffableDataSource.Snapshot()
         snapshot.appendSections([.main])
         snapshot.appendItems(presentationModel.cellModels, toSection: .main)
-        apply(snapshot)
+        diffableDataSource.apply(snapshot)
     }
 }
 
 private extension CharactersDataSource {
-    static func provideCell(
+    static func configureCell(_ cell: CharacterCell, at _: IndexPath, using model: CharacterCell.Item) {
+        cell.configure(using: model)
+    }
+
+    func provideCell(
         in collectionView: UICollectionView,
         forRowAt indexPath: IndexPath,
-        with model: CharacterCellModel
+        with model: CharacterCell.Item
     ) -> UICollectionViewCell {
-        let cell = collectionView.dequeue(cellOfType: CharacterCell.self, at: indexPath)
-        cell.configure(using: model)
-        return cell
+        collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: model)
     }
 }
