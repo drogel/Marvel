@@ -21,6 +21,14 @@ enum CharacterDetailSection: Int, CaseIterable {
 
 class CharacterDetailDataSource: NSObject, CollectionViewDataSource, UICollectionViewDataSource {
     private let presentationModel: CharacterDetailPresentationModelProtocol!
+    private let imageRegistration = CellRegistration<CharacterImageCell>(handler: CharacterDetailDataSource.configure)
+    private let infoRegistration = CellRegistration<CharacterImageCell>(handler: CharacterDetailDataSource.configure)
+    private let comicRegistration = CellRegistration<CharacterImageCell>(handler: CharacterDetailDataSource.configure)
+    // TODO: Create some kind of HeaderRegistration
+    private let comicHeaderRegistration = SupplementaryRegistration<CollectionSectionHeader>(
+        elementKind: UICollectionView.elementKindSectionHeader,
+        handler: CharacterDetailDataSource.configure
+    )
 
     init(presentationModel: CharacterDetailPresentationModelProtocol) {
         self.presentationModel = presentationModel
@@ -94,6 +102,22 @@ extension CharacterDetailDataSource: UICollectionViewDelegate {
 }
 
 private extension CharacterDetailDataSource {
+    static func configure(_ imageCell: CharacterImageCell, at _: IndexPath, using model: CharacterImageCell.Item) {
+        imageCell.configure(using: model)
+    }
+
+    static func configure(_ infoCell: CharacterInfoCell, at _: IndexPath, using model: CharacterInfoCell.Item) {
+        infoCell.configure(using: model)
+    }
+
+    static func configure(_ comicCell: ComicCell, at _: IndexPath, using model: ComicCell.Item) {
+        comicCell.configure(using: model)
+    }
+
+    static func configure(_ comicsSectionHeader: CollectionSectionHeader, with _: String, at _: IndexPath) {
+        comicsSectionHeader.configure(using: "comics".localized)
+    }
+
     func imageCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeue(cellOfType: CharacterImageCell.self, at: indexPath)
         cell.configure(using: presentationModel.imageCellData)

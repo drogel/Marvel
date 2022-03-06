@@ -8,3 +8,5 @@
 import UIKit
 
 typealias CellRegistration<C: UICollectionViewCell & Configurable> = UICollectionView.CellRegistration<C, C.Item>
+typealias SupplementaryRegistration<S: UICollectionReusableView & Configurable>
+    = UICollectionView.SupplementaryRegistration<S>
