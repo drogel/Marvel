@@ -9,17 +9,13 @@ import Foundation
 @testable import Marvel_Debug
 
 class CharacterDetailPresentationModelMock: PresentationModelMock, CharacterDetailPresentationModelProtocol {
+    var comicCellModels: [ComicCellModel] = []
+
     var comicsSectionTitle: String = ""
 
     var imageCellData: CharacterImageModel?
 
     var infoCellData: CharacterInfoModel?
-
-    var numberOfComics: Int = 0
-
-    func comicCellData(at _: IndexPath) -> ComicCellModel? {
-        nil
-    }
 
     func willDisplayComicCell(at _: IndexPath) {}
 }

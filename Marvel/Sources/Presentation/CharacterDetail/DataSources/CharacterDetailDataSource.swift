@@ -44,10 +44,11 @@ class CharacterDetailDataSource: CollectionViewDataSource {
         handler: CharacterDetailDataSource.configure
     )
 
-    private lazy var diffableDataSource = CharacterDetailDiffableDataSource(
-        collectionView: collectionView,
-        cellProvider: provideCell
-    )
+    private lazy var diffableDataSource: CharacterDetailDiffableDataSource = {
+        let dataSource = CharacterDetailDiffableDataSource(collectionView: collectionView, cellProvider: provideCell)
+        dataSource.supplementaryViewProvider = provideSupplementaryView
+        return dataSource
+    }()
 
     init(collectionView: UICollectionView, presentationModel: CharacterDetailPresentationModelProtocol) {
         self.presentationModel = presentationModel
@@ -58,22 +59,13 @@ class CharacterDetailDataSource: CollectionViewDataSource {
         collectionView.dataSource = diffableDataSource
     }
 
-    // TODO: Implement header
-//    func collectionView(
-//        _ collectionView: UICollectionView,
-//        viewForSupplementaryElementOfKind _: String,
-//        at indexPath: IndexPath
-//    ) -> UICollectionReusableView {
-//        switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
-//        case .comics:
-//            return comicsHeader(in: collectionView, at: indexPath)
-//        default:
-//            return UICollectionReusableView()
-//        }
-//    }
-
     func applySnapshot() {
-        // TODO: Implement when we migrate this data source to UICollectionViewDiffableDataSource
+        var snapshot = CharacterDetailDiffableDataSource.Snapshot()
+        snapshot.appendSections([.image, .info, .comics])
+        snapshot.appendItems([presentationModel.imageCellData], toSection: .image)
+        snapshot.appendItems([presentationModel.infoCellData], toSection: .info)
+        snapshot.appendItems(presentationModel.comicCellModels, toSection: .comics)
+        diffableDataSource.apply(snapshot)
     }
 }
 
@@ -111,7 +103,16 @@ private extension CharacterDetailDataSource {
         }
     }
 
-    func comicsHeader(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionReusableView {
-        collectionView.dequeueConfiguredReusableSupplementary(using: comicHeaderRegistration, for: indexPath)
+    func provideSupplementaryView(
+        in collectionView: UICollectionView,
+        of _: String,
+        forRowAt indexPath: IndexPath
+    ) -> UICollectionReusableView {
+        switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
+        case .comics:
+            return collectionView.dequeueConfiguredReusableSupplementary(using: comicHeaderRegistration, for: indexPath)
+        default:
+            return UICollectionReusableView()
+        }
     }
 }

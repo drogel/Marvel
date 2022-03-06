@@ -118,6 +118,6 @@ private extension CharacterDetailViewController {
     }
 
     func reload() {
-        collectionView.reloadData()
+        dataSource.applySnapshot()
     }
 }

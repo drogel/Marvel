@@ -10,23 +10,17 @@ import Foundation
 
 class ComicsPresentationModelMock: ComicsPresentationModelProtocol {
     var startCallCount = 0
+    var comicCellModelsCallCount = 0
     var disposeCallCount = 0
-    var numberOfComicsCallCount = 0
-    var comicsCellDataCallCount = 0
     var willDisplayComicCellCallCount = 0
 
-    var numberOfComics: Int {
-        numberOfComicsCallCount += 1
-        return 0
+    var comicCellModels: [ComicCellModel] {
+        comicCellModelsCallCount += 1
+        return []
     }
 
     func start() {
         startCallCount += 1
-    }
-
-    func comicCellData(at _: IndexPath) -> ComicCellModel? {
-        comicsCellDataCallCount += 1
-        return nil
     }
 
     func willDisplayComicCell(at _: IndexPath) {

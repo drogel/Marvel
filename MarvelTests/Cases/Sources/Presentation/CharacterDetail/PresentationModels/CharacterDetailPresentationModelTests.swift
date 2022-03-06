@@ -79,16 +79,10 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         assertInfoPresentationModelInfoCellData(callCount: 1)
     }
 
-    func test_numberOfComics_delegatesToComicsPresentationModel() {
-        assertComicsPresentationModelNumberOfComics(callCount: 0)
-        _ = sut.numberOfComics
-        assertComicsPresentationModelNumberOfComics(callCount: 1)
-    }
-
     func test_comicCellData_delegatesToComicsPresentationModel() {
-        assertComicsPresentationModelComicCellModel(callCount: 0)
-        _ = sut.comicCellData(at: IndexPath(row: 0, section: 0))
-        assertComicsPresentationModelComicCellModel(callCount: 1)
+        assertComicsPresentationModelComicCellModels(callCount: 0)
+        _ = sut.comicCellModels
+        assertComicsPresentationModelComicCellModels(callCount: 1)
     }
 
     func test_givenViewDelegate_whenInfoStartsLoading_notifiesView() {
@@ -145,10 +139,6 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         assertViewDelegateDidFinishLoading(callCount: 0)
         sut.modelDidFinishLoading(comicsPresentationModelMock)
         assertViewDelegateDidFinishLoading(callCount: 0)
-    }
-
-    func test_comicsSectionTitle_returnsComics() {
-        XCTAssertEqual(sut.comicsSectionTitle, "comics".localized)
     }
 
     func test_whenAboutToDisplayAComicCell_delegatesToComicsPresentationModel() {
@@ -220,12 +210,8 @@ private extension CharacterDetailPresentationModelTests {
         XCTAssertEqual(infoPresentationModelMock.infoCellDataCallCount, callCount, line: line)
     }
 
-    func assertComicsPresentationModelNumberOfComics(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicsPresentationModelMock.numberOfComicsCallCount, callCount, line: line)
-    }
-
-    func assertComicsPresentationModelComicCellModel(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicsPresentationModelMock.comicsCellDataCallCount, callCount, line: line)
+    func assertComicsPresentationModelComicCellModels(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(comicsPresentationModelMock.comicCellModelsCallCount, callCount, line: line)
     }
 
     func assertComicsPresentationModelWillDisplayCell(callCount: Int, line: UInt = #line) {
