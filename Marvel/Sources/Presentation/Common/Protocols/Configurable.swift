@@ -6,6 +6,11 @@
 //
 
 import Foundation
+import UIKit
+
+typealias ConfigurableCell = UICollectionViewCell & Configurable
+
+typealias ConfigurableReusableView = UICollectionReusableView & Configurable
 
 protocol Configurable {
     associatedtype Item

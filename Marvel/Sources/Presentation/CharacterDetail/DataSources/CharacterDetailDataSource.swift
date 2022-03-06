@@ -22,11 +22,9 @@ enum CharacterDetailSection: Int, CaseIterable {
 class CharacterDetailDataSource: NSObject, CollectionViewDataSource, UICollectionViewDataSource {
     private let presentationModel: CharacterDetailPresentationModelProtocol!
     private let imageRegistration = CellRegistration<CharacterImageCell>(handler: CharacterDetailDataSource.configure)
-    private let infoRegistration = CellRegistration<CharacterImageCell>(handler: CharacterDetailDataSource.configure)
-    private let comicRegistration = CellRegistration<CharacterImageCell>(handler: CharacterDetailDataSource.configure)
-    // TODO: Create some kind of HeaderRegistration
-    private let comicHeaderRegistration = SupplementaryRegistration<CollectionSectionHeader>(
-        elementKind: UICollectionView.elementKindSectionHeader,
+    private let infoRegistration = CellRegistration<CharacterInfoCell>(handler: CharacterDetailDataSource.configure)
+    private let comicRegistration = CellRegistration<ComicCell>(handler: CharacterDetailDataSource.configure)
+    private let comicHeaderRegistration = SupplementaryRegistration<CollectionSectionHeader>.header(
         handler: CharacterDetailDataSource.configure
     )
 
@@ -78,13 +76,6 @@ class CharacterDetailDataSource: NSObject, CollectionViewDataSource, UICollectio
         }
     }
 
-    func registerSubviews(in collectionView: UICollectionView) {
-        collectionView.register(cellOfType: CharacterImageCell.self)
-        collectionView.register(cellOfType: CharacterInfoCell.self)
-        collectionView.register(cellOfType: ComicCell.self)
-        collectionView.register(headerOfType: CollectionSectionHeader.self)
-    }
-
     func applySnapshot() {
         // TODO: Implement when we migrate this data source to UICollectionViewDiffableDataSource
     }
@@ -102,7 +93,7 @@ extension CharacterDetailDataSource: UICollectionViewDelegate {
 }
 
 private extension CharacterDetailDataSource {
-    static func configure(_ imageCell: CharacterImageCell, at _: IndexPath, using model: CharacterImageCell.Item) {
+    static func configure(_ imageCell: CharacterImageCell, at _: IndexPath, using model: CharacterImageModel?) {
         imageCell.configure(using: model)
     }
 
@@ -119,27 +110,21 @@ private extension CharacterDetailDataSource {
     }
 
     func imageCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeue(cellOfType: CharacterImageCell.self, at: indexPath)
-        cell.configure(using: presentationModel.imageCellData)
-        return cell
+        guard let cellModel = presentationModel.imageCellData else { return UICollectionViewCell() }
+        return collectionView.dequeueConfiguredReusableCell(using: imageRegistration, for: indexPath, item: cellModel)
     }
 
     func infoCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeue(cellOfType: CharacterInfoCell.self, at: indexPath)
-        cell.configure(using: presentationModel.infoCellData)
-        return cell
+        guard let cellModel = presentationModel.infoCellData else { return UICollectionViewCell() }
+        return collectionView.dequeueConfiguredReusableCell(using: infoRegistration, for: indexPath, item: cellModel)
     }
 
     func comicCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
-        guard let comicCellData = presentationModel.comicCellData(at: indexPath) else { return UICollectionViewCell() }
-        let cell = collectionView.dequeue(cellOfType: ComicCell.self, at: indexPath)
-        cell.configure(using: comicCellData)
-        return cell
+        guard let cellModel = presentationModel.comicCellData(at: indexPath) else { return UICollectionViewCell() }
+        return collectionView.dequeueConfiguredReusableCell(using: comicRegistration, for: indexPath, item: cellModel)
     }
 
     func comicsHeader(in collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeue(headerOfType: CollectionSectionHeader.self, at: indexPath)
-        header.configure(using: presentationModel.comicsSectionTitle)
-        return header
+        collectionView.dequeueConfiguredReusableSupplementary(using: comicHeaderRegistration, for: indexPath)
     }
 }

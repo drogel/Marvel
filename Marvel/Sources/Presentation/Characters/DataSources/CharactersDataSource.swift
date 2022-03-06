@@ -47,10 +47,6 @@ class CharactersDataSource: CollectionViewDataSource {
         collectionView.dataSource = diffableDataSource
     }
 
-    func registerSubviews(in _: UICollectionView) {
-        // TODO: Remove this when fully migrated to the new iOS 14+ API to configure and register cells
-    }
-
     func applySnapshot() {
         var snapshot = CharactersDiffableDataSource.Snapshot()
         snapshot.appendSections([.main])

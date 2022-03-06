@@ -21,10 +21,6 @@ class CollectionViewDataSourceMock: NSObject, CollectionViewDataSource, UICollec
         setDataSourceCallCount += 1
     }
 
-    func registerSubviews(in _: UICollectionView) {
-        registerSubviewsCallCount += 1
-    }
-
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
         numberOfItemsInSectionCallCount += 1
         return 0
@@ -37,10 +33,6 @@ class CollectionViewDataSourceMock: NSObject, CollectionViewDataSource, UICollec
 
     func applySnapshot() {
         applySnapshotCallCount += 1
-    }
-
-    func assertRegisterSubviews(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(registerSubviewsCallCount, callCount, line: line)
     }
 
     func assertApplySnapshot(callCount: Int, line: UInt = #line) {

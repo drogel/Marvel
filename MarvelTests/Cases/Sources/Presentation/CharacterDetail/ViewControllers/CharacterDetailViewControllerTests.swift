@@ -46,12 +46,6 @@ class CharacterDetailViewControllerTests: XCTestCase {
         assertPresentationModelDispose(callCount: 1)
     }
 
-    func test_whenViewDidLoad_registersSubviewsInCollectionView() {
-        assertDataSourceRegisterSubviews(callCount: 0)
-        sut.loadViewIfNeeded()
-        assertDataSourceRegisterSubviews(callCount: 1)
-    }
-
     func test_whenViewDidLoad_dataSourceIsSet() {
         dataSourceMock.assertSetDataSource(callCount: 0)
         sut.loadViewIfNeeded()
@@ -72,9 +66,5 @@ private extension CharacterDetailViewControllerTests {
 
     func assertPresentationModelDispose(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(presentationModelMock.disposeCallCount, callCount, line: line)
-    }
-
-    func assertDataSourceRegisterSubviews(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(dataSourceMock.registerSubviewsCallCount, callCount, line: line)
     }
 }

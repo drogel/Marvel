@@ -97,7 +97,6 @@ private extension CharactersViewController {
         setSubview(collectionView)
         configureDataSource(of: collectionView)
         configureConstraints(of: collectionView)
-        registerSubviews(in: collectionView)
     }
 
     func createCollectionView() -> UICollectionView {
@@ -118,9 +117,5 @@ private extension CharactersViewController {
     func configureConstraints(of collectionView: UICollectionView) {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.fit(collectionView, in: view)
-    }
-
-    func registerSubviews(in collectionView: UICollectionView) {
-        dataSource.registerSubviews(in: collectionView)
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class CharacterInfoCell: UICollectionViewCell {
+class CharacterInfoCell: ConfigurableCell {
     private enum Constants {
         static let spacing: CGFloat = 8
         static let nameFontSize: CGFloat = 28
@@ -55,7 +55,7 @@ class CharacterInfoCell: UICollectionViewCell {
     }
 }
 
-extension CharacterInfoCell: Configurable {
+extension CharacterInfoCell {
     typealias Item = CharacterInfoModel?
 
     func configure(using item: CharacterInfoModel?) {

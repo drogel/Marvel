@@ -18,7 +18,6 @@ class CharacterDetailDataSourceTests: XCTestCase {
         collectionViewStub = UICollectionViewStub()
         presentationModelMock = CharacterDetailPresentationModelMock()
         sut = CharacterDetailDataSource(presentationModel: presentationModelMock)
-        sut.registerSubviews(in: collectionViewStub)
     }
 
     override func tearDown() {
