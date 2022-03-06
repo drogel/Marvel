@@ -58,7 +58,7 @@ private extension CharactersCoordinator {
         let viewController = CharactersViewController.instantiate(
             presentationModel: presentationModel,
             layout: CharactersLayout(),
-            dataSourceFactory: CharactersDiffableDataSourceFactory()
+            dataSourceFactory: CharactersDataSourceFactory(presentationModel: presentationModel)
         )
         presentationModel.coordinatorDelegate = self
         presentationModel.viewDelegate = viewController

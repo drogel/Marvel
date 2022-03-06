@@ -11,18 +11,14 @@ enum CharactersSection {
     case main
 }
 
-protocol CharactersDataSourceFactory {
-    func create(
-        collectionView: UICollectionView,
-        presentationModel: CharactersPresentationModelProtocol
-    ) -> CollectionViewDataSource
-}
+class CharactersDataSourceFactory: CollectionViewDataSourceFactory {
+    private let presentationModel: CharactersPresentationModelProtocol
 
-class CharactersDiffableDataSourceFactory: CharactersDataSourceFactory {
-    func create(
-        collectionView: UICollectionView,
-        presentationModel: CharactersPresentationModelProtocol
-    ) -> CollectionViewDataSource {
+    init(presentationModel: CharactersPresentationModelProtocol) {
+        self.presentationModel = presentationModel
+    }
+
+    func create(collectionView: UICollectionView) -> CollectionViewDataSource {
         CharactersDataSource(collectionView: collectionView, presentationModel: presentationModel)
     }
 }

@@ -58,12 +58,10 @@ private extension CharacterDetailCoordinator {
         )
         infoPresentationModel.viewDelegate = presentationModel
         comicsPresentationModel.viewDelegate = presentationModel
-        let dataSource = CharacterDetailDataSource(presentationModel: presentationModel)
         let viewController = CharacterDetailViewController.instantiate(
             presentationModel: presentationModel,
-            dataSource: dataSource,
-            collectionViewDelegate: dataSource,
-            layout: CharacterDetailLayout()
+            layout: CharacterDetailLayout(),
+            dataSourceFactory: CharacterDetailDataSourceFactory(presentationModel: presentationModel)
         )
         viewController.transitioningDelegate = self
         presentationModel.viewDelegate = viewController

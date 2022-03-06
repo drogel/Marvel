@@ -10,6 +10,7 @@ import Foundation
 typealias CharacterDetailPresentationModels = CharacterInfoPresentationModelProtocol & ComicsPresentationModelProtocol
 
 protocol CharacterDetailPresentationModelProtocol: CharacterDetailPresentationModels {
+    // TODO: Remove this
     var comicsSectionTitle: String { get }
 }
 

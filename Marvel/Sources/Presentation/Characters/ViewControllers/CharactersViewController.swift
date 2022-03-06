@@ -18,12 +18,12 @@ class CharactersViewController: ViewController {
     private var layout: UICollectionViewCompositionalLayout!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
-    private var dataSourceFactory: CharactersDataSourceFactory!
+    private var dataSourceFactory: CollectionViewDataSourceFactory!
 
     static func instantiate(
         presentationModel: PresentationModelProtocol,
         layout: UICollectionViewCompositionalLayout,
-        dataSourceFactory: CharactersDataSourceFactory
+        dataSourceFactory: CollectionViewDataSourceFactory
     ) -> CharactersViewController {
         let viewController = instantiate(presentationModel: presentationModel)
         viewController.layout = layout
@@ -109,7 +109,7 @@ private extension CharactersViewController {
     }
 
     func configureDataSource(of collectionView: UICollectionView) {
-        dataSource = dataSourceFactory.create(collectionView: collectionView, presentationModel: presentationModel)
+        dataSource = dataSourceFactory.create(collectionView: collectionView)
         dataSource.setDataSource(of: collectionView)
         collectionView.delegate = self
     }

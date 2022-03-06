@@ -1,5 +1,5 @@
 //
-//  CharactersDiffableDataSourceFactoryTests.swift
+//  CharactersDataSourceFactoryTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 4/3/22.
@@ -8,12 +8,13 @@
 @testable import Marvel_Debug
 import XCTest
 
-class CharactersDiffableDataSourceFactoryTests: XCTestCase {
-    private var sut: CharactersDiffableDataSourceFactory!
+class CharactersDataSourceFactoryTests: XCTestCase {
+    private var sut: CharactersDataSourceFactory!
 
     override func setUp() {
         super.setUp()
-        sut = CharactersDiffableDataSourceFactory()
+        let presentationModelMock = CharactersPresentationModelMock()
+        sut = CharactersDataSourceFactory(presentationModel: presentationModelMock)
     }
 
     override func tearDown() {
@@ -25,10 +26,9 @@ class CharactersDiffableDataSourceFactoryTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is CharactersDataSourceFactory)
     }
 
-    func test_whenCreating_returnsDiffableDataSource() {
+    func test_whenCreating_returnsDataSource() {
         let collectionViewStub = UICollectionViewStub()
-        let presentationModelMock = CharactersPresentationModelMock()
-        let dataSource = sut.create(collectionView: collectionViewStub, presentationModel: presentationModelMock)
+        let dataSource = sut.create(collectionView: collectionViewStub)
         XCTAssertTrue(dataSource is CharactersDataSource)
     }
 }

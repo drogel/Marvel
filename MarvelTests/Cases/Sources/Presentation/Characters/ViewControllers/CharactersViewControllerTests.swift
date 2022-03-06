@@ -11,13 +11,13 @@ import XCTest
 class CharactersViewControllerTests: XCTestCase {
     private var sut: CharactersViewController!
     private var presentationModelMock: CharactersPresentationModelMock!
-    private var dataSourceFactoryMock: CharactersDataSourceFactoryMock!
+    private var dataSourceFactoryMock: CollectionViewDataSourceFactoryMock!
     private var dataSourceMock: CollectionViewDataSourceMock!
 
     override func setUp() {
         super.setUp()
         presentationModelMock = CharactersPresentationModelMock()
-        dataSourceFactoryMock = CharactersDataSourceFactoryMock()
+        dataSourceFactoryMock = CollectionViewDataSourceFactoryMock()
         dataSourceMock = dataSourceFactoryMock.dataSourceMock
         sut = CharactersViewController.instantiate(
             presentationModel: presentationModelMock,
@@ -69,23 +69,6 @@ class CharactersViewControllerTests: XCTestCase {
         dataSourceMock.assertSetDataSource(callCount: 0)
         sut.loadViewIfNeeded()
         dataSourceMock.assertSetDataSource(callCount: 1)
-    }
-}
-
-private class CharactersDataSourceFactoryMock: CharactersDataSourceFactory {
-    var createCallCount = 0
-    let dataSourceMock = CollectionViewDataSourceMock()
-
-    func create(
-        collectionView _: UICollectionView,
-        presentationModel _: CharactersPresentationModelProtocol
-    ) -> CollectionViewDataSource {
-        createCallCount += 1
-        return dataSourceMock
-    }
-
-    func assertCreate(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(createCallCount, callCount, line: line)
     }
 }
 

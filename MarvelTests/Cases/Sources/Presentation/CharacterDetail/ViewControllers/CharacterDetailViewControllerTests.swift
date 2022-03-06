@@ -12,18 +12,17 @@ class CharacterDetailViewControllerTests: XCTestCase {
     private var sut: CharacterDetailViewController!
     private var presentationModelMock: CharacterDetailPresentationModelMock!
     private var dataSourceMock: CollectionViewDataSourceMock!
-    private var delegateMock: CollectionViewDelegateMock!
+    private var dataSourceFactoryMock: CollectionViewDataSourceFactoryMock!
 
     override func setUp() {
         super.setUp()
-        dataSourceMock = CollectionViewDataSourceMock()
-        delegateMock = CollectionViewDelegateMock()
+        dataSourceFactoryMock = CollectionViewDataSourceFactoryMock()
+        dataSourceMock = dataSourceFactoryMock.dataSourceMock
         presentationModelMock = CharacterDetailPresentationModelMock()
         sut = CharacterDetailViewController.instantiate(
             presentationModel: presentationModelMock,
-            dataSource: dataSourceMock,
-            collectionViewDelegate: delegateMock,
-            layout: CharacterDetailLayout()
+            layout: CharacterDetailLayout(),
+            dataSourceFactory: dataSourceFactoryMock
         )
     }
 
@@ -35,15 +34,15 @@ class CharacterDetailViewControllerTests: XCTestCase {
     }
 
     func test_whenViewDidLoad_callsPresentationModelStart() {
-        assertPresentationModelStart(callCount: 0)
+        presentationModelMock.assertStart(callCount: 0)
         sut.loadViewIfNeeded()
-        assertPresentationModelStart(callCount: 1)
+        presentationModelMock.assertStart(callCount: 1)
     }
 
     func test_whenViewDidDisappear_callsPresentationModelDispose() {
-        assertPresentationModelDispose(callCount: 0)
+        presentationModelMock.assertDispose(callCount: 0)
         sut.viewDidDisappear(false)
-        assertPresentationModelDispose(callCount: 1)
+        presentationModelMock.assertDispose(callCount: 1)
     }
 
     func test_whenViewDidLoad_dataSourceIsSet() {
@@ -53,18 +52,8 @@ class CharacterDetailViewControllerTests: XCTestCase {
     }
 }
 
-private class CharacterDetailPresentationModelMock: PresentationModelMock {}
-
 private extension CharacterDetailViewControllerTests {
     func givenViewDidLoad() {
         sut.loadViewIfNeeded()
-    }
-
-    func assertPresentationModelStart(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(presentationModelMock.startCallCount, callCount, line: line)
-    }
-
-    func assertPresentationModelDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(presentationModelMock.disposeCallCount, callCount, line: line)
     }
 }

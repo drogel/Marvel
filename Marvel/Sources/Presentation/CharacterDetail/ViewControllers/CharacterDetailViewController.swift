@@ -8,7 +8,7 @@
 import UIKit
 
 class CharacterDetailViewController: ViewController {
-    typealias PresentationModelProtocol = PresentationModel
+    typealias PresentationModelProtocol = CharacterDetailPresentationModelProtocol
 
     private enum Constants {
         static let collectionContentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
@@ -19,17 +19,16 @@ class CharacterDetailViewController: ViewController {
     private var dataSource: CollectionViewDataSource!
     private var collectionViewDelegate: UICollectionViewDelegate!
     private var layout: UICollectionViewCompositionalLayout!
+    private var dataSourceFactory: CollectionViewDataSourceFactory!
 
     static func instantiate(
         presentationModel: PresentationModelProtocol,
-        dataSource: CollectionViewDataSource,
-        collectionViewDelegate: UICollectionViewDelegate,
-        layout: UICollectionViewCompositionalLayout
+        layout: UICollectionViewCompositionalLayout,
+        dataSourceFactory: CollectionViewDataSourceFactory
     ) -> Self {
         let viewController = instantiate(presentationModel: presentationModel)
-        viewController.dataSource = dataSource
-        viewController.collectionViewDelegate = collectionViewDelegate
         viewController.layout = layout
+        viewController.dataSourceFactory = dataSourceFactory
         return viewController
     }
 
@@ -48,6 +47,17 @@ class CharacterDetailViewController: ViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         presentationModel.dispose()
+    }
+}
+
+extension CharacterDetailViewController: UICollectionViewDelegate {
+    func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
+        case .comics:
+            return presentationModel.willDisplayComicCell(at: indexPath)
+        default:
+            return
+        }
     }
 }
 
@@ -97,6 +107,7 @@ private extension CharacterDetailViewController {
     }
 
     func configureDataSource(of collectionView: UICollectionView) {
+        dataSource = dataSourceFactory.create(collectionView: collectionView)
         collectionView.delegate = collectionViewDelegate
         dataSource.setDataSource(of: collectionView)
     }
