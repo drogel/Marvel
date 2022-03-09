@@ -78,13 +78,13 @@ private class FetchCharacterDetailUseCaseStub: FetchCharacterDetailUseCase {
     func fetch(
         query _: FetchCharacterDetailQuery,
         completion _: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         nil
     }
 }
 
 private class FetchComicsUseCaseStub: FetchComicsUseCase {
-    func fetch(query _: FetchComicsQuery, completion _: @escaping (FetchComicsResult) -> Void) -> Cancellable? {
+    func fetch(query _: FetchComicsQuery, completion _: @escaping (FetchComicsResult) -> Void) -> Disposable? {
         nil
     }
 }

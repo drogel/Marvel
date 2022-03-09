@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 19/1/22.
 //
 
+import Combine
 @testable import Marvel_Debug
 import XCTest
 
@@ -16,6 +17,7 @@ class CharactersPresentationModelTests: XCTestCase {
     private var offsetPagerMock: OffsetPagerPartialMock!
     private var methodCallRecorder: ViewDelegatePagerCallRecorder!
     private var imageURLBuilderMock: ImageURLBuilderMock!
+    private var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
@@ -24,6 +26,7 @@ class CharactersPresentationModelTests: XCTestCase {
         charactersFetcherMock = CharactersFetcherMock()
         offsetPagerMock = OffsetPagerPartialMock()
         imageURLBuilderMock = ImageURLBuilderMock()
+        cancellables = Set<AnyCancellable>()
         givenSut()
     }
 
@@ -34,6 +37,7 @@ class CharactersPresentationModelTests: XCTestCase {
         offsetPagerMock = nil
         imageURLBuilderMock = nil
         methodCallRecorder = nil
+        cancellables = nil
         sut = nil
         super.tearDown()
     }
@@ -58,14 +62,6 @@ class CharactersPresentationModelTests: XCTestCase {
         XCTAssertEqual(charactersFetcherMock.fetchCallCount, 1)
     }
 
-    func test_givenSuccessfulCharactersFetcher_whenStartingCompletes_numberOfItemsIsNotZero() {
-        givenSutWithSuccessfulFetcher()
-        assert(numberOfItems: 0)
-        sut.start()
-        let expectedNumberOfItems = CharactersFetcherSuccessfulStub.charactersStub.count
-        assert(numberOfItems: expectedNumberOfItems)
-    }
-
     func test_givenViewDelegate_whenStarting_notifiesLoadingToViewDelegate() {
         givenViewDelegate()
         sut.start()
@@ -86,15 +82,33 @@ class CharactersPresentationModelTests: XCTestCase {
         XCTAssertEqual(viewDelegateMock.didFinishLoadingCallCount, 1)
     }
 
-    func test_whenRetrievingCellData_returnsNilIfDidNotFetchYet() {
-        XCTAssertTrue(sut.cellModels.isEmpty)
+    func test_givenDidNotFetchYet_whenRetrievingCellData_publishesEmptyArray() {
+        // TODO: Extract this to reuse in tests
+        let receivedValueExpectation = expectation(description: "Publishes single value")
+        sut.cellModelsPublisher
+            .sink { receivedModels in
+                XCTAssertTrue(receivedModels.isEmpty)
+                receivedValueExpectation.fulfill()
+            }
+            .store(in: &cancellables)
+        wait(for: [receivedValueExpectation], timeout: 0.1)
     }
 
-    func test_givenDidStartSuccessfully_whenRetrievingCellDataAtValidIndex_returnsData() throws {
-        givenDidStartSuccessfully()
-        let actual = try XCTUnwrap(sut.cellModels.first)
-        XCTAssertEqual(actual.name, "Aginar")
-        XCTAssertEqual(actual.description, "")
+    func test_givenSutWithSuccessfulFetcher_whenStarting_publishesSingleDataAfterDroppingInitial() throws {
+        givenSutWithSuccessfulFetcher()
+        // TODO: Extract this to reuse in tests
+        let receivedValueExpectation = expectation(description: "Publishes single value")
+        let expectedModels = buildExpectedCellModels(from: CharactersFetcherSuccessfulStub.charactersStub)
+        sut.cellModelsPublisher
+            .dropFirst()
+            .sink { receivedModels in
+                XCTAssertEqual(receivedModels, expectedModels)
+                receivedValueExpectation.fulfill()
+            }
+            .store(in: &cancellables)
+
+        sut.start()
+        wait(for: [receivedValueExpectation], timeout: 0.1)
     }
 
     func test_whenWillDisplayCellFromIndexZero_doesNotFetch() {
@@ -167,13 +181,6 @@ class CharactersPresentationModelTests: XCTestCase {
         let actualUsedVariant = try XCTUnwrap(imageURLBuilderMock.mostRecentImageVariant)
         XCTAssertEqual(actualUsedVariant, expectedImageVariant)
     }
-
-    func test_givenDidStartSuccessfully_whenRetrievingCharacters_returnsExpectedCellModels() throws {
-        givenDidStartSuccessfully()
-        let expectedCellModels = buildExpectedCellModels(from: CharactersFetcherSuccessfulStub.charactersStub)
-        let actualCellModels = sut.cellModels
-        XCTAssertEqual(expectedCellModels, actualCellModels)
-    }
 }
 
 private extension CharactersPresentationModelTests {
@@ -238,7 +245,7 @@ private extension CharactersPresentationModelTests {
         return mostRecentQuery
     }
 
-    func retrieveFetcherMockCancellableMock() -> CancellableMock {
+    func retrieveFetcherMockCancellableMock() -> DisposableMock {
         try! XCTUnwrap(charactersFetcherMock.cancellable)
     }
 
@@ -248,7 +255,7 @@ private extension CharactersPresentationModelTests {
 
     func assertCancelledRequests(line: UInt = #line) {
         let cancellableMock = retrieveFetcherMockCancellableMock()
-        XCTAssertEqual(cancellableMock.didCancelCallCount, 1, line: line)
+        XCTAssertEqual(cancellableMock.didDisposeCallCount, 1, line: line)
     }
 
     func assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: Int, line: UInt = #line) {
@@ -257,10 +264,6 @@ private extension CharactersPresentationModelTests {
 
     func assertPagerUpdate(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(offsetPagerMock.updateCallCount, callCount, line: line)
-    }
-
-    func assert(numberOfItems: Int, line: UInt = #line) {
-        XCTAssertEqual(sut.cellModels.count, numberOfItems, line: line)
     }
 
     func buildExpectedCellModels(from characters: [Character]) -> [CharacterCellModel] {
@@ -288,12 +291,12 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
     var fetchCallCount = 0
     var mostRecentQuery: FetchCharactersQuery?
 
-    var cancellable: CancellableMock?
+    var cancellable: DisposableMock?
 
-    func fetch(query: FetchCharactersQuery, completion _: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
+    func fetch(query: FetchCharactersQuery, completion _: @escaping (FetchCharactersResult) -> Void) -> Disposable? {
         fetchCallCount += 1
         mostRecentQuery = query
-        cancellable = CancellableMock()
+        cancellable = DisposableMock()
         return cancellable
     }
 }
@@ -305,7 +308,7 @@ private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
     override func fetch(
         query: FetchCharactersQuery,
         completion: @escaping (FetchCharactersResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(Self.contentPageStub))
         return result
@@ -316,7 +319,7 @@ private class CharactersFetcherSuccessfulEmptyStub: CharactersFetcherMock {
     override func fetch(
         query: FetchCharactersQuery,
         completion: @escaping (FetchCharactersResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(ContentPage<Character>.empty))
         return result
@@ -327,7 +330,7 @@ private class CharactersFetcherFailingStub: CharactersFetcherMock {
     override func fetch(
         query: FetchCharactersQuery,
         completion: @escaping (FetchCharactersResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.failure(.unauthorized))
         return result

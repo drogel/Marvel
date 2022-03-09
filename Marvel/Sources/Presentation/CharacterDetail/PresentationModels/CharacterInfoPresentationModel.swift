@@ -40,7 +40,7 @@ class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
     private let imageURLBuilder: ImageURLBuilder
     private let characterID: Int
     private var characterDetailData: CharacterDetailModel?
-    private var characterCancellable: Cancellable?
+    private var characterCancellable: Disposable?
 
     init(
         characterFetcher: FetchCharacterDetailUseCase,

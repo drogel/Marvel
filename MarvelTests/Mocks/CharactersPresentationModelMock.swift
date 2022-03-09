@@ -10,7 +10,7 @@ import Foundation
 
 class CharactersPresentationModelMock: CharactersPresentationModelProtocol {
     var numberOfItemsCallCount = 0
-    var cellModelsCallCount = 0
+    var cellModelsPublisherCallCount = 0
     var willDisplayCellCallCount = 0
     var selectCallCount = 0
     var cellDataCallCount = 0
@@ -22,9 +22,11 @@ class CharactersPresentationModelMock: CharactersPresentationModelProtocol {
         return 0
     }
 
-    var cellModels: [CharacterCellModel] {
-        cellModelsCallCount += 1
-        return []
+    @Published var cellModelsStub: [CharacterCellModel] = []
+
+    var cellModelsPublisher: Published<[CharacterCellModel]>.Publisher {
+        cellModelsPublisherCallCount += 1
+        return $cellModelsStub
     }
 
     func willDisplayCell(at _: IndexPath) {

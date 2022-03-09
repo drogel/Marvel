@@ -18,7 +18,7 @@ class CharactersDebugService: CharactersService {
         self.dataResultHandler = dataResultHandler
     }
 
-    func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
+    func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
         guard !didTryLoadingData else { return nil }
         didTryLoadingData = true
         return dataLoader.loadData { [weak self] result in

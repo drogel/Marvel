@@ -11,14 +11,14 @@ import Foundation
 class NetworkServiceMock: NetworkService {
     var requestCallCount = 0
 
-    func request(endpoint _: RequestComponents, completion _: @escaping NetworkServiceCompletion) -> Cancellable? {
+    func request(endpoint _: RequestComponents, completion _: @escaping NetworkServiceCompletion) -> Disposable? {
         requestCallCount += 1
-        return CancellableMock()
+        return DisposableMock()
     }
 }
 
 class NetworkServiceSuccessfulStub: NetworkServiceMock {
-    override func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Cancellable? {
+    override func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Disposable? {
         let result = super.request(endpoint: endpoint, completion: completion)
         completion(.success(Data()))
         return result
@@ -32,7 +32,7 @@ class NetworkServiceFailingStub: NetworkServiceMock {
         self.errorStub = errorStub
     }
 
-    override func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Cancellable? {
+    override func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Disposable? {
         let result = super.request(endpoint: endpoint, completion: completion)
         completion(.failure(errorStub))
         return result
@@ -42,7 +42,7 @@ class NetworkServiceFailingStub: NetworkServiceMock {
 class NetworkServiceRequestCacheFake: NetworkServiceMock {
     var cachedComponents: RequestComponents?
 
-    override func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Cancellable? {
+    override func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Disposable? {
         cachedComponents = endpoint
         return super.request(endpoint: endpoint, completion: completion)
     }

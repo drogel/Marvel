@@ -8,7 +8,7 @@
 import Foundation
 
 protocol FetchCharactersUseCase {
-    func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable?
+    func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Disposable?
 }
 
 struct FetchCharactersQuery {
@@ -26,7 +26,7 @@ class FetchCharactersServiceUseCase: FetchCharactersUseCase {
         self.service = service
     }
 
-    func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
+    func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Disposable? {
         service.characters(from: query.offset, completion: completion)
     }
 }

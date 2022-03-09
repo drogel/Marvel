@@ -211,12 +211,12 @@ private class ComicsPresentationModelViewDelegateMock: ComicsPresentationModelVi
 private class ComicFetcherMock: FetchComicsUseCase {
     var fetchCallCount = 0
     var mostRecentQuery: FetchComicsQuery?
-    var cancellables: [CancellableMock] = []
+    var cancellables: [DisposableMock] = []
 
-    func fetch(query: FetchComicsQuery, completion _: @escaping (FetchComicsResult) -> Void) -> Cancellable? {
+    func fetch(query: FetchComicsQuery, completion _: @escaping (FetchComicsResult) -> Void) -> Disposable? {
         fetchCallCount += 1
         mostRecentQuery = query
-        cancellables.append(CancellableMock())
+        cancellables.append(DisposableMock())
         return cancellables.last
     }
 }
@@ -232,7 +232,7 @@ private class ComicFetcherSuccessfulStub: ComicFetcherMock {
         contents: [ComicFetcherSuccessfulStub.comicStub]
     )
 
-    override func fetch(query: FetchComicsQuery, completion: @escaping (FetchComicsResult) -> Void) -> Cancellable? {
+    override func fetch(query: FetchComicsQuery, completion: @escaping (FetchComicsResult) -> Void) -> Disposable? {
         let cancellable = super.fetch(query: query, completion: completion)
         completion(.success(Self.contentPageStub))
         return cancellable
@@ -240,7 +240,7 @@ private class ComicFetcherSuccessfulStub: ComicFetcherMock {
 }
 
 private class ComicFetcherFailureStub: ComicFetcherMock {
-    override func fetch(query: FetchComicsQuery, completion: @escaping (FetchComicsResult) -> Void) -> Cancellable? {
+    override func fetch(query: FetchComicsQuery, completion: @escaping (FetchComicsResult) -> Void) -> Disposable? {
         let cancellable = super.fetch(query: query, completion: completion)
         completion(.failure(.emptyData))
         return cancellable
@@ -314,11 +314,11 @@ private extension ComicsPresentationModelTests {
     }
 
     func assertComicFetcherFetchLastCancellableDidCancel(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicFetcherMock.cancellables.last?.didCancelCallCount, callCount, line: line)
+        XCTAssertEqual(comicFetcherMock.cancellables.last?.didDisposeCallCount, callCount, line: line)
     }
 
     func assertComicFetcherFetchFirstCancellableDidCancel(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicFetcherMock.cancellables.first?.didCancelCallCount, callCount, line: line)
+        XCTAssertEqual(comicFetcherMock.cancellables.first?.didDisposeCallCount, callCount, line: line)
     }
 
     func assertSutNumberOfComics(equals expectedNumberOfComics: Int, line: UInt = #line) {

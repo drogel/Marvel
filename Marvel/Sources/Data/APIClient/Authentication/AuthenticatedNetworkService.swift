@@ -16,7 +16,7 @@ class AuthenticatedNetworkService: NetworkService {
         self.authenticator = authenticator
     }
 
-    func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Cancellable? {
+    func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Disposable? {
         guard let authenticatedComponents = addAuthentication(to: endpoint) else {
             completion(.failure(.unauthorized))
             return nil

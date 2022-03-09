@@ -5,10 +5,12 @@
 //  Created by Diego Rogel on 18/1/22.
 //
 
+import Combine
 import Foundation
 
+// TODO: Rename to ViewModel
 protocol CharactersPresentationModelProtocol: PresentationModel {
-    var cellModels: [CharacterCellModel] { get }
+    var cellModelsPublisher: Published<[CharacterCellModel]>.Publisher { get }
     func willDisplayCell(at indexPath: IndexPath)
     func select(at indexPath: IndexPath)
 }
@@ -34,12 +36,13 @@ class CharactersPresentationModel: CharactersPresentationModelProtocol {
     weak var coordinatorDelegate: CharactersPresentationModelCoordinatorDelegate?
     weak var viewDelegate: CharactersPresentationModelViewDelegate?
 
-    private(set) var cellModels: [CharacterCellModel]
+    var cellModelsPublisher: Published<[CharacterCellModel]>.Publisher { $cellModels }
 
+    @Published private var cellModels: [CharacterCellModel]
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
-    private var charactersCancellable: Cancellable?
+    private var charactersCancellable: Disposable?
 
     init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder, pager: Pager) {
         self.charactersFetcher = charactersFetcher

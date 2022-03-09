@@ -28,7 +28,7 @@ class ComicsPresentationModel: ComicsPresentationModelProtocol {
     private let characterID: Int
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
-    private var cancellable: Cancellable?
+    private var cancellable: Disposable?
 
     init(comicsFetcher: FetchComicsUseCase, characterID: Int, imageURLBuilder: ImageURLBuilder, pager: Pager) {
         self.comicsFetcher = comicsFetcher

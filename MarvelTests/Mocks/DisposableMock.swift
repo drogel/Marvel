@@ -8,10 +8,10 @@
 import Foundation
 @testable import Marvel_Debug
 
-class CancellableMock: Cancellable {
-    var didCancelCallCount = 0
+class DisposableMock: Disposable {
+    var didDisposeCallCount = 0
 
     func cancel() {
-        didCancelCallCount += 1
+        didDisposeCallCount += 1
     }
 }

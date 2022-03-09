@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 1/2/22.
 //
 
+import Combine
 @testable import Marvel_Debug
 import XCTest
 
@@ -57,8 +58,10 @@ private class CharactersPresentationModelStub: CharactersPresentationModelProtoc
         0
     }
 
-    var cellModels: [CharacterCellModel] {
-        []
+    @Published var cellModelsStub: [CharacterCellModel] = []
+
+    var cellModelsPublisher: Published<[CharacterCellModel]>.Publisher {
+        $cellModelsStub
     }
 
     func willDisplayCell(at _: IndexPath) {}

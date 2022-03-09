@@ -56,14 +56,14 @@ private class CharactersServiceMock: CharactersService {
     static let cancellableStub = CancellableStub()
     var charactersCallCount = 0
 
-    func characters(from _: Int, completion _: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
+    func characters(from _: Int, completion _: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
         charactersCallCount += 1
         return Self.cancellableStub
     }
 }
 
 private class CharactersServiceFailureStub: CharactersService {
-    func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
+    func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
         completion(.failure(.emptyData))
         return CancellableStub()
     }
@@ -76,7 +76,7 @@ private class CharactersServiceSuccessStub: CharactersService {
         contentPage = contentPageStub
     }
 
-    func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
+    func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
         completion(.success(contentPage))
         return CancellableStub()
     }

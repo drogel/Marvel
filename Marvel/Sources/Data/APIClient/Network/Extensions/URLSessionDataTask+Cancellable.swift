@@ -7,4 +7,4 @@
 
 import Foundation
 
-extension URLSessionDataTask: Cancellable {}
+extension URLSessionDataTask: Disposable {}

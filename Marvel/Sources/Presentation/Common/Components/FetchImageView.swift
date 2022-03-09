@@ -20,7 +20,7 @@ protocol URLImage {
 }
 
 class FetchImageView: UIImageView, URLImage {
-    private var cancellable: Cancellable?
+    private var cancellable: Disposable?
 
     func loadImage(from url: URL?, completion: URLImageCompletion? = nil) {
         guard let urlRequest = buildURLRequest(from: url) else { return }
@@ -48,7 +48,7 @@ private extension UIImageView {
         return UIImage(data: cachedData)
     }
 
-    func requestNetworkImage(_ urlRequest: URLRequest, completion: URLImageCompletion?) -> Cancellable {
+    func requestNetworkImage(_ urlRequest: URLRequest, completion: URLImageCompletion?) -> Disposable {
         let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response, _ in
             guard let self = self else { return }
             guard let data = data, let response = response else {

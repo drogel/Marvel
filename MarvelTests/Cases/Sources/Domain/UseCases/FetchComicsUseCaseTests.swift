@@ -60,7 +60,7 @@ private class ComicsServiceMock: ComicsService {
         for _: Int,
         from _: Int,
         completion _: @escaping (ComicsServiceResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         comicsCallCount += 1
         return Self.cancellableStub
     }
@@ -71,7 +71,7 @@ private class ComicsServiceFailureStub: ComicsService {
         for _: Int,
         from _: Int,
         completion: @escaping (ComicsServiceResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         completion(.failure(.emptyData))
         return CancellableStub()
     }
@@ -84,7 +84,7 @@ private class ComicsServiceSuccessStub: ComicsService {
         self.pageStub = pageStub
     }
 
-    func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Cancellable? {
+    func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Disposable? {
         completion(.success(pageStub))
         return CancellableStub()
     }

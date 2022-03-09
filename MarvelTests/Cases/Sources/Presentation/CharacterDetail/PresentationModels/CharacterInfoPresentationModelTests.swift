@@ -125,15 +125,15 @@ private class CharacterInfoViewDelegateMock: CharacterInfoPresentationModelViewD
 private class CharacterFetcherMock: FetchCharacterDetailUseCase {
     var fetchCallCount = 0
     var fetchCallCountsForID: [Int: Int] = [:]
-    var cancellable: CancellableMock?
+    var cancellable: DisposableMock?
 
     func fetch(
         query: FetchCharacterDetailQuery,
         completion _: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         fetchCallCount += 1
         fetchCallCountsForID[query.characterID] = fetchCallCountsForID[query.characterID] ?? 0 + 1
-        cancellable = CancellableMock()
+        cancellable = DisposableMock()
         return cancellable
     }
 
@@ -150,7 +150,7 @@ private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
     override func fetch(
         query: FetchCharacterDetailQuery,
         completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(Self.pageDataStub))
         return result
@@ -161,7 +161,7 @@ private class CharacterFetcherFailingStub: CharacterFetcherMock {
     override func fetch(
         query: FetchCharacterDetailQuery,
         completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.failure(.unauthorized))
         return result
@@ -203,13 +203,13 @@ private extension CharacterInfoPresentationModelTests {
         sut.start()
     }
 
-    func retrieveFetcherMockCancellableMock() -> CancellableMock {
+    func retrieveFetcherMockCancellableMock() -> DisposableMock {
         try! XCTUnwrap(characterFetcherMock.cancellable)
     }
 
     func assertCancelledRequests(line _: UInt = #line) {
         let cancellableMock = retrieveFetcherMockCancellableMock()
-        XCTAssertEqual(cancellableMock.didCancelCallCount, 1)
+        XCTAssertEqual(cancellableMock.didDisposeCallCount, 1)
     }
 
     func assertCellDataIsNil(line _: UInt = #line) {
