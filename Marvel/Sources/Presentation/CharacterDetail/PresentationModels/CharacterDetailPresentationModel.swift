@@ -9,9 +9,7 @@ import Foundation
 
 typealias CharacterDetailPresentationModels = CharacterInfoPresentationModelProtocol & ComicsPresentationModelProtocol
 
-protocol CharacterDetailPresentationModelProtocol: CharacterDetailPresentationModels {
-    var comicsSectionTitle: String { get }
-}
+protocol CharacterDetailPresentationModelProtocol: CharacterDetailPresentationModels {}
 
 protocol CharacterDetailPresentationModelViewDelegate: AnyObject {
     func modelDidStartLoading(_ presentationModel: CharacterDetailPresentationModelProtocol)
@@ -24,10 +22,6 @@ protocol CharacterDetailPresentationModelViewDelegate: AnyObject {
 class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol {
     weak var viewDelegate: CharacterDetailPresentationModelViewDelegate?
 
-    var comicsSectionTitle: String {
-        "comics".localized
-    }
-
     var imageCellData: CharacterImageModel? {
         infoPresentationModel.imageCellData
     }
@@ -36,8 +30,8 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
         infoPresentationModel.infoCellData
     }
 
-    var numberOfComics: Int {
-        comicsPresentationModel.numberOfComics
+    var comicCellModels: [ComicCellModel] {
+        comicsPresentationModel.comicCellModels
     }
 
     private var infoPresentationModel: CharacterInfoPresentationModelProtocol
@@ -54,10 +48,6 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
     func start() {
         infoPresentationModel.start()
         comicsPresentationModel.start()
-    }
-
-    func comicCellData(at indexPath: IndexPath) -> ComicCellModel? {
-        comicsPresentationModel.comicCellData(at: indexPath)
     }
 
     func willDisplayComicCell(at indexPath: IndexPath) {

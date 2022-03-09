@@ -7,10 +7,11 @@
 
 import Foundation
 @testable import Marvel_Debug
+import XCTest
 
 class PresentationModelMock: PresentationModel {
-    var startCallCount = 0
-    var disposeCallCount = 0
+    private var startCallCount = 0
+    private var disposeCallCount = 0
 
     func start() {
         startCallCount += 1
@@ -18,5 +19,13 @@ class PresentationModelMock: PresentationModel {
 
     func dispose() {
         disposeCallCount += 1
+    }
+
+    func assertStart(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(startCallCount, callCount, line: line)
+    }
+
+    func assertDispose(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(disposeCallCount, callCount, line: line)
     }
 }

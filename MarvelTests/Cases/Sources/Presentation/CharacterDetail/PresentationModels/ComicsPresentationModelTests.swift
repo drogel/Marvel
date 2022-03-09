@@ -118,7 +118,7 @@ class ComicsPresentationModelTests: XCTestCase {
     func test_givenDidStartSuccessfully_cellDataHasFormattedFields() {
         givenDidStartSuccessfully()
         XCTAssertNotNil(whenRetrievingFirstCellData())
-        let actualCellData = try! XCTUnwrap(sut.comicCellData(at: IndexPath(row: 0, section: 0)))
+        let actualCellData = try! XCTUnwrap(whenRetrievingFirstCellData())
         XCTAssertEqual(actualCellData.title, "Test Title")
         let expectedIssueNumber = String(format: "issue_number %@".localized, String(1))
         XCTAssertEqual(actualCellData.issueNumber, expectedIssueNumber)
@@ -282,7 +282,7 @@ private extension ComicsPresentationModelTests {
     }
 
     func whenRetrievingFirstCellData() -> ComicCellModel? {
-        sut.comicCellData(at: IndexPath(row: 0, section: 0))
+        sut.comicCellModels.first
     }
 
     func assertViewDelegateDidStartLoading(callCount: Int, line: UInt = #line) {
@@ -322,7 +322,7 @@ private extension ComicsPresentationModelTests {
     }
 
     func assertSutNumberOfComics(equals expectedNumberOfComics: Int, line: UInt = #line) {
-        XCTAssertEqual(sut.numberOfComics, expectedNumberOfComics, line: line)
+        XCTAssertEqual(sut.comicCellModels.count, expectedNumberOfComics, line: line)
     }
 
     func assertImageURLBuilderBuildVariant(callCount: Int, line: UInt = #line) {

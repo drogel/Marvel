@@ -11,6 +11,7 @@ class CharactersDebugService: CharactersService {
     private let charactersFileName: DebugDataFileName = .charactersFileName
     private let dataLoader: DataLoaderDebugService
     private let dataResultHandler: CharacterDataResultHandler
+    private var didTryLoadingData = false
 
     init(dataLoader: JsonDataLoader, dataResultHandler: CharacterDataResultHandler) {
         self.dataLoader = JsonDataLoaderDebugService(dataLoader: dataLoader, fileName: charactersFileName)
@@ -18,7 +19,9 @@ class CharactersDebugService: CharactersService {
     }
 
     func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Cancellable? {
-        dataLoader.loadData { [weak self] result in
+        guard !didTryLoadingData else { return nil }
+        didTryLoadingData = true
+        return dataLoader.loadData { [weak self] result in
             self?.dataResultHandler.completeWithServiceResult(result, completion: completion)
         }
     }

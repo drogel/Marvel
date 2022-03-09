@@ -11,15 +11,25 @@ import XCTest
 class CharactersViewControllerTests: XCTestCase {
     private var sut: CharactersViewController!
     private var presentationModelMock: CharactersPresentationModelMock!
+    private var dataSourceFactoryMock: CollectionViewDataSourceFactoryMock!
+    private var dataSourceMock: CollectionViewDataSourceMock!
 
     override func setUp() {
         super.setUp()
         presentationModelMock = CharactersPresentationModelMock()
-        sut = CharactersViewController.instantiate(presentationModel: presentationModelMock, layout: CharactersLayout())
+        dataSourceFactoryMock = CollectionViewDataSourceFactoryMock()
+        dataSourceMock = dataSourceFactoryMock.dataSourceMock
+        sut = CharactersViewController.instantiate(
+            presentationModel: presentationModelMock,
+            layout: CharactersLayout(),
+            dataSourceFactory: dataSourceFactoryMock
+        )
     }
 
     override func tearDown() {
         sut = nil
+        dataSourceFactoryMock = nil
+        dataSourceMock = nil
         presentationModelMock = nil
         super.tearDown()
     }
@@ -36,62 +46,29 @@ class CharactersViewControllerTests: XCTestCase {
         assertPresentationModelDispose(callCount: 1)
     }
 
-    func test_numberOfSections_returnsOneSection() {
-        XCTAssertEqual(sut.numberOfSections(in: collectionViewStub), 1)
-    }
-
-    func test_numberOfItems_returnsPresentationModelNumberOfItems() {
-        XCTAssertEqual(
-            sut.collectionView(collectionViewStub, numberOfItemsInSection: 0),
-            presentationModelMock.numberOfItems
-        )
-    }
-
-    func test_whenDequeueingCells_retrievesPresentationModelCellData() {
-        assertPresentationModelCellData(callCount: 0)
-        _ = sut.collectionView(collectionViewStub, cellForItemAt: indexPathStub)
-        assertPresentationModelCellData(callCount: 1)
-    }
-
     func test_whenSelectingACell_notifiesPresentationModel() {
         assertPresentationModelSelect(callCount: 0)
         sut.collectionView(collectionViewStub, didSelectItemAt: indexPathStub)
         assertPresentationModelSelect(callCount: 1)
     }
-}
 
-private class CharactersPresentationModelMock: CharactersPresentationModelProtocol {
-    var numberOfItemsCallCount = 0
-    var willDisplayCellCallCount = 0
-    var selectCallCount = 0
-    var cellDataCallCount = 0
-    var startCallCount = 0
-    var disposeCallCount = 0
-
-    var numberOfItems: Int {
-        numberOfItemsCallCount += 1
-        return 0
+    func test_whenViewDidLoad_callsDataSourceFactoryCreate() {
+        dataSourceFactoryMock.assertCreate(callCount: 0)
+        sut.loadViewIfNeeded()
+        dataSourceFactoryMock.assertCreate(callCount: 1)
     }
 
-    func willDisplayCell(at _: IndexPath) {
-        willDisplayCellCallCount += 1
+    func test_givenViewDidLoad_whenModelUpdatedItems_appliesSnapshot() {
+        givenViewDidLoad()
+        dataSourceMock.assertApplySnapshot(callCount: 0)
+        sut.modelDidUpdateItems(presentationModelMock)
+        dataSourceMock.assertApplySnapshot(callCount: 1)
     }
 
-    func select(at _: IndexPath) {
-        selectCallCount += 1
-    }
-
-    func cellData(at _: IndexPath) -> CharacterCellModel? {
-        cellDataCallCount += 1
-        return nil
-    }
-
-    func start() {
-        startCallCount += 1
-    }
-
-    func dispose() {
-        disposeCallCount += 1
+    func test_whenViewDidLoad_dataSourceIsSet() {
+        dataSourceMock.assertSetDataSource(callCount: 0)
+        sut.loadViewIfNeeded()
+        dataSourceMock.assertSetDataSource(callCount: 1)
     }
 }
 
@@ -102,6 +79,10 @@ private extension CharactersViewControllerTests {
 
     var indexPathStub: IndexPath {
         IndexPath(row: 0, section: 0)
+    }
+
+    func givenViewDidLoad() {
+        sut.loadViewIfNeeded()
     }
 
     func assertPresentationModelStart(callCount: Int, line: UInt = #line) {

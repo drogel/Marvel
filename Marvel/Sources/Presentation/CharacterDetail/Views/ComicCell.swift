@@ -8,9 +8,7 @@
 import Foundation
 import UIKit
 
-class ComicCell: UICollectionViewCell, Configurable {
-    typealias Item = ComicCellModel
-
+class ComicCell: ConfigurableCell {
     private enum Constants {
         static let mainStackViewSpacing: CGFloat = 8
         static let infoStackViewSpacing: CGFloat = 2
@@ -81,6 +79,10 @@ class ComicCell: UICollectionViewCell, Configurable {
     override func prepareForReuse() {
         comicImageView.clear()
     }
+}
+
+extension ComicCell {
+    typealias Item = ComicCellModel
 
     func configure(using item: ComicCellModel) {
         titleLabel.text = item.title

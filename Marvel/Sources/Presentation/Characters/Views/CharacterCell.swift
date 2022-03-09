@@ -7,9 +7,7 @@
 
 import UIKit
 
-class CharacterCell: UICollectionViewCell, Configurable {
-    typealias Item = CharacterCellModel
-
+class CharacterCell: ConfigurableCell {
     private enum Constants {
         static let nameLabelFontSize: CGFloat = 20
         static let cellCornerRadius: CGFloat = 16
@@ -83,6 +81,10 @@ class CharacterCell: UICollectionViewCell, Configurable {
     override func prepareForReuse() {
         characterImageView.clear()
     }
+}
+
+extension CharacterCell {
+    typealias Item = CharacterCellModel
 
     func configure(using item: CharacterCellModel) {
         nameLabel.text = item.name

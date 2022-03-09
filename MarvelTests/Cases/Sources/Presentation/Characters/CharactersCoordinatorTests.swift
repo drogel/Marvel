@@ -57,11 +57,15 @@ private class CharactersPresentationModelStub: CharactersPresentationModelProtoc
         0
     }
 
+    var cellModels: [CharacterCellModel] {
+        []
+    }
+
     func willDisplayCell(at _: IndexPath) {}
 
     func select(at _: IndexPath) {}
 
-    func cellData(at _: IndexPath) -> CharacterCellModel? {
+    func cellModel(at _: IndexPath) -> CharacterCellModel? {
         nil
     }
 

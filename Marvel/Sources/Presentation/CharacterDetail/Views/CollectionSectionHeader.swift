@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class CollectionSectionHeader: UICollectionReusableView {
+class CollectionSectionHeader: ConfigurableReusableView {
     private enum Constants {
         enum Title {
             static let fontSize: CGFloat = 18
@@ -36,7 +36,7 @@ class CollectionSectionHeader: UICollectionReusableView {
     }
 }
 
-extension CollectionSectionHeader: Configurable {
+extension CollectionSectionHeader {
     typealias Item = String
 
     func configure(using item: String) {

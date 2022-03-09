@@ -8,8 +8,7 @@
 import Foundation
 
 protocol ComicsPresentationModelProtocol: PresentationModel {
-    var numberOfComics: Int { get }
-    func comicCellData(at indexPath: IndexPath) -> ComicCellModel?
+    var comicCellModels: [ComicCellModel] { get }
     func willDisplayComicCell(at indexPath: IndexPath)
 }
 
@@ -23,34 +22,25 @@ protocol ComicsPresentationModelViewDelegate: AnyObject {
 class ComicsPresentationModel: ComicsPresentationModelProtocol {
     weak var viewDelegate: ComicsPresentationModelViewDelegate?
 
+    private(set) var comicCellModels: [ComicCellModel]
+
     private let comicsFetcher: FetchComicsUseCase
     private let characterID: Int
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
     private var cancellable: Cancellable?
-    private var comics: [ComicCellModel]
-
-    var numberOfComics: Int {
-        comics.count
-    }
 
     init(comicsFetcher: FetchComicsUseCase, characterID: Int, imageURLBuilder: ImageURLBuilder, pager: Pager) {
         self.comicsFetcher = comicsFetcher
         self.characterID = characterID
         self.imageURLBuilder = imageURLBuilder
         self.pager = pager
-        comics = []
+        comicCellModels = []
     }
 
     func start() {
         viewDelegate?.modelDidStartLoading(self)
         loadComics(with: startingQuery)
-    }
-
-    func comicCellData(at indexPath: IndexPath) -> ComicCellModel? {
-        let row = indexPath.row
-        guard comics.indices.contains(row) else { return nil }
-        return comics[row]
     }
 
     func willDisplayComicCell(at indexPath: IndexPath) {
@@ -77,7 +67,7 @@ private extension ComicsPresentationModel {
     }
 
     func loadMore() {
-        loadComics(with: query(atOffset: comics.count))
+        loadComics(with: query(atOffset: comicCellModels.count))
     }
 
     func loadComics(with query: FetchComicsQuery) {
@@ -98,7 +88,7 @@ private extension ComicsPresentationModel {
     func handleSuccess(with contentPage: ContentPage<Comic>) {
         guard let comicsCellData = mapToCells(comics: contentPage.contents) else { return }
         pager.update(currentPage: contentPage)
-        comics.append(contentsOf: comicsCellData)
+        comicCellModels.append(contentsOf: comicsCellData)
         viewDelegate?.modelDidRetrieveData(self)
     }
 
