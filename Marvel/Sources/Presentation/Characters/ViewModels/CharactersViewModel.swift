@@ -1,5 +1,5 @@
 //
-//  CharactersPresentationModel.swift
+//  CharactersViewModel.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 18/1/22.
@@ -8,33 +8,32 @@
 import Combine
 import Foundation
 
-// TODO: Rename to ViewModel
-protocol CharactersPresentationModelProtocol: PresentationModel {
+protocol CharactersViewModelProtocol: PresentationModel {
     var cellModelsPublisher: Published<[CharacterCellModel]>.Publisher { get }
     func willDisplayCell(at indexPath: IndexPath)
     func select(at indexPath: IndexPath)
 }
 
-protocol CharactersPresentationModelCoordinatorDelegate: AnyObject {
-    func model(_ presentationModel: CharactersPresentationModelProtocol, didSelectCharacterWith characterID: Int)
+protocol CharactersViewModelCoordinatorDelegate: AnyObject {
+    func model(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int)
 }
 
-protocol CharactersPresentationModelViewDelegate: AnyObject {
-    func modelDidStartLoading(_ presentationModel: CharactersPresentationModelProtocol)
-    func modelDidFinishLoading(_ presentationModel: CharactersPresentationModelProtocol)
-    func modelDidUpdateItems(_ presentationModel: CharactersPresentationModelProtocol)
-    func model(_ presentationModel: CharactersPresentationModelProtocol, didFailWithError message: String)
+protocol CharactersViewModelViewDelegate: AnyObject {
+    func modelDidStartLoading(_ viewModel: CharactersViewModelProtocol)
+    func modelDidFinishLoading(_ viewModel: CharactersViewModelProtocol)
+    func modelDidUpdateItems(_ viewModel: CharactersViewModelProtocol)
+    func model(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String)
 }
 
-class CharactersPresentationModel: CharactersPresentationModelProtocol {
+class CharactersViewModel: CharactersViewModelProtocol {
     private enum Messages {
         static let noCharacters = "server_not_responding".localized
         static let noAPIKeys = "api_keys_not_found".localized
         static let noConnection = "no_internet".localized
     }
 
-    weak var coordinatorDelegate: CharactersPresentationModelCoordinatorDelegate?
-    weak var viewDelegate: CharactersPresentationModelViewDelegate?
+    weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
+    weak var viewDelegate: CharactersViewModelViewDelegate?
 
     var cellModelsPublisher: Published<[CharacterCellModel]>.Publisher { $cellModels }
 
@@ -71,7 +70,7 @@ class CharactersPresentationModel: CharactersPresentationModelProtocol {
     }
 }
 
-private extension CharactersPresentationModel {
+private extension CharactersViewModel {
     var startingQuery: FetchCharactersQuery {
         FetchCharactersQuery(offset: 0)
     }

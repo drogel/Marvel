@@ -38,7 +38,7 @@ class CharactersCoordinatorTests: XCTestCase {
     }
 
     func test_whenCharacterSelected_presentsCharacterDetailViewController() {
-        sut.model(CharactersPresentationModelStub(), didSelectCharacterWith: 0)
+        sut.model(CharactersViewModelStub(), didSelectCharacterWith: 0)
         XCTAssertTrue(navigationController.mostRecentPresentedViewController is CharacterDetailViewController)
     }
 }
@@ -53,7 +53,7 @@ private class CharactersDependenciesStub: CharactersDependencies {
     }
 }
 
-private class CharactersPresentationModelStub: CharactersPresentationModelProtocol {
+private class CharactersViewModelStub: CharactersViewModelProtocol {
     var numberOfItems: Int {
         0
     }

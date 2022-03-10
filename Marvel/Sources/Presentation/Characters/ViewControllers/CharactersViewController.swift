@@ -8,13 +8,13 @@
 import UIKit
 
 class CharactersViewController: ViewController {
-    typealias PresentationModelProtocol = CharactersPresentationModelProtocol
+    typealias PresentationModelProtocol = CharactersViewModelProtocol
 
     private enum Constants {
         static let scrollNearEndThreshold: CGFloat = 300
     }
 
-    private var presentationModel: PresentationModelProtocol!
+    private var viewModel: PresentationModelProtocol!
     private var layout: UICollectionViewCompositionalLayout!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
@@ -33,7 +33,7 @@ class CharactersViewController: ViewController {
 
     static func instantiate(presentationModel: PresentationModelProtocol) -> Self {
         let viewController = Self()
-        viewController.presentationModel = presentationModel
+        viewController.viewModel = presentationModel
         return viewController
     }
 
@@ -44,40 +44,40 @@ class CharactersViewController: ViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        presentationModel.start()
+        viewModel.start()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        presentationModel.dispose()
+        viewModel.dispose()
     }
 }
 
 extension CharactersViewController: UICollectionViewDelegate {
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presentationModel.select(at: indexPath)
+        viewModel.select(at: indexPath)
     }
 
     func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        presentationModel.willDisplayCell(at: indexPath)
+        viewModel.willDisplayCell(at: indexPath)
     }
 }
 
-extension CharactersViewController: CharactersPresentationModelViewDelegate {
-    func modelDidStartLoading(_: CharactersPresentationModelProtocol) {
+extension CharactersViewController: CharactersViewModelViewDelegate {
+    func modelDidStartLoading(_: CharactersViewModelProtocol) {
         startLoading()
     }
 
-    func modelDidFinishLoading(_: CharactersPresentationModelProtocol) {
+    func modelDidFinishLoading(_: CharactersViewModelProtocol) {
         stopLoading()
     }
 
-    func modelDidUpdateItems(_: CharactersPresentationModelProtocol) {
+    func modelDidUpdateItems(_: CharactersViewModelProtocol) {
         dataSource.applySnapshot()
     }
 
-    func model(_ presentationModel: CharactersPresentationModelProtocol, didFailWithError message: String) {
-        showErrorAlert(message: message, retryButtonAction: presentationModel.start)
+    func model(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String) {
+        showErrorAlert(message: message, retryButtonAction: viewModel.start)
     }
 }
 

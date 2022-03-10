@@ -13,21 +13,21 @@ enum CharactersSection {
 }
 
 class CharactersDataSourceFactory: CollectionViewDataSourceFactory {
-    private let presentationModel: CharactersPresentationModelProtocol
+    private let viewModel: CharactersViewModelProtocol
 
-    init(presentationModel: CharactersPresentationModelProtocol) {
-        self.presentationModel = presentationModel
+    init(viewModel: CharactersViewModelProtocol) {
+        self.viewModel = viewModel
     }
 
     func create(collectionView: UICollectionView) -> CollectionViewDataSource {
-        CharactersDataSource(collectionView: collectionView, presentationModel: presentationModel)
+        CharactersDataSource(collectionView: collectionView, viewModel: viewModel)
     }
 }
 
 typealias CharactersDiffableDataSource = UICollectionViewDiffableDataSource<CharactersSection, CharacterCell.Item>
 
 class CharactersDataSource: CollectionViewDataSource {
-    private let presentationModel: CharactersPresentationModelProtocol
+    private let viewModel: CharactersViewModelProtocol
     private let collectionView: UICollectionView
     private let cellRegistration = CellRegistration<CharacterCell>(handler: CharactersDataSource.configureCell)
     private var cancellables = Set<AnyCancellable>()
@@ -36,8 +36,8 @@ class CharactersDataSource: CollectionViewDataSource {
         cellProvider: provideCell
     )
 
-    init(collectionView: UICollectionView, presentationModel: CharactersPresentationModelProtocol) {
-        self.presentationModel = presentationModel
+    init(collectionView: UICollectionView, viewModel: CharactersViewModelProtocol) {
+        self.viewModel = viewModel
         self.collectionView = collectionView
     }
 
@@ -65,7 +65,7 @@ private extension CharactersDataSource {
     }
 
     func subscribeToCellModels() {
-        presentationModel.cellModelsPublisher.sink(receiveValue: applySnapshot).store(in: &cancellables)
+        viewModel.cellModelsPublisher.sink(receiveValue: applySnapshot).store(in: &cancellables)
     }
 
     func applySnapshot(with models: [CharacterCell.Item]) {

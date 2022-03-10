@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: Rename all references of presentation model to view models when we migrate these models to Combine too
 typealias CharacterDetailPresentationModels = CharacterInfoPresentationModelProtocol & ComicsPresentationModelProtocol
 
 protocol CharacterDetailPresentationModelProtocol: CharacterDetailPresentationModels {}

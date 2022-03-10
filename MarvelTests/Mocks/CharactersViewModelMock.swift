@@ -1,5 +1,5 @@
 //
-//  CharactersPresentationModelMock.swift
+//  CharactersViewModelMock.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 4/3/22.
@@ -8,7 +8,7 @@
 import Foundation
 @testable import Marvel_Debug
 
-class CharactersPresentationModelMock: CharactersPresentationModelProtocol {
+class CharactersViewModelMock: CharactersViewModelProtocol {
     var numberOfItemsCallCount = 0
     var cellModelsPublisherCallCount = 0
     var willDisplayCellCallCount = 0
