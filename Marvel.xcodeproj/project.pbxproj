@@ -193,6 +193,7 @@
 		05DAC34827974C690062CC6F /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34727974C690062CC6F /* MainCoordinator.swift */; };
 		05DAC34C27974CE30062CC6F /* CharacterDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34B27974CE30062CC6F /* CharacterDetailViewController.swift */; };
 		05DAC35027974D8D0062CC6F /* CharactersPresentationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34F27974D8D0062CC6F /* CharactersPresentationModel.swift */; };
+		05DE20CF27DA626500BB2F47 /* Publisher+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DE20CE27DA626500BB2F47 /* Publisher+Assertions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -398,6 +399,7 @@
 		05DAC34727974C690062CC6F /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		05DAC34B27974CE30062CC6F /* CharacterDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailViewController.swift; sourceTree = "<group>"; };
 		05DAC34F27974D8D0062CC6F /* CharactersPresentationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersPresentationModel.swift; sourceTree = "<group>"; };
+		05DE20CE27DA626500BB2F47 /* Publisher+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+Assertions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -578,6 +580,7 @@
 		054594732798A0FC00A634AD /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				05DE20CE27DA626500BB2F47 /* Publisher+Assertions.swift */,
 				054594742798A11000A634AD /* XCTestCase+ResultAssertions.swift */,
 				0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */,
 			);
@@ -1578,6 +1581,7 @@
 				0571306727A55B3A0009383E /* NetworkServiceMock.swift in Sources */,
 				054594812798B93C00A634AD /* DataWrapper+Stubs.swift in Sources */,
 				05B0855827AC57AA00A74DD0 /* CollectionViewDataSourceMock.swift in Sources */,
+				05DE20CF27DA626500BB2F47 /* Publisher+Assertions.swift in Sources */,
 				0559261027A85EB500026919 /* XCTestCase+FailureMessage.swift in Sources */,
 				052A0A6D27B1C24A002CE6BB /* RequestComponentsTests.swift in Sources */,
 				0571306B27A5B36A0009383E /* CharacterDetailClientServiceTests.swift in Sources */,

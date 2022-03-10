@@ -83,30 +83,22 @@ class CharactersPresentationModelTests: XCTestCase {
     }
 
     func test_givenDidNotFetchYet_whenRetrievingCellData_publishesEmptyArray() {
-        // TODO: Extract this to reuse in tests
-        let receivedValueExpectation = expectation(description: "Publishes single value")
+        let receivedValueExpectation = expectation(description: "Publishes empty models")
+        let expectedEmptyModels: [CharacterCellModel] = []
         sut.cellModelsPublisher
-            .sink { receivedModels in
-                XCTAssertTrue(receivedModels.isEmpty)
-                receivedValueExpectation.fulfill()
-            }
+            .assertOutput(matches: expectedEmptyModels, expectation: receivedValueExpectation)
             .store(in: &cancellables)
         wait(for: [receivedValueExpectation], timeout: 0.1)
     }
 
     func test_givenSutWithSuccessfulFetcher_whenStarting_publishesSingleDataAfterDroppingInitial() throws {
         givenSutWithSuccessfulFetcher()
-        // TODO: Extract this to reuse in tests
         let receivedValueExpectation = expectation(description: "Publishes single value")
         let expectedModels = buildExpectedCellModels(from: CharactersFetcherSuccessfulStub.charactersStub)
         sut.cellModelsPublisher
             .dropFirst()
-            .sink { receivedModels in
-                XCTAssertEqual(receivedModels, expectedModels)
-                receivedValueExpectation.fulfill()
-            }
+            .assertOutput(matches: expectedModels, expectation: receivedValueExpectation)
             .store(in: &cancellables)
-
         sut.start()
         wait(for: [receivedValueExpectation], timeout: 0.1)
     }
