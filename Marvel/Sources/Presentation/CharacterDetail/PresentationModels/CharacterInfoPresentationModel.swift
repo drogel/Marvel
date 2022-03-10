@@ -40,7 +40,7 @@ class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
     private let imageURLBuilder: ImageURLBuilder
     private let characterID: Int
     private var characterDetailData: CharacterDetailModel?
-    private var characterCancellable: Disposable?
+    private var characterDisposable: Disposable?
 
     init(
         characterFetcher: FetchCharacterDetailUseCase,
@@ -59,14 +59,14 @@ class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
     }
 
     func dispose() {
-        characterCancellable?.cancel()
+        characterDisposable?.dispose()
     }
 }
 
 private extension CharacterInfoPresentationModel {
     func loadCharacter(with query: FetchCharacterDetailQuery) {
-        characterCancellable?.cancel()
-        characterCancellable = characterFetcher.fetch(query: query, completion: handleFetchCharacterResult)
+        characterDisposable?.dispose()
+        characterDisposable = characterFetcher.fetch(query: query, completion: handleFetchCharacterResult)
     }
 
     func handleFetchCharacterResult(_ result: FetchCharacterDetailResult) {

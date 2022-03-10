@@ -20,20 +20,20 @@ protocol URLImage {
 }
 
 class FetchImageView: UIImageView, URLImage {
-    private var cancellable: Disposable?
+    private var disposable: Disposable?
 
     func loadImage(from url: URL?, completion: URLImageCompletion? = nil) {
         guard let urlRequest = buildURLRequest(from: url) else { return }
         if let image = retrieveCachedImageIfAny(for: urlRequest) {
             self.image = image
         } else {
-            cancellable = requestNetworkImage(urlRequest, completion: completion)
+            disposable = requestNetworkImage(urlRequest, completion: completion)
         }
     }
 
     func clear() {
         image = nil
-        cancellable?.cancel()
+        disposable?.dispose()
     }
 }
 

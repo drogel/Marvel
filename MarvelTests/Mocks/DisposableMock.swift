@@ -1,5 +1,5 @@
 //
-//  CancellableMock.swift
+//  DisposableMock.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 23/1/22.
@@ -11,7 +11,7 @@ import Foundation
 class DisposableMock: Disposable {
     var didDisposeCallCount = 0
 
-    func cancel() {
+    func dispose() {
         didDisposeCallCount += 1
     }
 }

@@ -125,7 +125,7 @@ private class CharacterInfoViewDelegateMock: CharacterInfoPresentationModelViewD
 private class CharacterFetcherMock: FetchCharacterDetailUseCase {
     var fetchCallCount = 0
     var fetchCallCountsForID: [Int: Int] = [:]
-    var cancellable: DisposableMock?
+    var disposable: DisposableMock?
 
     func fetch(
         query: FetchCharacterDetailQuery,
@@ -133,8 +133,8 @@ private class CharacterFetcherMock: FetchCharacterDetailUseCase {
     ) -> Disposable? {
         fetchCallCount += 1
         fetchCallCountsForID[query.characterID] = fetchCallCountsForID[query.characterID] ?? 0 + 1
-        cancellable = DisposableMock()
-        return cancellable
+        disposable = DisposableMock()
+        return disposable
     }
 
     func fetchCallCount(withID identifier: Int) -> Int {
@@ -203,13 +203,13 @@ private extension CharacterInfoPresentationModelTests {
         sut.start()
     }
 
-    func retrieveFetcherMockCancellableMock() -> DisposableMock {
-        try! XCTUnwrap(characterFetcherMock.cancellable)
+    func retrieveFetcherMockDisposableMock() -> DisposableMock {
+        try! XCTUnwrap(characterFetcherMock.disposable)
     }
 
     func assertCancelledRequests(line _: UInt = #line) {
-        let cancellableMock = retrieveFetcherMockCancellableMock()
-        XCTAssertEqual(cancellableMock.didDisposeCallCount, 1)
+        let disposableMock = retrieveFetcherMockDisposableMock()
+        XCTAssertEqual(disposableMock.didDisposeCallCount, 1)
     }
 
     func assertCellDataIsNil(line _: UInt = #line) {

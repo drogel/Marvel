@@ -28,7 +28,7 @@ class ComicsPresentationModel: ComicsPresentationModelProtocol {
     private let characterID: Int
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
-    private var cancellable: Disposable?
+    private var disposable: Disposable?
 
     init(comicsFetcher: FetchComicsUseCase, characterID: Int, imageURLBuilder: ImageURLBuilder, pager: Pager) {
         self.comicsFetcher = comicsFetcher
@@ -49,7 +49,7 @@ class ComicsPresentationModel: ComicsPresentationModelProtocol {
     }
 
     func dispose() {
-        cancellable?.cancel()
+        disposable?.dispose()
     }
 }
 
@@ -71,8 +71,8 @@ private extension ComicsPresentationModel {
     }
 
     func loadComics(with query: FetchComicsQuery) {
-        cancellable?.cancel()
-        cancellable = comicsFetcher.fetch(query: query, completion: handle)
+        disposable?.dispose()
+        disposable = comicsFetcher.fetch(query: query, completion: handle)
     }
 
     func handle(result: FetchComicsResult) {

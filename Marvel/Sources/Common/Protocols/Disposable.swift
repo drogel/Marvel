@@ -8,6 +8,5 @@
 import Foundation
 
 protocol Disposable {
-    // TODO: Rename to dispose. PresentationModels should be Disposable too.
-    func cancel()
+    func dispose()
 }

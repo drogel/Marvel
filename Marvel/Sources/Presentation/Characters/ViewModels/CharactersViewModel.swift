@@ -40,7 +40,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
-    private var charactersCancellable: Disposable?
+    private var charactersDisposable: Disposable?
 
     init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder, pager: Pager) {
         self.charactersFetcher = charactersFetcher
@@ -65,7 +65,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     }
 
     func dispose() {
-        charactersCancellable?.cancel()
+        charactersDisposable?.dispose()
     }
 }
 
@@ -91,8 +91,8 @@ private extension CharactersViewModel {
     }
 
     func loadCharacters(with query: FetchCharactersQuery) {
-        charactersCancellable?.cancel()
-        charactersCancellable = charactersFetcher.fetch(query: query) { [weak self] result in
+        charactersDisposable?.dispose()
+        charactersDisposable = charactersFetcher.fetch(query: query) { [weak self] result in
             self?.handleFetchCharactersResult(result)
         }
     }

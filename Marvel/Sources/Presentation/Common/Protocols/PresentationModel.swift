@@ -7,7 +7,6 @@
 
 import Foundation
 
-protocol PresentationModel {
+protocol PresentationModel: Disposable {
     func start()
-    func dispose()
 }

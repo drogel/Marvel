@@ -229,8 +229,8 @@ private extension CharactersViewModelTests {
         return mostRecentQuery
     }
 
-    func retrieveFetcherMockCancellableMock() -> DisposableMock {
-        try! XCTUnwrap(charactersFetcherMock.cancellable)
+    func retrieveFetcherMockDisposableMock() -> DisposableMock {
+        try! XCTUnwrap(charactersFetcherMock.disposable)
     }
 
     func whenWillDisplayCellIgnoringQuery(atIndex index: Int) {
@@ -238,8 +238,8 @@ private extension CharactersViewModelTests {
     }
 
     func assertCancelledRequests(line: UInt = #line) {
-        let cancellableMock = retrieveFetcherMockCancellableMock()
-        XCTAssertEqual(cancellableMock.didDisposeCallCount, 1, line: line)
+        let disposableMock = retrieveFetcherMockDisposableMock()
+        XCTAssertEqual(disposableMock.didDisposeCallCount, 1, line: line)
     }
 
     func assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: Int, line: UInt = #line) {
@@ -275,13 +275,13 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
     var fetchCallCount = 0
     var mostRecentQuery: FetchCharactersQuery?
 
-    var cancellable: DisposableMock?
+    var disposable: DisposableMock?
 
     func fetch(query: FetchCharactersQuery, completion _: @escaping (FetchCharactersResult) -> Void) -> Disposable? {
         fetchCallCount += 1
         mostRecentQuery = query
-        cancellable = DisposableMock()
-        return cancellable
+        disposable = DisposableMock()
+        return disposable
     }
 }
 
