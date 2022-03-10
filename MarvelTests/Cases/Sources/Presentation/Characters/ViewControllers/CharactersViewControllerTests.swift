@@ -58,13 +58,6 @@ class CharactersViewControllerTests: XCTestCase {
         dataSourceFactoryMock.assertCreate(callCount: 1)
     }
 
-    func test_givenViewDidLoad_whenModelUpdatedItems_appliesSnapshot() {
-        givenViewDidLoad()
-        dataSourceMock.assertApplySnapshot(callCount: 0)
-        sut.modelDidUpdateItems(viewModelMock)
-        dataSourceMock.assertApplySnapshot(callCount: 1)
-    }
-
     func test_whenViewDidLoad_dataSourceIsSet() {
         dataSourceMock.assertSetDataSource(callCount: 0)
         sut.loadViewIfNeeded()

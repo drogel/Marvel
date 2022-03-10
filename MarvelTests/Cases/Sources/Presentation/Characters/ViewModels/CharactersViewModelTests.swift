@@ -68,13 +68,6 @@ class CharactersViewModelTests: XCTestCase {
         XCTAssertEqual(viewDelegateMock.didStartLoadingCallCount, 1)
     }
 
-    func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesViewDelegate() {
-        givenSutWithSuccessfulFetcher()
-        givenViewDelegate()
-        sut.start()
-        XCTAssertEqual(viewDelegateMock.didUpdateCallCount, 1)
-    }
-
     func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesFinishLoadToViewDelegate() {
         givenSutWithSuccessfulFetcher()
         givenViewDelegate()
@@ -158,7 +151,6 @@ class CharactersViewModelTests: XCTestCase {
         let expectedCalls: [ViewDelegatePagerCallRecorder.Method] = [
             .isAtEndOfCurrentPageWithMoreContent,
             .modelDidFinishLoading,
-            .modelDidUpdateItems,
             .update,
         ]
         givenSuccessfulCharactersFetcher()
@@ -330,14 +322,9 @@ private class CharactersFetcherFailingStub: CharactersFetcherMock {
 }
 
 private class CharactersViewModelDelegateMock: CharactersViewModelViewDelegate {
-    var didUpdateCallCount = 0
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
     var didFailCallCount = 0
-
-    func modelDidUpdateItems(_: CharactersViewModelProtocol) {
-        didUpdateCallCount += 1
-    }
 
     func modelDidStartLoading(_: CharactersViewModelProtocol) {
         didStartLoadingCallCount += 1
@@ -356,7 +343,6 @@ private class ViewDelegatePagerCallRecorder: CharactersViewModelViewDelegate, Pa
     enum Method: String, CustomDebugStringConvertible {
         case isAtEndOfCurrentPageWithMoreContent
         case modelDidFinishLoading
-        case modelDidUpdateItems
         case update
 
         var debugDescription: String {
@@ -370,10 +356,6 @@ private class ViewDelegatePagerCallRecorder: CharactersViewModelViewDelegate, Pa
 
     func modelDidFinishLoading(_: CharactersViewModelProtocol) {
         methodsCalled.append(.modelDidFinishLoading)
-    }
-
-    func modelDidUpdateItems(_: CharactersViewModelProtocol) {
-        methodsCalled.append(.modelDidUpdateItems)
     }
 
     func model(_: CharactersViewModelProtocol, didFailWithError _: String) {}

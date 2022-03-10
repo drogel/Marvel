@@ -21,7 +21,6 @@ protocol CharactersViewModelCoordinatorDelegate: AnyObject {
 protocol CharactersViewModelViewDelegate: AnyObject {
     func modelDidStartLoading(_ viewModel: CharactersViewModelProtocol)
     func modelDidFinishLoading(_ viewModel: CharactersViewModelProtocol)
-    func modelDidUpdateItems(_ viewModel: CharactersViewModelProtocol)
     func model(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String)
 }
 
@@ -149,6 +148,5 @@ private extension CharactersViewModel {
 
     func updateCells(using newCells: [CharacterCellModel]) {
         cellModels.append(contentsOf: newCells)
-        viewDelegate?.modelDidUpdateItems(self)
     }
 }

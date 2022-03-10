@@ -72,10 +72,6 @@ extension CharactersViewController: CharactersViewModelViewDelegate {
         stopLoading()
     }
 
-    func modelDidUpdateItems(_: CharactersViewModelProtocol) {
-        dataSource.applySnapshot()
-    }
-
     func model(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String) {
         showErrorAlert(message: message, retryButtonAction: viewModel.start)
     }
