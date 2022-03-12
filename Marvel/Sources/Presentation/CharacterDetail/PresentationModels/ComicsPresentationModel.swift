@@ -77,10 +77,12 @@ private extension ComicsPresentationModel {
 
     func loadComics(with query: FetchComicsQuery) {
         disposable?.dispose()
-        disposable = comicsFetcher.fetch(query: query, completion: handle)
+        disposable = comicsFetcher.fetch(query: query) { [weak self] result in
+            self?.handle(result)
+        }
     }
 
-    func handle(result: FetchComicsResult) {
+    func handle(_ result: FetchComicsResult) {
         viewDelegate?.modelDidFinishLoading(self)
         switch result {
         case let .success(contentPage):

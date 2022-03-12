@@ -43,4 +43,30 @@ extension Publisher where Output: Equatable, Failure == Never {
             expectation.fulfill()
         }
     }
+
+    func assertOutputIsEmptyArray(
+        expectation: XCTestExpectation,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> AnyCancellable {
+        sink { receivedValue in
+            guard let receivedArray = receivedValue as? [Any] else {
+                XCTFail("Expected received value \(receivedValue) to be an array")
+                return
+            }
+            XCTAssertTrue(receivedArray.isEmpty, file: file, line: line)
+            expectation.fulfill()
+        }
+    }
+
+    func assertReceivedValueNotNil(
+        expectation: XCTestExpectation,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> AnyCancellable {
+        sink { receivedValue in
+            XCTAssertNotNil(receivedValue, file: file, line: line)
+            expectation.fulfill()
+        }
+    }
 }

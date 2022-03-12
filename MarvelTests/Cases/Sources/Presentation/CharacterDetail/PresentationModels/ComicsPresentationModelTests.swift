@@ -173,11 +173,14 @@ class ComicsPresentationModelTests: XCTestCase {
     }
 
     func test_givenDidStartSuccessfully_whenAboutToDisplayACell_comicCellsAreAppended() {
-        // TODO: Test this with the changes made to migrate to combine
-//        givenDidStartSuccessfully()
-//        assertSutNumberOfComics(equals: 1)
-//        whenAboutToDisplayACell()
-//        assertSutNumberOfComics(equals: 2)
+        givenDidStartSuccessfully()
+        let newValueExpectation = expectation(description: "Received a new value")
+        sut.comicCellModelsPublisher
+            .dropFirst()
+            .assertReceivedValueNotNil(expectation: newValueExpectation)
+            .store(in: &cancellables)
+        whenAboutToDisplayACell()
+        wait(for: [newValueExpectation], timeout: 0.1)
     }
 
     func test_givenDidStartSuccessfully_whenRetrievingComicCells_imageURLBuiltExpectedVariant() throws {
@@ -326,10 +329,8 @@ private extension ComicsPresentationModelTests {
 
     func subscribeToModelsExpectingNoCellModels(line: UInt = #line) {
         let hasCellModelsExpectation = expectation(description: "Has no comic cell models")
-        // TODO: Extract to assert empty
-        let expectedComicCellModels: [ComicCellModel] = []
         sut.comicCellModelsPublisher
-            .assertOutput(matches: expectedComicCellModels, expectation: hasCellModelsExpectation, line: line)
+            .assertOutputIsEmptyArray(expectation: hasCellModelsExpectation, line: line)
             .store(in: &cancellables)
         wait(for: [hasCellModelsExpectation], timeout: 0.1)
     }
