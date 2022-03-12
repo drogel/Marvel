@@ -42,7 +42,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
 
     var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> {
-        cellModelsSubject.eraseToAnyPublisher()
+        $publishedCellModels.eraseToAnyPublisher()
     }
 
     var loadingStatePublisher: AnyPublisher<LoadingState, Never> {
@@ -51,12 +51,12 @@ class CharactersViewModel: CharactersViewModelProtocol {
 
     private var cellModels: [CharacterCellModel] {
         didSet {
-            cellModelsSubject.send(.success(cellModels))
+            publishedCellModels = .success(cellModels)
         }
     }
 
     @Published private var loadingState: LoadingState
-    private let cellModelsSubject: CurrentValueSubject<CharactersViewModelState, Never>
+    @Published private var publishedCellModels: CharactersViewModelState
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
@@ -66,9 +66,8 @@ class CharactersViewModel: CharactersViewModelProtocol {
         self.charactersFetcher = charactersFetcher
         self.imageURLBuilder = imageURLBuilder
         self.pager = pager
-        let initialCellModels: [CharacterCellModel] = []
-        cellModels = initialCellModels
-        cellModelsSubject = CurrentValueSubject<CharactersViewModelState, Never>(.success(initialCellModels))
+        cellModels = []
+        publishedCellModels = .success(cellModels)
         loadingState = .idle
     }
 
@@ -139,7 +138,7 @@ private extension CharactersViewModel {
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {
         let viewModelError = viewModelError(for: error)
-        cellModelsSubject.send(.failure(viewModelError))
+        publishedCellModels = .failure(viewModelError)
     }
 
     func viewModelError(for error: FetchCharacterDetailUseCaseError) -> CharactersViewModelError {
@@ -155,12 +154,11 @@ private extension CharactersViewModel {
 
     func mapToCells(characters: [Character]) -> [CharacterCellModel] {
         characters.map { character in
-            let imageURL = buildImageURL(from: character)
-            return CharacterCellModel(
+            CharacterCellModel(
                 identifier: character.identifier,
                 name: character.name,
                 description: character.description,
-                imageURL: imageURL
+                imageURL: buildImageURL(from: character)
             )
         }
     }
