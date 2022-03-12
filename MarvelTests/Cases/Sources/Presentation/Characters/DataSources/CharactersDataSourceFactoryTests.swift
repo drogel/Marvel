@@ -13,8 +13,7 @@ class CharactersDataSourceFactoryTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        let viewModelMock = CharactersViewModelMock()
-        sut = CharactersDataSourceFactory(viewModel: viewModelMock)
+        sut = CharactersDataSourceFactory()
     }
 
     override func tearDown() {

@@ -118,6 +118,7 @@ private extension CharacterDetailViewController {
     }
 
     func reload() {
-        dataSource.applySnapshot()
+        // TODO: Update properly here
+        dataSource.update(with: [AnyHashable]())
     }
 }

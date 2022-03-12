@@ -13,21 +13,14 @@ enum CharactersSection {
 }
 
 class CharactersDataSourceFactory: CollectionViewDataSourceFactory {
-    private let viewModel: CharactersViewModelProtocol
-
-    init(viewModel: CharactersViewModelProtocol) {
-        self.viewModel = viewModel
-    }
-
     func create(collectionView: UICollectionView) -> CollectionViewDataSource {
-        CharactersDataSource(collectionView: collectionView, viewModel: viewModel)
+        CharactersDataSource(collectionView: collectionView)
     }
 }
 
-typealias CharactersDiffableDataSource = UICollectionViewDiffableDataSource<CharactersSection, CharacterCell.Item>
+typealias CharactersDiffableDataSource = UICollectionViewDiffableDataSource<CharactersSection, AnyHashable>
 
 class CharactersDataSource: CollectionViewDataSource {
-    private let viewModel: CharactersViewModelProtocol
     private let collectionView: UICollectionView
     private let cellRegistration = CellRegistration<CharacterCell>(handler: CharactersDataSource.configureCell)
     private var cancellables = Set<AnyCancellable>()
@@ -36,18 +29,16 @@ class CharactersDataSource: CollectionViewDataSource {
         cellProvider: provideCell
     )
 
-    init(collectionView: UICollectionView, viewModel: CharactersViewModelProtocol) {
-        self.viewModel = viewModel
+    init(collectionView: UICollectionView) {
         self.collectionView = collectionView
     }
 
     func setDataSource(of collectionView: UICollectionView) {
         collectionView.dataSource = diffableDataSource
-        subscribeToCellModels()
     }
 
-    func applySnapshot() {
-        // TODO: Remove
+    func update<T>(with items: [T]) where T: Hashable {
+        applySnapshot(with: items)
     }
 }
 
@@ -59,16 +50,13 @@ private extension CharactersDataSource {
     func provideCell(
         in collectionView: UICollectionView,
         forRowAt indexPath: IndexPath,
-        with model: CharacterCell.Item
-    ) -> UICollectionViewCell {
-        collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: model)
+        with model: AnyHashable
+    ) -> UICollectionViewCell? {
+        guard let model = model as? CharacterCell.Item else { return nil }
+        return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: model)
     }
 
-    func subscribeToCellModels() {
-        viewModel.cellModelsPublisher.sink(receiveValue: applySnapshot).store(in: &cancellables)
-    }
-
-    func applySnapshot(with models: [CharacterCell.Item]) {
+    func applySnapshot(with models: [AnyHashable]) {
         var snapshot = CharactersDiffableDataSource.Snapshot()
         snapshot.appendSections([.main])
         snapshot.appendItems(models, toSection: .main)

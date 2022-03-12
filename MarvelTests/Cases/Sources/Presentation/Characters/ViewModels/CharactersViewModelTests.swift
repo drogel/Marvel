@@ -77,9 +77,9 @@ class CharactersViewModelTests: XCTestCase {
 
     func test_givenDidNotFetchYet_whenRetrievingCellData_publishesEmptyArray() {
         let receivedValueExpectation = expectation(description: "Publishes empty models")
-        let expectedEmptyModels: [CharacterCellModel] = []
+        let expectedEmptyState: CharactersViewModelState = .success([])
         sut.cellModelsPublisher
-            .assertOutput(matches: expectedEmptyModels, expectation: receivedValueExpectation)
+            .assertOutput(matches: expectedEmptyState, expectation: receivedValueExpectation)
             .store(in: &cancellables)
         wait(for: [receivedValueExpectation], timeout: 0.1)
     }
@@ -88,9 +88,10 @@ class CharactersViewModelTests: XCTestCase {
         givenSutWithSuccessfulFetcher()
         let receivedValueExpectation = expectation(description: "Publishes single value")
         let expectedModels = buildExpectedCellModels(from: CharactersFetcherSuccessfulStub.charactersStub)
+        let expectedState: CharactersViewModelState = .success(expectedModels)
         sut.cellModelsPublisher
             .dropFirst()
-            .assertOutput(matches: expectedModels, expectation: receivedValueExpectation)
+            .assertOutput(matches: expectedState, expectation: receivedValueExpectation)
             .store(in: &cancellables)
         sut.start()
         wait(for: [receivedValueExpectation], timeout: 0.1)
@@ -124,13 +125,6 @@ class CharactersViewModelTests: XCTestCase {
         givenStartFailed()
         sut.dispose()
         assertCancelledRequests()
-    }
-
-    func test_givenStartFailed_notifiesViewDelegate() {
-        givenSutWithFailingFetcher()
-        givenViewDelegate()
-        sut.start()
-        XCTAssertEqual(viewDelegateMock.didFailCallCount, 1)
     }
 
     func test_givenViewDelegate_whenStartingFinishes_updatesPage() {
@@ -324,7 +318,6 @@ private class CharactersFetcherFailingStub: CharactersFetcherMock {
 private class CharactersViewModelDelegateMock: CharactersViewModelViewDelegate {
     var didStartLoadingCallCount = 0
     var didFinishLoadingCallCount = 0
-    var didFailCallCount = 0
 
     func modelDidStartLoading(_: CharactersViewModelProtocol) {
         didStartLoadingCallCount += 1
@@ -332,10 +325,6 @@ private class CharactersViewModelDelegateMock: CharactersViewModelViewDelegate {
 
     func modelDidFinishLoading(_: CharactersViewModelProtocol) {
         didFinishLoadingCallCount += 1
-    }
-
-    func model(_: CharactersViewModelProtocol, didFailWithError _: String) {
-        didFailCallCount += 1
     }
 }
 
@@ -357,8 +346,6 @@ private class ViewDelegatePagerCallRecorder: CharactersViewModelViewDelegate, Pa
     func modelDidFinishLoading(_: CharactersViewModelProtocol) {
         methodsCalled.append(.modelDidFinishLoading)
     }
-
-    func model(_: CharactersViewModelProtocol, didFailWithError _: String) {}
 
     func isThereMoreContent(at _: Int) -> Bool {
         true

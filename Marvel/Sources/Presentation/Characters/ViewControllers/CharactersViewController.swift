@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 18/1/22.
 //
 
+import Combine
 import UIKit
 
 class CharactersViewController: ViewController {
@@ -19,6 +20,7 @@ class CharactersViewController: ViewController {
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
     private var dataSourceFactory: CollectionViewDataSourceFactory!
+    private var cancellables = Set<AnyCancellable>()
 
     static func instantiate(
         presentationModel: PresentationModelProtocol,
@@ -71,16 +73,28 @@ extension CharactersViewController: CharactersViewModelViewDelegate {
     func modelDidFinishLoading(_: CharactersViewModelProtocol) {
         stopLoading()
     }
-
-    func model(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String) {
-        showErrorAlert(message: message, retryButtonAction: viewModel.start)
-    }
 }
 
 private extension CharactersViewController {
     func setUp() {
         setUpNavigationController()
         setUpCollectionView()
+        subscribeToViewModelState()
+    }
+
+    func subscribeToViewModelState() {
+        viewModel.cellModelsPublisher
+            .sink(receiveValue: handleState)
+            .store(in: &cancellables)
+    }
+
+    func handleState(_ state: CharactersViewModelState) {
+        switch state {
+        case let .success(models):
+            dataSource.update(with: models)
+        case let .failure(error):
+            showErrorAlert(message: error.localizedDescription, retryButtonAction: viewModel.start)
+        }
     }
 
     func setUpNavigationController() {

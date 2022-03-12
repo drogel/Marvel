@@ -59,7 +59,7 @@ class CharacterDetailDataSource: CollectionViewDataSource {
         collectionView.dataSource = diffableDataSource
     }
 
-    func applySnapshot() {
+    func update<T: Hashable>(with _: [T]) {
         var snapshot = CharacterDetailDiffableDataSource.Snapshot()
         snapshot.appendSections([.image, .info, .comics])
         snapshot.appendItems([presentationModel.imageCellData], toSection: .image)

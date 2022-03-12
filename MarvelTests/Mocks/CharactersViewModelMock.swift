@@ -23,9 +23,9 @@ class CharactersViewModelMock: CharactersViewModelProtocol {
         return 0
     }
 
-    var cellModelsStub = CurrentValueSubject<[CharacterCellModel], Never>([])
+    var cellModelsStub = CurrentValueSubject<CharactersViewModelState, Never>(.success([]))
 
-    var cellModelsPublisher: AnyPublisher<[CharacterCellModel], Never> {
+    var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> {
         cellModelsPublisherCallCount += 1
         return cellModelsStub.eraseToAnyPublisher()
     }

@@ -58,9 +58,9 @@ private class CharactersViewModelStub: CharactersViewModelProtocol {
         0
     }
 
-    var cellModelsStub = CurrentValueSubject<[CharacterCellModel], Never>([])
+    var cellModelsStub = CurrentValueSubject<CharactersViewModelState, Never>(.success([]))
 
-    var cellModelsPublisher: AnyPublisher<[CharacterCellModel], Never> {
+    var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> {
         cellModelsStub.eraseToAnyPublisher()
     }
 

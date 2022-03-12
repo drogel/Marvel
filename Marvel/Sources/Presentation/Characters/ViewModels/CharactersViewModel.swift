@@ -8,8 +8,10 @@
 import Combine
 import Foundation
 
+typealias CharactersViewModelState = Result<[CharacterCellModel], CharactersViewModelError>
+
 protocol CharactersViewModelProtocol: PresentationModel {
-    var cellModelsPublisher: AnyPublisher<[CharacterCellModel], Never> { get }
+    var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> { get }
     func willDisplayCell(at indexPath: IndexPath)
     func select(at indexPath: IndexPath)
 }
@@ -21,7 +23,6 @@ protocol CharactersViewModelCoordinatorDelegate: AnyObject {
 protocol CharactersViewModelViewDelegate: AnyObject {
     func modelDidStartLoading(_ viewModel: CharactersViewModelProtocol)
     func modelDidFinishLoading(_ viewModel: CharactersViewModelProtocol)
-    func model(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String)
 }
 
 enum CharactersViewModelError: LocalizedError {
@@ -45,9 +46,17 @@ class CharactersViewModel: CharactersViewModelProtocol {
     weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
     weak var viewDelegate: CharactersViewModelViewDelegate?
 
-    var cellModelsPublisher: AnyPublisher<[CharacterCellModel], Never> { cellModelsSubject.eraseToAnyPublisher() }
+    var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> {
+        cellModelsSubject.eraseToAnyPublisher()
+    }
 
-    private var cellModelsSubject: CurrentValueSubject<[CharacterCellModel], Never>
+    private var cellModels: [CharacterCellModel] {
+        didSet {
+            cellModelsSubject.send(.success(cellModels))
+        }
+    }
+
+    private let cellModelsSubject: CurrentValueSubject<CharactersViewModelState, Never>
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
@@ -57,7 +66,9 @@ class CharactersViewModel: CharactersViewModelProtocol {
         self.charactersFetcher = charactersFetcher
         self.imageURLBuilder = imageURLBuilder
         self.pager = pager
-        cellModelsSubject = CurrentValueSubject<[CharacterCellModel], Never>([])
+        let initialCellModels: [CharacterCellModel] = []
+        cellModels = initialCellModels
+        cellModelsSubject = CurrentValueSubject<CharactersViewModelState, Never>(.success(initialCellModels))
     }
 
     func start() {
@@ -83,10 +94,6 @@ class CharactersViewModel: CharactersViewModelProtocol {
 private extension CharactersViewModel {
     var startingQuery: FetchCharactersQuery {
         FetchCharactersQuery(offset: 0)
-    }
-
-    var cellModels: [CharacterCellModel] {
-        cellModelsSubject.value
     }
 
     func shouldLoadMore(at indexPath: IndexPath) -> Bool {
@@ -131,7 +138,7 @@ private extension CharactersViewModel {
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {
         let viewModelError = viewModelError(for: error)
-        viewDelegate?.model(self, didFailWithError: viewModelError.localizedDescription)
+        cellModelsSubject.send(.failure(viewModelError))
     }
 
     func viewModelError(for error: FetchCharacterDetailUseCaseError) -> CharactersViewModelError {
@@ -162,6 +169,6 @@ private extension CharactersViewModel {
     }
 
     func updateCells(using newCells: [CharacterCellModel]) {
-        cellModelsSubject.value += newCells
+        cellModels += newCells
     }
 }

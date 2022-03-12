@@ -9,6 +9,5 @@ import UIKit
 
 protocol CollectionViewDataSource {
     func setDataSource(of collectionView: UICollectionView)
-    // TODO: Remove when we migrate to Combine
-    func applySnapshot()
+    func update<T: Hashable>(with items: [T])
 }
