@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 5/2/22.
 //
 
+import Combine
 import Foundation
 
 // TODO: Rename all references of presentation model to view models when we migrate these models to Combine too
@@ -31,8 +32,8 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
         infoPresentationModel.infoCellData
     }
 
-    var comicCellModels: [ComicCellModel] {
-        comicsPresentationModel.comicCellModels
+    var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
+        comicsPresentationModel.comicCellModelsPublisher
     }
 
     private var infoPresentationModel: CharacterInfoPresentationModelProtocol
@@ -84,9 +85,7 @@ extension CharacterDetailPresentationModel: ComicsPresentationModelViewDelegate 
 
     func modelDidFinishLoading(_: ComicsPresentationModelProtocol) {}
 
-    func modelDidRetrieveData(_: ComicsPresentationModelProtocol) {
-        viewDelegate?.modelDidRetrieveComics(self)
-    }
+    func modelDidRetrieveData(_: ComicsPresentationModelProtocol) {}
 
     func modelDidFailRetrievingData(_: ComicsPresentationModelProtocol) {}
 }

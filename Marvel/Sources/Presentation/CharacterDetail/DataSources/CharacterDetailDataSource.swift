@@ -59,13 +59,8 @@ class CharacterDetailDataSource: CollectionViewDataSource {
         collectionView.dataSource = diffableDataSource
     }
 
-    func update<T: Hashable>(with _: [T]) {
-        var snapshot = CharacterDetailDiffableDataSource.Snapshot()
-        snapshot.appendSections([.image, .info, .comics])
-        snapshot.appendItems([presentationModel.imageCellData], toSection: .image)
-        snapshot.appendItems([presentationModel.infoCellData], toSection: .info)
-        snapshot.appendItems(presentationModel.comicCellModels, toSection: .comics)
-        diffableDataSource.apply(snapshot)
+    func update<T: Hashable>(with items: [T]) {
+        applySnapshot(with: items)
     }
 }
 
@@ -114,5 +109,14 @@ private extension CharacterDetailDataSource {
         default:
             return UICollectionReusableView()
         }
+    }
+
+    func applySnapshot(with items: [AnyHashable]) {
+        var snapshot = CharacterDetailDiffableDataSource.Snapshot()
+        snapshot.appendSections([.image, .info, .comics])
+        snapshot.appendItems([presentationModel.imageCellData], toSection: .image)
+        snapshot.appendItems([presentationModel.infoCellData], toSection: .info)
+        snapshot.appendItems(items, toSection: .comics)
+        diffableDataSource.apply(snapshot)
     }
 }

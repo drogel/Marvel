@@ -37,7 +37,7 @@ class CharactersDataSource: CollectionViewDataSource {
         collectionView.dataSource = diffableDataSource
     }
 
-    func update<T>(with items: [T]) where T: Hashable {
+    func update<T: Hashable>(with items: [T]) {
         applySnapshot(with: items)
     }
 }

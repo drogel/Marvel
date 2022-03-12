@@ -5,10 +5,11 @@
 //  Created by Diego Rogel on 5/2/22.
 //
 
+import Combine
 import Foundation
 
 protocol ComicsPresentationModelProtocol: PresentationModel {
-    var comicCellModels: [ComicCellModel] { get }
+    var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> { get }
     func willDisplayComicCell(at indexPath: IndexPath)
 }
 
@@ -19,11 +20,15 @@ protocol ComicsPresentationModelViewDelegate: AnyObject {
     func modelDidFailRetrievingData(_ presentationModel: ComicsPresentationModelProtocol)
 }
 
+// TODO: Rename to view model when refactor is finished
 class ComicsPresentationModel: ComicsPresentationModelProtocol {
     weak var viewDelegate: ComicsPresentationModelViewDelegate?
 
-    private(set) var comicCellModels: [ComicCellModel]
+    var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
+        $publishedComicCellModels.eraseToAnyPublisher()
+    }
 
+    @Published private var publishedComicCellModels: [ComicCellModel]
     private let comicsFetcher: FetchComicsUseCase
     private let characterID: Int
     private let imageURLBuilder: ImageURLBuilder
@@ -35,7 +40,7 @@ class ComicsPresentationModel: ComicsPresentationModelProtocol {
         self.characterID = characterID
         self.imageURLBuilder = imageURLBuilder
         self.pager = pager
-        comicCellModels = []
+        publishedComicCellModels = []
     }
 
     func start() {
@@ -67,7 +72,7 @@ private extension ComicsPresentationModel {
     }
 
     func loadMore() {
-        loadComics(with: query(atOffset: comicCellModels.count))
+        loadComics(with: query(atOffset: publishedComicCellModels.count))
     }
 
     func loadComics(with query: FetchComicsQuery) {
@@ -88,7 +93,7 @@ private extension ComicsPresentationModel {
     func handleSuccess(with contentPage: ContentPage<Comic>) {
         guard let comicsCellData = mapToCells(comics: contentPage.contents) else { return }
         pager.update(currentPage: contentPage)
-        comicCellModels.append(contentsOf: comicsCellData)
+        publishedComicCellModels += comicsCellData
         viewDelegate?.modelDidRetrieveData(self)
     }
 

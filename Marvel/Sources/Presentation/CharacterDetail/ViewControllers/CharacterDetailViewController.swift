@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 18/1/22.
 //
 
+import Combine
 import UIKit
 
 class CharacterDetailViewController: ViewController {
@@ -20,6 +21,7 @@ class CharacterDetailViewController: ViewController {
     private var collectionViewDelegate: UICollectionViewDelegate!
     private var layout: UICollectionViewCompositionalLayout!
     private var dataSourceFactory: CollectionViewDataSourceFactory!
+    private var cancellables = Set<AnyCancellable>()
 
     static func instantiate(
         presentationModel: PresentationModelProtocol,
@@ -70,13 +72,9 @@ extension CharacterDetailViewController: CharacterDetailPresentationModelViewDel
         stopLoading()
     }
 
-    func modelDidRetrieveCharacterInfo(_: CharacterDetailPresentationModelProtocol) {
-        reload()
-    }
+    func modelDidRetrieveCharacterInfo(_: CharacterDetailPresentationModelProtocol) {}
 
-    func modelDidRetrieveComics(_: CharacterDetailPresentationModelProtocol) {
-        reload()
-    }
+    func modelDidRetrieveComics(_: CharacterDetailPresentationModelProtocol) {}
 
     func model(_ presentationModel: CharacterDetailPresentationModelProtocol, didFailWithError message: String) {
         showErrorAlert(message: message, retryButtonAction: presentationModel.start)
@@ -86,6 +84,7 @@ extension CharacterDetailViewController: CharacterDetailPresentationModelViewDel
 private extension CharacterDetailViewController {
     func setUp() {
         setUpCollectionView()
+        subscribeToComics()
     }
 
     func setUpCollectionView() {
@@ -93,6 +92,12 @@ private extension CharacterDetailViewController {
         setSubview(collectionView)
         configureDataSource(of: collectionView)
         configureConstraints(of: collectionView)
+    }
+
+    func subscribeToComics() {
+        presentationModel.comicCellModelsPublisher
+            .sink(receiveValue: dataSource.update)
+            .store(in: &cancellables)
     }
 
     func createCollectionView() -> UICollectionView {
@@ -115,10 +120,5 @@ private extension CharacterDetailViewController {
     func configureConstraints(of collectionView: UICollectionView) {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.fit(collectionView, in: view)
-    }
-
-    func reload() {
-        // TODO: Update properly here
-        dataSource.update(with: [AnyHashable]())
     }
 }

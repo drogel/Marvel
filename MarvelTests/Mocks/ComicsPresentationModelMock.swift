@@ -5,18 +5,19 @@
 //  Created by Diego Rogel on 5/2/22.
 //
 
+import Combine
 import Foundation
 @testable import Marvel_Debug
 
 class ComicsPresentationModelMock: ComicsPresentationModelProtocol {
     var startCallCount = 0
-    var comicCellModelsCallCount = 0
+    var comicCellModelsPublisherCallCount = 0
     var disposeCallCount = 0
     var willDisplayComicCellCallCount = 0
 
-    var comicCellModels: [ComicCellModel] {
-        comicCellModelsCallCount += 1
-        return []
+    var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
+        comicCellModelsPublisherCallCount += 1
+        return Just([]).eraseToAnyPublisher()
     }
 
     func start() {

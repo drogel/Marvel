@@ -5,11 +5,14 @@
 //  Created by Diego Rogel on 6/3/22.
 //
 
+import Combine
 import Foundation
 @testable import Marvel_Debug
 
 class CharacterDetailPresentationModelMock: PresentationModelMock, CharacterDetailPresentationModelProtocol {
-    var comicCellModels: [ComicCellModel] = []
+    var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
+        Just([]).eraseToAnyPublisher()
+    }
 
     var comicsSectionTitle: String = ""
 

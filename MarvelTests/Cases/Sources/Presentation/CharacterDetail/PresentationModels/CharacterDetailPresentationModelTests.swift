@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 5/2/22.
 //
 
+import Combine
 @testable import Marvel_Debug
 import XCTest
 
@@ -13,9 +14,11 @@ class CharacterDetailPresentationModelTests: XCTestCase {
     private var infoPresentationModelMock: CharacterDetailInfoPresentationModelMock!
     private var comicsPresentationModelMock: ComicsPresentationModelMock!
     private var viewDelegateMock: CharacterDetailViewDelegateMock!
+    private var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
+        cancellables = Set<AnyCancellable>()
         infoPresentationModelMock = CharacterDetailInfoPresentationModelMock()
         comicsPresentationModelMock = ComicsPresentationModelMock()
         viewDelegateMock = CharacterDetailViewDelegateMock()
@@ -27,6 +30,7 @@ class CharacterDetailPresentationModelTests: XCTestCase {
 
     override func tearDown() {
         sut = nil
+        cancellables = nil
         comicsPresentationModelMock = nil
         viewDelegateMock = nil
         infoPresentationModelMock = nil
@@ -80,9 +84,9 @@ class CharacterDetailPresentationModelTests: XCTestCase {
     }
 
     func test_comicCellData_delegatesToComicsPresentationModel() {
-        assertComicsPresentationModelComicCellModels(callCount: 0)
-        _ = sut.comicCellModels
-        assertComicsPresentationModelComicCellModels(callCount: 1)
+        assertComicsPresentationModelComicCellModelsPublisher(callCount: 0)
+        _ = sut.comicCellModelsPublisher
+        assertComicsPresentationModelComicCellModelsPublisher(callCount: 1)
     }
 
     func test_givenViewDelegate_whenInfoStartsLoading_notifiesView() {
@@ -106,11 +110,10 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         assertViewDelegateDidRetrieveCharacterInfo(callCount: 1)
     }
 
-    func test_givenViewDelegate_whenComicsAreRetrieved_notifiesView() {
-        givenViewDelegate()
-        assertViewDelegateDidRetrieveComics(callCount: 0)
-        sut.modelDidRetrieveData(comicsPresentationModelMock)
-        assertViewDelegateDidRetrieveComics(callCount: 1)
+    func test_whenSubscribingToComicCellModels_delegatesToComicsViewModel() {
+        assertComicsPresentationModelComicCellModelsPublisher(callCount: 0)
+        sut.comicCellModelsPublisher.sink(receiveValue: { _ in }).store(in: &cancellables)
+        assertComicsPresentationModelComicCellModelsPublisher(callCount: 1)
     }
 
     func test_givenViewDelegate_whenInfoFails_notifiesView() {
@@ -210,8 +213,8 @@ private extension CharacterDetailPresentationModelTests {
         XCTAssertEqual(infoPresentationModelMock.infoCellDataCallCount, callCount, line: line)
     }
 
-    func assertComicsPresentationModelComicCellModels(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicsPresentationModelMock.comicCellModelsCallCount, callCount, line: line)
+    func assertComicsPresentationModelComicCellModelsPublisher(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(comicsPresentationModelMock.comicCellModelsPublisherCallCount, callCount, line: line)
     }
 
     func assertComicsPresentationModelWillDisplayCell(callCount: Int, line: UInt = #line) {
