@@ -17,6 +17,7 @@ class CharactersViewModelMock: CharactersViewModelProtocol {
     var cellDataCallCount = 0
     var startCallCount = 0
     var disposeCallCount = 0
+    var loadingStatePublisherCallCount = 0
 
     var numberOfItems: Int {
         numberOfItemsCallCount += 1
@@ -24,6 +25,11 @@ class CharactersViewModelMock: CharactersViewModelProtocol {
     }
 
     var cellModelsStub = CurrentValueSubject<CharactersViewModelState, Never>(.success([]))
+
+    var loadingStatePublisher: AnyPublisher<LoadingState, Never> {
+        loadingStatePublisherCallCount += 1
+        return Just(LoadingState.loading).eraseToAnyPublisher()
+    }
 
     var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> {
         cellModelsPublisherCallCount += 1

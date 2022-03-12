@@ -60,6 +60,10 @@ private class CharactersViewModelStub: CharactersViewModelProtocol {
 
     var cellModelsStub = CurrentValueSubject<CharactersViewModelState, Never>(.success([]))
 
+    var loadingStatePublisher: AnyPublisher<LoadingState, Never> {
+        Just(LoadingState.loading).eraseToAnyPublisher()
+    }
+
     var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> {
         cellModelsStub.eraseToAnyPublisher()
     }

@@ -12,17 +12,13 @@ typealias CharactersViewModelState = Result<[CharacterCellModel], CharactersView
 
 protocol CharactersViewModelProtocol: PresentationModel {
     var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> { get }
+    var loadingStatePublisher: AnyPublisher<LoadingState, Never> { get }
     func willDisplayCell(at indexPath: IndexPath)
     func select(at indexPath: IndexPath)
 }
 
 protocol CharactersViewModelCoordinatorDelegate: AnyObject {
     func model(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int)
-}
-
-protocol CharactersViewModelViewDelegate: AnyObject {
-    func modelDidStartLoading(_ viewModel: CharactersViewModelProtocol)
-    func modelDidFinishLoading(_ viewModel: CharactersViewModelProtocol)
 }
 
 enum CharactersViewModelError: LocalizedError {
@@ -44,10 +40,13 @@ enum CharactersViewModelError: LocalizedError {
 
 class CharactersViewModel: CharactersViewModelProtocol {
     weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
-    weak var viewDelegate: CharactersViewModelViewDelegate?
 
     var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> {
         cellModelsSubject.eraseToAnyPublisher()
+    }
+
+    var loadingStatePublisher: AnyPublisher<LoadingState, Never> {
+        $loadingState.eraseToAnyPublisher()
     }
 
     private var cellModels: [CharacterCellModel] {
@@ -56,6 +55,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
         }
     }
 
+    @Published private var loadingState: LoadingState
     private let cellModelsSubject: CurrentValueSubject<CharactersViewModelState, Never>
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
@@ -69,10 +69,11 @@ class CharactersViewModel: CharactersViewModelProtocol {
         let initialCellModels: [CharacterCellModel] = []
         cellModels = initialCellModels
         cellModelsSubject = CurrentValueSubject<CharactersViewModelState, Never>(.success(initialCellModels))
+        loadingState = .idle
     }
 
     func start() {
-        viewDelegate?.modelDidStartLoading(self)
+        loadingState = .loading
         loadCharacters(with: startingQuery)
     }
 
@@ -120,7 +121,7 @@ private extension CharactersViewModel {
     }
 
     func handleFetchCharactersResult(_ result: FetchCharactersResult) {
-        viewDelegate?.modelDidFinishLoading(self)
+        loadingState = .loaded
         switch result {
         case let .success(contentPage):
             handleSuccess(with: contentPage)

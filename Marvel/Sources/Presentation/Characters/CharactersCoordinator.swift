@@ -61,7 +61,6 @@ private extension CharactersCoordinator {
             dataSourceFactory: CharactersDataSourceFactory()
         )
         viewModel.coordinatorDelegate = self
-        viewModel.viewDelegate = viewController
         return viewController
     }
 }

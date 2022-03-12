@@ -13,7 +13,6 @@ class CharactersViewModelTests: XCTestCase {
     private var sut: CharactersViewModel!
     private var coordinatorDelegateMock: CharactersCoordinatorDelegateMock!
     private var charactersFetcherMock: CharactersFetcherMock!
-    private var viewDelegateMock: CharactersViewModelDelegateMock!
     private var offsetPagerMock: OffsetPagerPartialMock!
     private var methodCallRecorder: ViewDelegatePagerCallRecorder!
     private var imageURLBuilderMock: ImageURLBuilderMock!
@@ -21,7 +20,6 @@ class CharactersViewModelTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        viewDelegateMock = CharactersViewModelDelegateMock()
         coordinatorDelegateMock = CharactersCoordinatorDelegateMock()
         charactersFetcherMock = CharactersFetcherMock()
         offsetPagerMock = OffsetPagerPartialMock()
@@ -31,7 +29,6 @@ class CharactersViewModelTests: XCTestCase {
     }
 
     override func tearDown() {
-        viewDelegateMock = nil
         charactersFetcherMock = nil
         coordinatorDelegateMock = nil
         offsetPagerMock = nil
@@ -62,17 +59,33 @@ class CharactersViewModelTests: XCTestCase {
         XCTAssertEqual(charactersFetcherMock.fetchCallCount, 1)
     }
 
-    func test_givenViewDelegate_whenStarting_notifiesLoadingToViewDelegate() {
-        givenViewDelegate()
-        sut.start()
-        XCTAssertEqual(viewDelegateMock.didStartLoadingCallCount, 1)
+    func test_whenInitialized_notifiesIdle() {
+        let receivedIdleExpectation = expectation(description: "Receives idle state")
+        sut.loadingStatePublisher
+            .assertOutput(matches: .idle, expectation: receivedIdleExpectation)
+            .store(in: &cancellables)
+        wait(for: [receivedIdleExpectation], timeout: 0.1)
     }
 
-    func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesFinishLoadToViewDelegate() {
-        givenSutWithSuccessfulFetcher()
-        givenViewDelegate()
+    func test_whenStarting_notifiesLoading() {
+        let receivedLoadingExpectation = expectation(description: "Receives loading state")
+        sut.loadingStatePublisher
+            .dropFirst()
+            .assertOutput(matches: .loading, expectation: receivedLoadingExpectation)
+            .store(in: &cancellables)
         sut.start()
-        XCTAssertEqual(viewDelegateMock.didFinishLoadingCallCount, 1)
+        wait(for: [receivedLoadingExpectation], timeout: 0.1)
+    }
+
+    func test_whenStartingCompletesSuccessfully_notifiesFinishedLoading() {
+        givenSutWithSuccessfulFetcher()
+        let receivedLoadedExpectation = expectation(description: "Receives loaded state")
+        sut.loadingStatePublisher
+            .dropFirst(2)
+            .assertOutput(matches: .loaded, expectation: receivedLoadedExpectation)
+            .store(in: &cancellables)
+        sut.start()
+        wait(for: [receivedLoadedExpectation], timeout: 0.1)
     }
 
     func test_givenDidNotFetchYet_whenRetrievingCellData_publishesEmptyArray() {
@@ -144,7 +157,6 @@ class CharactersViewModelTests: XCTestCase {
     func test_givenDidStartSuccessfully_whenAboutToDisplayACell_updateNotificationsAreCalledInOrder() {
         let expectedCalls: [ViewDelegatePagerCallRecorder.Method] = [
             .isAtEndOfCurrentPageWithMoreContent,
-            .modelDidFinishLoading,
             .update,
         ]
         givenSuccessfulCharactersFetcher()
@@ -196,11 +208,6 @@ private extension CharactersViewModelTests {
     func givenSutWithCallRecorder() {
         methodCallRecorder = ViewDelegatePagerCallRecorder()
         givenSut(pager: methodCallRecorder)
-        sut.viewDelegate = methodCallRecorder
-    }
-
-    func givenViewDelegate() {
-        sut.viewDelegate = viewDelegateMock
     }
 
     func givenCoordinatorDelegate() {
@@ -315,23 +322,9 @@ private class CharactersFetcherFailingStub: CharactersFetcherMock {
     }
 }
 
-private class CharactersViewModelDelegateMock: CharactersViewModelViewDelegate {
-    var didStartLoadingCallCount = 0
-    var didFinishLoadingCallCount = 0
-
-    func modelDidStartLoading(_: CharactersViewModelProtocol) {
-        didStartLoadingCallCount += 1
-    }
-
-    func modelDidFinishLoading(_: CharactersViewModelProtocol) {
-        didFinishLoadingCallCount += 1
-    }
-}
-
-private class ViewDelegatePagerCallRecorder: CharactersViewModelViewDelegate, Pager {
+private class ViewDelegatePagerCallRecorder: Pager {
     enum Method: String, CustomDebugStringConvertible {
         case isAtEndOfCurrentPageWithMoreContent
-        case modelDidFinishLoading
         case update
 
         var debugDescription: String {
@@ -342,10 +335,6 @@ private class ViewDelegatePagerCallRecorder: CharactersViewModelViewDelegate, Pa
     var methodsCalled: [Method] = []
 
     func modelDidStartLoading(_: CharactersViewModelProtocol) {}
-
-    func modelDidFinishLoading(_: CharactersViewModelProtocol) {
-        methodsCalled.append(.modelDidFinishLoading)
-    }
 
     func isThereMoreContent(at _: Int) -> Bool {
         true

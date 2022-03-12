@@ -65,27 +65,35 @@ extension CharactersViewController: UICollectionViewDelegate {
     }
 }
 
-extension CharactersViewController: CharactersViewModelViewDelegate {
-    func modelDidStartLoading(_: CharactersViewModelProtocol) {
-        startLoading()
-    }
-
-    func modelDidFinishLoading(_: CharactersViewModelProtocol) {
-        stopLoading()
-    }
-}
-
 private extension CharactersViewController {
     func setUp() {
         setUpNavigationController()
         setUpCollectionView()
+        subscribeToLoadingState()
         subscribeToViewModelState()
+    }
+
+    func subscribeToLoadingState() {
+        viewModel.loadingStatePublisher
+            .sink(receiveValue: handleLoadingState)
+            .store(in: &cancellables)
     }
 
     func subscribeToViewModelState() {
         viewModel.cellModelsPublisher
             .sink(receiveValue: handleState)
             .store(in: &cancellables)
+    }
+
+    func handleLoadingState(_ loadingState: LoadingState) {
+        switch loadingState {
+        case .idle:
+            return
+        case .loading:
+            startLoading()
+        case .loaded:
+            stopLoading()
+        }
     }
 
     func handleState(_ state: CharactersViewModelState) {
