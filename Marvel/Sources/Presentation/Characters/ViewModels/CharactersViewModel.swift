@@ -9,7 +9,7 @@ import Combine
 import Foundation
 
 protocol CharactersViewModelProtocol: PresentationModel {
-    var cellModelsPublisher: Published<[CharacterCellModel]>.Publisher { get }
+    var cellModelsPublisher: AnyPublisher<[CharacterCellModel], Never> { get }
     func willDisplayCell(at indexPath: IndexPath)
     func select(at indexPath: IndexPath)
 }
@@ -34,9 +34,9 @@ class CharactersViewModel: CharactersViewModelProtocol {
     weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
     weak var viewDelegate: CharactersViewModelViewDelegate?
 
-    var cellModelsPublisher: Published<[CharacterCellModel]>.Publisher { $cellModels }
+    var cellModelsPublisher: AnyPublisher<[CharacterCellModel], Never> { cellModelsSubject.eraseToAnyPublisher() }
 
-    @Published private var cellModels: [CharacterCellModel]
+    private var cellModelsSubject: CurrentValueSubject<[CharacterCellModel], Never>
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
@@ -46,7 +46,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
         self.charactersFetcher = charactersFetcher
         self.imageURLBuilder = imageURLBuilder
         self.pager = pager
-        cellModels = []
+        cellModelsSubject = CurrentValueSubject<[CharacterCellModel], Never>([])
     }
 
     func start() {
@@ -72,6 +72,10 @@ class CharactersViewModel: CharactersViewModelProtocol {
 private extension CharactersViewModel {
     var startingQuery: FetchCharactersQuery {
         FetchCharactersQuery(offset: 0)
+    }
+
+    var cellModels: [CharacterCellModel] {
+        cellModelsSubject.value
     }
 
     func shouldLoadMore(at indexPath: IndexPath) -> Bool {
@@ -147,6 +151,6 @@ private extension CharactersViewModel {
     }
 
     func updateCells(using newCells: [CharacterCellModel]) {
-        cellModels.append(contentsOf: newCells)
+        cellModelsSubject.value += newCells
     }
 }

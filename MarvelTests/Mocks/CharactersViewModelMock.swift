@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 4/3/22.
 //
 
+import Combine
 import Foundation
 @testable import Marvel_Debug
 
@@ -22,11 +23,11 @@ class CharactersViewModelMock: CharactersViewModelProtocol {
         return 0
     }
 
-    @Published var cellModelsStub: [CharacterCellModel] = []
+    var cellModelsStub = CurrentValueSubject<[CharacterCellModel], Never>([])
 
-    var cellModelsPublisher: Published<[CharacterCellModel]>.Publisher {
+    var cellModelsPublisher: AnyPublisher<[CharacterCellModel], Never> {
         cellModelsPublisherCallCount += 1
-        return $cellModelsStub
+        return cellModelsStub.eraseToAnyPublisher()
     }
 
     func willDisplayCell(at _: IndexPath) {

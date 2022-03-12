@@ -58,10 +58,10 @@ private class CharactersViewModelStub: CharactersViewModelProtocol {
         0
     }
 
-    @Published var cellModelsStub: [CharacterCellModel] = []
+    var cellModelsStub = CurrentValueSubject<[CharacterCellModel], Never>([])
 
-    var cellModelsPublisher: Published<[CharacterCellModel]>.Publisher {
-        $cellModelsStub
+    var cellModelsPublisher: AnyPublisher<[CharacterCellModel], Never> {
+        cellModelsStub.eraseToAnyPublisher()
     }
 
     func willDisplayCell(at _: IndexPath) {}
