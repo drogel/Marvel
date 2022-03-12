@@ -24,13 +24,24 @@ protocol CharactersViewModelViewDelegate: AnyObject {
     func model(_ viewModel: CharactersViewModelProtocol, didFailWithError message: String)
 }
 
-class CharactersViewModel: CharactersViewModelProtocol {
-    private enum Messages {
-        static let noCharacters = "server_not_responding".localized
-        static let noAPIKeys = "api_keys_not_found".localized
-        static let noConnection = "no_internet".localized
-    }
+enum CharactersViewModelError: LocalizedError {
+    case noCharacters
+    case noAPIKeys
+    case noConnection
 
+    var errorDescription: String? {
+        switch self {
+        case .noCharacters:
+            return "server_not_responding".localized
+        case .noAPIKeys:
+            return "api_keys_not_found".localized
+        case .noConnection:
+            return "no_internet".localized
+        }
+    }
+}
+
+class CharactersViewModel: CharactersViewModelProtocol {
     weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
     weak var viewDelegate: CharactersViewModelViewDelegate?
 
@@ -119,18 +130,18 @@ private extension CharactersViewModel {
     }
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {
-        let message = message(for: error)
-        viewDelegate?.model(self, didFailWithError: message)
+        let viewModelError = viewModelError(for: error)
+        viewDelegate?.model(self, didFailWithError: viewModelError.localizedDescription)
     }
 
-    func message(for error: FetchCharacterDetailUseCaseError) -> String {
+    func viewModelError(for error: FetchCharacterDetailUseCaseError) -> CharactersViewModelError {
         switch error {
         case .noConnection:
-            return Messages.noConnection
+            return .noConnection
         case .emptyData:
-            return Messages.noCharacters
+            return .noCharacters
         case .unauthorized:
-            return Messages.noAPIKeys
+            return .noAPIKeys
         }
     }
 
