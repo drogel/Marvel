@@ -50,9 +50,8 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is ComicsPresentationModelProtocol)
     }
 
-    func test_conformsToSubPresentationModelDelegates() {
+    func test_conformsToSubPresentationModelDelegate() {
         XCTAssertTrue((sut as AnyObject) is CharacterInfoPresentationModelViewDelegate)
-        XCTAssertTrue((sut as AnyObject) is ComicsPresentationModelViewDelegate)
     }
 
     func test_whenStarting_callsStartOnAllSubPresentationModels() {
@@ -121,27 +120,6 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         assertViewDelegateDidFail(callCount: 0)
         sut.model(infoPresentationModelMock, didFailWithError: "")
         assertViewDelegateDidFail(callCount: 1)
-    }
-
-    func test_givenViewDelegate_whenComicsFail_failsSilently() {
-        givenViewDelegate()
-        assertViewDelegateDidFail(callCount: 0)
-        sut.modelDidFailRetrievingData(comicsPresentationModelMock)
-        assertViewDelegateDidFail(callCount: 0)
-    }
-
-    func test_givenViewDelegate_whenComicsStartLoading_doesNothing() {
-        givenViewDelegate()
-        assertViewDelegateDidStartLoading(callCount: 0)
-        sut.modelDidStartLoading(comicsPresentationModelMock)
-        assertViewDelegateDidStartLoading(callCount: 0)
-    }
-
-    func test_givenViewDelegate_whenComicsFinishLoading_doesNothing() {
-        givenViewDelegate()
-        assertViewDelegateDidFinishLoading(callCount: 0)
-        sut.modelDidFinishLoading(comicsPresentationModelMock)
-        assertViewDelegateDidFinishLoading(callCount: 0)
     }
 
     func test_whenAboutToDisplayAComicCell_delegatesToComicsPresentationModel() {

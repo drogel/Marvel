@@ -140,7 +140,7 @@ class CharactersViewModelTests: XCTestCase {
         assertCancelledRequests()
     }
 
-    func test_givenViewDelegate_whenStartingFinishes_updatesPage() {
+    func test_whenStartingFinishes_updatesPage() {
         givenSutWithSuccessfulFetcher()
         assertPagerUpdate(callCount: 0)
         sut.start()

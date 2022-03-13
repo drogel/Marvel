@@ -57,7 +57,6 @@ private extension CharacterDetailCoordinator {
             comicsPresentationModel: comicsPresentationModel
         )
         infoPresentationModel.viewDelegate = presentationModel
-        comicsPresentationModel.viewDelegate = presentationModel
         let viewController = CharacterDetailViewController.instantiate(
             presentationModel: presentationModel,
             layout: CharacterDetailLayout(),

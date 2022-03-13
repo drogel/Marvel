@@ -11,7 +11,6 @@ import XCTest
 
 class ComicsPresentationModelTests: XCTestCase {
     private var sut: ComicsPresentationModel!
-    private var viewDelegate: ComicsPresentationModelViewDelegateMock!
     private var comicFetcherMock: ComicFetcherMock!
     private var imageURLBuilderMock: ImageURLBuilderMock!
     private var offsetPagerMock: OffsetPagerPartialMock!
@@ -32,7 +31,6 @@ class ComicsPresentationModelTests: XCTestCase {
         offsetPagerMock = nil
         cancellables = nil
         comicFetcherMock = nil
-        viewDelegate = nil
         super.tearDown()
     }
 
@@ -42,13 +40,6 @@ class ComicsPresentationModelTests: XCTestCase {
 
     func test_conformsToPresentationModel() {
         XCTAssertTrue((sut as AnyObject) is PresentationModel)
-    }
-
-    func test_givenViewDelegate_whenStarting_notifiesLoading() {
-        givenViewDelegate()
-        assertViewDelegateDidStartLoading(callCount: 0)
-        sut.start()
-        assertViewDelegateDidStartLoading(callCount: 1)
     }
 
     func test_whenStarting_fetchesComics() {
@@ -77,35 +68,22 @@ class ComicsPresentationModelTests: XCTestCase {
         assertComicFetcherFetchFirstDisposableDidCancel(callCount: 1)
     }
 
-    func test_givenViewDelegate_whenStartingFinishes_notifiesView() {
-        givenSutWithSuccessfulFetcher()
-        givenViewDelegate()
-        assertViewDelegateDidFinishLoading(callCount: 0)
-        sut.start()
-        assertViewDelegateDidFinishLoading(callCount: 1)
-    }
-
-    func test_givenViewDelegate_whenStartingFinishes_updatesPage() {
+    func test_whenStartingFinishes_updatesPage() {
         givenSutWithSuccessfulFetcher()
         assertPagerUpdate(callCount: 0)
         sut.start()
         assertPagerUpdate(callCount: 1)
     }
 
-    func test_givenViewDelegate_whenStartingFinishesSuccessfully_notifiesView() {
+    func test_whenInitializing_emitsEmptyComicCellModels() {
         givenSutWithSuccessfulFetcher()
-        givenViewDelegate()
-        assertViewDelegateDidRetrieveData(callCount: 0)
-        sut.start()
-        assertViewDelegateDidRetrieveData(callCount: 1)
+        assertEmitsEmptyComicCellModels()
     }
 
-    func test_givenViewDelegate_whenStartingFails_notifiesView() {
+    func test_whenStartingFails_onlyEmptyComicCellModelsAreEmitted() {
         givenSutWithFailingFetcher()
-        givenViewDelegate()
-        assertViewDelegateDidFailRetrievingData(callCount: 0)
+        assertEmitsEmptyComicCellModels()
         sut.start()
-        assertViewDelegateDidFailRetrievingData(callCount: 1)
     }
 
     func test_givenDidNotStart_hasNoCellData() {
@@ -191,29 +169,6 @@ class ComicsPresentationModelTests: XCTestCase {
     }
 }
 
-private class ComicsPresentationModelViewDelegateMock: ComicsPresentationModelViewDelegate {
-    var didStartLoadingCallCount = 0
-    var didFinishLoadingCallCount = 0
-    var didRetrieveDataCallCount = 0
-    var didFailRetrievingDataCallCount = 0
-
-    func modelDidStartLoading(_: ComicsPresentationModelProtocol) {
-        didStartLoadingCallCount += 1
-    }
-
-    func modelDidFinishLoading(_: ComicsPresentationModelProtocol) {
-        didFinishLoadingCallCount += 1
-    }
-
-    func modelDidRetrieveData(_: ComicsPresentationModelProtocol) {
-        didRetrieveDataCallCount += 1
-    }
-
-    func modelDidFailRetrievingData(_: ComicsPresentationModelProtocol) {
-        didFailRetrievingDataCallCount += 1
-    }
-}
-
 private class ComicFetcherMock: FetchComicsUseCase {
     var fetchCallCount = 0
     var mostRecentQuery: FetchComicsQuery?
@@ -258,11 +213,6 @@ private extension ComicsPresentationModelTests {
         12345
     }
 
-    func givenViewDelegate() {
-        viewDelegate = ComicsPresentationModelViewDelegateMock()
-        sut.viewDelegate = viewDelegate
-    }
-
     func givenSutWithSuccessfulFetcher() {
         comicFetcherMock = ComicFetcherSuccessfulStub()
         givenSut(with: comicFetcherMock)
@@ -287,28 +237,12 @@ private extension ComicsPresentationModelTests {
         sut.start()
     }
 
-    func assertViewDelegateDidStartLoading(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewDelegate.didStartLoadingCallCount, callCount, line: line)
-    }
-
-    func assertViewDelegateDidFinishLoading(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewDelegate.didFinishLoadingCallCount, callCount, line: line)
-    }
-
     func assertPagerUpdate(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(offsetPagerMock.updateCallCount, callCount, line: line)
     }
 
     func assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(offsetPagerMock.isAtEndOfCurrentPageMoreContentCallCount, callCount, line: line)
-    }
-
-    func assertViewDelegateDidRetrieveData(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewDelegate.didRetrieveDataCallCount, callCount, line: line)
-    }
-
-    func assertViewDelegateDidFailRetrievingData(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewDelegate.didFailRetrievingDataCallCount, callCount, line: line)
     }
 
     func assertComicFetcherFetch(callCount: Int, line: UInt = #line) {
@@ -325,6 +259,14 @@ private extension ComicsPresentationModelTests {
 
     func assertImageURLBuilderBuildVariant(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(imageURLBuilderMock.buildURLVariantCallCount, callCount, line: line)
+    }
+
+    func assertEmitsEmptyComicCellModels(line: UInt = #line) {
+        let hasEmptyCellModelsExpectation = expectation(description: "Has empty comics cell models")
+        sut.comicCellModelsPublisher
+            .assertOutputIsEmptyArray(expectation: hasEmptyCellModelsExpectation, line: line)
+            .store(in: &cancellables)
+        wait(for: [hasEmptyCellModelsExpectation], timeout: 0.1)
     }
 
     func subscribeToModelsExpectingNoCellModels(line: UInt = #line) {

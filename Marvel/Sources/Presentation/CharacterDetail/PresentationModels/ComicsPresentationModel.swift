@@ -13,17 +13,8 @@ protocol ComicsPresentationModelProtocol: PresentationModel {
     func willDisplayComicCell(at indexPath: IndexPath)
 }
 
-protocol ComicsPresentationModelViewDelegate: AnyObject {
-    func modelDidStartLoading(_ presentationModel: ComicsPresentationModelProtocol)
-    func modelDidFinishLoading(_ presentationModel: ComicsPresentationModelProtocol)
-    func modelDidRetrieveData(_ presentationModel: ComicsPresentationModelProtocol)
-    func modelDidFailRetrievingData(_ presentationModel: ComicsPresentationModelProtocol)
-}
-
 // TODO: Rename to view model when refactor is finished
 class ComicsPresentationModel: ComicsPresentationModelProtocol {
-    weak var viewDelegate: ComicsPresentationModelViewDelegate?
-
     var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
         $publishedComicCellModels.eraseToAnyPublisher()
     }
@@ -44,7 +35,6 @@ class ComicsPresentationModel: ComicsPresentationModelProtocol {
     }
 
     func start() {
-        viewDelegate?.modelDidStartLoading(self)
         loadComics(with: startingQuery)
     }
 
@@ -83,12 +73,11 @@ private extension ComicsPresentationModel {
     }
 
     func handle(_ result: FetchComicsResult) {
-        viewDelegate?.modelDidFinishLoading(self)
         switch result {
         case let .success(contentPage):
             handleSuccess(with: contentPage)
         case .failure:
-            handleFailure()
+            return
         }
     }
 
@@ -96,7 +85,6 @@ private extension ComicsPresentationModel {
         guard let comicsCellData = mapToCells(comics: contentPage.contents) else { return }
         pager.update(currentPage: contentPage)
         publishedComicCellModels += comicsCellData
-        viewDelegate?.modelDidRetrieveData(self)
     }
 
     func mapToCells(comics: [Comic]) -> [ComicCellModel]? {
@@ -121,10 +109,6 @@ private extension ComicsPresentationModel {
 
     func buildImageURL(from comic: Comic) -> URL? {
         imageURLBuilder.buildURL(from: comic.image, variant: .portraitLarge)
-    }
-
-    func handleFailure() {
-        viewDelegate?.modelDidFailRetrievingData(self)
     }
 
     func removeIssueNumber(from comicTitle: String) -> String {

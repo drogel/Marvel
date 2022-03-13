@@ -79,13 +79,3 @@ extension CharacterDetailPresentationModel: CharacterInfoPresentationModelViewDe
         viewDelegate?.model(self, didFailWithError: message)
     }
 }
-
-extension CharacterDetailPresentationModel: ComicsPresentationModelViewDelegate {
-    func modelDidStartLoading(_: ComicsPresentationModelProtocol) {}
-
-    func modelDidFinishLoading(_: ComicsPresentationModelProtocol) {}
-
-    func modelDidRetrieveData(_: ComicsPresentationModelProtocol) {}
-
-    func modelDidFailRetrievingData(_: ComicsPresentationModelProtocol) {}
-}
