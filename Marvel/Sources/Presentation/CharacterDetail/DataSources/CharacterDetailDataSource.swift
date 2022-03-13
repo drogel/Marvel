@@ -112,11 +112,34 @@ private extension CharacterDetailDataSource {
     }
 
     func applySnapshot(with items: [AnyHashable]) {
+        guard let snapshot = createSnapshot(with: items) else { return }
+        diffableDataSource.apply(snapshot)
+    }
+
+    func createSnapshot(with items: [AnyHashable]) -> CharacterDetailDiffableDataSource.Snapshot? {
+        if let infos = items as? [CharacterInfoModel] {
+            return infoSectionsSnapshot(with: infos)
+        }
+        if let comicItems = items as? [ComicCell.Item] {
+            return comicsSectionSnapshot(with: comicItems)
+        }
+        return nil
+    }
+
+    func infoSectionsSnapshot(with items: [CharacterInfoModel]) -> CharacterDetailDiffableDataSource.Snapshot {
+        var snapshot = CharacterDetailDiffableDataSource.Snapshot()
+        let images = items.map(\.image)
+        let descriptions = items.map(\.description)
+        snapshot.appendSections([.image, .info, .comics])
+        snapshot.appendItems(images, toSection: .image)
+        snapshot.appendItems(descriptions, toSection: .info)
+        return snapshot
+    }
+
+    func comicsSectionSnapshot(with items: [ComicCell.Item]) -> CharacterDetailDiffableDataSource.Snapshot {
         var snapshot = CharacterDetailDiffableDataSource.Snapshot()
         snapshot.appendSections([.image, .info, .comics])
-        snapshot.appendItems([presentationModel.imageCellData], toSection: .image)
-        snapshot.appendItems([presentationModel.infoCellData], toSection: .info)
         snapshot.appendItems(items, toSection: .comics)
-        diffableDataSource.apply(snapshot)
+        return snapshot
     }
 }

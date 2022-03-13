@@ -69,4 +69,15 @@ extension Publisher where Output: Equatable, Failure == Never {
             expectation.fulfill()
         }
     }
+
+    func assertReceivedValueIsNil(
+        expectation: XCTestExpectation,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> AnyCancellable {
+        sink { receivedValue in
+            XCTAssertNil(receivedValue, file: file, line: line)
+            expectation.fulfill()
+        }
+    }
 }

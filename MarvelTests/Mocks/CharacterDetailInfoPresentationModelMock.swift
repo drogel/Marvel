@@ -13,22 +13,10 @@ class CharacterDetailInfoPresentationModelMock: CharacterInfoPresentationModelPr
     var infoStatePublisherCallCount = 0
     var startCallCount = 0
     var disposeCallCount = 0
-    var imageCellDataCallCount = 0
-    var infoCellDataCallCount = 0
 
     var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> {
         infoStatePublisherCallCount += 1
         return Just(CharacterInfoViewModelState.success(nil)).eraseToAnyPublisher()
-    }
-
-    var imageCellData: CharacterImageModel? {
-        imageCellDataCallCount += 1
-        return nil
-    }
-
-    var infoCellData: CharacterDescriptionModel? {
-        infoCellDataCallCount += 1
-        return nil
     }
 
     func start() {

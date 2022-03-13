@@ -10,8 +10,6 @@ import Foundation
 
 protocol CharacterInfoPresentationModelProtocol: PresentationModel {
     var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> { get }
-    var imageCellData: CharacterImageModel? { get }
-    var infoCellData: CharacterDescriptionModel? { get }
 }
 
 protocol CharacterInfoPresentationModelViewDelegate: AnyObject {
@@ -45,14 +43,6 @@ class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
 
     var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> {
         $publishedState.eraseToAnyPublisher()
-    }
-
-    var imageCellData: CharacterImageModel? {
-        characterInfoModel?.image
-    }
-
-    var infoCellData: CharacterDescriptionModel? {
-        characterInfoModel?.info
     }
 
     private var characterInfoModel: CharacterInfoModel? {
@@ -92,7 +82,9 @@ class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
 private extension CharacterInfoPresentationModel {
     func loadCharacter(with query: FetchCharacterDetailQuery) {
         characterDisposable?.dispose()
-        characterDisposable = characterFetcher.fetch(query: query, completion: handleFetchCharacterResult)
+        characterDisposable = characterFetcher.fetch(query: query) { [weak self] result in
+            self?.handleFetchCharacterResult(result)
+        }
     }
 
     func handleFetchCharacterResult(_ result: FetchCharacterDetailResult) {
@@ -131,7 +123,7 @@ private extension CharacterInfoPresentationModel {
         guard let firstCharacter = characters.first else { return nil }
         let characterInfoData = infoData(from: firstCharacter)
         let characterImageModel = imageData(from: firstCharacter)
-        return CharacterInfoModel(image: characterImageModel, info: characterInfoData)
+        return CharacterInfoModel(image: characterImageModel, description: characterInfoData)
     }
 
     func imageData(from character: Character) -> CharacterImageModel {

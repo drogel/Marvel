@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 23/1/22.
 //
 
+import Combine
 @testable import Marvel_Debug
 import XCTest
 
@@ -14,10 +15,12 @@ class CharacterInfoPresentationModelTests: XCTestCase {
     private var characterIDStub: Int!
     private var viewDelegateMock: CharacterInfoViewDelegateMock!
     private var imageURLBuilderMock: ImageURLBuilderMock!
+    private var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
         characterFetcherMock = CharacterFetcherMock()
+        cancellables = Set<AnyCancellable>()
         characterIDStub = 123_456
         viewDelegateMock = CharacterInfoViewDelegateMock()
         imageURLBuilderMock = ImageURLBuilderMock()
@@ -25,6 +28,7 @@ class CharacterInfoPresentationModelTests: XCTestCase {
     }
 
     override func tearDown() {
+        cancellables = nil
         characterIDStub = nil
         characterFetcherMock = nil
         imageURLBuilderMock = nil
@@ -43,8 +47,8 @@ class CharacterInfoPresentationModelTests: XCTestCase {
         XCTAssertEqual(viewDelegateMock.didStartLoadingCallCount, 1)
     }
 
-    func test_infoCellDataIsNilInitially() {
-        assertCellDataIsNil()
+    func test_infoModelIsNilInitially() {
+        assertInfoModelIsNil()
     }
 
     func test_givenCharacterFetcher_whenStrating_fetchesCharacter() {
@@ -62,19 +66,32 @@ class CharacterInfoPresentationModelTests: XCTestCase {
         XCTAssertEqual(viewDelegateMock.didRetrieveDataCallCount, 1)
     }
 
-    func test_givenSuccessfulCharacterFetcher_whenStartingCompletes_infoCellDataIsNotNil() {
-        givenStartCompletedSuccessfully()
-        XCTAssertNotNil(sut.infoCellData)
+    func test_givenDidNotStartYet_receivesEmptyInfoModel() {
+        let receivedResultExpectation = expectation(description: "Received a nil result")
+        let expectedState = CharacterInfoViewModelState.success(nil)
+        sut.infoStatePublisher
+            .assertOutput(matches: expectedState, expectation: receivedResultExpectation)
+            .store(in: &cancellables)
+        wait(for: [receivedResultExpectation], timeout: 0.1)
     }
 
-    func test_givenSuccessfulCharacterFetcher_whenStartingCompletes_imageCellDataIsNotNil() {
-        givenStartCompletedSuccessfully()
-        XCTAssertNotNil(sut.imageCellData)
+    func test_givenSuccessfulCharacterFetcher_whenStarting_receivesExpectedInfoModel() {
+        givenSutWithSuccessfulFetcher()
+        let receivedResultExpectation = expectation(description: "Received a result")
+        let expectedInfoModel = buildExpectedInfoModel(from: CharacterFetcherSuccessfulStub.resultsStub)
+        let expectedState = CharacterInfoViewModelState.success(expectedInfoModel)
+        sut.infoStatePublisher
+            .dropFirst()
+            .assertOutput(matches: expectedState, expectation: receivedResultExpectation)
+            .store(in: &cancellables)
+        sut.start()
+        wait(for: [receivedResultExpectation], timeout: 0.1)
     }
 
-    func test_givenStartFailed_allCellDataIsNil() {
-        givenStartFailed()
-        assertCellDataIsNil()
+    func test_givenStartFailed_receivesNilInfoModel() {
+        givenSutWithFailingFetcher()
+        assertInfoModelIsNil()
+        sut.start()
     }
 
     func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesFinishLoadToViewDelegate() {
@@ -212,8 +229,18 @@ private extension CharacterInfoPresentationModelTests {
         XCTAssertEqual(disposableMock.didDisposeCallCount, 1)
     }
 
-    func assertCellDataIsNil(line _: UInt = #line) {
-        XCTAssertNil(sut.imageCellData)
-        XCTAssertNil(sut.infoCellData)
+    func assertInfoModelIsNil(line: UInt = #line) {
+        let receivedValueExpectation = expectation(description: "Received a value")
+        sut.infoStatePublisher
+            .assertReceivedValueNotNil(expectation: receivedValueExpectation, line: line)
+            .store(in: &cancellables)
+        wait(for: [receivedValueExpectation], timeout: 0.1)
+    }
+
+    func buildExpectedInfoModel(from characters: [Character]) -> CharacterInfoModel {
+        let character = characters.first!
+        let characterInfoData = CharacterDescriptionModel(name: character.name, description: character.description)
+        let characterImageModel = CharacterImageModel(imageURL: imageURLBuilderMock.buildURL(from: character.image))
+        return CharacterInfoModel(image: characterImageModel, description: characterInfoData)
     }
 }

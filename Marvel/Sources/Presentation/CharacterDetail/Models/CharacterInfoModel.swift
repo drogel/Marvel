@@ -9,5 +9,5 @@ import Foundation
 
 struct CharacterInfoModel: Hashable {
     let image: CharacterImageModel
-    let info: CharacterDescriptionModel
+    let description: CharacterDescriptionModel
 }

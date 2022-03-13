@@ -70,16 +70,10 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         assertComicsViewModelDispose(callCount: 1)
     }
 
-    func test_imageCellData_delegatesToInfoPresentationModel() {
-        assertInfoPresentationModelImageCellData(callCount: 0)
-        _ = sut.imageCellData
-        assertInfoPresentationModelImageCellData(callCount: 1)
-    }
-
-    func test_infoCellData_delegatesToInfoPresentationModel() {
-        assertInfoPresentationModelInfoCellData(callCount: 0)
-        _ = sut.infoCellData
-        assertInfoPresentationModelInfoCellData(callCount: 1)
+    func test_infoStatePublisher_delegatesToInfoPresentationModel() {
+        assertInfoPresentationModelInfoStatePublisher(callCount: 0)
+        _ = sut.infoStatePublisher
+        assertInfoPresentationModelInfoStatePublisher(callCount: 1)
     }
 
     func test_comicCellData_delegatesToComicsViewModel() {
@@ -183,12 +177,8 @@ private extension CharacterDetailPresentationModelTests {
         XCTAssertEqual(comicsViewModelMock.disposeCallCount, callCount, line: line)
     }
 
-    func assertInfoPresentationModelImageCellData(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(infoPresentationModelMock.imageCellDataCallCount, callCount, line: line)
-    }
-
-    func assertInfoPresentationModelInfoCellData(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(infoPresentationModelMock.infoCellDataCallCount, callCount, line: line)
+    func assertInfoPresentationModelInfoStatePublisher(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(infoPresentationModelMock.infoStatePublisherCallCount, callCount, line: line)
     }
 
     func assertComicsViewModelComicCellModelsPublisher(callCount: Int, line: UInt = #line) {

@@ -28,20 +28,13 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
         infoPresentationModel.infoStatePublisher
     }
 
-    var imageCellData: CharacterImageModel? {
-        infoPresentationModel.imageCellData
-    }
-
-    var infoCellData: CharacterDescriptionModel? {
-        infoPresentationModel.infoCellData
-    }
-
     var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
+        // TODO: Combine both publishers, creating a new hashable to collect info and comics at once
         comicsViewModel.comicCellModelsPublisher
     }
 
-    private var infoPresentationModel: CharacterInfoPresentationModelProtocol
-    private var comicsViewModel: ComicsViewModelProtocol
+    private let infoPresentationModel: CharacterInfoPresentationModelProtocol
+    private let comicsViewModel: ComicsViewModelProtocol
 
     init(
         infoPresentationModel: CharacterInfoPresentationModelProtocol,
