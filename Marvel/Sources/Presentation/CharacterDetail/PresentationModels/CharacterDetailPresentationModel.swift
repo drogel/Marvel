@@ -9,7 +9,7 @@ import Combine
 import Foundation
 
 // TODO: Rename all references of presentation model to view models when we migrate these models to Combine too
-typealias CharacterDetailPresentationModels = CharacterInfoPresentationModelProtocol & ComicsPresentationModelProtocol
+typealias CharacterDetailPresentationModels = CharacterInfoPresentationModelProtocol & ComicsViewModelProtocol
 
 protocol CharacterDetailPresentationModelProtocol: CharacterDetailPresentationModels {}
 
@@ -33,32 +33,32 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
     }
 
     var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
-        comicsPresentationModel.comicCellModelsPublisher
+        comicsViewModel.comicCellModelsPublisher
     }
 
     private var infoPresentationModel: CharacterInfoPresentationModelProtocol
-    private var comicsPresentationModel: ComicsPresentationModelProtocol
+    private var comicsViewModel: ComicsViewModelProtocol
 
     init(
         infoPresentationModel: CharacterInfoPresentationModelProtocol,
-        comicsPresentationModel: ComicsPresentationModelProtocol
+        comicsViewModel: ComicsViewModelProtocol
     ) {
         self.infoPresentationModel = infoPresentationModel
-        self.comicsPresentationModel = comicsPresentationModel
+        self.comicsViewModel = comicsViewModel
     }
 
     func start() {
         infoPresentationModel.start()
-        comicsPresentationModel.start()
+        comicsViewModel.start()
     }
 
     func willDisplayComicCell(at indexPath: IndexPath) {
-        comicsPresentationModel.willDisplayComicCell(at: indexPath)
+        comicsViewModel.willDisplayComicCell(at: indexPath)
     }
 
     func dispose() {
         infoPresentationModel.dispose()
-        comicsPresentationModel.dispose()
+        comicsViewModel.dispose()
     }
 }
 

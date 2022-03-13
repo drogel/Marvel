@@ -1,5 +1,5 @@
 //
-//  ComicsPresentationModelMock.swift
+//  ComicsViewModelMock.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 5/2/22.
@@ -9,7 +9,7 @@ import Combine
 import Foundation
 @testable import Marvel_Debug
 
-class ComicsPresentationModelMock: ComicsPresentationModelProtocol {
+class ComicsViewModelMock: ComicsViewModelProtocol {
     var startCallCount = 0
     var comicCellModelsPublisherCallCount = 0
     var disposeCallCount = 0

@@ -46,7 +46,7 @@ private extension CharacterDetailCoordinator {
             characterID: container.characterID,
             imageURLBuilder: container.imageURLBuilder
         )
-        let comicsPresentationModel = ComicsPresentationModel(
+        let comicsViewModel = ComicsViewModel(
             comicsFetcher: container.fetchComicsUseCase,
             characterID: container.characterID,
             imageURLBuilder: container.imageURLBuilder,
@@ -54,7 +54,7 @@ private extension CharacterDetailCoordinator {
         )
         let presentationModel = CharacterDetailPresentationModel(
             infoPresentationModel: infoPresentationModel,
-            comicsPresentationModel: comicsPresentationModel
+            comicsViewModel: comicsViewModel
         )
         infoPresentationModel.viewDelegate = presentationModel
         let viewController = CharacterDetailViewController.instantiate(

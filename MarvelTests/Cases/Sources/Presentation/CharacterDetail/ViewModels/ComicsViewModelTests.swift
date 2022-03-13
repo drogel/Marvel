@@ -1,5 +1,5 @@
 //
-//  ComicsPresentationModelTests.swift
+//  ComicsViewModelTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 5/2/22.
@@ -9,8 +9,8 @@ import Combine
 @testable import Marvel_Debug
 import XCTest
 
-class ComicsPresentationModelTests: XCTestCase {
-    private var sut: ComicsPresentationModel!
+class ComicsViewModelTests: XCTestCase {
+    private var sut: ComicsViewModel!
     private var comicFetcherMock: ComicFetcherMock!
     private var imageURLBuilderMock: ImageURLBuilderMock!
     private var offsetPagerMock: OffsetPagerPartialMock!
@@ -34,8 +34,8 @@ class ComicsPresentationModelTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_conformsToComicsPresentationModelProtocol() {
-        XCTAssertTrue((sut as AnyObject) is ComicsPresentationModelProtocol)
+    func test_conformsToComicsViewModelProtocol() {
+        XCTAssertTrue((sut as AnyObject) is ComicsViewModelProtocol)
     }
 
     func test_conformsToPresentationModel() {
@@ -208,7 +208,7 @@ private class ComicFetcherFailureStub: ComicFetcherMock {
     }
 }
 
-private extension ComicsPresentationModelTests {
+private extension ComicsViewModelTests {
     var characterIDStub: Int {
         12345
     }
@@ -224,7 +224,7 @@ private extension ComicsPresentationModelTests {
     }
 
     func givenSut(with comicsFetcher: ComicFetcherMock) {
-        sut = ComicsPresentationModel(
+        sut = ComicsViewModel(
             comicsFetcher: comicsFetcher,
             characterID: characterIDStub,
             imageURLBuilder: imageURLBuilderMock,

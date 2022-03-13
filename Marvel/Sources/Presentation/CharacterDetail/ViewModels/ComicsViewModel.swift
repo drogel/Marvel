@@ -1,5 +1,5 @@
 //
-//  ComicsPresentationModel.swift
+//  ComicsViewModel.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 5/2/22.
@@ -8,13 +8,12 @@
 import Combine
 import Foundation
 
-protocol ComicsPresentationModelProtocol: PresentationModel {
+protocol ComicsViewModelProtocol: PresentationModel {
     var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> { get }
     func willDisplayComicCell(at indexPath: IndexPath)
 }
 
-// TODO: Rename to view model when refactor is finished
-class ComicsPresentationModel: ComicsPresentationModelProtocol {
+class ComicsViewModel: ComicsViewModelProtocol {
     var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
         $publishedComicCellModels.eraseToAnyPublisher()
     }
@@ -48,7 +47,7 @@ class ComicsPresentationModel: ComicsPresentationModelProtocol {
     }
 }
 
-private extension ComicsPresentationModel {
+private extension ComicsViewModel {
     var startingQuery: FetchComicsQuery {
         query(atOffset: 0)
     }

@@ -12,7 +12,7 @@ import XCTest
 class CharacterDetailPresentationModelTests: XCTestCase {
     private var sut: CharacterDetailPresentationModel!
     private var infoPresentationModelMock: CharacterDetailInfoPresentationModelMock!
-    private var comicsPresentationModelMock: ComicsPresentationModelMock!
+    private var comicsViewModelMock: ComicsViewModelMock!
     private var viewDelegateMock: CharacterDetailViewDelegateMock!
     private var cancellables: Set<AnyCancellable>!
 
@@ -20,18 +20,18 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         super.setUp()
         cancellables = Set<AnyCancellable>()
         infoPresentationModelMock = CharacterDetailInfoPresentationModelMock()
-        comicsPresentationModelMock = ComicsPresentationModelMock()
+        comicsViewModelMock = ComicsViewModelMock()
         viewDelegateMock = CharacterDetailViewDelegateMock()
         sut = CharacterDetailPresentationModel(
             infoPresentationModel: infoPresentationModelMock,
-            comicsPresentationModel: comicsPresentationModelMock
+            comicsViewModel: comicsViewModelMock
         )
     }
 
     override func tearDown() {
         sut = nil
         cancellables = nil
-        comicsPresentationModelMock = nil
+        comicsViewModelMock = nil
         viewDelegateMock = nil
         infoPresentationModelMock = nil
         super.tearDown()
@@ -47,7 +47,7 @@ class CharacterDetailPresentationModelTests: XCTestCase {
 
     func test_conformsToSubPresentationModels() {
         XCTAssertTrue((sut as AnyObject) is CharacterInfoPresentationModelProtocol)
-        XCTAssertTrue((sut as AnyObject) is ComicsPresentationModelProtocol)
+        XCTAssertTrue((sut as AnyObject) is ComicsViewModelProtocol)
     }
 
     func test_conformsToSubPresentationModelDelegate() {
@@ -56,18 +56,18 @@ class CharacterDetailPresentationModelTests: XCTestCase {
 
     func test_whenStarting_callsStartOnAllSubPresentationModels() {
         assertInfoPresentationModelStart(callCount: 0)
-        assertComicsPresentationModelStart(callCount: 0)
+        assertComicsViewModelStart(callCount: 0)
         sut.start()
         assertInfoPresentationModelStart(callCount: 1)
-        assertComicsPresentationModelStart(callCount: 1)
+        assertComicsViewModelStart(callCount: 1)
     }
 
     func test_whenDisposing_callsDisposeOnAllSubPresentationModels() {
         assertInfoPresentationModelDispose(callCount: 0)
-        assertComicsPresentationModelDispose(callCount: 0)
+        assertComicsViewModelDispose(callCount: 0)
         sut.dispose()
         assertInfoPresentationModelDispose(callCount: 1)
-        assertComicsPresentationModelDispose(callCount: 1)
+        assertComicsViewModelDispose(callCount: 1)
     }
 
     func test_imageCellData_delegatesToInfoPresentationModel() {
@@ -82,10 +82,10 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         assertInfoPresentationModelInfoCellData(callCount: 1)
     }
 
-    func test_comicCellData_delegatesToComicsPresentationModel() {
-        assertComicsPresentationModelComicCellModelsPublisher(callCount: 0)
+    func test_comicCellData_delegatesToComicsViewModel() {
+        assertComicsViewModelComicCellModelsPublisher(callCount: 0)
         _ = sut.comicCellModelsPublisher
-        assertComicsPresentationModelComicCellModelsPublisher(callCount: 1)
+        assertComicsViewModelComicCellModelsPublisher(callCount: 1)
     }
 
     func test_givenViewDelegate_whenInfoStartsLoading_notifiesView() {
@@ -110,9 +110,9 @@ class CharacterDetailPresentationModelTests: XCTestCase {
     }
 
     func test_whenSubscribingToComicCellModels_delegatesToComicsViewModel() {
-        assertComicsPresentationModelComicCellModelsPublisher(callCount: 0)
+        assertComicsViewModelComicCellModelsPublisher(callCount: 0)
         sut.comicCellModelsPublisher.sink(receiveValue: { _ in }).store(in: &cancellables)
-        assertComicsPresentationModelComicCellModelsPublisher(callCount: 1)
+        assertComicsViewModelComicCellModelsPublisher(callCount: 1)
     }
 
     func test_givenViewDelegate_whenInfoFails_notifiesView() {
@@ -122,10 +122,10 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         assertViewDelegateDidFail(callCount: 1)
     }
 
-    func test_whenAboutToDisplayAComicCell_delegatesToComicsPresentationModel() {
-        assertComicsPresentationModelWillDisplayCell(callCount: 0)
+    func test_whenAboutToDisplayAComicCell_delegatesToComicsViewModel() {
+        assertComicsViewModelWillDisplayCell(callCount: 0)
         whenAboutToDisplayAComicCell()
-        assertComicsPresentationModelWillDisplayCell(callCount: 1)
+        assertComicsViewModelWillDisplayCell(callCount: 1)
     }
 }
 
@@ -171,16 +171,16 @@ private extension CharacterDetailPresentationModelTests {
         XCTAssertEqual(infoPresentationModelMock.startCallCount, callCount, line: line)
     }
 
-    func assertComicsPresentationModelStart(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicsPresentationModelMock.startCallCount, callCount, line: line)
+    func assertComicsViewModelStart(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(comicsViewModelMock.startCallCount, callCount, line: line)
     }
 
     func assertInfoPresentationModelDispose(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(infoPresentationModelMock.disposeCallCount, callCount, line: line)
     }
 
-    func assertComicsPresentationModelDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicsPresentationModelMock.disposeCallCount, callCount, line: line)
+    func assertComicsViewModelDispose(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(comicsViewModelMock.disposeCallCount, callCount, line: line)
     }
 
     func assertInfoPresentationModelImageCellData(callCount: Int, line: UInt = #line) {
@@ -191,12 +191,12 @@ private extension CharacterDetailPresentationModelTests {
         XCTAssertEqual(infoPresentationModelMock.infoCellDataCallCount, callCount, line: line)
     }
 
-    func assertComicsPresentationModelComicCellModelsPublisher(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicsPresentationModelMock.comicCellModelsPublisherCallCount, callCount, line: line)
+    func assertComicsViewModelComicCellModelsPublisher(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(comicsViewModelMock.comicCellModelsPublisherCallCount, callCount, line: line)
     }
 
-    func assertComicsPresentationModelWillDisplayCell(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicsPresentationModelMock.willDisplayComicCellCallCount, callCount, line: line)
+    func assertComicsViewModelWillDisplayCell(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(comicsViewModelMock.willDisplayComicCellCallCount, callCount, line: line)
     }
 
     func assertViewDelegateDidStartLoading(callCount: Int, line: UInt = #line) {
