@@ -28,7 +28,7 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
         infoPresentationModel.imageCellData
     }
 
-    var infoCellData: CharacterInfoModel? {
+    var infoCellData: CharacterDescriptionModel? {
         infoPresentationModel.infoCellData
     }
 

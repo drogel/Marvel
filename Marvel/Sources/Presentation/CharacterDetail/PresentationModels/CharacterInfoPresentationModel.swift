@@ -5,11 +5,12 @@
 //  Created by Diego Rogel on 23/1/22.
 //
 
+import Combine
 import Foundation
 
 protocol CharacterInfoPresentationModelProtocol: PresentationModel {
     var imageCellData: CharacterImageModel? { get }
-    var infoCellData: CharacterInfoModel? { get }
+    var infoCellData: CharacterDescriptionModel? { get }
 }
 
 protocol CharacterInfoPresentationModelViewDelegate: AnyObject {
@@ -19,27 +20,40 @@ protocol CharacterInfoPresentationModelViewDelegate: AnyObject {
     func model(_ presentationModel: CharacterInfoPresentationModelProtocol, didFailWithError message: String)
 }
 
-class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
-    private enum Messages {
-        static let noSuchCharacter = "character_not_found".localized
-        static let noAPIKeys = "api_keys_not_found".localized
-        static let noConnection = "no_internet".localized
-    }
+typealias CharacterInfoViewModelState = Result<CharacterInfoModel, CharacterInfoViewModelError>
 
+enum CharacterInfoViewModelError: LocalizedError {
+    case noSuchCharacter
+    case noAuthorization
+    case noConnection
+
+    var errorDescription: String? {
+        switch self {
+        case .noSuchCharacter:
+            return "character_not_found".localized
+        case .noAuthorization:
+            return "api_keys_not_found".localized
+        case .noConnection:
+            return "no_internet".localized
+        }
+    }
+}
+
+class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
     weak var viewDelegate: CharacterInfoPresentationModelViewDelegate?
 
     var imageCellData: CharacterImageModel? {
-        characterDetailData?.image
+        characterDetailModel?.image
     }
 
-    var infoCellData: CharacterInfoModel? {
-        characterDetailData?.info
+    var infoCellData: CharacterDescriptionModel? {
+        characterDetailModel?.info
     }
 
     private let characterFetcher: FetchCharacterDetailUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let characterID: Int
-    private var characterDetailData: CharacterDetailModel?
+    private var characterDetailModel: CharacterInfoModel?
     private var characterDisposable: Disposable?
 
     init(
@@ -81,7 +95,7 @@ private extension CharacterInfoPresentationModel {
 
     func handleSuccess(with contentPage: ContentPage<Character>) {
         guard let characterDetail = mapToCharacterDetail(characters: contentPage.contents) else { return }
-        characterDetailData = characterDetail
+        characterDetailModel = characterDetail
         viewDelegate?.modelDidRetrieveData(self)
     }
 
@@ -93,27 +107,27 @@ private extension CharacterInfoPresentationModel {
     func message(for error: FetchCharacterDetailUseCaseError) -> String {
         switch error {
         case .noConnection:
-            return Messages.noConnection
+            return CharacterInfoViewModelError.noConnection.localizedDescription
         case .emptyData:
-            return Messages.noSuchCharacter
+            return CharacterInfoViewModelError.noSuchCharacter.localizedDescription
         case .unauthorized:
-            return Messages.noAPIKeys
+            return CharacterInfoViewModelError.noAuthorization.localizedDescription
         }
     }
 
-    func mapToCharacterDetail(characters: [Character]) -> CharacterDetailModel? {
+    func mapToCharacterDetail(characters: [Character]) -> CharacterInfoModel? {
         guard let firstCharacter = characters.first else { return nil }
         let characterInfoData = infoData(from: firstCharacter)
         let characterImageModel = imageData(from: firstCharacter)
-        return CharacterDetailModel(image: characterImageModel, info: characterInfoData)
+        return CharacterInfoModel(image: characterImageModel, info: characterInfoData)
     }
 
     func imageData(from character: Character) -> CharacterImageModel {
         CharacterImageModel(imageURL: imageURL(for: character))
     }
 
-    func infoData(from character: Character) -> CharacterInfoModel {
-        CharacterInfoModel(name: character.name, description: character.description)
+    func infoData(from character: Character) -> CharacterDescriptionModel {
+        CharacterDescriptionModel(name: character.name, description: character.description)
     }
 
     func imageURL(for character: Character) -> URL? {

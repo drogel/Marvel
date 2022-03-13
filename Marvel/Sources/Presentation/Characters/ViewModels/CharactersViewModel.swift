@@ -23,14 +23,14 @@ protocol CharactersViewModelCoordinatorDelegate: AnyObject {
 
 enum CharactersViewModelError: LocalizedError {
     case noCharacters
-    case noAPIKeys
+    case noAuthorization
     case noConnection
 
     var errorDescription: String? {
         switch self {
         case .noCharacters:
             return "server_not_responding".localized
-        case .noAPIKeys:
+        case .noAuthorization:
             return "api_keys_not_found".localized
         case .noConnection:
             return "no_internet".localized
@@ -148,7 +148,7 @@ private extension CharactersViewModel {
         case .emptyData:
             return .noCharacters
         case .unauthorized:
-            return .noAPIKeys
+            return .noAuthorization
         }
     }
 

@@ -1,13 +1,13 @@
 //
-//  CharacterInfoModel.swift
+//  CharacterDetailModel.swift
 //  Marvel
 //
-//  Created by Diego Rogel on 3/2/22.
+//  Created by Diego Rogel on 23/1/22.
 //
 
 import Foundation
 
 struct CharacterInfoModel: Hashable {
-    let name: String
-    let description: String
+    let image: CharacterImageModel
+    let info: CharacterDescriptionModel
 }

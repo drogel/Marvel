@@ -56,9 +56,9 @@ class CharacterInfoCell: ConfigurableCell {
 }
 
 extension CharacterInfoCell {
-    typealias Item = CharacterInfoModel?
+    typealias Item = CharacterDescriptionModel?
 
-    func configure(using item: CharacterInfoModel?) {
+    func configure(using item: CharacterDescriptionModel?) {
         nameLabel.text = item?.name
         configure(description: item?.description)
     }

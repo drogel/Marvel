@@ -19,7 +19,7 @@ class CharacterDetailInfoPresentationModelMock: CharacterInfoPresentationModelPr
         return nil
     }
 
-    var infoCellData: CharacterInfoModel? {
+    var infoCellData: CharacterDescriptionModel? {
         infoCellDataCallCount += 1
         return nil
     }

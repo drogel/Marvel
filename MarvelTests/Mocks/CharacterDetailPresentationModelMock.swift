@@ -18,7 +18,7 @@ class CharacterDetailPresentationModelMock: PresentationModelMock, CharacterDeta
 
     var imageCellData: CharacterImageModel?
 
-    var infoCellData: CharacterInfoModel?
+    var infoCellData: CharacterDescriptionModel?
 
     func willDisplayComicCell(at _: IndexPath) {}
 }
