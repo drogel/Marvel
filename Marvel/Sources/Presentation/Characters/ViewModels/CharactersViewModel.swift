@@ -42,7 +42,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
     weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
 
     var statePublisher: AnyPublisher<CharactersViewModelState, Never> {
-        $publishedCellModels.eraseToAnyPublisher()
+        $publishedState.eraseToAnyPublisher()
     }
 
     var loadingStatePublisher: AnyPublisher<LoadingState, Never> {
@@ -51,12 +51,12 @@ class CharactersViewModel: CharactersViewModelProtocol {
 
     private var cellModels: [CharacterCellModel] {
         didSet {
-            publishedCellModels = .success(cellModels)
+            publishedState = .success(cellModels)
         }
     }
 
     @Published private var loadingState: LoadingState
-    @Published private var publishedCellModels: CharactersViewModelState
+    @Published private var publishedState: CharactersViewModelState
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
@@ -67,7 +67,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
         self.imageURLBuilder = imageURLBuilder
         self.pager = pager
         cellModels = []
-        publishedCellModels = .success(cellModels)
+        publishedState = .success(cellModels)
         loadingState = .idle
     }
 
@@ -138,7 +138,7 @@ private extension CharactersViewModel {
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {
         let viewModelError = viewModelError(for: error)
-        publishedCellModels = .failure(viewModelError)
+        publishedState = .failure(viewModelError)
     }
 
     func viewModelError(for error: FetchCharacterDetailUseCaseError) -> CharactersViewModelError {

@@ -44,7 +44,7 @@ class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
     weak var viewDelegate: CharacterInfoPresentationModelViewDelegate?
 
     var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> {
-        $characterInfoModel.map { CharacterInfoViewModelState.success($0) }.eraseToAnyPublisher()
+        $publishedState.eraseToAnyPublisher()
     }
 
     var imageCellData: CharacterImageModel? {
@@ -55,7 +55,13 @@ class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
         characterInfoModel?.info
     }
 
-    @Published private var characterInfoModel: CharacterInfoModel?
+    private var characterInfoModel: CharacterInfoModel? {
+        didSet {
+            publishedState = .success(characterInfoModel)
+        }
+    }
+
+    @Published private var publishedState: CharacterInfoViewModelState
     private let characterFetcher: FetchCharacterDetailUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let characterID: Int
@@ -69,6 +75,7 @@ class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
         self.characterFetcher = characterFetcher
         self.imageURLBuilder = imageURLBuilder
         self.characterID = characterID
+        publishedState = .success(characterInfoModel)
     }
 
     func start() {
@@ -99,8 +106,8 @@ private extension CharacterInfoPresentationModel {
     }
 
     func handleSuccess(with contentPage: ContentPage<Character>) {
-        guard let characterDetail = mapToCharacterDetail(characters: contentPage.contents) else { return }
-        characterInfoModel = characterDetail
+        guard let characterInfo = mapToCharacterInfo(characters: contentPage.contents) else { return }
+        characterInfoModel = characterInfo
         viewDelegate?.modelDidRetrieveData(self)
     }
 
@@ -120,7 +127,7 @@ private extension CharacterInfoPresentationModel {
         }
     }
 
-    func mapToCharacterDetail(characters: [Character]) -> CharacterInfoModel? {
+    func mapToCharacterInfo(characters: [Character]) -> CharacterInfoModel? {
         guard let firstCharacter = characters.first else { return nil }
         let characterInfoData = infoData(from: firstCharacter)
         let characterImageModel = imageData(from: firstCharacter)
