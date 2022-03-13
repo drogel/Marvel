@@ -64,7 +64,7 @@ private class CharactersViewModelStub: CharactersViewModelProtocol {
         Just(LoadingState.loading).eraseToAnyPublisher()
     }
 
-    var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> {
+    var statePublisher: AnyPublisher<CharactersViewModelState, Never> {
         cellModelsStub.eraseToAnyPublisher()
     }
 

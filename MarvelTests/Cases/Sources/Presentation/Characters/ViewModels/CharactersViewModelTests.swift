@@ -91,7 +91,7 @@ class CharactersViewModelTests: XCTestCase {
     func test_givenDidNotFetchYet_whenRetrievingCellData_publishesEmptyArray() {
         let receivedValueExpectation = expectation(description: "Publishes empty models")
         let expectedEmptyState: CharactersViewModelState = .success([])
-        sut.cellModelsPublisher
+        sut.statePublisher
             .assertOutput(matches: expectedEmptyState, expectation: receivedValueExpectation)
             .store(in: &cancellables)
         wait(for: [receivedValueExpectation], timeout: 0.1)
@@ -102,7 +102,7 @@ class CharactersViewModelTests: XCTestCase {
         let receivedValueExpectation = expectation(description: "Publishes single value")
         let expectedModels = buildExpectedCellModels(from: CharactersFetcherSuccessfulStub.charactersStub)
         let expectedState: CharactersViewModelState = .success(expectedModels)
-        sut.cellModelsPublisher
+        sut.statePublisher
             .dropFirst()
             .assertOutput(matches: expectedState, expectation: receivedValueExpectation)
             .store(in: &cancellables)

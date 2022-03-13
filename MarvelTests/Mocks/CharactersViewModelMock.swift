@@ -31,7 +31,7 @@ class CharactersViewModelMock: CharactersViewModelProtocol {
         return Just(LoadingState.loading).eraseToAnyPublisher()
     }
 
-    var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> {
+    var statePublisher: AnyPublisher<CharactersViewModelState, Never> {
         cellModelsPublisherCallCount += 1
         return cellModelsStub.eraseToAnyPublisher()
     }

@@ -11,7 +11,7 @@ import Foundation
 typealias CharactersViewModelState = Result<[CharacterCellModel], CharactersViewModelError>
 
 protocol CharactersViewModelProtocol: PresentationModel {
-    var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> { get }
+    var statePublisher: AnyPublisher<CharactersViewModelState, Never> { get }
     var loadingStatePublisher: AnyPublisher<LoadingState, Never> { get }
     func willDisplayCell(at indexPath: IndexPath)
     func select(at indexPath: IndexPath)
@@ -41,7 +41,7 @@ enum CharactersViewModelError: LocalizedError {
 class CharactersViewModel: CharactersViewModelProtocol {
     weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
 
-    var cellModelsPublisher: AnyPublisher<CharactersViewModelState, Never> {
+    var statePublisher: AnyPublisher<CharactersViewModelState, Never> {
         $publishedCellModels.eraseToAnyPublisher()
     }
 

@@ -10,6 +10,10 @@ import Foundation
 @testable import Marvel_Debug
 
 class CharacterDetailPresentationModelMock: PresentationModelMock, CharacterDetailPresentationModelProtocol {
+    var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> {
+        Just(CharacterInfoViewModelState.success(nil)).eraseToAnyPublisher()
+    }
+
     var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
         Just([]).eraseToAnyPublisher()
     }

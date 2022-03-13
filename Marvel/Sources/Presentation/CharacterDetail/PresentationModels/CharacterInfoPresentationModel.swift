@@ -9,6 +9,7 @@ import Combine
 import Foundation
 
 protocol CharacterInfoPresentationModelProtocol: PresentationModel {
+    var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> { get }
     var imageCellData: CharacterImageModel? { get }
     var infoCellData: CharacterDescriptionModel? { get }
 }
@@ -20,7 +21,7 @@ protocol CharacterInfoPresentationModelViewDelegate: AnyObject {
     func model(_ presentationModel: CharacterInfoPresentationModelProtocol, didFailWithError message: String)
 }
 
-typealias CharacterInfoViewModelState = Result<CharacterInfoModel, CharacterInfoViewModelError>
+typealias CharacterInfoViewModelState = Result<CharacterInfoModel?, CharacterInfoViewModelError>
 
 enum CharacterInfoViewModelError: LocalizedError {
     case noSuchCharacter
@@ -42,18 +43,22 @@ enum CharacterInfoViewModelError: LocalizedError {
 class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
     weak var viewDelegate: CharacterInfoPresentationModelViewDelegate?
 
+    var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> {
+        $characterInfoModel.map { CharacterInfoViewModelState.success($0) }.eraseToAnyPublisher()
+    }
+
     var imageCellData: CharacterImageModel? {
-        characterDetailModel?.image
+        characterInfoModel?.image
     }
 
     var infoCellData: CharacterDescriptionModel? {
-        characterDetailModel?.info
+        characterInfoModel?.info
     }
 
+    @Published private var characterInfoModel: CharacterInfoModel?
     private let characterFetcher: FetchCharacterDetailUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let characterID: Int
-    private var characterDetailModel: CharacterInfoModel?
     private var characterDisposable: Disposable?
 
     init(
@@ -95,7 +100,7 @@ private extension CharacterInfoPresentationModel {
 
     func handleSuccess(with contentPage: ContentPage<Character>) {
         guard let characterDetail = mapToCharacterDetail(characters: contentPage.contents) else { return }
-        characterDetailModel = characterDetail
+        characterInfoModel = characterDetail
         viewDelegate?.modelDidRetrieveData(self)
     }
 

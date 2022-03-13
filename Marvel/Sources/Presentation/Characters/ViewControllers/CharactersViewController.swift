@@ -80,7 +80,7 @@ private extension CharactersViewController {
     }
 
     func subscribeToViewModelState() {
-        viewModel.cellModelsPublisher
+        viewModel.statePublisher
             .sink(receiveValue: handleState)
             .store(in: &cancellables)
     }

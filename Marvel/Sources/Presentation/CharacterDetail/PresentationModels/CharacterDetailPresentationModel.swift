@@ -24,6 +24,10 @@ protocol CharacterDetailPresentationModelViewDelegate: AnyObject {
 class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol {
     weak var viewDelegate: CharacterDetailPresentationModelViewDelegate?
 
+    var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> {
+        infoPresentationModel.infoStatePublisher
+    }
+
     var imageCellData: CharacterImageModel? {
         infoPresentationModel.imageCellData
     }
