@@ -121,6 +121,27 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         whenAboutToDisplayAComicCell()
         assertComicsViewModelWillDisplayCell(callCount: 1)
     }
+
+    func test_whenReceivingDetailStateValues_delegatesToInfoAndComicsPublishers() {
+        assertInfoPresentationModelInfoStatePublisher(callCount: 0)
+        assertComicsViewModelComicCellModelsPublisher(callCount: 0)
+        sut.detailStatePublisher.sink(receiveValue: { _ in }).store(in: &cancellables)
+        assertInfoPresentationModelInfoStatePublisher(callCount: 1)
+        assertComicsViewModelComicCellModelsPublisher(callCount: 1)
+    }
+
+    func test_whenReceivingDetailStateValues_combinesInfoAndComicsPublishers() {
+        let receivedValueExpectation = expectation(description: "Received a detail state value")
+        let expectedDetailModel = CharacterDetailModel(
+            info: CharacterDetailInfoPresentationModelMock.emitedInfoViewModelState,
+            comics: ComicsViewModelMock.emittedComicCellModels
+        )
+        let expectedState = CharacterDetailState.success(expectedDetailModel)
+        sut.detailStatePublisher
+            .assertOutput(matches: expectedState, expectation: receivedValueExpectation)
+            .store(in: &cancellables)
+        wait(for: [receivedValueExpectation], timeout: 0.1)
+    }
 }
 
 private class CharacterDetailViewDelegateMock: CharacterDetailPresentationModelViewDelegate {

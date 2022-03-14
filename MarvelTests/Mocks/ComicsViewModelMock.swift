@@ -10,6 +10,8 @@ import Foundation
 @testable import Marvel_Debug
 
 class ComicsViewModelMock: ComicsViewModelProtocol {
+    static let emittedComicCellModels: [ComicCellModel] = []
+
     var startCallCount = 0
     var comicCellModelsPublisherCallCount = 0
     var disposeCallCount = 0
@@ -17,7 +19,7 @@ class ComicsViewModelMock: ComicsViewModelProtocol {
 
     var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
         comicCellModelsPublisherCallCount += 1
-        return Just([]).eraseToAnyPublisher()
+        return Just(Self.emittedComicCellModels).eraseToAnyPublisher()
     }
 
     func start() {

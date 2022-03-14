@@ -11,7 +11,9 @@ import Foundation
 // TODO: Rename all references of presentation model to view models when we migrate these models to Combine too
 typealias CharacterDetailPresentationModels = CharacterInfoPresentationModelProtocol & ComicsViewModelProtocol
 
-protocol CharacterDetailPresentationModelProtocol: CharacterDetailPresentationModels {}
+protocol CharacterDetailPresentationModelProtocol: CharacterDetailPresentationModels {
+    var detailStatePublisher: AnyPublisher<CharacterDetailState, Never> { get }
+}
 
 protocol CharacterDetailPresentationModelViewDelegate: AnyObject {
     func modelDidStartLoading(_ presentationModel: CharacterDetailPresentationModelProtocol)
@@ -21,8 +23,19 @@ protocol CharacterDetailPresentationModelViewDelegate: AnyObject {
     func model(_ presentationModel: CharacterDetailPresentationModelProtocol, didFailWithError message: String)
 }
 
+typealias CharacterDetailViewModelError = CharacterInfoViewModelError
+
+typealias CharacterDetailState = Result<CharacterDetailModel, CharacterInfoViewModelError>
+
 class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol {
     weak var viewDelegate: CharacterDetailPresentationModelViewDelegate?
+
+    var detailStatePublisher: AnyPublisher<CharacterDetailState, Never> {
+        infoPresentationModel.infoStatePublisher
+            .combineLatest(comicsViewModel.comicCellModelsPublisher)
+            .map(mapToCharacterDetailState)
+            .eraseToAnyPublisher()
+    }
 
     var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> {
         infoPresentationModel.infoStatePublisher
@@ -74,5 +87,19 @@ extension CharacterDetailPresentationModel: CharacterInfoPresentationModelViewDe
 
     func model(_: CharacterInfoPresentationModelProtocol, didFailWithError message: String) {
         viewDelegate?.model(self, didFailWithError: message)
+    }
+}
+
+private extension CharacterDetailPresentationModel {
+    func mapToCharacterDetailState(
+        _ combination: (characterInfoState: CharacterInfoViewModelState, comicCellModels: [ComicCellModel])
+    ) -> CharacterDetailState {
+        switch combination.characterInfoState {
+        case let .success(infoModel):
+            let detailModel = CharacterDetailModel(info: infoModel, comics: combination.comicCellModels)
+            return CharacterDetailState.success(detailModel)
+        case let .failure(error):
+            return CharacterDetailState.failure(error)
+        }
     }
 }
