@@ -12,7 +12,7 @@ import Foundation
 typealias CharacterDetailPresentationModels = CharacterInfoPresentationModelProtocol & ComicsViewModelProtocol
 
 protocol CharacterDetailPresentationModelProtocol: CharacterDetailPresentationModels {
-    var detailStatePublisher: AnyPublisher<CharacterDetailState, Never> { get }
+    var detailStatePublisher: AnyPublisher<CharacterDetailViewModelState, Never> { get }
 }
 
 protocol CharacterDetailPresentationModelViewDelegate: AnyObject {
@@ -25,12 +25,12 @@ protocol CharacterDetailPresentationModelViewDelegate: AnyObject {
 
 typealias CharacterDetailViewModelError = CharacterInfoViewModelError
 
-typealias CharacterDetailState = Result<CharacterDetailModel, CharacterInfoViewModelError>
+typealias CharacterDetailViewModelState = Result<CharacterDetailModel, CharacterInfoViewModelError>
 
 class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol {
     weak var viewDelegate: CharacterDetailPresentationModelViewDelegate?
 
-    var detailStatePublisher: AnyPublisher<CharacterDetailState, Never> {
+    var detailStatePublisher: AnyPublisher<CharacterDetailViewModelState, Never> {
         infoPresentationModel.infoStatePublisher
             .combineLatest(comicsViewModel.comicCellModelsPublisher)
             .map(mapToCharacterDetailState)
@@ -93,13 +93,13 @@ extension CharacterDetailPresentationModel: CharacterInfoPresentationModelViewDe
 private extension CharacterDetailPresentationModel {
     func mapToCharacterDetailState(
         _ combination: (characterInfoState: CharacterInfoViewModelState, comicCellModels: [ComicCellModel])
-    ) -> CharacterDetailState {
+    ) -> CharacterDetailViewModelState {
         switch combination.characterInfoState {
         case let .success(infoModel):
             let detailModel = CharacterDetailModel(info: infoModel, comics: combination.comicCellModels)
-            return CharacterDetailState.success(detailModel)
+            return CharacterDetailViewModelState.success(detailModel)
         case let .failure(error):
-            return CharacterDetailState.failure(error)
+            return CharacterDetailViewModelState.failure(error)
         }
     }
 }

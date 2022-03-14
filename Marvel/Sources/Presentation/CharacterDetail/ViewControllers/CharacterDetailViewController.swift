@@ -84,8 +84,7 @@ extension CharacterDetailViewController: CharacterDetailPresentationModelViewDel
 private extension CharacterDetailViewController {
     func setUp() {
         setUpCollectionView()
-        subscribeToInfo()
-        subscribeToComics()
+        subscribeToDetail()
     }
 
     func setUpCollectionView() {
@@ -95,22 +94,16 @@ private extension CharacterDetailViewController {
         configureConstraints(of: collectionView)
     }
 
-    func subscribeToInfo() {
-        presentationModel.infoStatePublisher
+    func subscribeToDetail() {
+        presentationModel.detailStatePublisher
             .sink(receiveValue: handleState)
             .store(in: &cancellables)
     }
 
-    func subscribeToComics() {
-        presentationModel.comicCellModelsPublisher
-            .sink(receiveValue: dataSource.update)
-            .store(in: &cancellables)
-    }
-
-    func handleState(_ state: CharacterInfoViewModelState) {
+    func handleState(_ state: CharacterDetailViewModelState) {
         switch state {
-        case let .success(model):
-            dataSource.update(with: [model])
+        case let .success(detailModel):
+            dataSource.update(with: [detailModel])
         case .failure:
             // TODO: Implement
             return

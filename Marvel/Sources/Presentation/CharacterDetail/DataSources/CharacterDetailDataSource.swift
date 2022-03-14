@@ -85,17 +85,42 @@ private extension CharacterDetailDataSource {
         in collectionView: UICollectionView,
         forRowAt indexPath: IndexPath,
         with model: AnyHashable
-    ) -> UICollectionViewCell {
-        switch model {
-        case let model as CharacterImageCell.Item:
-            return collectionView.dequeueConfiguredReusableCell(using: imageRegistration, for: indexPath, item: model)
-        case let model as CharacterInfoCell.Item:
-            return collectionView.dequeueConfiguredReusableCell(using: infoRegistration, for: indexPath, item: model)
-        case let model as ComicCell.Item:
-            return collectionView.dequeueConfiguredReusableCell(using: comicRegistration, for: indexPath, item: model)
-        default:
-            fatalError()
+    ) -> UICollectionViewCell? {
+        switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
+        case .image:
+            return imageCell(in: collectionView, forRowAt: indexPath, with: model)
+        case .info:
+            return infoCell(in: collectionView, forRowAt: indexPath, with: model)
+        case .comics:
+            return comicCell(in: collectionView, forRowAt: indexPath, with: model)
         }
+    }
+
+    func imageCell(
+        in collectionView: UICollectionView,
+        forRowAt indexPath: IndexPath,
+        with model: AnyHashable
+    ) -> UICollectionViewCell? {
+        guard let image = model as? CharacterImageCell.Item else { return nil }
+        return collectionView.dequeueConfiguredReusableCell(using: imageRegistration, for: indexPath, item: image)
+    }
+
+    func infoCell(
+        in collectionView: UICollectionView,
+        forRowAt indexPath: IndexPath,
+        with model: AnyHashable
+    ) -> UICollectionViewCell? {
+        guard let info = model as? CharacterInfoCell.Item else { return nil }
+        return collectionView.dequeueConfiguredReusableCell(using: infoRegistration, for: indexPath, item: info)
+    }
+
+    func comicCell(
+        in collectionView: UICollectionView,
+        forRowAt indexPath: IndexPath,
+        with model: AnyHashable
+    ) -> UICollectionViewCell? {
+        guard let comic = model as? ComicCell.Item else { return nil }
+        return collectionView.dequeueConfiguredReusableCell(using: comicRegistration, for: indexPath, item: comic)
     }
 
     func provideSupplementaryView(
@@ -117,29 +142,19 @@ private extension CharacterDetailDataSource {
     }
 
     func createSnapshot(with items: [AnyHashable]) -> CharacterDetailDiffableDataSource.Snapshot? {
-        if let infos = items as? [CharacterInfoModel] {
-            return infoSectionsSnapshot(with: infos)
-        }
-        if let comicItems = items as? [ComicCell.Item] {
-            return comicsSectionSnapshot(with: comicItems)
-        }
-        return nil
+        guard let details = items as? [CharacterDetailModel] else { return nil }
+        return createDetailSnapshot(with: details)
     }
 
-    func infoSectionsSnapshot(with items: [CharacterInfoModel]) -> CharacterDetailDiffableDataSource.Snapshot {
+    func createDetailSnapshot(with items: [CharacterDetailModel]) -> CharacterDetailDiffableDataSource.Snapshot {
         var snapshot = CharacterDetailDiffableDataSource.Snapshot()
-        let images = items.map(\.image)
-        let descriptions = items.map(\.description)
+        let images = items.compactMap(\.info?.image)
+        let descriptions = items.compactMap(\.info?.description)
+        let comics = items.flatMap(\.comics)
         snapshot.appendSections([.image, .info, .comics])
         snapshot.appendItems(images, toSection: .image)
         snapshot.appendItems(descriptions, toSection: .info)
-        return snapshot
-    }
-
-    func comicsSectionSnapshot(with items: [ComicCell.Item]) -> CharacterDetailDiffableDataSource.Snapshot {
-        var snapshot = CharacterDetailDiffableDataSource.Snapshot()
-        snapshot.appendSections([.image, .info, .comics])
-        snapshot.appendItems(items, toSection: .comics)
+        snapshot.appendItems(comics, toSection: .comics)
         return snapshot
     }
 }

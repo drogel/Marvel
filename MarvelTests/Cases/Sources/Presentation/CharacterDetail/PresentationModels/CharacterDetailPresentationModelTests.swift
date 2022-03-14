@@ -136,7 +136,7 @@ class CharacterDetailPresentationModelTests: XCTestCase {
             info: CharacterDetailInfoPresentationModelMock.emitedInfoViewModelState,
             comics: ComicsViewModelMock.emittedComicCellModels
         )
-        let expectedState = CharacterDetailState.success(expectedDetailModel)
+        let expectedState = CharacterDetailViewModelState.success(expectedDetailModel)
         sut.detailStatePublisher
             .assertOutput(matches: expectedState, expectation: receivedValueExpectation)
             .store(in: &cancellables)
