@@ -9,12 +9,12 @@ import Combine
 import Foundation
 
 // TODO: Rename all references of presentation model to view models when we migrate these models to Combine too
-typealias CharacterDetailPresentationModels = CharacterInfoPresentationModelProtocol & ComicsViewModelProtocol
-
-protocol CharacterDetailPresentationModelProtocol: CharacterDetailPresentationModels {
+protocol CharacterDetailPresentationModelProtocol: PresentationModel {
     var detailStatePublisher: AnyPublisher<CharacterDetailViewModelState, Never> { get }
+    func willDisplayComicCell(at indexPath: IndexPath)
 }
 
+// TODO: Remove all these delegates
 protocol CharacterDetailPresentationModelViewDelegate: AnyObject {
     func modelDidStartLoading(_ presentationModel: CharacterDetailPresentationModelProtocol)
     func modelDidFinishLoading(_ presentationModel: CharacterDetailPresentationModelProtocol)
@@ -35,15 +35,6 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
             .combineLatest(comicsViewModel.comicCellModelsPublisher)
             .map(mapToCharacterDetailState)
             .eraseToAnyPublisher()
-    }
-
-    var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> {
-        infoPresentationModel.infoStatePublisher
-    }
-
-    var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
-        // TODO: Combine both publishers, creating a new hashable to collect info and comics at once
-        comicsViewModel.comicCellModelsPublisher
     }
 
     private let infoPresentationModel: CharacterInfoPresentationModelProtocol

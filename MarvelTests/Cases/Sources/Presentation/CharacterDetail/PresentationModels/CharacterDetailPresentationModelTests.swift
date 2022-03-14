@@ -45,11 +45,6 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is CharacterDetailPresentationModelProtocol)
     }
 
-    func test_conformsToSubPresentationModels() {
-        XCTAssertTrue((sut as AnyObject) is CharacterInfoPresentationModelProtocol)
-        XCTAssertTrue((sut as AnyObject) is ComicsViewModelProtocol)
-    }
-
     func test_conformsToSubPresentationModelDelegate() {
         XCTAssertTrue((sut as AnyObject) is CharacterInfoPresentationModelViewDelegate)
     }
@@ -68,18 +63,6 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         sut.dispose()
         assertInfoPresentationModelDispose(callCount: 1)
         assertComicsViewModelDispose(callCount: 1)
-    }
-
-    func test_infoStatePublisher_delegatesToInfoPresentationModel() {
-        assertInfoPresentationModelInfoStatePublisher(callCount: 0)
-        _ = sut.infoStatePublisher
-        assertInfoPresentationModelInfoStatePublisher(callCount: 1)
-    }
-
-    func test_comicCellData_delegatesToComicsViewModel() {
-        assertComicsViewModelComicCellModelsPublisher(callCount: 0)
-        _ = sut.comicCellModelsPublisher
-        assertComicsViewModelComicCellModelsPublisher(callCount: 1)
     }
 
     func test_givenViewDelegate_whenInfoStartsLoading_notifiesView() {
@@ -101,12 +84,6 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         assertViewDelegateDidRetrieveCharacterInfo(callCount: 0)
         sut.modelDidRetrieveData(infoPresentationModelMock)
         assertViewDelegateDidRetrieveCharacterInfo(callCount: 1)
-    }
-
-    func test_whenSubscribingToComicCellModels_delegatesToComicsViewModel() {
-        assertComicsViewModelComicCellModelsPublisher(callCount: 0)
-        sut.comicCellModelsPublisher.sink(receiveValue: { _ in }).store(in: &cancellables)
-        assertComicsViewModelComicCellModelsPublisher(callCount: 1)
     }
 
     func test_givenViewDelegate_whenInfoFails_notifiesView() {
