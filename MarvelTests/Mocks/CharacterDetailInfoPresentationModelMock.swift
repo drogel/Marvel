@@ -1,5 +1,5 @@
 //
-//  CharacterDetailInfoPresentationModelMock.swift
+//  CharacterDetailInfoViewModelMock.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 5/2/22.
@@ -9,7 +9,7 @@ import Combine
 import Foundation
 @testable import Marvel_Debug
 
-class CharacterDetailInfoPresentationModelMock: CharacterInfoPresentationModelProtocol {
+class CharacterDetailInfoViewModelMock: CharacterInfoViewModelProtocol {
     static let emitedInfoViewModelState: CharacterInfoModel? = nil
 
     var infoStatePublisherCallCount = 0

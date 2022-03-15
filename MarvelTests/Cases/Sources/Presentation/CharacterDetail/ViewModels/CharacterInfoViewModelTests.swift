@@ -1,5 +1,5 @@
 //
-//  CharacterInfoPresentationModelTests.swift
+//  CharacterInfoViewModelTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 23/1/22.
@@ -9,8 +9,8 @@ import Combine
 @testable import Marvel_Debug
 import XCTest
 
-class CharacterInfoPresentationModelTests: XCTestCase {
-    private var sut: CharacterInfoPresentationModel!
+class CharacterInfoViewModelTests: XCTestCase {
+    private var sut: CharacterInfoViewModel!
     private var characterFetcherMock: CharacterFetcherMock!
     private var characterIDStub: Int!
     private var imageURLBuilderMock: ImageURLBuilderMock!
@@ -173,14 +173,14 @@ private class CharacterFetcherFailingStub: CharacterFetcherMock {
     }
 }
 
-private extension CharacterInfoPresentationModelTests {
+private extension CharacterInfoViewModelTests {
     func givenSutWithSuccessfulFetcher() {
         characterFetcherMock = CharacterFetcherSuccessfulStub()
         givenSut(with: characterFetcherMock)
     }
 
     func givenSut(with characterFetcherMock: CharacterFetcherMock) {
-        sut = CharacterInfoPresentationModel(
+        sut = CharacterInfoViewModel(
             characterFetcher: characterFetcherMock,
             characterID: characterIDStub,
             imageURLBuilder: imageURLBuilderMock

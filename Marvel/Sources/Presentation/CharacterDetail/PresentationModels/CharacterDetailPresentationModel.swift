@@ -31,25 +31,25 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
     weak var viewDelegate: CharacterDetailPresentationModelViewDelegate?
 
     var detailStatePublisher: AnyPublisher<CharacterDetailViewModelState, Never> {
-        infoPresentationModel.infoStatePublisher
+        infoViewModel.infoStatePublisher
             .combineLatest(comicsViewModel.comicCellModelsPublisher)
             .map(mapToCharacterDetailState)
             .eraseToAnyPublisher()
     }
 
-    private let infoPresentationModel: CharacterInfoPresentationModelProtocol
+    private let infoViewModel: CharacterInfoViewModelProtocol
     private let comicsViewModel: ComicsViewModelProtocol
 
     init(
-        infoPresentationModel: CharacterInfoPresentationModelProtocol,
+        infoViewModel: CharacterInfoViewModelProtocol,
         comicsViewModel: ComicsViewModelProtocol
     ) {
-        self.infoPresentationModel = infoPresentationModel
+        self.infoViewModel = infoViewModel
         self.comicsViewModel = comicsViewModel
     }
 
     func start() {
-        infoPresentationModel.start()
+        infoViewModel.start()
         comicsViewModel.start()
     }
 
@@ -58,7 +58,7 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
     }
 
     func dispose() {
-        infoPresentationModel.dispose()
+        infoViewModel.dispose()
         comicsViewModel.dispose()
     }
 }

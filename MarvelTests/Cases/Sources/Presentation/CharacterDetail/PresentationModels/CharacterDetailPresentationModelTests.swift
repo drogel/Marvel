@@ -11,7 +11,7 @@ import XCTest
 
 class CharacterDetailPresentationModelTests: XCTestCase {
     private var sut: CharacterDetailPresentationModel!
-    private var infoPresentationModelMock: CharacterDetailInfoPresentationModelMock!
+    private var infoViewModelMock: CharacterDetailInfoViewModelMock!
     private var comicsViewModelMock: ComicsViewModelMock!
     private var viewDelegateMock: CharacterDetailViewDelegateMock!
     private var cancellables: Set<AnyCancellable>!
@@ -19,11 +19,11 @@ class CharacterDetailPresentationModelTests: XCTestCase {
     override func setUp() {
         super.setUp()
         cancellables = Set<AnyCancellable>()
-        infoPresentationModelMock = CharacterDetailInfoPresentationModelMock()
+        infoViewModelMock = CharacterDetailInfoViewModelMock()
         comicsViewModelMock = ComicsViewModelMock()
         viewDelegateMock = CharacterDetailViewDelegateMock()
         sut = CharacterDetailPresentationModel(
-            infoPresentationModel: infoPresentationModelMock,
+            infoViewModel: infoViewModelMock,
             comicsViewModel: comicsViewModelMock
         )
     }
@@ -33,7 +33,7 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         cancellables = nil
         comicsViewModelMock = nil
         viewDelegateMock = nil
-        infoPresentationModelMock = nil
+        infoViewModelMock = nil
         super.tearDown()
     }
 
@@ -46,18 +46,18 @@ class CharacterDetailPresentationModelTests: XCTestCase {
     }
 
     func test_whenStarting_callsStartOnAllSubPresentationModels() {
-        assertInfoPresentationModelStart(callCount: 0)
+        assertInfoViewModelStart(callCount: 0)
         assertComicsViewModelStart(callCount: 0)
         sut.start()
-        assertInfoPresentationModelStart(callCount: 1)
+        assertInfoViewModelStart(callCount: 1)
         assertComicsViewModelStart(callCount: 1)
     }
 
     func test_whenDisposing_callsDisposeOnAllSubPresentationModels() {
-        assertInfoPresentationModelDispose(callCount: 0)
+        assertInfoViewModelDispose(callCount: 0)
         assertComicsViewModelDispose(callCount: 0)
         sut.dispose()
-        assertInfoPresentationModelDispose(callCount: 1)
+        assertInfoViewModelDispose(callCount: 1)
         assertComicsViewModelDispose(callCount: 1)
     }
 
@@ -68,17 +68,17 @@ class CharacterDetailPresentationModelTests: XCTestCase {
     }
 
     func test_whenReceivingDetailStateValues_delegatesToInfoAndComicsPublishers() {
-        assertInfoPresentationModelInfoStatePublisher(callCount: 0)
+        assertInfoViewModelInfoStatePublisher(callCount: 0)
         assertComicsViewModelComicCellModelsPublisher(callCount: 0)
         sut.detailStatePublisher.sink(receiveValue: { _ in }).store(in: &cancellables)
-        assertInfoPresentationModelInfoStatePublisher(callCount: 1)
+        assertInfoViewModelInfoStatePublisher(callCount: 1)
         assertComicsViewModelComicCellModelsPublisher(callCount: 1)
     }
 
     func test_whenReceivingDetailStateValues_combinesInfoAndComicsPublishers() {
         let receivedValueExpectation = expectation(description: "Received a detail state value")
         let expectedDetailModel = CharacterDetailModel(
-            info: CharacterDetailInfoPresentationModelMock.emitedInfoViewModelState,
+            info: CharacterDetailInfoViewModelMock.emitedInfoViewModelState,
             comics: ComicsViewModelMock.emittedComicCellModels
         )
         let expectedState = CharacterDetailViewModelState.success(expectedDetailModel)
@@ -127,24 +127,24 @@ private extension CharacterDetailPresentationModelTests {
         sut.willDisplayComicCell(at: IndexPath(row: 0, section: 0))
     }
 
-    func assertInfoPresentationModelStart(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(infoPresentationModelMock.startCallCount, callCount, line: line)
+    func assertInfoViewModelStart(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(infoViewModelMock.startCallCount, callCount, line: line)
     }
 
     func assertComicsViewModelStart(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(comicsViewModelMock.startCallCount, callCount, line: line)
     }
 
-    func assertInfoPresentationModelDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(infoPresentationModelMock.disposeCallCount, callCount, line: line)
+    func assertInfoViewModelDispose(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(infoViewModelMock.disposeCallCount, callCount, line: line)
     }
 
     func assertComicsViewModelDispose(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(comicsViewModelMock.disposeCallCount, callCount, line: line)
     }
 
-    func assertInfoPresentationModelInfoStatePublisher(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(infoPresentationModelMock.infoStatePublisherCallCount, callCount, line: line)
+    func assertInfoViewModelInfoStatePublisher(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(infoViewModelMock.infoStatePublisherCallCount, callCount, line: line)
     }
 
     func assertComicsViewModelComicCellModelsPublisher(callCount: Int, line: UInt = #line) {

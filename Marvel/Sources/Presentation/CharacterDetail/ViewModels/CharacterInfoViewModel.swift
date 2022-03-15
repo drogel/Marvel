@@ -1,5 +1,5 @@
 //
-//  CharacterInfoPresentationModel.swift
+//  CharacterInfoViewModel.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 23/1/22.
@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-protocol CharacterInfoPresentationModelProtocol: PresentationModel {
+protocol CharacterInfoViewModelProtocol: PresentationModel {
     var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> { get }
     var loadingStatePublisher: AnyPublisher<LoadingState, Never> { get }
 }
@@ -32,7 +32,7 @@ enum CharacterInfoViewModelError: LocalizedError {
     }
 }
 
-class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
+class CharacterInfoViewModel: CharacterInfoViewModelProtocol {
     var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> {
         $publishedState.eraseToAnyPublisher()
     }
@@ -77,7 +77,7 @@ class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
     }
 }
 
-private extension CharacterInfoPresentationModel {
+private extension CharacterInfoViewModel {
     func loadCharacter(with query: FetchCharacterDetailQuery) {
         characterDisposable?.dispose()
         characterDisposable = characterFetcher.fetch(query: query) { [weak self] result in

@@ -41,7 +41,7 @@ private extension CharacterDetailCoordinator {
     }
 
     func createCharacterDetailViewController() -> UIViewController {
-        let infoPresentationModel = CharacterInfoPresentationModel(
+        let infoViewModel = CharacterInfoViewModel(
             characterFetcher: container.fetchCharacterDetailUseCase,
             characterID: container.characterID,
             imageURLBuilder: container.imageURLBuilder
@@ -53,7 +53,7 @@ private extension CharacterDetailCoordinator {
             pager: container.pager
         )
         let presentationModel = CharacterDetailPresentationModel(
-            infoPresentationModel: infoPresentationModel,
+            infoViewModel: infoViewModel,
             comicsViewModel: comicsViewModel
         )
         let viewController = CharacterDetailViewController.instantiate(
