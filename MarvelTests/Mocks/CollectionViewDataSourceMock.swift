@@ -11,7 +11,7 @@ import UIKit
 import XCTest
 
 class CollectionViewDataSourceMock: NSObject, CollectionViewDataSource, UICollectionViewDataSource {
-    var applySnapshotCallCount = 0
+    var updateCallCount = 0
     var setDataSourceCallCount = 0
     var registerSubviewsCallCount = 0
     var numberOfItemsInSectionCallCount = 0
@@ -31,12 +31,12 @@ class CollectionViewDataSourceMock: NSObject, CollectionViewDataSource, UICollec
         return UICollectionViewCell()
     }
 
-    func applySnapshot() {
-        applySnapshotCallCount += 1
+    func update<T: Hashable>(with _: [T]) {
+        updateCallCount += 1
     }
 
-    func assertApplySnapshot(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(applySnapshotCallCount, callCount, line: line)
+    func assertUpdate(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(updateCallCount, callCount, line: line)
     }
 
     func assertSetDataSource(callCount: Int, line: UInt = #line) {

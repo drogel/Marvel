@@ -16,5 +16,5 @@ protocol ComicsService {
         for characterID: Int,
         from offset: Int,
         completion: @escaping (ComicsServiceResult) -> Void
-    ) -> Cancellable?
+    ) -> Disposable?
 }

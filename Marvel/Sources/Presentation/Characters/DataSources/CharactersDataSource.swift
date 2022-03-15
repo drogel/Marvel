@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 4/3/22.
 //
 
+import Combine
 import UIKit
 
 enum CharactersSection {
@@ -12,30 +13,23 @@ enum CharactersSection {
 }
 
 class CharactersDataSourceFactory: CollectionViewDataSourceFactory {
-    private let presentationModel: CharactersPresentationModelProtocol
-
-    init(presentationModel: CharactersPresentationModelProtocol) {
-        self.presentationModel = presentationModel
-    }
-
     func create(collectionView: UICollectionView) -> CollectionViewDataSource {
-        CharactersDataSource(collectionView: collectionView, presentationModel: presentationModel)
+        CharactersDataSource(collectionView: collectionView)
     }
 }
 
-typealias CharactersDiffableDataSource = UICollectionViewDiffableDataSource<CharactersSection, CharacterCell.Item>
+typealias CharactersDiffableDataSource = UICollectionViewDiffableDataSource<CharactersSection, AnyHashable>
 
 class CharactersDataSource: CollectionViewDataSource {
-    private let presentationModel: CharactersPresentationModelProtocol
     private let collectionView: UICollectionView
     private let cellRegistration = CellRegistration<CharacterCell>(handler: CharactersDataSource.configureCell)
+    private var cancellables = Set<AnyCancellable>()
     private lazy var diffableDataSource = CharactersDiffableDataSource(
         collectionView: collectionView,
         cellProvider: provideCell
     )
 
-    init(collectionView: UICollectionView, presentationModel: CharactersPresentationModelProtocol) {
-        self.presentationModel = presentationModel
+    init(collectionView: UICollectionView) {
         self.collectionView = collectionView
     }
 
@@ -43,11 +37,8 @@ class CharactersDataSource: CollectionViewDataSource {
         collectionView.dataSource = diffableDataSource
     }
 
-    func applySnapshot() {
-        var snapshot = CharactersDiffableDataSource.Snapshot()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(presentationModel.cellModels, toSection: .main)
-        diffableDataSource.apply(snapshot)
+    func update<T: Hashable>(with items: [T]) {
+        applySnapshot(with: items)
     }
 }
 
@@ -59,8 +50,16 @@ private extension CharactersDataSource {
     func provideCell(
         in collectionView: UICollectionView,
         forRowAt indexPath: IndexPath,
-        with model: CharacterCell.Item
-    ) -> UICollectionViewCell {
-        collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: model)
+        with model: AnyHashable
+    ) -> UICollectionViewCell? {
+        guard let model = model as? CharacterCell.Item else { return nil }
+        return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: model)
+    }
+
+    func applySnapshot(with models: [AnyHashable]) {
+        var snapshot = CharactersDiffableDataSource.Snapshot()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(models, toSection: .main)
+        diffableDataSource.apply(snapshot)
     }
 }

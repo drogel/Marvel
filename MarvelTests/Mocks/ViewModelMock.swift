@@ -1,5 +1,5 @@
 //
-//  PresentationModelMock.swift
+//  ViewModelMock.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 5/2/22.
@@ -9,7 +9,7 @@ import Foundation
 @testable import Marvel_Debug
 import XCTest
 
-class PresentationModelMock: PresentationModel {
+class ViewModelMock: ViewModel {
     private var startCallCount = 0
     private var disposeCallCount = 0
 

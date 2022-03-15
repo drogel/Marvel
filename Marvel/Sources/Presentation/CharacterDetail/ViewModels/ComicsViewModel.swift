@@ -1,45 +1,39 @@
 //
-//  ComicsPresentationModel.swift
+//  ComicsViewModel.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 5/2/22.
 //
 
+import Combine
 import Foundation
 
-protocol ComicsPresentationModelProtocol: PresentationModel {
-    var comicCellModels: [ComicCellModel] { get }
+protocol ComicsViewModelProtocol: ViewModel {
+    var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> { get }
     func willDisplayComicCell(at indexPath: IndexPath)
 }
 
-protocol ComicsPresentationModelViewDelegate: AnyObject {
-    func modelDidStartLoading(_ presentationModel: ComicsPresentationModelProtocol)
-    func modelDidFinishLoading(_ presentationModel: ComicsPresentationModelProtocol)
-    func modelDidRetrieveData(_ presentationModel: ComicsPresentationModelProtocol)
-    func modelDidFailRetrievingData(_ presentationModel: ComicsPresentationModelProtocol)
-}
+class ComicsViewModel: ComicsViewModelProtocol {
+    var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
+        $publishedComicCellModels.eraseToAnyPublisher()
+    }
 
-class ComicsPresentationModel: ComicsPresentationModelProtocol {
-    weak var viewDelegate: ComicsPresentationModelViewDelegate?
-
-    private(set) var comicCellModels: [ComicCellModel]
-
+    @Published private var publishedComicCellModels: [ComicCellModel]
     private let comicsFetcher: FetchComicsUseCase
     private let characterID: Int
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
-    private var cancellable: Cancellable?
+    private var disposable: Disposable?
 
     init(comicsFetcher: FetchComicsUseCase, characterID: Int, imageURLBuilder: ImageURLBuilder, pager: Pager) {
         self.comicsFetcher = comicsFetcher
         self.characterID = characterID
         self.imageURLBuilder = imageURLBuilder
         self.pager = pager
-        comicCellModels = []
+        publishedComicCellModels = []
     }
 
     func start() {
-        viewDelegate?.modelDidStartLoading(self)
         loadComics(with: startingQuery)
     }
 
@@ -49,11 +43,11 @@ class ComicsPresentationModel: ComicsPresentationModelProtocol {
     }
 
     func dispose() {
-        cancellable?.cancel()
+        disposable?.dispose()
     }
 }
 
-private extension ComicsPresentationModel {
+private extension ComicsViewModel {
     var startingQuery: FetchComicsQuery {
         query(atOffset: 0)
     }
@@ -67,29 +61,29 @@ private extension ComicsPresentationModel {
     }
 
     func loadMore() {
-        loadComics(with: query(atOffset: comicCellModels.count))
+        loadComics(with: query(atOffset: publishedComicCellModels.count))
     }
 
     func loadComics(with query: FetchComicsQuery) {
-        cancellable?.cancel()
-        cancellable = comicsFetcher.fetch(query: query, completion: handle)
+        disposable?.dispose()
+        disposable = comicsFetcher.fetch(query: query) { [weak self] result in
+            self?.handle(result)
+        }
     }
 
-    func handle(result: FetchComicsResult) {
-        viewDelegate?.modelDidFinishLoading(self)
+    func handle(_ result: FetchComicsResult) {
         switch result {
         case let .success(contentPage):
             handleSuccess(with: contentPage)
         case .failure:
-            handleFailure()
+            return
         }
     }
 
     func handleSuccess(with contentPage: ContentPage<Comic>) {
         guard let comicsCellData = mapToCells(comics: contentPage.contents) else { return }
         pager.update(currentPage: contentPage)
-        comicCellModels.append(contentsOf: comicsCellData)
-        viewDelegate?.modelDidRetrieveData(self)
+        publishedComicCellModels += comicsCellData
     }
 
     func mapToCells(comics: [Comic]) -> [ComicCellModel]? {
@@ -114,10 +108,6 @@ private extension ComicsPresentationModel {
 
     func buildImageURL(from comic: Comic) -> URL? {
         imageURLBuilder.buildURL(from: comic.image, variant: .portraitLarge)
-    }
-
-    func handleFailure() {
-        viewDelegate?.modelDidFailRetrievingData(self)
     }
 
     func removeIssueNumber(from comicTitle: String) -> String {

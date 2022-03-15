@@ -8,7 +8,7 @@
 import Foundation
 
 protocol DataLoaderDebugService {
-    func loadData<T: DataObject>(completion: @escaping (DataServiceResult<T>) -> Void) -> Cancellable?
+    func loadData<T: DataObject>(completion: @escaping (DataServiceResult<T>) -> Void) -> Disposable?
 }
 
 class JsonDataLoaderDebugService: DataLoaderDebugService {
@@ -22,7 +22,7 @@ class JsonDataLoaderDebugService: DataLoaderDebugService {
 
     func loadData<T: DataObject>(
         completion: @escaping (DataServiceResult<T>) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.retrieveData(completion: completion)

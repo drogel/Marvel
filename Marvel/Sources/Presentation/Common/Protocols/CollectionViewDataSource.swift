@@ -9,5 +9,5 @@ import UIKit
 
 protocol CollectionViewDataSource {
     func setDataSource(of collectionView: UICollectionView)
-    func applySnapshot()
+    func update<T: Hashable>(with items: [T])
 }

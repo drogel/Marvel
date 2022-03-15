@@ -38,13 +38,13 @@ class ComicsLayoutSection: NSCollectionLayoutSection {
         )
         self.init(group: group)
         orthogonalScrollingBehavior = .continuous
-        setFooter()
+        setHeader()
         setContentInsets()
     }
 }
 
 private extension ComicsLayoutSection {
-    func setFooter() {
+    func setHeader() {
         let footerHeaderSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
             heightDimension: Constants.headerHeight

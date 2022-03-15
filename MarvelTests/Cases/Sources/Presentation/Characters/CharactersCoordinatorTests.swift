@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 1/2/22.
 //
 
+import Combine
 @testable import Marvel_Debug
 import XCTest
 
@@ -37,7 +38,7 @@ class CharactersCoordinatorTests: XCTestCase {
     }
 
     func test_whenCharacterSelected_presentsCharacterDetailViewController() {
-        sut.model(CharactersPresentationModelStub(), didSelectCharacterWith: 0)
+        sut.model(CharactersViewModelStub(), didSelectCharacterWith: 0)
         XCTAssertTrue(navigationController.mostRecentPresentedViewController is CharacterDetailViewController)
     }
 }
@@ -52,13 +53,19 @@ private class CharactersDependenciesStub: CharactersDependencies {
     }
 }
 
-private class CharactersPresentationModelStub: CharactersPresentationModelProtocol {
+private class CharactersViewModelStub: CharactersViewModelProtocol {
     var numberOfItems: Int {
         0
     }
 
-    var cellModels: [CharacterCellModel] {
-        []
+    var cellModelsStub = CurrentValueSubject<CharactersViewModelState, Never>(.success([]))
+
+    var loadingStatePublisher: AnyPublisher<LoadingState, Never> {
+        Just(LoadingState.loading).eraseToAnyPublisher()
+    }
+
+    var statePublisher: AnyPublisher<CharactersViewModelState, Never> {
+        cellModelsStub.eraseToAnyPublisher()
     }
 
     func willDisplayCell(at _: IndexPath) {}

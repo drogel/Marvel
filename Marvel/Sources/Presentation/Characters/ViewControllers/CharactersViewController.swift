@@ -5,35 +5,37 @@
 //  Created by Diego Rogel on 18/1/22.
 //
 
+import Combine
 import UIKit
 
 class CharactersViewController: ViewController {
-    typealias PresentationModelProtocol = CharactersPresentationModelProtocol
+    typealias ViewModelProtocol = CharactersViewModelProtocol
 
     private enum Constants {
         static let scrollNearEndThreshold: CGFloat = 300
     }
 
-    private var presentationModel: PresentationModelProtocol!
+    private var viewModel: ViewModelProtocol!
     private var layout: UICollectionViewCompositionalLayout!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
     private var dataSourceFactory: CollectionViewDataSourceFactory!
+    private var cancellables = Set<AnyCancellable>()
 
     static func instantiate(
-        presentationModel: PresentationModelProtocol,
+        viewModel: ViewModelProtocol,
         layout: UICollectionViewCompositionalLayout,
         dataSourceFactory: CollectionViewDataSourceFactory
     ) -> CharactersViewController {
-        let viewController = instantiate(presentationModel: presentationModel)
+        let viewController = instantiate(viewModel: viewModel)
         viewController.layout = layout
         viewController.dataSourceFactory = dataSourceFactory
         return viewController
     }
 
-    static func instantiate(presentationModel: PresentationModelProtocol) -> Self {
+    static func instantiate(viewModel: ViewModelProtocol) -> Self {
         let viewController = Self()
-        viewController.presentationModel = presentationModel
+        viewController.viewModel = viewModel
         return viewController
     }
 
@@ -44,40 +46,22 @@ class CharactersViewController: ViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        presentationModel.start()
+        viewModel.start()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        presentationModel.dispose()
+        viewModel.dispose()
     }
 }
 
 extension CharactersViewController: UICollectionViewDelegate {
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presentationModel.select(at: indexPath)
+        viewModel.select(at: indexPath)
     }
 
     func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        presentationModel.willDisplayCell(at: indexPath)
-    }
-}
-
-extension CharactersViewController: CharactersPresentationModelViewDelegate {
-    func modelDidStartLoading(_: CharactersPresentationModelProtocol) {
-        startLoading()
-    }
-
-    func modelDidFinishLoading(_: CharactersPresentationModelProtocol) {
-        stopLoading()
-    }
-
-    func modelDidUpdateItems(_: CharactersPresentationModelProtocol) {
-        dataSource.applySnapshot()
-    }
-
-    func model(_ presentationModel: CharactersPresentationModelProtocol, didFailWithError message: String) {
-        showErrorAlert(message: message, retryButtonAction: presentationModel.start)
+        viewModel.willDisplayCell(at: indexPath)
     }
 }
 
@@ -85,6 +69,40 @@ private extension CharactersViewController {
     func setUp() {
         setUpNavigationController()
         setUpCollectionView()
+        subscribeToLoadingState()
+        subscribeToViewModelState()
+    }
+
+    func subscribeToLoadingState() {
+        viewModel.loadingStatePublisher
+            .sink(receiveValue: handleLoadingState)
+            .store(in: &cancellables)
+    }
+
+    func subscribeToViewModelState() {
+        viewModel.statePublisher
+            .sink(receiveValue: handleState)
+            .store(in: &cancellables)
+    }
+
+    func handleLoadingState(_ loadingState: LoadingState) {
+        switch loadingState {
+        case .idle:
+            return
+        case .loading:
+            startLoading()
+        case .loaded:
+            stopLoading()
+        }
+    }
+
+    func handleState(_ state: CharactersViewModelState) {
+        switch state {
+        case let .success(models):
+            dataSource.update(with: models)
+        case let .failure(error):
+            showErrorAlert(message: error.localizedDescription, retryButtonAction: viewModel.start)
+        }
     }
 
     func setUpNavigationController() {

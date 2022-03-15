@@ -20,21 +20,21 @@ enum CharacterDetailSection: Int, CaseIterable {
 }
 
 class CharacterDetailDataSourceFactory: CollectionViewDataSourceFactory {
-    private let presentationModel: CharacterDetailPresentationModelProtocol
+    private let viewModel: CharacterDetailViewModelProtocol
 
-    init(presentationModel: CharacterDetailPresentationModelProtocol) {
-        self.presentationModel = presentationModel
+    init(viewModel: CharacterDetailViewModelProtocol) {
+        self.viewModel = viewModel
     }
 
     func create(collectionView: UICollectionView) -> CollectionViewDataSource {
-        CharacterDetailDataSource(collectionView: collectionView, presentationModel: presentationModel)
+        CharacterDetailDataSource(collectionView: collectionView, viewModel: viewModel)
     }
 }
 
 typealias CharacterDetailDiffableDataSource = UICollectionViewDiffableDataSource<CharacterDetailSection, AnyHashable>
 
 class CharacterDetailDataSource: CollectionViewDataSource {
-    private let presentationModel: CharacterDetailPresentationModelProtocol
+    private let viewModel: CharacterDetailViewModelProtocol
     private let collectionView: UICollectionView
 
     private let imageRegistration = CellRegistration<CharacterImageCell>(handler: CharacterDetailDataSource.configure)
@@ -50,8 +50,8 @@ class CharacterDetailDataSource: CollectionViewDataSource {
         return dataSource
     }()
 
-    init(collectionView: UICollectionView, presentationModel: CharacterDetailPresentationModelProtocol) {
-        self.presentationModel = presentationModel
+    init(collectionView: UICollectionView, viewModel: CharacterDetailViewModelProtocol) {
+        self.viewModel = viewModel
         self.collectionView = collectionView
     }
 
@@ -59,13 +59,8 @@ class CharacterDetailDataSource: CollectionViewDataSource {
         collectionView.dataSource = diffableDataSource
     }
 
-    func applySnapshot() {
-        var snapshot = CharacterDetailDiffableDataSource.Snapshot()
-        snapshot.appendSections([.image, .info, .comics])
-        snapshot.appendItems([presentationModel.imageCellData], toSection: .image)
-        snapshot.appendItems([presentationModel.infoCellData], toSection: .info)
-        snapshot.appendItems(presentationModel.comicCellModels, toSection: .comics)
-        diffableDataSource.apply(snapshot)
+    func update<T: Hashable>(with items: [T]) {
+        applySnapshot(with: items)
     }
 }
 
@@ -90,17 +85,42 @@ private extension CharacterDetailDataSource {
         in collectionView: UICollectionView,
         forRowAt indexPath: IndexPath,
         with model: AnyHashable
-    ) -> UICollectionViewCell {
-        switch model {
-        case let model as CharacterImageCell.Item:
-            return collectionView.dequeueConfiguredReusableCell(using: imageRegistration, for: indexPath, item: model)
-        case let model as CharacterInfoCell.Item:
-            return collectionView.dequeueConfiguredReusableCell(using: infoRegistration, for: indexPath, item: model)
-        case let model as ComicCell.Item:
-            return collectionView.dequeueConfiguredReusableCell(using: comicRegistration, for: indexPath, item: model)
-        default:
-            fatalError()
+    ) -> UICollectionViewCell? {
+        switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
+        case .image:
+            return imageCell(in: collectionView, forRowAt: indexPath, with: model)
+        case .info:
+            return infoCell(in: collectionView, forRowAt: indexPath, with: model)
+        case .comics:
+            return comicCell(in: collectionView, forRowAt: indexPath, with: model)
         }
+    }
+
+    func imageCell(
+        in collectionView: UICollectionView,
+        forRowAt indexPath: IndexPath,
+        with model: AnyHashable
+    ) -> UICollectionViewCell? {
+        guard let image = model as? CharacterImageCell.Item else { return nil }
+        return collectionView.dequeueConfiguredReusableCell(using: imageRegistration, for: indexPath, item: image)
+    }
+
+    func infoCell(
+        in collectionView: UICollectionView,
+        forRowAt indexPath: IndexPath,
+        with model: AnyHashable
+    ) -> UICollectionViewCell? {
+        guard let info = model as? CharacterInfoCell.Item else { return nil }
+        return collectionView.dequeueConfiguredReusableCell(using: infoRegistration, for: indexPath, item: info)
+    }
+
+    func comicCell(
+        in collectionView: UICollectionView,
+        forRowAt indexPath: IndexPath,
+        with model: AnyHashable
+    ) -> UICollectionViewCell? {
+        guard let comic = model as? ComicCell.Item else { return nil }
+        return collectionView.dequeueConfiguredReusableCell(using: comicRegistration, for: indexPath, item: comic)
     }
 
     func provideSupplementaryView(
@@ -114,5 +134,27 @@ private extension CharacterDetailDataSource {
         default:
             return UICollectionReusableView()
         }
+    }
+
+    func applySnapshot(with items: [AnyHashable]) {
+        guard let snapshot = createSnapshot(with: items) else { return }
+        diffableDataSource.apply(snapshot)
+    }
+
+    func createSnapshot(with items: [AnyHashable]) -> CharacterDetailDiffableDataSource.Snapshot? {
+        guard let details = items as? [CharacterDetailModel] else { return nil }
+        return createDetailSnapshot(with: details)
+    }
+
+    func createDetailSnapshot(with items: [CharacterDetailModel]) -> CharacterDetailDiffableDataSource.Snapshot {
+        var snapshot = CharacterDetailDiffableDataSource.Snapshot()
+        let images = items.compactMap(\.info?.image)
+        let descriptions = items.compactMap(\.info?.description)
+        let comics = items.flatMap(\.comics)
+        snapshot.appendSections([.image, .info, .comics])
+        snapshot.appendItems(images, toSection: .image)
+        snapshot.appendItems(descriptions, toSection: .info)
+        snapshot.appendItems(comics, toSection: .comics)
+        return snapshot
     }
 }

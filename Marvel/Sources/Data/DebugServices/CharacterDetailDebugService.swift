@@ -17,7 +17,7 @@ class CharacterDetailDebugService: CharacterDetailService {
         self.dataResultHandler = dataResultHandler
     }
 
-    func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
+    func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable? {
         dataLoader.loadData { [weak self] result in
             self?.dataResultHandler.completeWithServiceResult(result, completion: completion)
         }

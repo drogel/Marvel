@@ -41,7 +41,7 @@ class CharactersDebugServiceTests: XCTestCase {
         assertIsSuccess(completionResult)
     }
 
-    func test_givenDidAlreadyLoad_whenRetrievingCharacters_cancellableIsNil() {
+    func test_givenDidAlreadyLoad_whenRetrievingCharacters_disposableIsNil() {
         givenDidAlreadyLoad()
         XCTAssertNil(sut.characters(from: 0, completion: { _ in }))
     }

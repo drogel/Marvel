@@ -1,55 +1,78 @@
 //
-//  CharactersPresentationModel.swift
+//  CharactersViewModel.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 18/1/22.
 //
 
+import Combine
 import Foundation
 
-protocol CharactersPresentationModelProtocol: PresentationModel {
-    var cellModels: [CharacterCellModel] { get }
+typealias CharactersViewModelState = Result<[CharacterCellModel], CharactersViewModelError>
+
+protocol CharactersViewModelProtocol: ViewModel {
+    var statePublisher: AnyPublisher<CharactersViewModelState, Never> { get }
+    var loadingStatePublisher: AnyPublisher<LoadingState, Never> { get }
     func willDisplayCell(at indexPath: IndexPath)
     func select(at indexPath: IndexPath)
 }
 
-protocol CharactersPresentationModelCoordinatorDelegate: AnyObject {
-    func model(_ presentationModel: CharactersPresentationModelProtocol, didSelectCharacterWith characterID: Int)
+protocol CharactersViewModelCoordinatorDelegate: AnyObject {
+    func model(_ viewModel: CharactersViewModelProtocol, didSelectCharacterWith characterID: Int)
 }
 
-protocol CharactersPresentationModelViewDelegate: AnyObject {
-    func modelDidStartLoading(_ presentationModel: CharactersPresentationModelProtocol)
-    func modelDidFinishLoading(_ presentationModel: CharactersPresentationModelProtocol)
-    func modelDidUpdateItems(_ presentationModel: CharactersPresentationModelProtocol)
-    func model(_ presentationModel: CharactersPresentationModelProtocol, didFailWithError message: String)
+enum CharactersViewModelError: LocalizedError {
+    case noCharacters
+    case noAuthorization
+    case noConnection
+
+    var errorDescription: String? {
+        switch self {
+        case .noCharacters:
+            return "server_not_responding".localized
+        case .noAuthorization:
+            return "api_keys_not_found".localized
+        case .noConnection:
+            return "no_internet".localized
+        }
+    }
 }
 
-class CharactersPresentationModel: CharactersPresentationModelProtocol {
-    private enum Messages {
-        static let noCharacters = "server_not_responding".localized
-        static let noAPIKeys = "api_keys_not_found".localized
-        static let noConnection = "no_internet".localized
+class CharactersViewModel: CharactersViewModelProtocol {
+    weak var coordinatorDelegate: CharactersViewModelCoordinatorDelegate?
+
+    var statePublisher: AnyPublisher<CharactersViewModelState, Never> {
+        $publishedState.eraseToAnyPublisher()
     }
 
-    weak var coordinatorDelegate: CharactersPresentationModelCoordinatorDelegate?
-    weak var viewDelegate: CharactersPresentationModelViewDelegate?
+    var loadingStatePublisher: AnyPublisher<LoadingState, Never> {
+        $loadingState.eraseToAnyPublisher()
+    }
 
-    private(set) var cellModels: [CharacterCellModel]
+    private var cellModels: [CharacterCellModel] {
+        didSet {
+            publishedState = .success(cellModels)
+        }
+    }
 
+    @Published private var loadingState: LoadingState
+    @Published private var publishedState: CharactersViewModelState
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
-    private var charactersCancellable: Cancellable?
+    private var charactersDisposable: Disposable?
 
     init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder, pager: Pager) {
         self.charactersFetcher = charactersFetcher
         self.imageURLBuilder = imageURLBuilder
         self.pager = pager
         cellModels = []
+        publishedState = .success(cellModels)
+        loadingState = .idle
     }
 
     func start() {
-        viewDelegate?.modelDidStartLoading(self)
+        loadingState = .loading
         loadCharacters(with: startingQuery)
     }
 
@@ -64,11 +87,11 @@ class CharactersPresentationModel: CharactersPresentationModelProtocol {
     }
 
     func dispose() {
-        charactersCancellable?.cancel()
+        charactersDisposable?.dispose()
     }
 }
 
-private extension CharactersPresentationModel {
+private extension CharactersViewModel {
     var startingQuery: FetchCharactersQuery {
         FetchCharactersQuery(offset: 0)
     }
@@ -90,14 +113,14 @@ private extension CharactersPresentationModel {
     }
 
     func loadCharacters(with query: FetchCharactersQuery) {
-        charactersCancellable?.cancel()
-        charactersCancellable = charactersFetcher.fetch(query: query) { [weak self] result in
+        charactersDisposable?.dispose()
+        charactersDisposable = charactersFetcher.fetch(query: query) { [weak self] result in
             self?.handleFetchCharactersResult(result)
         }
     }
 
     func handleFetchCharactersResult(_ result: FetchCharactersResult) {
-        viewDelegate?.modelDidFinishLoading(self)
+        loadingState = .loaded
         switch result {
         case let .success(contentPage):
             handleSuccess(with: contentPage)
@@ -114,29 +137,28 @@ private extension CharactersPresentationModel {
     }
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {
-        let message = message(for: error)
-        viewDelegate?.model(self, didFailWithError: message)
+        let viewModelError = viewModelError(for: error)
+        publishedState = .failure(viewModelError)
     }
 
-    func message(for error: FetchCharacterDetailUseCaseError) -> String {
+    func viewModelError(for error: FetchCharacterDetailUseCaseError) -> CharactersViewModelError {
         switch error {
         case .noConnection:
-            return Messages.noConnection
+            return .noConnection
         case .emptyData:
-            return Messages.noCharacters
+            return .noCharacters
         case .unauthorized:
-            return Messages.noAPIKeys
+            return .noAuthorization
         }
     }
 
     func mapToCells(characters: [Character]) -> [CharacterCellModel] {
         characters.map { character in
-            let imageURL = buildImageURL(from: character)
-            return CharacterCellModel(
+            CharacterCellModel(
                 identifier: character.identifier,
                 name: character.name,
                 description: character.description,
-                imageURL: imageURL
+                imageURL: buildImageURL(from: character)
             )
         }
     }
@@ -146,7 +168,6 @@ private extension CharactersPresentationModel {
     }
 
     func updateCells(using newCells: [CharacterCellModel]) {
-        cellModels.append(contentsOf: newCells)
-        viewDelegate?.modelDidUpdateItems(self)
+        cellModels += newCells
     }
 }

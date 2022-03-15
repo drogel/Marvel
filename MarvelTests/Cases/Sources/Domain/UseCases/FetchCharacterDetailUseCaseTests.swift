@@ -27,9 +27,9 @@ class FetchCharacterDetailUseCaseTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_whenFetching_returnsServiceCancellable() throws {
-        let cancellable = try whenRetrievingCancellableFromFetchCharacter()
-        XCTAssertTrue(CharacterDetailServiceMock.cancellableStub === cancellable)
+    func test_whenFetching_returnsServiceDisposable() throws {
+        let disposable = try whenRetrievingDisposibleFromFetchCharacter()
+        XCTAssertTrue(CharacterDetailServiceMock.disposableStub === disposable)
     }
 
     func test_whenFetching_callsServiceFetch() throws {
@@ -53,19 +53,19 @@ class FetchCharacterDetailUseCaseTests: XCTestCase {
 }
 
 private class CharacterDetailServiceMock: CharacterDetailService {
-    static let cancellableStub = CancellableStub()
+    static let disposableStub = DisposableStub()
     var characterCallCount = 0
 
-    func character(with _: Int, completion _: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
+    func character(with _: Int, completion _: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable? {
         characterCallCount += 1
-        return Self.cancellableStub
+        return Self.disposableStub
     }
 }
 
 private class CharacterDetailServiceFailureStub: CharacterDetailService {
-    func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
+    func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable? {
         completion(.failure(.emptyData))
-        return CancellableStub()
+        return DisposableStub()
     }
 }
 
@@ -76,24 +76,24 @@ private class CharacterDetailServiceSuccessStub: CharacterDetailService {
         self.pageStub = pageStub
     }
 
-    func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Cancellable? {
+    func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable? {
         completion(.success(pageStub))
-        return CancellableStub()
+        return DisposableStub()
     }
 }
 
 private extension FetchCharacterDetailUseCaseTests {
-    func whenRetrievingCancellableFromFetchCharacter(
+    func whenRetrievingDisposibleFromFetchCharacter(
         completion: ((FetchCharacterDetailResult) -> Void)? = nil
-    ) throws -> CancellableStub {
-        let cancellable = sut.fetch(query: query) { result in
+    ) throws -> DisposableStub {
+        let disposable = sut.fetch(query: query) { result in
             completion?(result)
         }
-        return try XCTUnwrap(cancellable as? CancellableStub)
+        return try XCTUnwrap(disposable as? DisposableStub)
     }
 
     func whenFetchingCharacter(completion: ((FetchCharacterDetailResult) -> Void)? = nil) {
-        _ = try? whenRetrievingCancellableFromFetchCharacter(completion: completion)
+        _ = try? whenRetrievingDisposibleFromFetchCharacter(completion: completion)
     }
 
     func givenSutWithFailureServiceStub() {

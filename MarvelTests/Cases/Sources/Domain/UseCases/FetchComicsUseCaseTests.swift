@@ -27,9 +27,9 @@ class FetchComicsUseCaseTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_whenFetching_returnsServiceCancellable() throws {
-        let cancellable = try whenRetrievingCancellableFromFetchCharacter()
-        XCTAssertTrue(ComicsServiceMock.cancellableStub === cancellable)
+    func test_whenFetching_returnsServiceDisposable() throws {
+        let disposable = try whenRetrievingDisposableFromFetchCharacter()
+        XCTAssertTrue(ComicsServiceMock.disposableStub === disposable)
     }
 
     func test_whenFetching_callsServiceFetch() throws {
@@ -53,16 +53,16 @@ class FetchComicsUseCaseTests: XCTestCase {
 }
 
 private class ComicsServiceMock: ComicsService {
-    static let cancellableStub = CancellableStub()
+    static let disposableStub = DisposableStub()
     var comicsCallCount = 0
 
     func comics(
         for _: Int,
         from _: Int,
         completion _: @escaping (ComicsServiceResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         comicsCallCount += 1
-        return Self.cancellableStub
+        return Self.disposableStub
     }
 }
 
@@ -71,9 +71,9 @@ private class ComicsServiceFailureStub: ComicsService {
         for _: Int,
         from _: Int,
         completion: @escaping (ComicsServiceResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         completion(.failure(.emptyData))
-        return CancellableStub()
+        return DisposableStub()
     }
 }
 
@@ -84,24 +84,24 @@ private class ComicsServiceSuccessStub: ComicsService {
         self.pageStub = pageStub
     }
 
-    func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Cancellable? {
+    func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Disposable? {
         completion(.success(pageStub))
-        return CancellableStub()
+        return DisposableStub()
     }
 }
 
 private extension FetchComicsUseCaseTests {
-    func whenRetrievingCancellableFromFetchCharacter(
+    func whenRetrievingDisposableFromFetchCharacter(
         completion: ((FetchComicsResult) -> Void)? = nil
-    ) throws -> CancellableStub {
-        let cancellable = sut.fetch(query: query) { result in
+    ) throws -> DisposableStub {
+        let disposable = sut.fetch(query: query) { result in
             completion?(result)
         }
-        return try XCTUnwrap(cancellable as? CancellableStub)
+        return try XCTUnwrap(disposable as? DisposableStub)
     }
 
     func whenFetchingCharacter(completion: ((FetchComicsResult) -> Void)? = nil) {
-        _ = try? whenRetrievingCancellableFromFetchCharacter(completion: completion)
+        _ = try? whenRetrievingDisposableFromFetchCharacter(completion: completion)
     }
 
     func givenSutWithFailureServiceStub() {

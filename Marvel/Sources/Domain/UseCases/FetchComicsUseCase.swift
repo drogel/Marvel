@@ -11,7 +11,7 @@ protocol FetchComicsUseCase {
     func fetch(
         query: FetchComicsQuery,
         completion: @escaping (FetchComicsResult) -> Void
-    ) -> Cancellable?
+    ) -> Disposable?
 }
 
 struct FetchComicsQuery: Equatable {
@@ -33,7 +33,7 @@ class FetchComicsServiceUseCase: FetchComicsUseCase {
     func fetch(
         query: FetchComicsQuery,
         completion: @escaping (FetchComicsResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         service.comics(for: query.characterID, from: query.offset, completion: completion)
     }
 }

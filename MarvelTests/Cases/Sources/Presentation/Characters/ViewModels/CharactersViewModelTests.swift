@@ -1,49 +1,50 @@
 //
-//  CharactersPresentationModelTests.swift
+//  CharactersViewModelTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 19/1/22.
 //
 
+import Combine
 @testable import Marvel_Debug
 import XCTest
 
-class CharactersPresentationModelTests: XCTestCase {
-    private var sut: CharactersPresentationModel!
+class CharactersViewModelTests: XCTestCase {
+    private var sut: CharactersViewModel!
     private var coordinatorDelegateMock: CharactersCoordinatorDelegateMock!
     private var charactersFetcherMock: CharactersFetcherMock!
-    private var viewDelegateMock: CharactersPresentationModelDelegateMock!
     private var offsetPagerMock: OffsetPagerPartialMock!
     private var methodCallRecorder: ViewDelegatePagerCallRecorder!
     private var imageURLBuilderMock: ImageURLBuilderMock!
+    private var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
-        viewDelegateMock = CharactersPresentationModelDelegateMock()
         coordinatorDelegateMock = CharactersCoordinatorDelegateMock()
         charactersFetcherMock = CharactersFetcherMock()
         offsetPagerMock = OffsetPagerPartialMock()
         imageURLBuilderMock = ImageURLBuilderMock()
+        cancellables = Set<AnyCancellable>()
         givenSut()
     }
 
     override func tearDown() {
-        viewDelegateMock = nil
         charactersFetcherMock = nil
         coordinatorDelegateMock = nil
         offsetPagerMock = nil
         imageURLBuilderMock = nil
         methodCallRecorder = nil
+        cancellables = nil
         sut = nil
         super.tearDown()
     }
 
-    func test_conformsToPresentationModel() {
-        XCTAssertTrue((sut as AnyObject) is PresentationModel)
+    func test_conformsToViewModel() {
+        XCTAssertTrue((sut as AnyObject) is ViewModel)
     }
 
-    func test_conformsToCharactersPresentationModel() {
-        XCTAssertTrue((sut as AnyObject) is CharactersPresentationModelProtocol)
+    func test_conformsToCharactersViewModel() {
+        XCTAssertTrue((sut as AnyObject) is CharactersViewModelProtocol)
     }
 
     func test_givenDidStartSuccessfullyAndACoordinatorDelegate_whenSelecting_notifiesDelegate() {
@@ -58,43 +59,55 @@ class CharactersPresentationModelTests: XCTestCase {
         XCTAssertEqual(charactersFetcherMock.fetchCallCount, 1)
     }
 
-    func test_givenSuccessfulCharactersFetcher_whenStartingCompletes_numberOfItemsIsNotZero() {
+    func test_whenInitialized_notifiesIdle() {
+        let receivedIdleExpectation = expectation(description: "Receives idle state")
+        sut.loadingStatePublisher
+            .assertOutput(matches: .idle, expectation: receivedIdleExpectation)
+            .store(in: &cancellables)
+        wait(for: [receivedIdleExpectation], timeout: 0.1)
+    }
+
+    func test_whenStarting_notifiesLoading() {
+        let receivedLoadingExpectation = expectation(description: "Receives loading state")
+        sut.loadingStatePublisher
+            .dropFirst()
+            .assertOutput(matches: .loading, expectation: receivedLoadingExpectation)
+            .store(in: &cancellables)
+        sut.start()
+        wait(for: [receivedLoadingExpectation], timeout: 0.1)
+    }
+
+    func test_whenStartingCompletesSuccessfully_notifiesFinishedLoading() {
         givenSutWithSuccessfulFetcher()
-        assert(numberOfItems: 0)
+        let receivedLoadedExpectation = expectation(description: "Receives loaded state")
+        sut.loadingStatePublisher
+            .dropFirst(2)
+            .assertOutput(matches: .loaded, expectation: receivedLoadedExpectation)
+            .store(in: &cancellables)
         sut.start()
-        let expectedNumberOfItems = CharactersFetcherSuccessfulStub.charactersStub.count
-        assert(numberOfItems: expectedNumberOfItems)
+        wait(for: [receivedLoadedExpectation], timeout: 0.1)
     }
 
-    func test_givenViewDelegate_whenStarting_notifiesLoadingToViewDelegate() {
-        givenViewDelegate()
-        sut.start()
-        XCTAssertEqual(viewDelegateMock.didStartLoadingCallCount, 1)
+    func test_givenDidNotFetchYet_whenRetrievingCellData_publishesEmptyArray() {
+        let receivedValueExpectation = expectation(description: "Publishes empty models")
+        let expectedEmptyState: CharactersViewModelState = .success([])
+        sut.statePublisher
+            .assertOutput(matches: expectedEmptyState, expectation: receivedValueExpectation)
+            .store(in: &cancellables)
+        wait(for: [receivedValueExpectation], timeout: 0.1)
     }
 
-    func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesViewDelegate() {
+    func test_givenSutWithSuccessfulFetcher_whenStarting_publishesSingleDataAfterDroppingInitial() throws {
         givenSutWithSuccessfulFetcher()
-        givenViewDelegate()
+        let receivedValueExpectation = expectation(description: "Publishes single value")
+        let expectedModels = buildExpectedCellModels(from: CharactersFetcherSuccessfulStub.charactersStub)
+        let expectedState: CharactersViewModelState = .success(expectedModels)
+        sut.statePublisher
+            .dropFirst()
+            .assertOutput(matches: expectedState, expectation: receivedValueExpectation)
+            .store(in: &cancellables)
         sut.start()
-        XCTAssertEqual(viewDelegateMock.didUpdateCallCount, 1)
-    }
-
-    func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesFinishLoadToViewDelegate() {
-        givenSutWithSuccessfulFetcher()
-        givenViewDelegate()
-        sut.start()
-        XCTAssertEqual(viewDelegateMock.didFinishLoadingCallCount, 1)
-    }
-
-    func test_whenRetrievingCellData_returnsNilIfDidNotFetchYet() {
-        XCTAssertTrue(sut.cellModels.isEmpty)
-    }
-
-    func test_givenDidStartSuccessfully_whenRetrievingCellDataAtValidIndex_returnsData() throws {
-        givenDidStartSuccessfully()
-        let actual = try XCTUnwrap(sut.cellModels.first)
-        XCTAssertEqual(actual.name, "Aginar")
-        XCTAssertEqual(actual.description, "")
+        wait(for: [receivedValueExpectation], timeout: 0.1)
     }
 
     func test_whenWillDisplayCellFromIndexZero_doesNotFetch() {
@@ -127,14 +140,7 @@ class CharactersPresentationModelTests: XCTestCase {
         assertCancelledRequests()
     }
 
-    func test_givenStartFailed_notifiesViewDelegate() {
-        givenSutWithFailingFetcher()
-        givenViewDelegate()
-        sut.start()
-        XCTAssertEqual(viewDelegateMock.didFailCallCount, 1)
-    }
-
-    func test_givenViewDelegate_whenStartingFinishes_updatesPage() {
+    func test_whenStartingFinishes_updatesPage() {
         givenSutWithSuccessfulFetcher()
         assertPagerUpdate(callCount: 0)
         sut.start()
@@ -151,8 +157,6 @@ class CharactersPresentationModelTests: XCTestCase {
     func test_givenDidStartSuccessfully_whenAboutToDisplayACell_updateNotificationsAreCalledInOrder() {
         let expectedCalls: [ViewDelegatePagerCallRecorder.Method] = [
             .isAtEndOfCurrentPageWithMoreContent,
-            .modelDidFinishLoading,
-            .modelDidUpdateItems,
             .update,
         ]
         givenSuccessfulCharactersFetcher()
@@ -167,16 +171,9 @@ class CharactersPresentationModelTests: XCTestCase {
         let actualUsedVariant = try XCTUnwrap(imageURLBuilderMock.mostRecentImageVariant)
         XCTAssertEqual(actualUsedVariant, expectedImageVariant)
     }
-
-    func test_givenDidStartSuccessfully_whenRetrievingCharacters_returnsExpectedCellModels() throws {
-        givenDidStartSuccessfully()
-        let expectedCellModels = buildExpectedCellModels(from: CharactersFetcherSuccessfulStub.charactersStub)
-        let actualCellModels = sut.cellModels
-        XCTAssertEqual(expectedCellModels, actualCellModels)
-    }
 }
 
-private extension CharactersPresentationModelTests {
+private extension CharactersViewModelTests {
     func givenSutWithSuccessfulFetcher() {
         givenSuccessfulCharactersFetcher()
         givenSut()
@@ -201,7 +198,7 @@ private extension CharactersPresentationModelTests {
     }
 
     func givenSut(pager: Pager) {
-        sut = CharactersPresentationModel(
+        sut = CharactersViewModel(
             charactersFetcher: charactersFetcherMock,
             imageURLBuilder: imageURLBuilderMock,
             pager: pager
@@ -211,11 +208,6 @@ private extension CharactersPresentationModelTests {
     func givenSutWithCallRecorder() {
         methodCallRecorder = ViewDelegatePagerCallRecorder()
         givenSut(pager: methodCallRecorder)
-        sut.viewDelegate = methodCallRecorder
-    }
-
-    func givenViewDelegate() {
-        sut.viewDelegate = viewDelegateMock
     }
 
     func givenCoordinatorDelegate() {
@@ -238,8 +230,8 @@ private extension CharactersPresentationModelTests {
         return mostRecentQuery
     }
 
-    func retrieveFetcherMockCancellableMock() -> CancellableMock {
-        try! XCTUnwrap(charactersFetcherMock.cancellable)
+    func retrieveFetcherMockDisposableMock() -> DisposableMock {
+        try! XCTUnwrap(charactersFetcherMock.disposable)
     }
 
     func whenWillDisplayCellIgnoringQuery(atIndex index: Int) {
@@ -247,8 +239,8 @@ private extension CharactersPresentationModelTests {
     }
 
     func assertCancelledRequests(line: UInt = #line) {
-        let cancellableMock = retrieveFetcherMockCancellableMock()
-        XCTAssertEqual(cancellableMock.didCancelCallCount, 1, line: line)
+        let disposableMock = retrieveFetcherMockDisposableMock()
+        XCTAssertEqual(disposableMock.didDisposeCallCount, 1, line: line)
     }
 
     func assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: Int, line: UInt = #line) {
@@ -257,10 +249,6 @@ private extension CharactersPresentationModelTests {
 
     func assertPagerUpdate(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(offsetPagerMock.updateCallCount, callCount, line: line)
-    }
-
-    func assert(numberOfItems: Int, line: UInt = #line) {
-        XCTAssertEqual(sut.cellModels.count, numberOfItems, line: line)
     }
 
     func buildExpectedCellModels(from characters: [Character]) -> [CharacterCellModel] {
@@ -276,10 +264,10 @@ private extension CharactersPresentationModelTests {
     }
 }
 
-private class CharactersCoordinatorDelegateMock: CharactersPresentationModelCoordinatorDelegate {
+private class CharactersCoordinatorDelegateMock: CharactersViewModelCoordinatorDelegate {
     var didSelectCallCount = 0
 
-    func model(_: CharactersPresentationModelProtocol, didSelectCharacterWith _: Int) {
+    func model(_: CharactersViewModelProtocol, didSelectCharacterWith _: Int) {
         didSelectCallCount += 1
     }
 }
@@ -288,13 +276,13 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
     var fetchCallCount = 0
     var mostRecentQuery: FetchCharactersQuery?
 
-    var cancellable: CancellableMock?
+    var disposable: DisposableMock?
 
-    func fetch(query: FetchCharactersQuery, completion _: @escaping (FetchCharactersResult) -> Void) -> Cancellable? {
+    func fetch(query: FetchCharactersQuery, completion _: @escaping (FetchCharactersResult) -> Void) -> Disposable? {
         fetchCallCount += 1
         mostRecentQuery = query
-        cancellable = CancellableMock()
-        return cancellable
+        disposable = DisposableMock()
+        return disposable
     }
 }
 
@@ -305,7 +293,7 @@ private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
     override func fetch(
         query: FetchCharactersQuery,
         completion: @escaping (FetchCharactersResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(Self.contentPageStub))
         return result
@@ -316,7 +304,7 @@ private class CharactersFetcherSuccessfulEmptyStub: CharactersFetcherMock {
     override func fetch(
         query: FetchCharactersQuery,
         completion: @escaping (FetchCharactersResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(ContentPage<Character>.empty))
         return result
@@ -327,41 +315,16 @@ private class CharactersFetcherFailingStub: CharactersFetcherMock {
     override func fetch(
         query: FetchCharactersQuery,
         completion: @escaping (FetchCharactersResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         let result = super.fetch(query: query, completion: completion)
         completion(.failure(.unauthorized))
         return result
     }
 }
 
-private class CharactersPresentationModelDelegateMock: CharactersPresentationModelViewDelegate {
-    var didUpdateCallCount = 0
-    var didStartLoadingCallCount = 0
-    var didFinishLoadingCallCount = 0
-    var didFailCallCount = 0
-
-    func modelDidUpdateItems(_: CharactersPresentationModelProtocol) {
-        didUpdateCallCount += 1
-    }
-
-    func modelDidStartLoading(_: CharactersPresentationModelProtocol) {
-        didStartLoadingCallCount += 1
-    }
-
-    func modelDidFinishLoading(_: CharactersPresentationModelProtocol) {
-        didFinishLoadingCallCount += 1
-    }
-
-    func model(_: CharactersPresentationModelProtocol, didFailWithError _: String) {
-        didFailCallCount += 1
-    }
-}
-
-private class ViewDelegatePagerCallRecorder: CharactersPresentationModelViewDelegate, Pager {
+private class ViewDelegatePagerCallRecorder: Pager {
     enum Method: String, CustomDebugStringConvertible {
         case isAtEndOfCurrentPageWithMoreContent
-        case modelDidFinishLoading
-        case modelDidUpdateItems
         case update
 
         var debugDescription: String {
@@ -371,17 +334,7 @@ private class ViewDelegatePagerCallRecorder: CharactersPresentationModelViewDele
 
     var methodsCalled: [Method] = []
 
-    func modelDidStartLoading(_: CharactersPresentationModelProtocol) {}
-
-    func modelDidFinishLoading(_: CharactersPresentationModelProtocol) {
-        methodsCalled.append(.modelDidFinishLoading)
-    }
-
-    func modelDidUpdateItems(_: CharactersPresentationModelProtocol) {
-        methodsCalled.append(.modelDidUpdateItems)
-    }
-
-    func model(_: CharactersPresentationModelProtocol, didFailWithError _: String) {}
+    func modelDidStartLoading(_: CharactersViewModelProtocol) {}
 
     func isThereMoreContent(at _: Int) -> Bool {
         true
