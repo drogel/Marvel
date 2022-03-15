@@ -62,7 +62,6 @@ private extension CharacterDetailCoordinator {
             dataSourceFactory: CharacterDetailDataSourceFactory(presentationModel: presentationModel)
         )
         viewController.transitioningDelegate = self
-        presentationModel.viewDelegate = viewController
         return viewController
     }
 }

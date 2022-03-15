@@ -63,22 +63,6 @@ extension CharacterDetailViewController: UICollectionViewDelegate {
     }
 }
 
-extension CharacterDetailViewController: CharacterDetailPresentationModelViewDelegate {
-    func modelDidStartLoading(_: CharacterDetailPresentationModelProtocol) {
-        startLoading()
-    }
-
-    func modelDidFinishLoading(_: CharacterDetailPresentationModelProtocol) {
-        stopLoading()
-    }
-
-    func modelDidRetrieveCharacterInfo(_: CharacterDetailPresentationModelProtocol) {}
-
-    func modelDidRetrieveComics(_: CharacterDetailPresentationModelProtocol) {}
-
-    func model(_: CharacterDetailPresentationModelProtocol, didFailWithError _: String) {}
-}
-
 private extension CharacterDetailViewController {
     func setUp() {
         setUpCollectionView()

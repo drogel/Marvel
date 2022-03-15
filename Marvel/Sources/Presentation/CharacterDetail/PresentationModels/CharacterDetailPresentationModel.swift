@@ -14,22 +14,11 @@ protocol CharacterDetailPresentationModelProtocol: PresentationModel {
     func willDisplayComicCell(at indexPath: IndexPath)
 }
 
-// TODO: Remove all these delegates
-protocol CharacterDetailPresentationModelViewDelegate: AnyObject {
-    func modelDidStartLoading(_ presentationModel: CharacterDetailPresentationModelProtocol)
-    func modelDidFinishLoading(_ presentationModel: CharacterDetailPresentationModelProtocol)
-    func modelDidRetrieveCharacterInfo(_ presentationModel: CharacterDetailPresentationModelProtocol)
-    func modelDidRetrieveComics(_ presentationModel: CharacterDetailPresentationModelProtocol)
-    func model(_ presentationModel: CharacterDetailPresentationModelProtocol, didFailWithError message: String)
-}
-
 typealias CharacterDetailViewModelError = CharacterInfoViewModelError
 
 typealias CharacterDetailViewModelState = Result<CharacterDetailModel, CharacterInfoViewModelError>
 
 class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol {
-    weak var viewDelegate: CharacterDetailPresentationModelViewDelegate?
-
     var detailStatePublisher: AnyPublisher<CharacterDetailViewModelState, Never> {
         infoViewModel.infoStatePublisher
             .combineLatest(comicsViewModel.comicCellModelsPublisher)

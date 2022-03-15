@@ -13,7 +13,6 @@ class CharacterDetailPresentationModelTests: XCTestCase {
     private var sut: CharacterDetailPresentationModel!
     private var infoViewModelMock: CharacterDetailInfoViewModelMock!
     private var comicsViewModelMock: ComicsViewModelMock!
-    private var viewDelegateMock: CharacterDetailViewDelegateMock!
     private var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
@@ -21,7 +20,6 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         cancellables = Set<AnyCancellable>()
         infoViewModelMock = CharacterDetailInfoViewModelMock()
         comicsViewModelMock = ComicsViewModelMock()
-        viewDelegateMock = CharacterDetailViewDelegateMock()
         sut = CharacterDetailPresentationModel(
             infoViewModel: infoViewModelMock,
             comicsViewModel: comicsViewModelMock
@@ -32,7 +30,6 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         sut = nil
         cancellables = nil
         comicsViewModelMock = nil
-        viewDelegateMock = nil
         infoViewModelMock = nil
         super.tearDown()
     }
@@ -89,40 +86,7 @@ class CharacterDetailPresentationModelTests: XCTestCase {
     }
 }
 
-private class CharacterDetailViewDelegateMock: CharacterDetailPresentationModelViewDelegate {
-    var didStartLoadingCallCount = 0
-    var didFinishLoadingCallCount = 0
-    var didRetrieveCharacterInfoCallCount = 0
-    var didRetrieveComicsCallCount = 0
-    var didFailCallCount = 0
-
-    func modelDidStartLoading(_: CharacterDetailPresentationModelProtocol) {
-        didStartLoadingCallCount += 1
-    }
-
-    func modelDidFinishLoading(_: CharacterDetailPresentationModelProtocol) {
-        didFinishLoadingCallCount += 1
-    }
-
-    func modelDidRetrieveCharacterInfo(_: CharacterDetailPresentationModelProtocol) {
-        didRetrieveCharacterInfoCallCount += 1
-    }
-
-    func modelDidRetrieveComics(_: CharacterDetailPresentationModelProtocol) {
-        didRetrieveComicsCallCount += 1
-    }
-
-    func model(_: CharacterDetailPresentationModelProtocol, didFailWithError _: String) {
-        didFailCallCount += 1
-    }
-}
-
 private extension CharacterDetailPresentationModelTests {
-    func givenViewDelegate() {
-        viewDelegateMock = CharacterDetailViewDelegateMock()
-        sut.viewDelegate = viewDelegateMock
-    }
-
     func whenAboutToDisplayAComicCell() {
         sut.willDisplayComicCell(at: IndexPath(row: 0, section: 0))
     }
@@ -153,25 +117,5 @@ private extension CharacterDetailPresentationModelTests {
 
     func assertComicsViewModelWillDisplayCell(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(comicsViewModelMock.willDisplayComicCellCallCount, callCount, line: line)
-    }
-
-    func assertViewDelegateDidStartLoading(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewDelegateMock.didStartLoadingCallCount, callCount, line: line)
-    }
-
-    func assertViewDelegateDidFinishLoading(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewDelegateMock.didFinishLoadingCallCount, callCount, line: line)
-    }
-
-    func assertViewDelegateDidRetrieveCharacterInfo(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewDelegateMock.didRetrieveCharacterInfoCallCount, callCount, line: line)
-    }
-
-    func assertViewDelegateDidRetrieveComics(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewDelegateMock.didRetrieveComicsCallCount, callCount, line: line)
-    }
-
-    func assertViewDelegateDidFail(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewDelegateMock.didFailCallCount, callCount, line: line)
     }
 }
