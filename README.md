@@ -25,7 +25,7 @@ This project has been built using UIKit and no third party dependencies.
 
 ### Architecture
 
-This app has been developed using an MVP+C architectural pattern, which is a combination of the Model-View-PresentationModel architecture, plus the Coordinator pattern. In this implementation, the binding between the Views and the PresentationModels is done via delegation. The app has three major layers:
+This app has been developed using an MVVM+C architectural pattern, which is a combination of the Model-View-ViewModel architecture, plus the Coordinator pattern. In this implementation, the binding between the Views and the ViewModels is done with Combine. The app has three major layers:
 - The **Presentation** layer, which contains the views and other UIKit-related units.
 - The **Domain** layer, which contains the entities and use cases.
 - The **Data** layer, which contains the networking and local data handling, as well as the models and authentication logic needed to connect to the Marvel API.
