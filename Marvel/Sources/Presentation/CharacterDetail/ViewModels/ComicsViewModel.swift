@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-protocol ComicsViewModelProtocol: PresentationModel {
+protocol ComicsViewModelProtocol: ViewModel {
     var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> { get }
     func willDisplayComicCell(at indexPath: IndexPath)
 }

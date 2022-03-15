@@ -20,21 +20,21 @@ enum CharacterDetailSection: Int, CaseIterable {
 }
 
 class CharacterDetailDataSourceFactory: CollectionViewDataSourceFactory {
-    private let presentationModel: CharacterDetailPresentationModelProtocol
+    private let viewModel: CharacterDetailViewModelProtocol
 
-    init(presentationModel: CharacterDetailPresentationModelProtocol) {
-        self.presentationModel = presentationModel
+    init(viewModel: CharacterDetailViewModelProtocol) {
+        self.viewModel = viewModel
     }
 
     func create(collectionView: UICollectionView) -> CollectionViewDataSource {
-        CharacterDetailDataSource(collectionView: collectionView, presentationModel: presentationModel)
+        CharacterDetailDataSource(collectionView: collectionView, viewModel: viewModel)
     }
 }
 
 typealias CharacterDetailDiffableDataSource = UICollectionViewDiffableDataSource<CharacterDetailSection, AnyHashable>
 
 class CharacterDetailDataSource: CollectionViewDataSource {
-    private let presentationModel: CharacterDetailPresentationModelProtocol
+    private let viewModel: CharacterDetailViewModelProtocol
     private let collectionView: UICollectionView
 
     private let imageRegistration = CellRegistration<CharacterImageCell>(handler: CharacterDetailDataSource.configure)
@@ -50,8 +50,8 @@ class CharacterDetailDataSource: CollectionViewDataSource {
         return dataSource
     }()
 
-    init(collectionView: UICollectionView, presentationModel: CharacterDetailPresentationModelProtocol) {
-        self.presentationModel = presentationModel
+    init(collectionView: UICollectionView, viewModel: CharacterDetailViewModelProtocol) {
+        self.viewModel = viewModel
         self.collectionView = collectionView
     }
 

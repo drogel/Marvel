@@ -56,7 +56,7 @@ private extension CharactersCoordinator {
             pager: charactersContainer.pager
         )
         let viewController = CharactersViewController.instantiate(
-            presentationModel: viewModel,
+            viewModel: viewModel,
             layout: CharactersLayout(),
             dataSourceFactory: CharactersDataSourceFactory()
         )

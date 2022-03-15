@@ -9,13 +9,13 @@ import Combine
 import UIKit
 
 class CharacterDetailViewController: ViewController {
-    typealias PresentationModelProtocol = CharacterDetailPresentationModelProtocol
+    typealias ViewModelProtocol = CharacterDetailViewModelProtocol
 
     private enum Constants {
         static let collectionContentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
     }
 
-    private var presentationModel: PresentationModelProtocol!
+    private var viewModel: ViewModelProtocol!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
     private var collectionViewDelegate: UICollectionViewDelegate!
@@ -24,31 +24,31 @@ class CharacterDetailViewController: ViewController {
     private var cancellables = Set<AnyCancellable>()
 
     static func instantiate(
-        presentationModel: PresentationModelProtocol,
+        viewModel: ViewModelProtocol,
         layout: UICollectionViewCompositionalLayout,
         dataSourceFactory: CollectionViewDataSourceFactory
     ) -> Self {
-        let viewController = instantiate(presentationModel: presentationModel)
+        let viewController = instantiate(viewModel: viewModel)
         viewController.layout = layout
         viewController.dataSourceFactory = dataSourceFactory
         return viewController
     }
 
-    static func instantiate(presentationModel: PresentationModelProtocol) -> Self {
+    static func instantiate(viewModel: ViewModelProtocol) -> Self {
         let viewController = Self()
-        viewController.presentationModel = presentationModel
+        viewController.viewModel = viewModel
         return viewController
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
-        presentationModel.start()
+        viewModel.start()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        presentationModel.dispose()
+        viewModel.dispose()
     }
 }
 
@@ -56,7 +56,7 @@ extension CharacterDetailViewController: UICollectionViewDelegate {
     func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
         case .comics:
-            return presentationModel.willDisplayComicCell(at: indexPath)
+            return viewModel.willDisplayComicCell(at: indexPath)
         default:
             return
         }
@@ -77,7 +77,7 @@ private extension CharacterDetailViewController {
     }
 
     func subscribeToDetail() {
-        presentationModel.detailStatePublisher
+        viewModel.detailStatePublisher
             .sink(receiveValue: handleState)
             .store(in: &cancellables)
     }
@@ -86,10 +86,8 @@ private extension CharacterDetailViewController {
         switch state {
         case let .success(detailModel):
             dataSource.update(with: [detailModel])
-            return
         case let .failure(error):
-            showErrorAlert(message: error.localizedDescription, retryButtonAction: presentationModel.start)
-            return
+            showErrorAlert(message: error.localizedDescription, retryButtonAction: viewModel.start)
         }
     }
 

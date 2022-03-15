@@ -38,8 +38,8 @@ class ComicsViewModelTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is ComicsViewModelProtocol)
     }
 
-    func test_conformsToPresentationModel() {
-        XCTAssertTrue((sut as AnyObject) is PresentationModel)
+    func test_conformsToViewModel() {
+        XCTAssertTrue((sut as AnyObject) is ViewModel)
     }
 
     func test_whenStarting_fetchesComics() {
@@ -54,14 +54,14 @@ class ComicsViewModelTests: XCTestCase {
         XCTAssertEqual(comicFetcherMock.mostRecentQuery, expectedQuery)
     }
 
-    func test_givenPresentationModelStarted_whenDisposing_disposesDisposable() {
+    func test_givenViewModelStarted_whenDisposing_disposesDisposable() {
         sut.start()
         assertComicFetcherFetchLastDisposableDidCancel(callCount: 0)
         sut.dispose()
         assertComicFetcherFetchLastDisposableDidCancel(callCount: 1)
     }
 
-    func test_givenPresentationModelStarted_whenStartingAgain_disposesDisposable() {
+    func test_givenViewModelStarted_whenStartingAgain_disposesDisposable() {
         sut.start()
         assertComicFetcherFetchFirstDisposableDidCancel(callCount: 0)
         sut.start()

@@ -10,7 +10,7 @@ import Foundation
 
 typealias CharactersViewModelState = Result<[CharacterCellModel], CharactersViewModelError>
 
-protocol CharactersViewModelProtocol: PresentationModel {
+protocol CharactersViewModelProtocol: ViewModel {
     var statePublisher: AnyPublisher<CharactersViewModelState, Never> { get }
     var loadingStatePublisher: AnyPublisher<LoadingState, Never> { get }
     func willDisplayCell(at indexPath: IndexPath)

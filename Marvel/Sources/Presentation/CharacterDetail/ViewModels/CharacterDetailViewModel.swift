@@ -1,5 +1,5 @@
 //
-//  CharacterDetailPresentationModel.swift
+//  CharacterDetailViewModel.swift
 //  Marvel
 //
 //  Created by Diego Rogel on 5/2/22.
@@ -8,8 +8,7 @@
 import Combine
 import Foundation
 
-// TODO: Rename all references of presentation model to view models when we migrate these models to Combine too
-protocol CharacterDetailPresentationModelProtocol: PresentationModel {
+protocol CharacterDetailViewModelProtocol: ViewModel {
     var detailStatePublisher: AnyPublisher<CharacterDetailViewModelState, Never> { get }
     func willDisplayComicCell(at indexPath: IndexPath)
 }
@@ -18,7 +17,7 @@ typealias CharacterDetailViewModelError = CharacterInfoViewModelError
 
 typealias CharacterDetailViewModelState = Result<CharacterDetailModel, CharacterInfoViewModelError>
 
-class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol {
+class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
     var detailStatePublisher: AnyPublisher<CharacterDetailViewModelState, Never> {
         infoViewModel.infoStatePublisher
             .combineLatest(comicsViewModel.comicCellModelsPublisher)
@@ -52,7 +51,7 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
     }
 }
 
-private extension CharacterDetailPresentationModel {
+private extension CharacterDetailViewModel {
     func mapToCharacterDetailState(
         _ combination: (characterInfoState: CharacterInfoViewModelState, comicCellModels: [ComicCellModel])
     ) -> CharacterDetailViewModelState {

@@ -8,4 +8,4 @@
 import Foundation
 import UIKit
 
-typealias ViewController = LoadingViewController & PresentationModelInstantiable & AlertPresenter
+typealias ViewController = LoadingViewController & ViewModelInstantiable & AlertPresenter

@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-protocol CharacterInfoViewModelProtocol: PresentationModel {
+protocol CharacterInfoViewModelProtocol: ViewModel {
     var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> { get }
     var loadingStatePublisher: AnyPublisher<LoadingState, Never> { get }
 }

@@ -1,5 +1,5 @@
 //
-//  CharacterDetailPresentationModelTests.swift
+//  CharacterDetailViewModelTests.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 5/2/22.
@@ -9,8 +9,8 @@ import Combine
 @testable import Marvel_Debug
 import XCTest
 
-class CharacterDetailPresentationModelTests: XCTestCase {
-    private var sut: CharacterDetailPresentationModel!
+class CharacterDetailViewModelTests: XCTestCase {
+    private var sut: CharacterDetailViewModel!
     private var infoViewModelMock: CharacterDetailInfoViewModelMock!
     private var comicsViewModelMock: ComicsViewModelMock!
     private var cancellables: Set<AnyCancellable>!
@@ -20,7 +20,7 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         cancellables = Set<AnyCancellable>()
         infoViewModelMock = CharacterDetailInfoViewModelMock()
         comicsViewModelMock = ComicsViewModelMock()
-        sut = CharacterDetailPresentationModel(
+        sut = CharacterDetailViewModel(
             infoViewModel: infoViewModelMock,
             comicsViewModel: comicsViewModelMock
         )
@@ -34,15 +34,15 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_conformsToPresentationModel() {
-        XCTAssertTrue((sut as AnyObject) is PresentationModel)
+    func test_conformsToViewModel() {
+        XCTAssertTrue((sut as AnyObject) is ViewModel)
     }
 
-    func test_conformsToCharacterDetailPresentationModelProtocol() {
-        XCTAssertTrue((sut as AnyObject) is CharacterDetailPresentationModelProtocol)
+    func test_conformsToCharacterDetailViewModelProtocol() {
+        XCTAssertTrue((sut as AnyObject) is CharacterDetailViewModelProtocol)
     }
 
-    func test_whenStarting_callsStartOnAllSubPresentationModels() {
+    func test_whenStarting_callsStartOnAllSubViewModels() {
         assertInfoViewModelStart(callCount: 0)
         assertComicsViewModelStart(callCount: 0)
         sut.start()
@@ -50,7 +50,7 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         assertComicsViewModelStart(callCount: 1)
     }
 
-    func test_whenDisposing_callsDisposeOnAllSubPresentationModels() {
+    func test_whenDisposing_callsDisposeOnAllSubViewModels() {
         assertInfoViewModelDispose(callCount: 0)
         assertComicsViewModelDispose(callCount: 0)
         sut.dispose()
@@ -86,7 +86,7 @@ class CharacterDetailPresentationModelTests: XCTestCase {
     }
 }
 
-private extension CharacterDetailPresentationModelTests {
+private extension CharacterDetailViewModelTests {
     func whenAboutToDisplayAComicCell() {
         sut.willDisplayComicCell(at: IndexPath(row: 0, section: 0))
     }

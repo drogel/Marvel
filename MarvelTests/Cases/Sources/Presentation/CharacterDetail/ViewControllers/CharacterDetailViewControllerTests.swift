@@ -10,7 +10,7 @@ import XCTest
 
 class CharacterDetailViewControllerTests: XCTestCase {
     private var sut: CharacterDetailViewController!
-    private var presentationModelMock: CharacterDetailPresentationModelMock!
+    private var viewModelMock: CharacterDetailViewModelMock!
     private var dataSourceMock: CollectionViewDataSourceMock!
     private var dataSourceFactoryMock: CollectionViewDataSourceFactoryMock!
 
@@ -18,9 +18,9 @@ class CharacterDetailViewControllerTests: XCTestCase {
         super.setUp()
         dataSourceFactoryMock = CollectionViewDataSourceFactoryMock()
         dataSourceMock = dataSourceFactoryMock.dataSourceMock
-        presentationModelMock = CharacterDetailPresentationModelMock()
+        viewModelMock = CharacterDetailViewModelMock()
         sut = CharacterDetailViewController.instantiate(
-            presentationModel: presentationModelMock,
+            viewModel: viewModelMock,
             layout: CharacterDetailLayout(),
             dataSourceFactory: dataSourceFactoryMock
         )
@@ -28,21 +28,21 @@ class CharacterDetailViewControllerTests: XCTestCase {
 
     override func tearDown() {
         sut = nil
-        presentationModelMock = nil
+        viewModelMock = nil
         dataSourceMock = nil
         super.tearDown()
     }
 
-    func test_whenViewDidLoad_callsPresentationModelStart() {
-        presentationModelMock.assertStart(callCount: 0)
+    func test_whenViewDidLoad_callsViewModelStart() {
+        viewModelMock.assertStart(callCount: 0)
         sut.loadViewIfNeeded()
-        presentationModelMock.assertStart(callCount: 1)
+        viewModelMock.assertStart(callCount: 1)
     }
 
-    func test_whenViewDidDisappear_callsPresentationModelDispose() {
-        presentationModelMock.assertDispose(callCount: 0)
+    func test_whenViewDidDisappear_callsViewModelDispose() {
+        viewModelMock.assertDispose(callCount: 0)
         sut.viewDidDisappear(false)
-        presentationModelMock.assertDispose(callCount: 1)
+        viewModelMock.assertDispose(callCount: 1)
     }
 
     func test_whenViewDidLoad_dataSourceIsSet() {

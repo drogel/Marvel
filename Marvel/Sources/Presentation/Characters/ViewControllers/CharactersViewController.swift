@@ -9,13 +9,13 @@ import Combine
 import UIKit
 
 class CharactersViewController: ViewController {
-    typealias PresentationModelProtocol = CharactersViewModelProtocol
+    typealias ViewModelProtocol = CharactersViewModelProtocol
 
     private enum Constants {
         static let scrollNearEndThreshold: CGFloat = 300
     }
 
-    private var viewModel: PresentationModelProtocol!
+    private var viewModel: ViewModelProtocol!
     private var layout: UICollectionViewCompositionalLayout!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
@@ -23,19 +23,19 @@ class CharactersViewController: ViewController {
     private var cancellables = Set<AnyCancellable>()
 
     static func instantiate(
-        presentationModel: PresentationModelProtocol,
+        viewModel: ViewModelProtocol,
         layout: UICollectionViewCompositionalLayout,
         dataSourceFactory: CollectionViewDataSourceFactory
     ) -> CharactersViewController {
-        let viewController = instantiate(presentationModel: presentationModel)
+        let viewController = instantiate(viewModel: viewModel)
         viewController.layout = layout
         viewController.dataSourceFactory = dataSourceFactory
         return viewController
     }
 
-    static func instantiate(presentationModel: PresentationModelProtocol) -> Self {
+    static func instantiate(viewModel: ViewModelProtocol) -> Self {
         let viewController = Self()
-        viewController.viewModel = presentationModel
+        viewController.viewModel = viewModel
         return viewController
     }
 

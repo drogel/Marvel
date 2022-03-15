@@ -20,7 +20,7 @@ class CharactersViewControllerTests: XCTestCase {
         dataSourceFactoryMock = CollectionViewDataSourceFactoryMock()
         dataSourceMock = dataSourceFactoryMock.dataSourceMock
         sut = CharactersViewController.instantiate(
-            presentationModel: viewModelMock,
+            viewModel: viewModelMock,
             layout: CharactersLayout(),
             dataSourceFactory: dataSourceFactoryMock
         )

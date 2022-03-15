@@ -1,5 +1,5 @@
 //
-//  CharacterDetailPresentationModelMock.swift
+//  CharacterDetailViewModelMock.swift
 //  MarvelTests
 //
 //  Created by Diego Rogel on 6/3/22.
@@ -9,7 +9,7 @@ import Combine
 import Foundation
 @testable import Marvel_Debug
 
-class CharacterDetailPresentationModelMock: PresentationModelMock, CharacterDetailPresentationModelProtocol {
+class CharacterDetailViewModelMock: ViewModelMock, CharacterDetailViewModelProtocol {
     var detailStatePublisher: AnyPublisher<CharacterDetailViewModelState, Never> {
         Just(CharacterDetailViewModelState.success(CharacterDetailModel(info: nil, comics: []))).eraseToAnyPublisher()
     }

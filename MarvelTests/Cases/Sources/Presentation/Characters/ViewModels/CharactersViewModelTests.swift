@@ -39,8 +39,8 @@ class CharactersViewModelTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_conformsToPresentationModel() {
-        XCTAssertTrue((sut as AnyObject) is PresentationModel)
+    func test_conformsToViewModel() {
+        XCTAssertTrue((sut as AnyObject) is ViewModel)
     }
 
     func test_conformsToCharactersViewModel() {

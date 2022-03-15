@@ -52,14 +52,14 @@ private extension CharacterDetailCoordinator {
             imageURLBuilder: container.imageURLBuilder,
             pager: container.pager
         )
-        let presentationModel = CharacterDetailPresentationModel(
+        let viewModel = CharacterDetailViewModel(
             infoViewModel: infoViewModel,
             comicsViewModel: comicsViewModel
         )
         let viewController = CharacterDetailViewController.instantiate(
-            presentationModel: presentationModel,
+            viewModel: viewModel,
             layout: CharacterDetailLayout(),
-            dataSourceFactory: CharacterDetailDataSourceFactory(presentationModel: presentationModel)
+            dataSourceFactory: CharacterDetailDataSourceFactory(viewModel: viewModel)
         )
         viewController.transitioningDelegate = self
         return viewController
