@@ -45,10 +45,6 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is CharacterDetailPresentationModelProtocol)
     }
 
-    func test_conformsToSubPresentationModelDelegate() {
-        XCTAssertTrue((sut as AnyObject) is CharacterInfoPresentationModelViewDelegate)
-    }
-
     func test_whenStarting_callsStartOnAllSubPresentationModels() {
         assertInfoPresentationModelStart(callCount: 0)
         assertComicsViewModelStart(callCount: 0)
@@ -63,34 +59,6 @@ class CharacterDetailPresentationModelTests: XCTestCase {
         sut.dispose()
         assertInfoPresentationModelDispose(callCount: 1)
         assertComicsViewModelDispose(callCount: 1)
-    }
-
-    func test_givenViewDelegate_whenInfoStartsLoading_notifiesView() {
-        givenViewDelegate()
-        assertViewDelegateDidStartLoading(callCount: 0)
-        sut.modelDidStartLoading(infoPresentationModelMock)
-        assertViewDelegateDidStartLoading(callCount: 1)
-    }
-
-    func test_givenViewDelegate_whenInfoFinishesLoading_notifiesView() {
-        givenViewDelegate()
-        assertViewDelegateDidFinishLoading(callCount: 0)
-        sut.modelDidFinishLoading(infoPresentationModelMock)
-        assertViewDelegateDidFinishLoading(callCount: 1)
-    }
-
-    func test_givenViewDelegate_whenInfoRetrievesData_notifiesView() {
-        givenViewDelegate()
-        assertViewDelegateDidRetrieveCharacterInfo(callCount: 0)
-        sut.modelDidRetrieveData(infoPresentationModelMock)
-        assertViewDelegateDidRetrieveCharacterInfo(callCount: 1)
-    }
-
-    func test_givenViewDelegate_whenInfoFails_notifiesView() {
-        givenViewDelegate()
-        assertViewDelegateDidFail(callCount: 0)
-        sut.model(infoPresentationModelMock, didFailWithError: "")
-        assertViewDelegateDidFail(callCount: 1)
     }
 
     func test_whenAboutToDisplayAComicCell_delegatesToComicsViewModel() {

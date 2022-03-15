@@ -10,13 +10,7 @@ import Foundation
 
 protocol CharacterInfoPresentationModelProtocol: PresentationModel {
     var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> { get }
-}
-
-protocol CharacterInfoPresentationModelViewDelegate: AnyObject {
-    func modelDidStartLoading(_ presentationModel: CharacterInfoPresentationModelProtocol)
-    func modelDidFinishLoading(_ presentationModel: CharacterInfoPresentationModelProtocol)
-    func modelDidRetrieveData(_ presentationModel: CharacterInfoPresentationModelProtocol)
-    func model(_ presentationModel: CharacterInfoPresentationModelProtocol, didFailWithError message: String)
+    var loadingStatePublisher: AnyPublisher<LoadingState, Never> { get }
 }
 
 typealias CharacterInfoViewModelState = Result<CharacterInfoModel?, CharacterInfoViewModelError>
@@ -39,10 +33,12 @@ enum CharacterInfoViewModelError: LocalizedError {
 }
 
 class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
-    weak var viewDelegate: CharacterInfoPresentationModelViewDelegate?
-
     var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> {
         $publishedState.eraseToAnyPublisher()
+    }
+
+    var loadingStatePublisher: AnyPublisher<LoadingState, Never> {
+        $loadingState.eraseToAnyPublisher()
     }
 
     private var characterInfoModel: CharacterInfoModel? {
@@ -52,6 +48,7 @@ class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
     }
 
     @Published private var publishedState: CharacterInfoViewModelState
+    @Published private var loadingState: LoadingState
     private let characterFetcher: FetchCharacterDetailUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let characterID: Int
@@ -66,10 +63,11 @@ class CharacterInfoPresentationModel: CharacterInfoPresentationModelProtocol {
         self.imageURLBuilder = imageURLBuilder
         self.characterID = characterID
         publishedState = .success(characterInfoModel)
+        loadingState = .idle
     }
 
     func start() {
-        viewDelegate?.modelDidStartLoading(self)
+        loadingState = .loading
         let query = FetchCharacterDetailQuery(characterID: characterID)
         loadCharacter(with: query)
     }
@@ -88,7 +86,7 @@ private extension CharacterInfoPresentationModel {
     }
 
     func handleFetchCharacterResult(_ result: FetchCharacterDetailResult) {
-        viewDelegate?.modelDidFinishLoading(self)
+        loadingState = .loaded
         switch result {
         case let .success(contentPage):
             handleSuccess(with: contentPage)
@@ -100,22 +98,21 @@ private extension CharacterInfoPresentationModel {
     func handleSuccess(with contentPage: ContentPage<Character>) {
         guard let characterInfo = mapToCharacterInfo(characters: contentPage.contents) else { return }
         characterInfoModel = characterInfo
-        viewDelegate?.modelDidRetrieveData(self)
     }
 
     func handleFailure(with error: FetchCharacterDetailUseCaseError) {
-        let message = message(for: error)
-        viewDelegate?.model(self, didFailWithError: message)
+        let viewModelError = viewModelError(for: error)
+        publishedState = .failure(viewModelError)
     }
 
-    func message(for error: FetchCharacterDetailUseCaseError) -> String {
+    func viewModelError(for error: FetchCharacterDetailUseCaseError) -> CharacterInfoViewModelError {
         switch error {
         case .noConnection:
-            return CharacterInfoViewModelError.noConnection.localizedDescription
+            return .noConnection
         case .emptyData:
-            return CharacterInfoViewModelError.noSuchCharacter.localizedDescription
+            return .noSuchCharacter
         case .unauthorized:
-            return CharacterInfoViewModelError.noAuthorization.localizedDescription
+            return .noAuthorization
         }
     }
 

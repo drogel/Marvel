@@ -63,24 +63,6 @@ class CharacterDetailPresentationModel: CharacterDetailPresentationModelProtocol
     }
 }
 
-extension CharacterDetailPresentationModel: CharacterInfoPresentationModelViewDelegate {
-    func modelDidStartLoading(_: CharacterInfoPresentationModelProtocol) {
-        viewDelegate?.modelDidStartLoading(self)
-    }
-
-    func modelDidFinishLoading(_: CharacterInfoPresentationModelProtocol) {
-        viewDelegate?.modelDidFinishLoading(self)
-    }
-
-    func modelDidRetrieveData(_: CharacterInfoPresentationModelProtocol) {
-        viewDelegate?.modelDidRetrieveCharacterInfo(self)
-    }
-
-    func model(_: CharacterInfoPresentationModelProtocol, didFailWithError message: String) {
-        viewDelegate?.model(self, didFailWithError: message)
-    }
-}
-
 private extension CharacterDetailPresentationModel {
     func mapToCharacterDetailState(
         _ combination: (characterInfoState: CharacterInfoViewModelState, comicCellModels: [ComicCellModel])

@@ -76,9 +76,7 @@ extension CharacterDetailViewController: CharacterDetailPresentationModelViewDel
 
     func modelDidRetrieveComics(_: CharacterDetailPresentationModelProtocol) {}
 
-    func model(_ presentationModel: CharacterDetailPresentationModelProtocol, didFailWithError message: String) {
-        showErrorAlert(message: message, retryButtonAction: presentationModel.start)
-    }
+    func model(_: CharacterDetailPresentationModelProtocol, didFailWithError _: String) {}
 }
 
 private extension CharacterDetailViewController {
@@ -104,8 +102,9 @@ private extension CharacterDetailViewController {
         switch state {
         case let .success(detailModel):
             dataSource.update(with: [detailModel])
-        case .failure:
-            // TODO: Implement
+            return
+        case let .failure(error):
+            showErrorAlert(message: error.localizedDescription, retryButtonAction: presentationModel.start)
             return
         }
     }

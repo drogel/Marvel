@@ -13,7 +13,6 @@ class CharacterInfoPresentationModelTests: XCTestCase {
     private var sut: CharacterInfoPresentationModel!
     private var characterFetcherMock: CharacterFetcherMock!
     private var characterIDStub: Int!
-    private var viewDelegateMock: CharacterInfoViewDelegateMock!
     private var imageURLBuilderMock: ImageURLBuilderMock!
     private var cancellables: Set<AnyCancellable>!
 
@@ -22,7 +21,6 @@ class CharacterInfoPresentationModelTests: XCTestCase {
         characterFetcherMock = CharacterFetcherMock()
         cancellables = Set<AnyCancellable>()
         characterIDStub = 123_456
-        viewDelegateMock = CharacterInfoViewDelegateMock()
         imageURLBuilderMock = ImageURLBuilderMock()
         givenSut(with: characterFetcherMock)
     }
@@ -32,7 +30,6 @@ class CharacterInfoPresentationModelTests: XCTestCase {
         characterIDStub = nil
         characterFetcherMock = nil
         imageURLBuilderMock = nil
-        viewDelegateMock = nil
         sut = nil
         super.tearDown()
     }
@@ -41,10 +38,22 @@ class CharacterInfoPresentationModelTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is PresentationModel)
     }
 
-    func test_givenViewDelegate_whenStarting_notifiesLoadingToViewDelegate() {
-        givenViewDelegate()
+    func test_givenDidNotStartYet_emitsIdleState() {
+        let idleStateReceivedExpectation = expectation(description: "Received idle state")
+        sut.loadingStatePublisher
+            .assertOutput(matches: .idle, expectation: idleStateReceivedExpectation)
+            .store(in: &cancellables)
+        wait(for: [idleStateReceivedExpectation], timeout: 0.1)
+    }
+
+    func test_whenStarting_emitsLoadingState() {
+        let loadingStateReceivedExpectation = expectation(description: "Received loading state")
+        sut.loadingStatePublisher
+            .dropFirst()
+            .assertOutput(matches: .loading, expectation: loadingStateReceivedExpectation)
+            .store(in: &cancellables)
         sut.start()
-        XCTAssertEqual(viewDelegateMock.didStartLoadingCallCount, 1)
+        wait(for: [loadingStateReceivedExpectation], timeout: 0.1)
     }
 
     func test_infoModelIsNilInitially() {
@@ -59,11 +68,6 @@ class CharacterInfoPresentationModelTests: XCTestCase {
     func test_givenCharacterFetcher_whenStrating_fetchesCharacterWithProvidedID() {
         sut.start()
         XCTAssertEqual(characterFetcherMock.fetchCallCount(withID: characterIDStub), 1)
-    }
-
-    func test_givenSuccessfulCharacterFetcher_whenStartingCompletes_notifiesViewWithData() {
-        givenStartCompletedSuccessfully()
-        XCTAssertEqual(viewDelegateMock.didRetrieveDataCallCount, 1)
     }
 
     func test_givenDidNotStartYet_receivesEmptyInfoModel() {
@@ -88,15 +92,15 @@ class CharacterInfoPresentationModelTests: XCTestCase {
         wait(for: [receivedResultExpectation], timeout: 0.1)
     }
 
-    func test_givenStartFailed_receivesNilInfoModel() {
-        givenSutWithFailingFetcher()
-        assertInfoModelIsNil()
+    func test_givenSucessfulFetcher_whenStartingFinished_emitsLoadedState() {
+        givenSutWithSuccessfulFetcher()
+        let loadedStateReceivedExpectation = expectation(description: "Received loaded state")
+        sut.loadingStatePublisher
+            .dropFirst(2)
+            .assertOutput(matches: .loaded, expectation: loadedStateReceivedExpectation)
+            .store(in: &cancellables)
         sut.start()
-    }
-
-    func test_givenViewDelegate_whenStartingCompletesSuccessfully_notifiesFinishLoadToViewDelegate() {
-        givenStartCompletedSuccessfully()
-        XCTAssertEqual(viewDelegateMock.didFinishLoadingCallCount, 1)
+        wait(for: [loadedStateReceivedExpectation], timeout: 0.1)
     }
 
     func test_givenDidStartSuccessfully_whenDisposing_cancellsRequests() {
@@ -105,37 +109,21 @@ class CharacterInfoPresentationModelTests: XCTestCase {
         assertCancelledRequests()
     }
 
-    func test_givenStartFailed_notifiesViewDelegate() {
-        givenStartFailed()
-        XCTAssertEqual(viewDelegateMock.didFailCallCount, 1)
+    func test_givenSutWithFailingFetcher_whenStarting_emitsFailureState() {
+        givenSutWithFailingFetcher()
+        let receivedResultExpectation = expectation(description: "Received a result")
+        let expectedState = CharacterInfoViewModelState.failure(.noAuthorization)
+        sut.infoStatePublisher
+            .dropFirst()
+            .assertOutput(matches: expectedState, expectation: receivedResultExpectation)
+            .store(in: &cancellables)
+        sut.start()
+        wait(for: [receivedResultExpectation], timeout: 0.1)
     }
 
     func test_givenDidStartSuccessfully_whenRetrievingCharacterImage_imageURLBuiltExpectedVariant() {
         givenStartCompletedSuccessfully()
         XCTAssertNil(imageURLBuilderMock.mostRecentImageVariant)
-    }
-}
-
-private class CharacterInfoViewDelegateMock: CharacterInfoPresentationModelViewDelegate {
-    var didStartLoadingCallCount = 0
-    var didFinishLoadingCallCount = 0
-    var didRetrieveDataCallCount = 0
-    var didFailCallCount = 0
-
-    func modelDidStartLoading(_: CharacterInfoPresentationModelProtocol) {
-        didStartLoadingCallCount += 1
-    }
-
-    func modelDidFinishLoading(_: CharacterInfoPresentationModelProtocol) {
-        didFinishLoadingCallCount += 1
-    }
-
-    func modelDidRetrieveData(_: CharacterInfoPresentationModelProtocol) {
-        didRetrieveDataCallCount += 1
-    }
-
-    func model(_: CharacterInfoPresentationModelProtocol, didFailWithError _: String) {
-        didFailCallCount += 1
     }
 }
 
@@ -186,10 +174,6 @@ private class CharacterFetcherFailingStub: CharacterFetcherMock {
 }
 
 private extension CharacterInfoPresentationModelTests {
-    func givenViewDelegate() {
-        sut.viewDelegate = viewDelegateMock
-    }
-
     func givenSutWithSuccessfulFetcher() {
         characterFetcherMock = CharacterFetcherSuccessfulStub()
         givenSut(with: characterFetcherMock)
@@ -210,13 +194,6 @@ private extension CharacterInfoPresentationModelTests {
 
     func givenStartCompletedSuccessfully() {
         givenSutWithSuccessfulFetcher()
-        givenViewDelegate()
-        sut.start()
-    }
-
-    func givenStartFailed() {
-        givenSutWithFailingFetcher()
-        givenViewDelegate()
         sut.start()
     }
 
