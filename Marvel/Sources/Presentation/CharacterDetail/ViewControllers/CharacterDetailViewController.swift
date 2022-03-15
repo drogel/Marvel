@@ -5,77 +5,68 @@
 //  Created by Diego Rogel on 18/1/22.
 //
 
+import Combine
 import UIKit
 
 class CharacterDetailViewController: ViewController {
-    typealias PresentationModelProtocol = PresentationModel
+    typealias ViewModelProtocol = CharacterDetailViewModelProtocol
 
     private enum Constants {
         static let collectionContentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
     }
 
-    private var presentationModel: PresentationModelProtocol!
+    private var viewModel: ViewModelProtocol!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
     private var collectionViewDelegate: UICollectionViewDelegate!
     private var layout: UICollectionViewCompositionalLayout!
+    private var dataSourceFactory: CollectionViewDataSourceFactory!
+    private var cancellables = Set<AnyCancellable>()
 
     static func instantiate(
-        presentationModel: PresentationModelProtocol,
-        dataSource: CollectionViewDataSource,
-        collectionViewDelegate: UICollectionViewDelegate,
-        layout: UICollectionViewCompositionalLayout
+        viewModel: ViewModelProtocol,
+        layout: UICollectionViewCompositionalLayout,
+        dataSourceFactory: CollectionViewDataSourceFactory
     ) -> Self {
-        let viewController = instantiate(presentationModel: presentationModel)
-        viewController.dataSource = dataSource
-        viewController.collectionViewDelegate = collectionViewDelegate
+        let viewController = instantiate(viewModel: viewModel)
         viewController.layout = layout
+        viewController.dataSourceFactory = dataSourceFactory
         return viewController
     }
 
-    static func instantiate(presentationModel: PresentationModelProtocol) -> Self {
+    static func instantiate(viewModel: ViewModelProtocol) -> Self {
         let viewController = Self()
-        viewController.presentationModel = presentationModel
+        viewController.viewModel = viewModel
         return viewController
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
-        presentationModel.start()
+        viewModel.start()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        presentationModel.dispose()
+        viewModel.dispose()
     }
 }
 
-extension CharacterDetailViewController: CharacterDetailPresentationModelViewDelegate {
-    func modelDidStartLoading(_: CharacterDetailPresentationModelProtocol) {
-        startLoading()
-    }
-
-    func modelDidFinishLoading(_: CharacterDetailPresentationModelProtocol) {
-        stopLoading()
-    }
-
-    func modelDidRetrieveCharacterInfo(_: CharacterDetailPresentationModelProtocol) {
-        reload()
-    }
-
-    func modelDidRetrieveComics(_: CharacterDetailPresentationModelProtocol) {
-        reload()
-    }
-
-    func model(_ presentationModel: CharacterDetailPresentationModelProtocol, didFailWithError message: String) {
-        showErrorAlert(message: message, retryButtonAction: presentationModel.start)
+extension CharacterDetailViewController: UICollectionViewDelegate {
+    func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
+        case .comics:
+            return viewModel.willDisplayComicCell(at: indexPath)
+        default:
+            return
+        }
     }
 }
 
 private extension CharacterDetailViewController {
     func setUp() {
         setUpCollectionView()
+        subscribeToDetail()
     }
 
     func setUpCollectionView() {
@@ -83,6 +74,21 @@ private extension CharacterDetailViewController {
         setSubview(collectionView)
         configureDataSource(of: collectionView)
         configureConstraints(of: collectionView)
+    }
+
+    func subscribeToDetail() {
+        viewModel.detailStatePublisher
+            .sink(receiveValue: handleState)
+            .store(in: &cancellables)
+    }
+
+    func handleState(_ state: CharacterDetailViewModelState) {
+        switch state {
+        case let .success(detailModel):
+            dataSource.update(with: [detailModel])
+        case let .failure(error):
+            showErrorAlert(message: error.localizedDescription, retryButtonAction: viewModel.start)
+        }
     }
 
     func createCollectionView() -> UICollectionView {
@@ -97,17 +103,13 @@ private extension CharacterDetailViewController {
     }
 
     func configureDataSource(of collectionView: UICollectionView) {
-        collectionView.dataSource = dataSource
+        dataSource = dataSourceFactory.create(collectionView: collectionView)
         collectionView.delegate = collectionViewDelegate
-        dataSource.registerSubviews(in: collectionView)
+        dataSource.setDataSource(of: collectionView)
     }
 
     func configureConstraints(of collectionView: UICollectionView) {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.fit(collectionView, in: view)
-    }
-
-    func reload() {
-        collectionView.reloadData()
     }
 }

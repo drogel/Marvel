@@ -10,88 +10,58 @@ import XCTest
 
 class CharactersViewControllerTests: XCTestCase {
     private var sut: CharactersViewController!
-    private var presentationModelMock: CharactersPresentationModelMock!
+    private var viewModelMock: CharactersViewModelMock!
+    private var dataSourceFactoryMock: CollectionViewDataSourceFactoryMock!
+    private var dataSourceMock: CollectionViewDataSourceMock!
 
     override func setUp() {
         super.setUp()
-        presentationModelMock = CharactersPresentationModelMock()
-        sut = CharactersViewController.instantiate(presentationModel: presentationModelMock, layout: CharactersLayout())
+        viewModelMock = CharactersViewModelMock()
+        dataSourceFactoryMock = CollectionViewDataSourceFactoryMock()
+        dataSourceMock = dataSourceFactoryMock.dataSourceMock
+        sut = CharactersViewController.instantiate(
+            viewModel: viewModelMock,
+            layout: CharactersLayout(),
+            dataSourceFactory: dataSourceFactoryMock
+        )
     }
 
     override func tearDown() {
         sut = nil
-        presentationModelMock = nil
+        dataSourceFactoryMock = nil
+        dataSourceMock = nil
+        viewModelMock = nil
         super.tearDown()
     }
 
-    func test_whenViewDidAppear_callsPresentationModelStart() {
-        assertPresentationModelStart(callCount: 0)
+    func test_whenViewDidAppear_callsViewModelStart() {
+        assertViewModelStart(callCount: 0)
         sut.viewDidAppear(false)
-        assertPresentationModelStart(callCount: 1)
+        assertViewModelStart(callCount: 1)
     }
 
-    func test_whenViewDidDisappear_callsPresentationModelDispose() {
-        assertPresentationModelDispose(callCount: 0)
+    func test_whenViewDidDisappear_callsViewModelDispose() {
+        assertViewModelDispose(callCount: 0)
         sut.viewDidDisappear(false)
-        assertPresentationModelDispose(callCount: 1)
+        assertViewModelDispose(callCount: 1)
     }
 
-    func test_numberOfSections_returnsOneSection() {
-        XCTAssertEqual(sut.numberOfSections(in: collectionViewStub), 1)
-    }
-
-    func test_numberOfItems_returnsPresentationModelNumberOfItems() {
-        XCTAssertEqual(
-            sut.collectionView(collectionViewStub, numberOfItemsInSection: 0),
-            presentationModelMock.numberOfItems
-        )
-    }
-
-    func test_whenDequeueingCells_retrievesPresentationModelCellData() {
-        assertPresentationModelCellData(callCount: 0)
-        _ = sut.collectionView(collectionViewStub, cellForItemAt: indexPathStub)
-        assertPresentationModelCellData(callCount: 1)
-    }
-
-    func test_whenSelectingACell_notifiesPresentationModel() {
-        assertPresentationModelSelect(callCount: 0)
+    func test_whenSelectingACell_notifiesViewModel() {
+        assertViewModelSelect(callCount: 0)
         sut.collectionView(collectionViewStub, didSelectItemAt: indexPathStub)
-        assertPresentationModelSelect(callCount: 1)
-    }
-}
-
-private class CharactersPresentationModelMock: CharactersPresentationModelProtocol {
-    var numberOfItemsCallCount = 0
-    var willDisplayCellCallCount = 0
-    var selectCallCount = 0
-    var cellDataCallCount = 0
-    var startCallCount = 0
-    var disposeCallCount = 0
-
-    var numberOfItems: Int {
-        numberOfItemsCallCount += 1
-        return 0
+        assertViewModelSelect(callCount: 1)
     }
 
-    func willDisplayCell(at _: IndexPath) {
-        willDisplayCellCallCount += 1
+    func test_whenViewDidLoad_callsDataSourceFactoryCreate() {
+        dataSourceFactoryMock.assertCreate(callCount: 0)
+        sut.loadViewIfNeeded()
+        dataSourceFactoryMock.assertCreate(callCount: 1)
     }
 
-    func select(at _: IndexPath) {
-        selectCallCount += 1
-    }
-
-    func cellData(at _: IndexPath) -> CharacterCellModel? {
-        cellDataCallCount += 1
-        return nil
-    }
-
-    func start() {
-        startCallCount += 1
-    }
-
-    func dispose() {
-        disposeCallCount += 1
+    func test_whenViewDidLoad_dataSourceIsSet() {
+        dataSourceMock.assertSetDataSource(callCount: 0)
+        sut.loadViewIfNeeded()
+        dataSourceMock.assertSetDataSource(callCount: 1)
     }
 }
 
@@ -104,23 +74,27 @@ private extension CharactersViewControllerTests {
         IndexPath(row: 0, section: 0)
     }
 
-    func assertPresentationModelStart(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(presentationModelMock.startCallCount, callCount, line: line)
+    func givenViewDidLoad() {
+        sut.loadViewIfNeeded()
     }
 
-    func assertPresentationModelDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(presentationModelMock.disposeCallCount, callCount, line: line)
+    func assertViewModelStart(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewModelMock.startCallCount, callCount, line: line)
     }
 
-    func assertPresentationModelCellData(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(presentationModelMock.cellDataCallCount, callCount, line: line)
+    func assertViewModelDispose(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewModelMock.disposeCallCount, callCount, line: line)
     }
 
-    func assertPresentationModelSelect(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(presentationModelMock.selectCallCount, callCount, line: line)
+    func assertViewModelCellData(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewModelMock.cellDataCallCount, callCount, line: line)
     }
 
-    func assertPresentationModelWillDisplayCell(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(presentationModelMock.willDisplayCellCallCount, callCount, line: line)
+    func assertViewModelSelect(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewModelMock.selectCallCount, callCount, line: line)
+    }
+
+    func assertViewModelWillDisplayCell(callCount: Int, line: UInt = #line) {
+        XCTAssertEqual(viewModelMock.willDisplayCellCallCount, callCount, line: line)
     }
 }

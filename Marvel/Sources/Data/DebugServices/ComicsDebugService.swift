@@ -17,7 +17,7 @@ class ComicsDebugService: ComicsService {
         self.dataResultHandler = dataResultHandler
     }
 
-    func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Cancellable? {
+    func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Disposable? {
         dataLoader.loadData { [weak self] result in
             self?.dataResultHandler.completeWithServiceResult(result, completion: completion)
         }

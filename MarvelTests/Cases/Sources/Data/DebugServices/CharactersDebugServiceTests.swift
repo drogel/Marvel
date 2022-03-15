@@ -40,6 +40,11 @@ class CharactersDebugServiceTests: XCTestCase {
         let completionResult = whenRetrievingResultFromCharacters()
         assertIsSuccess(completionResult)
     }
+
+    func test_givenDidAlreadyLoad_whenRetrievingCharacters_disposableIsNil() {
+        givenDidAlreadyLoad()
+        XCTAssertNil(sut.characters(from: 0, completion: { _ in }))
+    }
 }
 
 private extension CharactersDebugServiceTests {
@@ -60,14 +65,20 @@ private extension CharactersDebugServiceTests {
         )
     }
 
-    func whenRetrievingResultFromCharacters() -> CharactersServiceResult {
+    func givenDidAlreadyLoad() {
+        givenSutWithDataLoader()
+        _ = whenRetrievingResultFromCharacters()
+    }
+
+    func whenRetrievingResultFromCharacters(externalExpectation: XCTestExpectation? = nil) -> CharactersServiceResult {
+        let defaultExpectation = expectation(description: "JSON file parsing completion")
+        let completionExpectation = externalExpectation ?? defaultExpectation
         var completionResult: CharactersServiceResult!
-        let expectation = expectation(description: "JSON file parsing completion")
         _ = sut.characters(from: 0) { result in
             completionResult = result
-            expectation.fulfill()
+            completionExpectation.fulfill()
         }
-        wait(for: [expectation], timeout: 1)
+        wait(for: [completionExpectation], timeout: 0.1)
         return completionResult
     }
 }

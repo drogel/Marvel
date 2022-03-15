@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class CharacterImageCell: UICollectionViewCell {
+class CharacterImageCell: ConfigurableCell {
     private lazy var characterImageView = FillImageView()
 
     override init(frame: CGRect) {
@@ -27,7 +27,7 @@ class CharacterImageCell: UICollectionViewCell {
     }
 }
 
-extension CharacterImageCell: Configurable {
+extension CharacterImageCell {
     typealias Item = CharacterImageModel?
 
     func configure(using item: CharacterImageModel?) {

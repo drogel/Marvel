@@ -11,7 +11,7 @@ protocol FetchCharacterDetailUseCase {
     func fetch(
         query: FetchCharacterDetailQuery,
         completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Cancellable?
+    ) -> Disposable?
 }
 
 struct FetchCharacterDetailQuery {
@@ -32,7 +32,7 @@ class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {
     func fetch(
         query: FetchCharacterDetailQuery,
         completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         service.character(with: query.characterID, completion: completion)
     }
 }

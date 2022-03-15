@@ -19,7 +19,7 @@ enum NetworkError: Error {
 typealias NetworkServiceCompletion = (Result<Data?, NetworkError>) -> Void
 
 protocol NetworkService {
-    func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Cancellable?
+    func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Disposable?
 }
 
 class NetworkSessionService: NetworkService {
@@ -33,7 +33,7 @@ class NetworkSessionService: NetworkService {
         self.urlComposer = urlComposer
     }
 
-    func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Cancellable? {
+    func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Disposable? {
         guard let urlRequest = buildURLRequest(from: endpoint) else {
             completion(.failure(.invalidURL))
             return nil
@@ -48,7 +48,7 @@ private extension NetworkSessionService {
         return URLRequest(url: url)
     }
 
-    func request(request: URLRequest, completion: @escaping NetworkServiceCompletion) -> Cancellable {
+    func request(request: URLRequest, completion: @escaping NetworkServiceCompletion) -> Disposable {
         let sessionDataTask = session.loadData(from: request) { [weak self] data, response, requestError in
             DispatchQueue.main.async {
                 self?.handleDataLoaded(data, response: response, error: requestError, completion: completion)

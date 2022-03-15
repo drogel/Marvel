@@ -28,7 +28,7 @@ class ComicsClientService: ComicsService {
         for characterID: Int,
         from offset: Int,
         completion: @escaping (ComicsServiceResult) -> Void
-    ) -> Cancellable? {
+    ) -> Disposable? {
         networkService.request(endpoint: components(for: characterID, offset: offset)) { [weak self] result in
             self?.resultHandler.handle(result: result) { handlerResult in
                 self?.dataResultHandler.completeWithServiceResult(handlerResult, completion: completion)
