@@ -30,8 +30,11 @@ class ComicsClientService: ComicsService {
         completion: @escaping (ComicsServiceResult) -> Void
     ) -> Disposable? {
         networkService.request(endpoint: components(for: characterID, offset: offset)) { [weak self] result in
-            self?.resultHandler.handle(result: result) { handlerResult in
-                self?.dataResultHandler.completeWithServiceResult(handlerResult, completion: completion)
+            // TODO: Remove these when we migrate to async await
+            DispatchQueue.main.async {
+                self?.resultHandler.handle(result: result) { handlerResult in
+                    self?.dataResultHandler.completeWithServiceResult(handlerResult, completion: completion)
+                }
             }
         }
     }

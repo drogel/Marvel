@@ -8,11 +8,7 @@
 import Foundation
 
 extension URLSession: NetworkSession {
-    func loadData(from request: URLRequest, completionHandler: @escaping NetworkCompletion) -> URLSessionDataTask {
-        let task = dataTask(with: request) { data, response, error in
-            completionHandler(data, response, error)
-        }
-        task.resume()
-        return task
+    func loadData(from request: URLRequest) async throws -> (data: Data, response: URLResponse) {
+        try await data(for: request, delegate: nil)
     }
 }

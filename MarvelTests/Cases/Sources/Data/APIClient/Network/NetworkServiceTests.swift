@@ -107,6 +107,20 @@ class NetworkServiceTests: XCTestCase {
             if case NetworkError.requestError = $0 { } else { failExpectingErrorMatching($0) }
         }
     }
+
+    func test_givenARequestError_whenRequesting_fails() {
+        let error = NSError(domain: "", code: 0, userInfo: nil)
+        givenSutWithFailingSession(errorStub: NetworkError.requestError(error))
+        let result = whenRequesting()
+        assertIsFailure(result)
+    }
+
+    func test_givenAGenericError_whenRequesting_fails() {
+        let error = NSError(domain: "", code: 0, userInfo: nil)
+        givenSutWithFailingSession(errorStub: error)
+        let result = whenRequesting()
+        assertIsFailure(result)
+    }
 }
 
 private extension NetworkServiceTests {
@@ -164,9 +178,11 @@ private class URLComposerInvalidStub: URLComposerMock {
 }
 
 private class NetworkSessionSuccessfulStub: NetworkSession {
-    func loadData(from request: URLRequest, completionHandler: @escaping NetworkCompletion) -> URLSessionDataTask {
-        completionHandler(Data(base64Encoded: "data"), URLResponse(), nil)
-        return URLSession(configuration: .default).dataTask(with: request)
+    private let dataStub = Data(base64Encoded: "data")!
+    private let responseStub = URLResponse()
+
+    func loadData(from _: URLRequest) async throws -> (data: Data, response: URLResponse) {
+        return (dataStub, responseStub)
     }
 }
 
@@ -177,13 +193,13 @@ private class NetworkSessionFailureStub: NetworkSession {
         self.errorStub = errorStub
     }
 
-    func loadData(from request: URLRequest, completionHandler: @escaping NetworkCompletion) -> URLSessionDataTask {
-        completionHandler(nil, nil, errorStub)
-        return URLSession(configuration: .default).dataTask(with: request)
+    func loadData(from _: URLRequest) async throws -> (data: Data, response: URLResponse) {
+        throw errorStub
     }
 }
 
 private class NetworkSessionHTTPResponseStub: NetworkSession {
+    private let dataStub = Data(base64Encoded: "data")!
     private let statusCodeStub: Int
 
     private var responseStub: HTTPURLResponse {
@@ -195,8 +211,7 @@ private class NetworkSessionHTTPResponseStub: NetworkSession {
         self.statusCodeStub = statusCodeStub
     }
 
-    func loadData(from request: URLRequest, completionHandler: @escaping NetworkCompletion) -> URLSessionDataTask {
-        completionHandler(nil, responseStub, nil)
-        return URLSession(configuration: .default).dataTask(with: request)
+    func loadData(from _: URLRequest) async throws -> (data: Data, response: URLResponse) {
+        (dataStub, responseStub)
     }
 }

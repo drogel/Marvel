@@ -25,8 +25,10 @@ class CharactersClientService: CharactersService {
 
     func characters(from offset: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
         client.request(endpoint: components(for: offset)) { [weak self] result in
-            self?.resultHandler.handle(result: result) { handlerResult in
-                self?.dataResultHandler.completeWithServiceResult(handlerResult, completion: completion)
+            DispatchQueue.main.async {
+                self?.resultHandler.handle(result: result) { handlerResult in
+                    self?.dataResultHandler.completeWithServiceResult(handlerResult, completion: completion)
+                }
             }
         }
     }

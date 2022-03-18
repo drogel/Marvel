@@ -142,9 +142,12 @@ private extension CharacterDetailClientServiceTests {
 
     func whenRetrievingCharacter(with identifier: Int = 0) -> CharacterDetailServiceResult {
         var characterResult: CharacterDetailServiceResult!
+        let expectation = expectation(description: "Received result")
         _ = sut.character(with: identifier) { result in
             characterResult = result
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 0.1)
         return characterResult
     }
 

@@ -146,9 +146,12 @@ private extension CharactersClientServiceTests {
 
     func whenRetrievingCharacters(from offset: Int = 0) -> CharactersServiceResult {
         var charactersResult: CharactersServiceResult!
+        let expectation = expectation(description: "Received result")
         _ = sut.characters(from: offset) { result in
             charactersResult = result
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 0.1)
         return charactersResult
     }
 

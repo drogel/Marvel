@@ -10,5 +10,5 @@ import Foundation
 typealias NetworkCompletion = (Data?, URLResponse?, Error?) -> Void
 
 protocol NetworkSession {
-    func loadData(from request: URLRequest, completionHandler: @escaping NetworkCompletion) -> URLSessionDataTask
+    func loadData(from request: URLRequest) async throws -> (data: Data, response: URLResponse)
 }
