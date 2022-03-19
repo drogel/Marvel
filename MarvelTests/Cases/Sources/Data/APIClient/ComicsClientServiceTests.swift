@@ -32,25 +32,25 @@ class ComicsClientServiceTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is ComicsService)
     }
 
-    func test_whenRequestingComics_delegatesToNetworkService() {
+    func test_whenRequestingComics_delegatesToNetworkService() async {
         assertNetworkServiceRequest(callCount: 0)
-        whenRequestingComics()
+        await whenRequestingComics()
         assertNetworkServiceRequest(callCount: 1)
     }
 
-    func test_whenRequestingComics_buildsExpectedRequestComponents() {
+    func test_whenRequestingComics_buildsExpectedRequestComponents() async {
         let expectedComponents = RequestComponents(
             path: "characters/0/comics",
             queryParameters: ["offset": "0"]
         )
-        whenRequestingComics()
+        await whenRequestingComics()
         XCTAssertEqual(networkServiceMock.cachedComponents, expectedComponents)
     }
 
-    func test_whenComicsRequestCompletes_delegatesResultHandlingToHandler() {
+    func test_whenComicsRequestCompletes_delegatesResultHandlingToHandler() async {
         givenSutWithSuccessfulNetworkService()
         assertResultHandlerHandle(callCount: 0)
-        whenRequestingComics()
+        await whenRequestingComics()
         assertResultHandlerHandle(callCount: 1)
     }
 }
@@ -69,8 +69,8 @@ private extension ComicsClientServiceTests {
         givenSut(with: networkServiceStub)
     }
 
-    func whenRequestingComics() {
-        _ = sut.comics(for: 0, from: 0, completion: { _ in })
+    func whenRequestingComics() async {
+        await sut.comics(for: 0, from: 0) { _ in }
     }
 
     func assertNetworkServiceRequest(callCount: Int, line: UInt = #line) {

@@ -56,7 +56,7 @@ private extension CharactersDependencyContainer {
 
     var charactersClientService: CharactersService {
         CharactersClientService(
-            client: dependencies.networkService,
+            networkService: dependencies.networkService,
             resultHandler: resultHandler,
             dataResultHandler: dataResultHandler
         )

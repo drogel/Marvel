@@ -29,13 +29,23 @@ class ComicsClientService: ComicsService {
         from offset: Int,
         completion: @escaping (ComicsServiceResult) -> Void
     ) -> Disposable? {
-        networkService.request(endpoint: components(for: characterID, offset: offset)) { [weak self] result in
-            // TODO: Remove these when we migrate to async await
-            DispatchQueue.main.async {
-                self?.resultHandler.handle(result: result) { handlerResult in
-                    self?.dataResultHandler.completeWithServiceResult(handlerResult, completion: completion)
-                }
-            }
+        Task { await comics(for: characterID, from: offset, completion: completion) }
+        return nil
+    }
+
+    // TODO: Remove this kind of workarounds for tests
+    func comics(
+        for characterID: Int,
+        from offset: Int,
+        completion: @escaping (ComicsServiceResult) -> Void
+    ) async {
+        do {
+            let data = try await networkService.request(endpoint: components(for: characterID, offset: offset))
+            handle(.success(data), completion: completion)
+        } catch let error as NetworkError {
+            handle(.failure(error), completion: completion)
+        } catch {
+            handle(.failure(.requestError(error)), completion: completion)
         }
     }
 }
@@ -44,5 +54,11 @@ private extension ComicsClientService {
     func components(for characterID: Int, offset: Int) -> RequestComponents {
         let components = RequestComponents().appendingPathComponents([charactersPath, String(characterID), comicsPath])
         return components.withOffsetQuery(offset)
+    }
+
+    func handle(_ result: Result<Data?, NetworkError>, completion: @escaping (ComicsServiceResult) -> Void) {
+        resultHandler.handle(result: result) { [weak self] handlerResult in
+            self?.dataResultHandler.completeWithServiceResult(handlerResult, completion: completion)
+        }
     }
 }

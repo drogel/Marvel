@@ -66,7 +66,7 @@ private extension CharacterDetailDependencyContainer {
 
     var characterDetailReleaseService: CharacterDetailService {
         CharacterDetailClientService(
-            client: dependencies.networkService,
+            networkService: dependencies.networkService,
             networkResultHandler: resultHandler,
             dataResultHandler: characterDataResultHandler
         )

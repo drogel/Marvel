@@ -23,6 +23,11 @@ class AuthenticatedNetworkService: NetworkService {
         }
         return networkService.request(endpoint: authenticatedComponents, completion: completion)
     }
+
+    func request(endpoint: RequestComponents) async throws -> Data? {
+        guard let authenticatedComponents = addAuthentication(to: endpoint) else { throw NetworkError.unauthorized }
+        return try await networkService.request(endpoint: authenticatedComponents)
+    }
 }
 
 private extension AuthenticatedNetworkService {

@@ -20,6 +20,7 @@ typealias NetworkServiceCompletion = (Result<Data?, NetworkError>) -> Void
 
 protocol NetworkService {
     func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Disposable?
+    func request(endpoint: RequestComponents) async throws -> Data?
 }
 
 class NetworkSessionService: NetworkService {
@@ -40,6 +41,11 @@ class NetworkSessionService: NetworkService {
         }
         Task { await handleDataLoading(from: urlRequest, completion: completion) }
         return nil
+    }
+
+    func request(endpoint: RequestComponents) async throws -> Data? {
+        guard let urlRequest = buildURLRequest(from: endpoint) else { throw NetworkError.invalidURL }
+        return try await loadData(from: urlRequest)
     }
 }
 
