@@ -19,7 +19,6 @@ enum NetworkError: Error {
 typealias NetworkServiceCompletion = (Result<Data?, NetworkError>) -> Void
 
 protocol NetworkService {
-    func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Disposable?
     func request(endpoint: RequestComponents) async throws -> Data?
 }
 
@@ -34,18 +33,9 @@ class NetworkSessionService: NetworkService {
         self.urlComposer = urlComposer
     }
 
-    func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Disposable? {
-        guard let urlRequest = buildURLRequest(from: endpoint) else {
-            completion(.failure(.invalidURL))
-            return nil
-        }
-        Task { await handleDataLoading(from: urlRequest, completion: completion) }
-        return nil
-    }
-
     func request(endpoint: RequestComponents) async throws -> Data? {
         guard let urlRequest = buildURLRequest(from: endpoint) else { throw NetworkError.invalidURL }
-        return try await loadData(from: urlRequest)
+        return try await loadDataHandlingErrors(from: urlRequest)
     }
 }
 
@@ -55,14 +45,14 @@ private extension NetworkSessionService {
         return URLRequest(url: url)
     }
 
-    func handleDataLoading(from urlRequest: URLRequest, completion: @escaping NetworkServiceCompletion) async {
+    func loadDataHandlingErrors(from urlRequest: URLRequest) async throws -> Data {
         do {
-            let data = try await loadData(from: urlRequest)
-            handleSuccess(data, completion: completion)
+            return try await loadData(from: urlRequest)
         } catch let error as NetworkError {
-            handle(networkError: error, completion: completion)
+            throw error
         } catch {
-            handle(error, completion: completion)
+            guard let networkError = findNetworkError(in: error) else { throw NetworkError.requestError(error) }
+            throw networkError
         }
     }
 
@@ -70,22 +60,6 @@ private extension NetworkSessionService {
         let responseWithData = try await session.loadData(from: urlRequest)
         if let networkError = findNetworkError(in: responseWithData.response) { throw networkError }
         return responseWithData.data
-    }
-
-    func handleSuccess(_ data: Data?, completion: @escaping NetworkServiceCompletion) {
-        completion(.success(data))
-    }
-
-    func handle(networkError: NetworkError, completion: @escaping NetworkServiceCompletion) {
-        completion(.failure(networkError))
-    }
-
-    func handle(_ genericError: Error, completion: @escaping NetworkServiceCompletion) {
-        guard let networkError = findNetworkError(in: genericError) else {
-            handle(networkError: .requestError(genericError), completion: completion)
-            return
-        }
-        handle(networkError: networkError, completion: completion)
     }
 
     func findNetworkError(in response: URLResponse) -> NetworkError? {

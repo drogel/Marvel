@@ -30,29 +30,33 @@ class AuthenticatedNetworkServiceTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_givenAuthenticatorMock_whenRequesting_callsAuthenticate() {
-        assertAuthenticatorAuthenticate(callCount: 0)
-        whenRequestingIgnoringResult()
-        assertAuthenticatorAuthenticate(callCount: 1)
+    func test_givenAuthenticatorMock_whenRequesting_callsAuthenticate() async {
+        do {
+            assertAuthenticatorAuthenticate(callCount: 0)
+            try await whenRequestingIgnoringResult()
+            assertAuthenticatorAuthenticate(callCount: 1)
+        } catch {}
     }
 
-    func test_givenAuthenticatorMock_whenRequesting_completsWithUnauthorizedError() {
-        let result = whenRequesting()
-        assertIsFailure(result) {
-            if case NetworkError.unauthorized = $0 { } else { failExpectingErrorMatching($0) }
+    func test_givenAuthenticatorMock_whenRequesting_throwsUnauthorizedError() async throws {
+        do {
+            try await whenRequestingIgnoringResult()
+            XCTFail("Expected \(NetworkError.unauthorized) error")
+        } catch {
+            if case NetworkError.unauthorized = error { } else { failExpectingErrorMatching(error) }
         }
     }
 
-    func test_givenNonEmptyAuthenticator_whenRequesting_requestsFromInnerNetworkService() {
+    func test_givenNonEmptyAuthenticator_whenRequesting_requestsFromInnerNetworkService() async throws {
         givenSutWithNonEmptyAuthenticator()
         assertNetworkServiceRequest(callCount: 0)
-        whenRequestingIgnoringResult()
+        try await whenRequestingIgnoringResult()
         assertNetworkServiceRequest(callCount: 1)
     }
 
-    func test_givenNonEmptyAuthenticator_whenRequesting_componentsContainAuthenticationParams() {
+    func test_givenNonEmptyAuthenticator_whenRequesting_componentsContainAuthenticationParams() async throws {
         givenSutWithNonEmptyAuthenticator()
-        whenRequestingIgnoringResult()
+        try await whenRequestingIgnoringResult()
         let expectedComponents = RequestComponents(
             path: componentsStub.path,
             queryParameters: AuthenticatorStub.authenticationParamsStub
@@ -71,16 +75,12 @@ private extension AuthenticatedNetworkServiceTests {
         givenSut(with: authenticatorMock)
     }
 
-    func whenRequestingIgnoringResult() {
-        _ = sut.request(endpoint: componentsStub, completion: { _ in })
+    func whenRequestingIgnoringResult() async throws {
+        _ = try await whenRequesting()
     }
 
-    func whenRequesting() -> Result<Data?, NetworkError> {
-        var requestResult: Result<Data?, NetworkError>!
-        _ = sut.request(endpoint: componentsStub) { result in
-            requestResult = result
-        }
-        return requestResult
+    func whenRequesting() async throws -> Data? {
+        try await sut.request(endpoint: componentsStub)
     }
 
     func assertAuthenticatorAuthenticate(callCount: Int, line: UInt = #line) {
