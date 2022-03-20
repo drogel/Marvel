@@ -29,7 +29,7 @@ class ComicsClientService: ComicsService {
         from offset: Int,
         completion: @escaping (ComicsServiceResult) -> Void
     ) -> Disposable? {
-        Task { await comics(for: characterID, from: offset, completion: completion) }
+        Task { @MainActor in await comics(for: characterID, from: offset, completion: completion) }
         return nil
     }
 

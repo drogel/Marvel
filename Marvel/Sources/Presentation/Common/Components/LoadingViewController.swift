@@ -63,12 +63,15 @@ private extension LoadingViewController {
     }
 
     func animate(animations: @escaping () -> Void, completion: (() -> Void)? = nil) {
-        UIView.animate(
-            withDuration: Constants.animationDuration,
-            delay: 0,
-            options: .curveEaseOut,
-            animations: animations,
-            completion: { _ in completion?() }
-        )
+        // TODO: Get rid of this when we complete async await migration
+        DispatchQueue.main.async {
+            UIView.animate(
+                withDuration: Constants.animationDuration,
+                delay: 0,
+                options: .curveEaseOut,
+                animations: animations,
+                completion: { _ in completion?() }
+            )
+        }
     }
 }

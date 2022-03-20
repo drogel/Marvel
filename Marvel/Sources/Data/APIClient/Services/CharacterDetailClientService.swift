@@ -24,7 +24,7 @@ class CharacterDetailClientService: CharacterDetailService {
     }
 
     func character(with identifier: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable? {
-        Task { await character(with: identifier, completion: completion) }
+        Task { @MainActor in await character(with: identifier, completion: completion) }
         return nil
     }
 
