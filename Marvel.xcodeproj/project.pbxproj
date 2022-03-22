@@ -95,6 +95,8 @@
 		0559261027A85EB500026919 /* XCTestCase+FailureMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */; };
 		0559261427A868BA00026919 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0559261627A868BA00026919 /* Localizable.strings */; };
 		0559261B27A86B2700026919 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0559261A27A86B2700026919 /* String+Localized.swift */; };
+		055D2B8927EA4D5400986FEF /* NetworkDataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055D2B8827EA4D5400986FEF /* NetworkDataHandler.swift */; };
+		055D2B8B27EA4DE700986FEF /* ClientDataHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055D2B8A27EA4DE700986FEF /* ClientDataHandlerTests.swift */; };
 		056B1FBF27B93690000EBC83 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B1FBE27B93690000EBC83 /* Character.swift */; };
 		056B1FC127B9371A000EBC83 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B1FC027B9371A000EBC83 /* Image.swift */; };
 		056B1FC327B93733000EBC83 /* Comic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B1FC227B93733000EBC83 /* Comic.swift */; };
@@ -301,6 +303,8 @@
 		0559261527A868BA00026919 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0559261927A869CD00026919 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0559261A27A86B2700026919 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
+		055D2B8827EA4D5400986FEF /* NetworkDataHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataHandler.swift; sourceTree = "<group>"; };
+		055D2B8A27EA4DE700986FEF /* ClientDataHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientDataHandlerTests.swift; sourceTree = "<group>"; };
 		056B1FBE27B93690000EBC83 /* Character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
 		056B1FC027B9371A000EBC83 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		056B1FC227B93733000EBC83 /* Comic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comic.swift; sourceTree = "<group>"; };
@@ -477,6 +481,7 @@
 				05484621279DE69300C6EC66 /* MarvelAPIPaths.swift */,
 				0571306F27A5C1D30009383E /* NetworkErrorHandler.swift */,
 				054ED2BC27A716C3000358A3 /* NetworkResultHandler.swift */,
+				055D2B8827EA4D5400986FEF /* NetworkDataHandler.swift */,
 				0548461A279DC6E400C6EC66 /* Authentication */,
 				056B1FC827B93E51000EBC83 /* Mappers */,
 				05932C43279B18AE00549D7D /* Network */,
@@ -490,6 +495,7 @@
 			children = (
 				0571306A27A5B36A0009383E /* CharacterDetailClientServiceTests.swift */,
 				0571306427A559F10009383E /* CharactersClientServiceTests.swift */,
+				055D2B8A27EA4DE700986FEF /* ClientDataHandlerTests.swift */,
 				054D95A227B18D71007B54DA /* ComicsClientServiceTests.swift */,
 				0571307127A5C3080009383E /* DataServicesNetworkErrorHandlerTests.swift */,
 				05BD40A127A9A5B100F2E513 /* URLComponentsBuilderTests.swift */,
@@ -1501,6 +1507,7 @@
 				05484617279D865800C6EC66 /* Instantiable.swift in Sources */,
 				053B9DA4279A0CD100CCF1C2 /* SecretsRetriever.swift in Sources */,
 				05484620279DC98800C6EC66 /* CharacterDetailCoordinator.swift in Sources */,
+				055D2B8927EA4D5400986FEF /* NetworkDataHandler.swift in Sources */,
 				05B0855B27AC594300A74DD0 /* CharacterDetailLayout.swift in Sources */,
 				053B9DA2279A0BE900CCF1C2 /* Authenticator.swift in Sources */,
 				0548461E279DC89C00C6EC66 /* CharacterDetailDependencyContainer.swift in Sources */,
@@ -1605,6 +1612,7 @@
 				0578120A27D51E7900934E35 /* CharacterDetailDataSourceFactoryTests.swift in Sources */,
 				056B1FDF27B97818000EBC83 /* ContentPage+Stubs.swift in Sources */,
 				057D72F227986BA7005ED888 /* PageInfoTests.swift in Sources */,
+				055D2B8B27EA4DE700986FEF /* ClientDataHandlerTests.swift in Sources */,
 				05BD40A027A9A2DC00F2E513 /* CoordinatorTests.swift in Sources */,
 				058B8B8327E787B7000E5F9A /* XCTestCase+AsyncAssertions.swift in Sources */,
 				057D72FA27986D33005ED888 /* CharacterDataTests.swift in Sources */,
