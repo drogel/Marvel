@@ -31,23 +31,28 @@ class CharactersClientServiceTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_givenANetworkServiceMock_whenRetrievingCharacters_callsRequest() async {
+    func test_givenANetworkServiceMock_whenRetrievingCharacters_callsRequest() async throws {
         givenSutWithNetworkServiceMock()
         assertNetworkServiceRequest(callCount: 0)
-        await whenRetrievingCharactersIgnoringResult()
+        try await whenRetrievingCharactersIgnoringResult()
         assertNetworkServiceRequest(callCount: 1)
     }
 
     func test_givenASucessfulNetworkServiceAndFailingParser_whenRetrievingCharacters_resultIsFailure() async {
+        let expectedError = CharactersServiceError.emptyData
         givenFailingDataHandler()
         givenSutWithSuccessfulNetworkService()
-        let result = await whenRetrievingCharacters()
-        assertIsFailure(result) {
-            assert($0, isEqualTo: .emptyData)
+        do {
+            try await whenRetrievingCharactersIgnoringResult()
+            failExpectingErrorMatching(expectedError)
+        } catch let error as CharactersServiceError {
+            XCTAssertEqual(error, expectedError)
+        } catch {
+            failExpectingErrorMatching(expectedError)
         }
     }
 
-    func test_givenACachingNetworkServiceFake_whenRetrievingCharacters_requestIsCalledWithExpectedComponents() async {
+    func test_givenACachingNetworkServiceFake_whenRetrievingCharacters_requestHasExpectedComponents() async throws {
         let offsetStub = 40
         let charactersPath = MarvelAPIPaths.characters.rawValue
         let expectedComponentsPath = RequestComponents(
@@ -55,18 +60,17 @@ class CharactersClientServiceTests: XCTestCase {
             queryParameters: ["offset": String(offsetStub)]
         )
         givenSutWithNetworkServiceCacherFake()
-        await whenRetrievingCharactersIgnoringResult(from: offsetStub)
+        try await whenRetrievingCharactersIgnoringResult(from: offsetStub)
         let actualComponents = whenGettingCachedComponentsFromNetworkService()
         XCTAssertEqual(actualComponents, expectedComponentsPath)
     }
 
-    func test_givenASucessfulNetworkServiceAndSuccessfulParser_whenRetrievingCharacters_resultIsSuccess() async {
+    func test_givenASucessfulNetworkServiceAndSuccessfulParser_whenRetrievingCharacters_resultIsSuccess() async throws {
+        let expectedCharacters = ContentPage<Character>.empty
         givenSuccesfulParser()
         givenSutWithSuccessfulNetworkService()
-        let result = await whenRetrievingCharacters()
-        assertIsSuccess(result) {
-            XCTAssertEqual($0, ContentPage<Character>.empty)
-        }
+        let actualCharacters = try await whenRetrievingCharacters()
+        XCTAssertEqual(actualCharacters, expectedCharacters)
     }
 
     func test_givenNoConnection_whenRetrievingCharacters_resultIsFailureWithNoConnectionError() async {
@@ -90,12 +94,11 @@ class CharactersClientServiceTests: XCTestCase {
         )
     }
 
-    func test_givenFailingNetworkService_whenRetrievingCharacters_delegatesErrorToErrorHandler() async {
-        givenErrorHandlerMock()
-        givenSutWithFailingNetworkService(providingError: .invalidURL)
-        assertErrorHandlerHandle(callCount: 0)
-        await whenRetrievingCharactersIgnoringResult()
-        assertErrorHandlerHandle(callCount: 1)
+    func test_givenInvalidURL_whenRetrievingCharacters_resultIsFailureWithEmptyData() async {
+        await assertWhenRetrievingCharacters(
+            returnsFailureWithError: .emptyData,
+            whenNetworkErrorWas: .invalidURL
+        )
     }
 }
 
@@ -143,19 +146,12 @@ private extension CharactersClientServiceTests {
         )
     }
 
-    func whenRetrievingCharactersIgnoringResult(from offset: Int = 0) async {
-        await sut.characters(from: offset) { _ in }
+    func whenRetrievingCharactersIgnoringResult(from offset: Int = 0) async throws {
+        _ = try await whenRetrievingCharacters(from: offset)
     }
 
-    func whenRetrievingCharacters(from offset: Int = 0) async -> CharactersServiceResult {
-        var charactersResult: CharactersServiceResult!
-        let expectation = expectation(description: "Received result")
-        await sut.characters(from: offset) { result in
-            charactersResult = result
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: 0.1)
-        return charactersResult
+    func whenRetrievingCharacters(from offset: Int = 0) async throws -> ContentPage<Character> {
+        try await sut.characters(from: offset)
     }
 
     func whenGettingCachedComponentsFromNetworkService() -> RequestComponents {
@@ -182,7 +178,13 @@ private extension CharactersClientServiceTests {
         line: UInt = #line
     ) async {
         givenSutWithFailingNetworkService(providingError: networkError)
-        let result = await whenRetrievingCharacters()
-        assertIsFailure(result, then: { assert($0, isEqualTo: expectedError) }, line: line)
+        do {
+            try await whenRetrievingCharactersIgnoringResult()
+            failExpectingErrorMatching(expectedError, line: line)
+        } catch let error as CharactersServiceError {
+            XCTAssertEqual(error, expectedError, line: line)
+        } catch {
+            failExpectingErrorMatching(expectedError, line: line)
+        }
     }
 }

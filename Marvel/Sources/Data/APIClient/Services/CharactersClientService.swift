@@ -26,31 +26,25 @@ class CharactersClientService: CharactersService {
         self.dataResultHandler = dataResultHandler
     }
 
-    func characters(from offset: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
-        Task { @MainActor in await characters(from: offset, completion: completion) }
-        return nil
-    }
-
-    func characters(from offset: Int, completion: @escaping (CharactersServiceResult) -> Void) async {
-        do {
-            let contentPage = try await characters(from: offset)
-            completion(.success(contentPage))
-        } catch let error as NetworkError {
-            completion(.failure(networkErrorHandler.handle(error)))
-        } catch {
-            completion(.failure(.emptyData))
-        }
-    }
-
     func characters(from offset: Int) async throws -> ContentPage<Character> {
-        let data = try await networkService.request(endpoint: components(for: offset))
-        let dataWrapper: DataWrapper<CharacterData> = try dataHandler.handle(data)
-        return try dataResultHandler.handle(dataWrapper)
+        do {
+            return try await requestCharacters(from: offset)
+        } catch let networkError as NetworkError {
+            throw networkErrorHandler.handle(networkError)
+        } catch {
+            throw CharactersServiceError.emptyData
+        }
     }
 }
 
 private extension CharactersClientService {
     func components(for offset: Int) -> RequestComponents {
         RequestComponents(path: charactersPath).withOffsetQuery(offset)
+    }
+
+    func requestCharacters(from offset: Int) async throws -> ContentPage<Character> {
+        let data = try await networkService.request(endpoint: components(for: offset))
+        let dataWrapper: DataWrapper<CharacterData> = try dataHandler.handle(data)
+        return try dataResultHandler.handle(dataWrapper)
     }
 }

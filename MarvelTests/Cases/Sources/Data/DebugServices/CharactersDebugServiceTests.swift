@@ -25,25 +25,21 @@ class CharactersDebugServiceTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is CharactersService)
     }
 
-    func test_whenRetrievingCharacters_returnsNil() {
-        XCTAssertNil(sut.characters(from: 0, completion: { _ in }))
-    }
-
-    func test_givenSutWithEmptyDataLoader_whenRetrievingCharacters_completesWithFailure() {
+    func test_givenSutWithEmptyDataLoader_whenRetrievingCharacters_completesWithFailure() async throws {
         givenSutWithEmptyDataLoader()
-        let completionResult = whenRetrievingResultFromCharacters()
-        assertIsFailure(completionResult)
+        do {
+            try await whenRetrievingCharactersIgnoringResult()
+            XCTFail("Expected error")
+        } catch {}
     }
 
-    func test_givenSutDataLoader_whenRetrievingCharacters_completesWithSuccess() {
+    func test_givenSutDataLoader_whenRetrievingCharacters_completesWithSuccess() async {
         givenSutWithDataLoader()
-        let completionResult = whenRetrievingResultFromCharacters()
-        assertIsSuccess(completionResult)
-    }
-
-    func test_givenDidAlreadyLoad_whenRetrievingCharacters_disposableIsNil() {
-        givenDidAlreadyLoad()
-        XCTAssertNil(sut.characters(from: 0, completion: { _ in }))
+        do {
+            try await whenRetrievingCharactersIgnoringResult()
+        } catch {
+            XCTFail("Did not expect error")
+        }
     }
 }
 
@@ -65,20 +61,7 @@ private extension CharactersDebugServiceTests {
         )
     }
 
-    func givenDidAlreadyLoad() {
-        givenSutWithDataLoader()
-        _ = whenRetrievingResultFromCharacters()
-    }
-
-    func whenRetrievingResultFromCharacters(externalExpectation: XCTestExpectation? = nil) -> CharactersServiceResult {
-        let defaultExpectation = expectation(description: "JSON file parsing completion")
-        let completionExpectation = externalExpectation ?? defaultExpectation
-        var completionResult: CharactersServiceResult!
-        _ = sut.characters(from: 0) { result in
-            completionResult = result
-            completionExpectation.fulfill()
-        }
-        wait(for: [completionExpectation], timeout: 0.1)
-        return completionResult
+    func whenRetrievingCharactersIgnoringResult() async throws {
+        _ = try await sut.characters(from: 0)
     }
 }
