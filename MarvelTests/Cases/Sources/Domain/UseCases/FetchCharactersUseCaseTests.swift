@@ -27,25 +27,20 @@ class FetchCharactersUseCaseTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_whenFetching_returnsServiceDisposable() throws {
-        let disposable = try whenRetrievingDisposableFromFetchCharacters()
-        XCTAssertTrue(CharactersServiceMock.disposableStub === disposable)
-    }
-
-    func test_whenFetching_callsServiceFetch() throws {
-        whenFetchingCharacters()
+    func test_whenFetching_callsServiceFetch() async throws {
+        try await whenFetchingCharacters()
         XCTAssertEqual(serviceMock.charactersCallCount, 1)
     }
 
-    func test_givenFailingService_whenFetching_completesWithFailure() {
+    func test_givenFailingService_whenFetching_completesWithFailure() async throws {
         givenSutWithFailureServiceStub()
-        let completionResult = whenRetrievingResultFromFetchingCharacters()
+        let completionResult = try await whenRetrievingResultFromFetchingCharacters()
         assertIsFailure(completionResult)
     }
 
-    func test_givenSuccessfulService_whenFetching_completesWithPageData() {
+    func test_givenSuccessfulService_whenFetching_completesWithPageData() async throws {
         givenSutWithSuccessfulServiceStub(stubbingContentPage: ContentPage<Character>.empty)
-        let completionResult = whenRetrievingResultFromFetchingCharacters()
+        let completionResult = try await whenRetrievingResultFromFetchingCharacters()
         assertIsSuccess(completionResult) {
             XCTAssertEqual($0, ContentPage<Character>.empty)
         }
@@ -96,17 +91,10 @@ private class CharactersServiceSuccessStub: CharactersService {
 }
 
 private extension FetchCharactersUseCaseTests {
-    func whenRetrievingDisposableFromFetchCharacters(
-        completion: ((FetchCharactersResult) -> Void)? = nil
-    ) throws -> DisposableStub {
-        let disposable = sut.fetch(query: query) { result in
+    func whenFetchingCharacters(completion: ((FetchCharactersResult) -> Void)? = nil) async throws {
+        await sut.fetch(query: query) { result in
             completion?(result)
         }
-        return try XCTUnwrap(disposable as? DisposableStub)
-    }
-
-    func whenFetchingCharacters(completion: ((FetchCharactersResult) -> Void)? = nil) {
-        _ = try? whenRetrievingDisposableFromFetchCharacters(completion: completion)
     }
 
     func givenSutWithFailureServiceStub() {
@@ -123,9 +111,9 @@ private extension FetchCharactersUseCaseTests {
         sut = FetchCharactersServiceUseCase(service: service)
     }
 
-    func whenRetrievingResultFromFetchingCharacters() -> FetchCharactersResult {
+    func whenRetrievingResultFromFetchingCharacters() async throws -> FetchCharactersResult {
         var completionResult: FetchCharactersResult!
-        whenFetchingCharacters { result in
+        try await whenFetchingCharacters { result in
             completionResult = result
         }
         return completionResult

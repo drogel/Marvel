@@ -27,6 +27,18 @@ class FetchCharactersServiceUseCase: FetchCharactersUseCase {
     }
 
     func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Disposable? {
-        service.characters(from: query.offset, completion: completion)
+        Task { await fetch(query: query, completion: completion) }
+        return nil
+    }
+
+    func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) async {
+        do {
+            let charactersPage = try await service.characters(from: query.offset)
+            completion(.success(charactersPage))
+        } catch let error as CharactersServiceError {
+            completion(.failure(error))
+        } catch {
+            completion(.failure(.emptyData))
+        }
     }
 }
