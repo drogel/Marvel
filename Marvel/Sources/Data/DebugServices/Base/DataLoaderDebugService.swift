@@ -9,6 +9,7 @@ import Foundation
 
 protocol DataLoaderDebugService {
     func loadData<T: DataObject>(completion: @escaping (DataServiceResult<T>) -> Void) -> Disposable?
+    func loadData<T: DataObject>() throws -> DataWrapper<T>
 }
 
 class JsonDataLoaderDebugService: DataLoaderDebugService {
@@ -28,6 +29,13 @@ class JsonDataLoaderDebugService: DataLoaderDebugService {
             self.retrieveData(completion: completion)
         }
         return nil
+    }
+
+    func loadData<T: DataObject>() throws -> DataWrapper<T> {
+        guard let data: DataWrapper<T> = dataLoader.load(fromFileNamed: fileName.rawValue) else {
+            throw DataServiceError.emptyData
+        }
+        return data
     }
 }
 

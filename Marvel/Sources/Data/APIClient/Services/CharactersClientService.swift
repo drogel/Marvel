@@ -10,16 +10,19 @@ import Foundation
 class CharactersClientService: CharactersService {
     private let charactersPath = MarvelAPIPaths.characters.rawValue
     private let networkService: NetworkService
-    private let resultHandler: NetworkResultHandler
+    private let dataHandler: NetworkDataHandler
     private let dataResultHandler: CharacterDataResultHandler
+    private let networkErrorHandler: NetworkErrorHandler
 
     init(
         networkService: NetworkService,
-        resultHandler: NetworkResultHandler,
+        dataHandler: NetworkDataHandler,
+        networkErrorHandler: NetworkErrorHandler,
         dataResultHandler: CharacterDataResultHandler
     ) {
         self.networkService = networkService
-        self.resultHandler = resultHandler
+        self.networkErrorHandler = networkErrorHandler
+        self.dataHandler = dataHandler
         self.dataResultHandler = dataResultHandler
     }
 
@@ -28,26 +31,26 @@ class CharactersClientService: CharactersService {
         return nil
     }
 
-    func characters(from offset: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) async {
+    func characters(from offset: Int, completion: @escaping (CharactersServiceResult) -> Void) async {
         do {
-            let data = try await networkService.request(endpoint: components(for: offset))
-            handle(.success(data), completion: completion)
+            let contentPage = try await characters(from: offset)
+            completion(.success(contentPage))
         } catch let error as NetworkError {
-            handle(.failure(error), completion: completion)
+            completion(.failure(networkErrorHandler.handle(error)))
         } catch {
-            handle(.failure(.requestError(error)), completion: completion)
+            completion(.failure(.emptyData))
         }
+    }
+
+    func characters(from offset: Int) async throws -> ContentPage<Character> {
+        let data = try await networkService.request(endpoint: components(for: offset))
+        let dataWrapper: DataWrapper<CharacterData> = try dataHandler.handle(data)
+        return try dataResultHandler.handle(dataWrapper)
     }
 }
 
 private extension CharactersClientService {
     func components(for offset: Int) -> RequestComponents {
         RequestComponents(path: charactersPath).withOffsetQuery(offset)
-    }
-
-    func handle(_ result: Result<Data?, NetworkError>, completion: @escaping (CharactersServiceResult) -> Void) {
-        resultHandler.handle(result: result) { [weak self] handlerResult in
-            self?.dataResultHandler.completeWithServiceResult(handlerResult, completion: completion)
-        }
     }
 }

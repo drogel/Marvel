@@ -57,7 +57,8 @@ private extension CharactersDependencyContainer {
     var charactersClientService: CharactersService {
         CharactersClientService(
             networkService: dependencies.networkService,
-            resultHandler: resultHandler,
+            dataHandler: ClientDataHandler(parser: parser),
+            networkErrorHandler: errorHandler,
             dataResultHandler: dataResultHandler
         )
     }
@@ -73,8 +74,8 @@ private extension CharactersDependencyContainer {
         JSONDecoderParser()
     }
 
-    var resultHandler: NetworkResultHandler {
-        ClientResultHandler(parser: parser, errorHandler: DataServicesNetworkErrorHandler())
+    var errorHandler: NetworkErrorHandler {
+        DataServicesNetworkErrorHandler()
     }
 
     var dataResultHandler: CharacterDataResultHandler {

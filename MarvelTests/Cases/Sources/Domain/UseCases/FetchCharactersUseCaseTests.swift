@@ -60,12 +60,21 @@ private class CharactersServiceMock: CharactersService {
         charactersCallCount += 1
         return Self.disposableStub
     }
+
+    func characters(from _: Int) async throws -> ContentPage<Character> {
+        charactersCallCount += 1
+        return ContentPage<Character>.empty
+    }
 }
 
 private class CharactersServiceFailureStub: CharactersService {
     func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
         completion(.failure(.emptyData))
         return DisposableStub()
+    }
+
+    func characters(from _: Int) async throws -> ContentPage<Character> {
+        throw CharactersServiceError.emptyData
     }
 }
 
@@ -79,6 +88,10 @@ private class CharactersServiceSuccessStub: CharactersService {
     func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
         completion(.success(contentPage))
         return DisposableStub()
+    }
+
+    func characters(from _: Int) async throws -> ContentPage<Character> {
+        contentPage
     }
 }
 

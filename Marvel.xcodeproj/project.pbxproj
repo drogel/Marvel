@@ -199,6 +199,7 @@
 		05DAC34C27974CE30062CC6F /* CharacterDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34B27974CE30062CC6F /* CharacterDetailViewController.swift */; };
 		05DAC35027974D8D0062CC6F /* CharactersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34F27974D8D0062CC6F /* CharactersViewModel.swift */; };
 		05DE20CF27DA626500BB2F47 /* Publisher+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DE20CE27DA626500BB2F47 /* Publisher+Assertions.swift */; };
+		05E596A227EF365D0090C918 /* NetworkDataHandlerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E596A127EF365D0090C918 /* NetworkDataHandlerMock.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -410,6 +411,7 @@
 		05DAC34B27974CE30062CC6F /* CharacterDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailViewController.swift; sourceTree = "<group>"; };
 		05DAC34F27974D8D0062CC6F /* CharactersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersViewModel.swift; sourceTree = "<group>"; };
 		05DE20CE27DA626500BB2F47 /* Publisher+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+Assertions.swift"; sourceTree = "<group>"; };
+		05E596A127EF365D0090C918 /* NetworkDataHandlerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataHandlerMock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -703,6 +705,7 @@
 				05484624279DE8C800C6EC66 /* DisposableMock.swift */,
 				0513D24427AEC6280040DF58 /* ImageURLBuilderMock.swift */,
 				0571306827A55C280009383E /* JSONParserMock.swift */,
+				05E596A127EF365D0090C918 /* NetworkDataHandlerMock.swift */,
 				0571307327A5C53E0009383E /* NetworkErrorHandlerMock.swift */,
 				0571306627A55B3A0009383E /* NetworkServiceMock.swift */,
 				0535F55927B2E55B006F8AC4 /* OffsetPagerPartialMock.swift */,
@@ -1628,6 +1631,7 @@
 				05B0854C27AC43D300A74DD0 /* OptionalStringNilOrEmptyTests.swift in Sources */,
 				0506E30127A8481C0006C759 /* AuthenticatedNetworkServiceTests.swift in Sources */,
 				0545946E27989A1A00A634AD /* CharactersDebugServiceTests.swift in Sources */,
+				05E596A227EF365D0090C918 /* NetworkDataHandlerMock.swift in Sources */,
 				0548460F279D6E8400C6EC66 /* CharacterInfoViewModelTests.swift in Sources */,
 				0571307227A5C3080009383E /* DataServicesNetworkErrorHandlerTests.swift in Sources */,
 				054594772798A7E000A634AD /* JsonDataLoaderTests.swift in Sources */,

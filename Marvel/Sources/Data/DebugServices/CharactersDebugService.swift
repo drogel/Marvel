@@ -25,4 +25,9 @@ class CharactersDebugService: CharactersService {
             self?.dataResultHandler.completeWithServiceResult(result, completion: completion)
         }
     }
+
+    func characters(from _: Int) async throws -> ContentPage<Character> {
+        let data: DataWrapper<CharacterData> = try dataLoader.loadData()
+        return try dataResultHandler.handle(data)
+    }
 }

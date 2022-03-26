@@ -12,16 +12,19 @@ class CharactersClientServiceTests: XCTestCase {
     private var sut: CharactersClientService!
     private var networkServiceMock: NetworkServiceMock!
     private var jsonParserMock: JSONParserMock!
+    private var networkDataHandlerMock: NetworkDataHandlerMock!
     private var errorHandler: NetworkErrorHandler!
 
     override func setUp() {
         super.setUp()
         jsonParserMock = JSONParserMock()
+        networkDataHandlerMock = NetworkDataHandlerMock()
         errorHandler = DataServicesNetworkErrorHandler()
     }
 
     override func tearDown() {
         sut = nil
+        networkDataHandlerMock = nil
         networkServiceMock = nil
         jsonParserMock = nil
         errorHandler = nil
@@ -36,7 +39,7 @@ class CharactersClientServiceTests: XCTestCase {
     }
 
     func test_givenASucessfulNetworkServiceAndFailingParser_whenRetrievingCharacters_resultIsFailure() async {
-        givenFailingParser()
+        givenFailingDataHandler()
         givenSutWithSuccessfulNetworkService()
         let result = await whenRetrievingCharacters()
         assertIsFailure(result) {
@@ -114,8 +117,8 @@ private extension CharactersClientServiceTests {
         givenSut(with: networkServiceMock)
     }
 
-    func givenFailingParser() {
-        jsonParserMock = JSONParserFailingStub()
+    func givenFailingDataHandler() {
+        networkDataHandlerMock = NetworkDataHandlerFailingStub()
     }
 
     func givenSuccesfulParser() {
@@ -132,10 +135,10 @@ private extension CharactersClientServiceTests {
     }
 
     func givenSut(with networkService: NetworkService) {
-        let resultHandler = ClientResultHandler(parser: jsonParserMock, errorHandler: errorHandler)
         sut = CharactersClientService(
             networkService: networkService,
-            resultHandler: resultHandler,
+            dataHandler: networkDataHandlerMock,
+            networkErrorHandler: errorHandler,
             dataResultHandler: CharacterDataResultHandlerFactory.createWithDataMappers()
         )
     }
