@@ -10,8 +10,8 @@ import Foundation
 import XCTest
 
 class ViewModelMock: ViewModel {
-    private var startCallCount = 0
-    private var disposeCallCount = 0
+    var startCallCount = 0
+    var disposeCallCount = 0
 
     func start() {
         startCallCount += 1

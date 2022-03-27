@@ -46,7 +46,7 @@ class CharactersViewController: ViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        viewModel.start()
+        start()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -61,7 +61,7 @@ extension CharactersViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        viewModel.willDisplayCell(at: indexPath)
+        Task { await viewModel.willDisplayCell(at: indexPath) }
     }
 }
 
@@ -103,7 +103,7 @@ private extension CharactersViewController {
         case let .success(models):
             dataSource.update(with: models)
         case let .failure(error):
-            showErrorAlert(message: error.localizedDescription, retryButtonAction: viewModel.start)
+            showErrorAlert(message: error.localizedDescription, retryButtonAction: start)
         }
     }
 
@@ -137,5 +137,9 @@ private extension CharactersViewController {
     func configureConstraints(of collectionView: UICollectionView) {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.fit(collectionView, in: view)
+    }
+
+    func start() {
+        Task { await viewModel.start() }
     }
 }

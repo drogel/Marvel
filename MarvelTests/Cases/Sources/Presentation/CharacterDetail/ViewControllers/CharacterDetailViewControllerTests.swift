@@ -34,8 +34,10 @@ class CharacterDetailViewControllerTests: XCTestCase {
     }
 
     func test_whenViewDidLoad_callsViewModelStart() {
+        let startDidCallExpectation = startDidCallExpectation(on: viewModelMock)
         viewModelMock.assertStart(callCount: 0)
         sut.loadViewIfNeeded()
+        wait(for: [startDidCallExpectation], timeout: 2)
         viewModelMock.assertStart(callCount: 1)
     }
 

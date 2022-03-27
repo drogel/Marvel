@@ -13,7 +13,7 @@ typealias CharactersViewModelState = Result<[CharacterCellModel], CharactersView
 protocol CharactersViewModelProtocol: ViewModel {
     var statePublisher: AnyPublisher<CharactersViewModelState, Never> { get }
     var loadingStatePublisher: AnyPublisher<LoadingState, Never> { get }
-    func willDisplayCell(at indexPath: IndexPath)
+    func willDisplayCell(at indexPath: IndexPath) async
     func select(at indexPath: IndexPath)
 }
 
@@ -70,9 +70,9 @@ class CharactersViewModel: CharactersViewModelProtocol {
         loadingState = .idle
     }
 
-    func start() {
+    func start() async {
         loadingState = .loading
-        loadCharacters(with: startingQuery)
+        await loadCharacters(with: startingQuery)
     }
 
     func select(at indexPath: IndexPath) {
@@ -80,9 +80,9 @@ class CharactersViewModel: CharactersViewModelProtocol {
         coordinatorDelegate?.model(self, didSelectCharacterWith: data.identifier)
     }
 
-    func willDisplayCell(at indexPath: IndexPath) {
+    func willDisplayCell(at indexPath: IndexPath) async {
         guard shouldLoadMore(at: indexPath) else { return }
-        loadMore()
+        await loadMore()
     }
 
     func dispose() {
@@ -99,20 +99,16 @@ private extension CharactersViewModel {
         pager.isAtEndOfCurrentPageWithMoreContent(indexPath.row)
     }
 
-    func loadMore() {
-        guard cellModels.hasElements else { return start() }
+    func loadMore() async {
+        guard cellModels.hasElements else { return await start() }
         let query = FetchCharactersQuery(offset: cellModels.count)
-        loadCharacters(with: query)
+        await loadCharacters(with: query)
     }
 
     func cellModel(at indexPath: IndexPath) -> CharacterCellModel? {
         let row = indexPath.row
         guard cellModels.indices.contains(row) else { return nil }
         return cellModels[row]
-    }
-
-    func loadCharacters(with query: FetchCharactersQuery) {
-        Task { await loadCharacters(with: query) }
     }
 
     func loadCharacters(with query: FetchCharactersQuery) async {

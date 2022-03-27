@@ -43,7 +43,7 @@ class CharacterDetailViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
-        viewModel.start()
+        start()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -88,7 +88,7 @@ private extension CharacterDetailViewController {
         case let .success(detailModel):
             dataSource.update(with: [detailModel])
         case let .failure(error):
-            showErrorAlert(message: error.localizedDescription, retryButtonAction: viewModel.start)
+            showErrorAlert(message: error.localizedDescription, retryButtonAction: start)
         }
     }
 
@@ -112,5 +112,9 @@ private extension CharacterDetailViewController {
     func configureConstraints(of collectionView: UICollectionView) {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.fit(collectionView, in: view)
+    }
+
+    func start() {
+        Task { await viewModel.start() }
     }
 }

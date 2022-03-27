@@ -8,5 +8,5 @@
 import Foundation
 
 protocol ViewModel: Disposable {
-    func start()
+    func start() async
 }

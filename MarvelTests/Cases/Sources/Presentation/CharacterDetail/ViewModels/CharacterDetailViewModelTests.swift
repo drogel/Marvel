@@ -42,10 +42,10 @@ class CharacterDetailViewModelTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is CharacterDetailViewModelProtocol)
     }
 
-    func test_whenStarting_callsStartOnAllSubViewModels() {
+    func test_whenStarting_callsStartOnAllSubViewModels() async {
         assertInfoViewModelStart(callCount: 0)
         assertComicsViewModelStart(callCount: 0)
-        sut.start()
+        await sut.start()
         assertInfoViewModelStart(callCount: 1)
         assertComicsViewModelStart(callCount: 1)
     }

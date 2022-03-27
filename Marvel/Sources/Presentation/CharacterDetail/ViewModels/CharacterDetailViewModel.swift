@@ -36,9 +36,9 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
         self.comicsViewModel = comicsViewModel
     }
 
-    func start() {
-        infoViewModel.start()
-        comicsViewModel.start()
+    func start() async {
+        await infoViewModel.start()
+        await comicsViewModel.start()
     }
 
     func willDisplayComicCell(at indexPath: IndexPath) {

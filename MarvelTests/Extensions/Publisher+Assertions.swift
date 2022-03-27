@@ -12,20 +12,20 @@ extension Publisher where Output: Equatable, Failure == Never {
     func assertOutput(
         matches expectedValues: [Output],
         expectation: XCTestExpectation,
-        file _: StaticString = #filePath,
-        line _: UInt = #line
+        file: StaticString = #filePath,
+        line: UInt = #line
     ) -> AnyCancellable {
         var copiedExpectedValues = expectedValues
         return sink { receivedValue in
             guard let expectedValue = copiedExpectedValues.first else {
-                XCTFail("The publisher emitted more values than expected.")
+                XCTFail("The publisher emitted more values than expected.", file: file, line: line)
                 return
             }
             guard expectedValue == receivedValue else {
-                XCTFail("Expected received value \(receivedValue) to match first expected value \(expectedValue)")
+                XCTFail("Expected received value \(receivedValue) to match \(expectedValue)", file: file, line: line)
                 return
             }
-            copiedExpectedValues = Array(expectedValues.dropFirst())
+            copiedExpectedValues = Array(copiedExpectedValues.dropFirst())
             if copiedExpectedValues.isEmpty {
                 expectation.fulfill()
             }
@@ -51,7 +51,7 @@ extension Publisher where Output: Equatable, Failure == Never {
     ) -> AnyCancellable {
         sink { receivedValue in
             guard let receivedArray = receivedValue as? [Any] else {
-                XCTFail("Expected received value \(receivedValue) to be an array")
+                XCTFail("Expected received value \(receivedValue) to be an array", file: file, line: line)
                 return
             }
             XCTAssertTrue(receivedArray.isEmpty, file: file, line: line)
