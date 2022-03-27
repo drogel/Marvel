@@ -75,12 +75,14 @@ private extension CharactersViewController {
 
     func subscribeToLoadingState() {
         viewModel.loadingStatePublisher
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: handleLoadingState)
             .store(in: &cancellables)
     }
 
     func subscribeToViewModelState() {
         viewModel.statePublisher
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: handleState)
             .store(in: &cancellables)
     }

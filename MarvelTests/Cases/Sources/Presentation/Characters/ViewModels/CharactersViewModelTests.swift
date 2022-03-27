@@ -128,18 +128,6 @@ class CharactersViewModelTests: XCTestCase {
         XCTAssertEqual(mostRecentQuery.offset, 0)
     }
 
-    func test_givenDidStartSuccessfully_whenDisposing_cancellsRequests() {
-        givenDidStartSuccessfully()
-        sut.dispose()
-        assertCancelledRequests()
-    }
-
-    func test_givenStartFailed_whenDisposing_cancellsRequests() {
-        givenStartFailed()
-        sut.dispose()
-        assertCancelledRequests()
-    }
-
     func test_whenStartingFinishes_updatesPage() {
         givenSutWithSuccessfulFetcher()
         assertPagerUpdate(callCount: 0)
@@ -230,17 +218,8 @@ private extension CharactersViewModelTests {
         return mostRecentQuery
     }
 
-    func retrieveFetcherMockDisposableMock() -> DisposableMock {
-        try! XCTUnwrap(charactersFetcherMock.disposable)
-    }
-
     func whenWillDisplayCellIgnoringQuery(atIndex index: Int) {
         sut.willDisplayCell(at: IndexPath(row: index, section: 0))
-    }
-
-    func assertCancelledRequests(line: UInt = #line) {
-        let disposableMock = retrieveFetcherMockDisposableMock()
-        XCTAssertEqual(disposableMock.didDisposeCallCount, 1, line: line)
     }
 
     func assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: Int, line: UInt = #line) {
