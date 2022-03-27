@@ -24,11 +24,8 @@ extension AlertPresenter where Self: UIViewController {
     }
 
     func showAlert(title: String, message: String, buttonTitle: String, buttonAction: (() -> Void)? = nil) {
-        // TODO: Get rid of this when we complete async await migration
-        DispatchQueue.main.async { [weak self] in
-            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: buttonTitle, style: .default, handler: { _ in buttonAction?() }))
-            self?.present(alert, animated: true)
-        }
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: buttonTitle, style: .default, handler: { _ in buttonAction?() }))
+        present(alert, animated: true)
     }
 }
