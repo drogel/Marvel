@@ -42,14 +42,7 @@ class CharactersClientServiceTests: XCTestCase {
         let expectedError = CharactersServiceError.emptyData
         givenFailingDataHandler()
         givenSutWithSuccessfulNetworkService()
-        do {
-            try await whenRetrievingCharactersIgnoringResult()
-            failExpectingErrorMatching(expectedError)
-        } catch let error as CharactersServiceError {
-            XCTAssertEqual(error, expectedError)
-        } catch {
-            failExpectingErrorMatching(expectedError)
-        }
+        await assertWhenRetrievingCharacters(returnsFailureWithError: expectedError)
     }
 
     func test_givenACachingNetworkServiceFake_whenRetrievingCharacters_requestHasExpectedComponents() async throws {
@@ -168,23 +161,22 @@ private extension CharactersClientServiceTests {
         XCTAssertEqual(errorHandlerMock.handleCallCount, callCount, line: line)
     }
 
-    func assert(_ actualError: CharactersServiceError, isEqualTo expectedError: CharactersServiceError) {
-        if case actualError = expectedError { } else { failExpectingErrorMatching(actualError) }
-    }
-
     func assertWhenRetrievingCharacters(
         returnsFailureWithError expectedError: CharactersServiceError,
         whenNetworkErrorWas networkError: NetworkError,
         line: UInt = #line
     ) async {
         givenSutWithFailingNetworkService(providingError: networkError)
-        do {
-            try await whenRetrievingCharactersIgnoringResult()
-            failExpectingErrorMatching(expectedError, line: line)
-        } catch let error as CharactersServiceError {
-            XCTAssertEqual(error, expectedError, line: line)
-        } catch {
-            failExpectingErrorMatching(expectedError, line: line)
+        await assertWhenRetrievingCharacters(returnsFailureWithError: expectedError, line: line)
+    }
+
+    func assertWhenRetrievingCharacters(
+        returnsFailureWithError expectedError: CharactersServiceError,
+        line: UInt = #line
+    ) async {
+        let retrievingCharactersBlock: () async throws -> Void = { [weak self] in
+            try await self?.whenRetrievingCharactersIgnoringResult()
         }
+        await assertThrows(retrievingCharactersBlock, expectedError: expectedError, line: line)
     }
 }

@@ -47,32 +47,21 @@ class NetworkServiceTests: XCTestCase {
         assertComposerCompose(callCount: 1)
     }
 
-    func test_givenAFailingRequest_whenRequesting_tellsComposerToComposeURL() async {
-        givenSutWithFailingSession()
-        do {
-            assertComposerCompose(callCount: 0)
-            try await whenRequestingIgnoringResult()
-            assertComposerCompose(callCount: 1)
-        } catch {}
-    }
-
     func test_givenAnInvalidURLFromComposer_whenRequesting_failsWithInvalidURL() async throws {
         givenInvalidURLComposer()
         givenSutWithSuccessfulSession()
-        do {
+        await assertThrowsError {
             try await whenRequestingIgnoringResult()
-            XCTFail("Expected \(NetworkError.invalidURL) error.")
-        } catch {
+        } didCatchErrorBlock: { error in
             if case NetworkError.invalidURL = error { } else { failExpectingErrorMatching(error) }
         }
     }
 
     func test_givenAnUnauthorizedHTTPResponse_whenRequesting_failsWithUnauthorized() async throws {
         givenSutWithHTTPResponseSesssion(responseStatusCode: 401)
-        do {
+        await assertThrowsError {
             try await whenRequestingIgnoringResult()
-            XCTFail("Expected \(NetworkError.unauthorized) error.")
-        } catch {
+        } didCatchErrorBlock: { error in
             if case NetworkError.unauthorized = error { } else { failExpectingErrorMatching(error) }
         }
     }
@@ -80,10 +69,9 @@ class NetworkServiceTests: XCTestCase {
     func test_givenAnErrorHTTPResponse_whenRequesting_failsWithStatusCodeError() async throws {
         let errorStatusCode = 500
         givenSutWithHTTPResponseSesssion(responseStatusCode: errorStatusCode)
-        do {
+        await assertThrowsError {
             try await whenRequestingIgnoringResult()
-            XCTFail("Expected \(NetworkError.statusCodeError(statusCode: errorStatusCode)) error.")
-        } catch {
+        } didCatchErrorBlock: { error in
             if case NetworkError.statusCodeError(statusCode: errorStatusCode) = error {
             } else {
                 failExpectingErrorMatching(error)
@@ -92,34 +80,30 @@ class NetworkServiceTests: XCTestCase {
     }
 
     func test_givenIsNotConnected_whenRequesting_failsWithNotConnected() async throws {
-        givenSutWithFailingSession(errorStub: URLError(.notConnectedToInternet))
-        do {
-            try await whenRequestingIgnoringResult()
-            XCTFail("Expected \(NetworkError.notConnected) error.")
-        } catch {
-            if case NetworkError.notConnected = error { } else { failExpectingErrorMatching(error) }
-        }
+        await assertRequestOnSessionFailing(
+            with: URLError(.notConnectedToInternet),
+            throwsWithCatchErrorBlock: { error in
+                if case NetworkError.notConnected = error { } else { failExpectingErrorMatching(error) }
+            }
+        )
     }
 
     func test_givenRequestIsCancelled_whenRequesting_failsWithCancelled() async throws {
-        givenSutWithFailingSession(errorStub: URLError(.cancelled))
-        do {
-            try await whenRequestingIgnoringResult()
-            XCTFail("Expected \(NetworkError.cancelled) error.")
-        } catch {
-            if case NetworkError.cancelled = error { } else { failExpectingErrorMatching(error) }
-        }
+        await assertRequestOnSessionFailing(
+            with: URLError(.cancelled),
+            throwsWithCatchErrorBlock: { error in
+                if case NetworkError.cancelled = error { } else { failExpectingErrorMatching(error) }
+            }
+        )
     }
 
     func test_givenRequestFailsWithURLError_whenRequesting_failsWithRequestError() async throws {
-        let urlError = URLError(.badURL)
-        givenSutWithFailingSession(errorStub: urlError)
-        do {
-            try await whenRequestingIgnoringResult()
-            XCTFail("Expected \(NetworkError.requestError(urlError)) error.")
-        } catch {
-            if case NetworkError.requestError = error { } else { failExpectingErrorMatching(error) }
-        }
+        await assertRequestOnSessionFailing(
+            with: URLError(.badURL),
+            throwsWithCatchErrorBlock: { error in
+                if case NetworkError.requestError = error { } else { failExpectingErrorMatching(error) }
+            }
+        )
     }
 
     func test_givenARequestError_whenRequesting_fails() async throws {
@@ -171,6 +155,19 @@ private extension NetworkServiceTests {
 
     func assertComposerCompose(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(composerMock.composeCallCount, callCount, line: line)
+    }
+
+    func assertRequestOnSessionFailing(
+        with errorStub: Error,
+        throwsWithCatchErrorBlock didCatchErrorBlock: (Error) -> Void,
+        line: UInt = #line,
+        file: StaticString = #filePath
+    ) async {
+        givenSutWithFailingSession(errorStub: errorStub)
+        let whenRequestingBlock: () async throws -> Void = { [weak self] in
+            try await self?.whenRequestingIgnoringResult()
+        }
+        await assertThrowsError(whenRequestingBlock, didCatchErrorBlock: didCatchErrorBlock, line: line, file: file)
     }
 }
 

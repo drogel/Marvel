@@ -49,7 +49,7 @@ class CharacterDetailClientServiceTests: XCTestCase {
         givenSutWithSuccessfulNetworkService()
         let result = await whenRetrievingCharacter()
         assertIsFailure(result) {
-            assert($0, isEqualTo: .emptyData)
+            assertError($0, isEqualTo: .emptyData)
         }
     }
 
@@ -160,7 +160,7 @@ private extension CharacterDetailClientServiceTests {
         XCTAssertEqual(networkServiceMock.requestCallCount, callCount, line: line)
     }
 
-    func assert(_ actualError: CharacterDetailServiceError, isEqualTo expectedError: CharacterDetailServiceError) {
+    func assertError(_ actualError: CharacterDetailServiceError, isEqualTo expectedError: CharacterDetailServiceError) {
         if case actualError = expectedError { } else { failExpectingErrorMatching(actualError) }
     }
 
@@ -171,7 +171,7 @@ private extension CharacterDetailClientServiceTests {
     ) async {
         givenSutWithFailingNetworkService(providingError: networkError)
         let result = await whenRetrievingCharacter()
-        assertIsFailure(result, then: { assert($0, isEqualTo: expectedError) }, line: line)
+        assertIsFailure(result, then: { assertError($0, isEqualTo: expectedError) }, line: line)
     }
 
     func assertErrorHandlerHandle(callCount: Int, line: UInt = #line) {

@@ -27,19 +27,14 @@ class CharactersDebugServiceTests: XCTestCase {
 
     func test_givenSutWithEmptyDataLoader_whenRetrievingCharacters_completesWithFailure() async throws {
         givenSutWithEmptyDataLoader()
-        do {
+        await assertThrows {
             try await whenRetrievingCharactersIgnoringResult()
-            XCTFail("Expected error")
-        } catch {}
+        }
     }
 
-    func test_givenSutDataLoader_whenRetrievingCharacters_completesWithSuccess() async {
+    func test_givenSutDataLoader_whenRetrievingCharacters_completesWithSuccess() async throws {
         givenSutWithDataLoader()
-        do {
-            try await whenRetrievingCharactersIgnoringResult()
-        } catch {
-            XCTFail("Did not expect error")
-        }
+        try await whenRetrievingCharactersIgnoringResult()
     }
 }
 

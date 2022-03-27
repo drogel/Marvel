@@ -24,13 +24,13 @@ class ClientDataHandlerTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_givenNilData_whenHandling_throwsEmptyDataError() {
-        assertThrowsEmptyDataErrorWhenHandling()
+    func test_givenNilData_whenHandling_throwsEmptyDataError() async {
+        await assertThrowsEmptyDataErrorWhenHandling()
     }
 
-    func test_givenFailingParser_whenHandling_throwsEmptyDataError() {
+    func test_givenFailingParser_whenHandling_throwsEmptyDataError() async {
         givenSutWithFailingParser()
-        assertThrowsEmptyDataErrorWhenHandling()
+        await assertThrowsEmptyDataErrorWhenHandling()
     }
 
     func test_givenSuccessfulParse_whenHandling_returnsExpectedDataWrapper() throws {
@@ -56,15 +56,11 @@ private extension ClientDataHandlerTests {
         givenSut(with: jsonParserMock)
     }
 
-    func assertThrowsEmptyDataErrorWhenHandling() {
+    func assertThrowsEmptyDataErrorWhenHandling() async {
         let expectedError = DataServiceError.emptyData
-        do {
-            let _: DataWrapper<Int> = try sut.handle(nil)
-            failExpectingErrorMatching(expectedError)
-        } catch let error as DataServiceError {
-            XCTAssertEqual(expectedError, error)
-        } catch {
-            failExpectingErrorMatching(expectedError)
+        let handleBlock: () async throws -> Void = {
+            let _: DataWrapper<Int> = try self.sut.handle(nil)
         }
+        await assertThrows(handleBlock, expectedError: expectedError)
     }
 }

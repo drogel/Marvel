@@ -30,19 +30,17 @@ class AuthenticatedNetworkServiceTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_givenAuthenticatorMock_whenRequesting_callsAuthenticate() async {
-        do {
-            assertAuthenticatorAuthenticate(callCount: 0)
-            try await whenRequestingIgnoringResult()
-            assertAuthenticatorAuthenticate(callCount: 1)
-        } catch {}
+    func test_givenSutWithNonEmptyAuthenticator_whenRequesting_callsAuthenticate() async throws {
+        givenSutWithNonEmptyAuthenticator()
+        assertAuthenticatorAuthenticate(callCount: 0)
+        try await whenRequestingIgnoringResult()
+        assertAuthenticatorAuthenticate(callCount: 1)
     }
 
     func test_givenAuthenticatorMock_whenRequesting_throwsUnauthorizedError() async throws {
-        do {
+        await assertThrowsError {
             try await whenRequestingIgnoringResult()
-            XCTFail("Expected \(NetworkError.unauthorized) error")
-        } catch {
+        } didCatchErrorBlock: { error in
             if case NetworkError.unauthorized = error { } else { failExpectingErrorMatching(error) }
         }
     }

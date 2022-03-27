@@ -34,21 +34,15 @@ class FetchCharactersUseCaseTests: XCTestCase {
 
     func test_givenFailingService_whenFetching_throwsError() async throws {
         givenSutWithFailureServiceStub()
-        do {
+        await assertThrows {
             try await whenFetchingCharactersIgnoringResult()
-            XCTFail("Expected an error.")
-        } catch {}
+        }
     }
 
     func test_givenSuccessfulService_whenFetching_returnsPageData() async throws {
         givenSutWithSuccessfulServiceStub(stubbingContentPage: ContentPage<Character>.empty)
-        // TODO: Wrap this kind of do catch because they are duplicated across the test cases
-        do {
-            let contentPage = try await whenFetchingCharacters()
-            XCTAssertEqual(contentPage, ContentPage<Character>.empty)
-        } catch {
-            XCTFail("Did not expect an error.")
-        }
+        let contentPage = try await whenFetchingCharacters()
+        XCTAssertEqual(contentPage, ContentPage<Character>.empty)
     }
 }
 
