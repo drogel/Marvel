@@ -28,21 +28,26 @@ class FetchCharactersUseCaseTests: XCTestCase {
     }
 
     func test_whenFetching_callsServiceFetch() async throws {
-        try await whenFetchingCharacters()
+        try await whenFetchingCharactersIgnoringResult()
         XCTAssertEqual(serviceMock.charactersCallCount, 1)
     }
 
-    func test_givenFailingService_whenFetching_completesWithFailure() async throws {
+    func test_givenFailingService_whenFetching_throwsError() async throws {
         givenSutWithFailureServiceStub()
-        let completionResult = try await whenRetrievingResultFromFetchingCharacters()
-        assertIsFailure(completionResult)
+        do {
+            try await whenFetchingCharactersIgnoringResult()
+            XCTFail("Expected an error.")
+        } catch {}
     }
 
-    func test_givenSuccessfulService_whenFetching_completesWithPageData() async throws {
+    func test_givenSuccessfulService_whenFetching_returnsPageData() async throws {
         givenSutWithSuccessfulServiceStub(stubbingContentPage: ContentPage<Character>.empty)
-        let completionResult = try await whenRetrievingResultFromFetchingCharacters()
-        assertIsSuccess(completionResult) {
-            XCTAssertEqual($0, ContentPage<Character>.empty)
+        // TODO: Wrap this kind of do catch because they are duplicated across the test cases
+        do {
+            let contentPage = try await whenFetchingCharacters()
+            XCTAssertEqual(contentPage, ContentPage<Character>.empty)
+        } catch {
+            XCTFail("Did not expect an error.")
         }
     }
 }
@@ -76,12 +81,6 @@ private class CharactersServiceSuccessStub: CharactersService {
 }
 
 private extension FetchCharactersUseCaseTests {
-    func whenFetchingCharacters(completion: ((FetchCharactersResult) -> Void)? = nil) async throws {
-        await sut.fetch(query: query) { result in
-            completion?(result)
-        }
-    }
-
     func givenSutWithFailureServiceStub() {
         let service = CharactersServiceFailureStub()
         givenSut(with: service)
@@ -96,11 +95,11 @@ private extension FetchCharactersUseCaseTests {
         sut = FetchCharactersServiceUseCase(service: service)
     }
 
-    func whenRetrievingResultFromFetchingCharacters() async throws -> FetchCharactersResult {
-        var completionResult: FetchCharactersResult!
-        try await whenFetchingCharacters { result in
-            completionResult = result
-        }
-        return completionResult
+    func whenFetchingCharacters() async throws -> ContentPage<Character> {
+        try await sut.fetch(query: query)
+    }
+
+    func whenFetchingCharactersIgnoringResult() async throws {
+        _ = try await sut.fetch(query: query)
     }
 }

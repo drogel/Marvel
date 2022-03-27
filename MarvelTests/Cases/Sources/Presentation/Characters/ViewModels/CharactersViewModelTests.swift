@@ -256,15 +256,6 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
     var fetchCallCount = 0
     var mostRecentQuery: FetchCharactersQuery?
 
-    var disposable: DisposableMock?
-
-    func fetch(query: FetchCharactersQuery, completion _: @escaping (FetchCharactersResult) -> Void) -> Disposable? {
-        fetchCallCount += 1
-        mostRecentQuery = query
-        disposable = DisposableMock()
-        return disposable
-    }
-
     func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
         fetchCallCount += 1
         mostRecentQuery = query
@@ -276,15 +267,6 @@ private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
     static let charactersStub = [Character.aginar]
     static let contentPageStub = ContentPage<Character>.atFirstPageOfTwoTotal(contents: charactersStub)
 
-    override func fetch(
-        query: FetchCharactersQuery,
-        completion: @escaping (FetchCharactersResult) -> Void
-    ) -> Disposable? {
-        let result = super.fetch(query: query, completion: completion)
-        completion(.success(Self.contentPageStub))
-        return result
-    }
-
     override func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
         _ = try await super.fetch(query: query)
         return Self.contentPageStub
@@ -292,26 +274,13 @@ private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
 }
 
 private class CharactersFetcherSuccessfulEmptyStub: CharactersFetcherMock {
-    override func fetch(
-        query: FetchCharactersQuery,
-        completion: @escaping (FetchCharactersResult) -> Void
-    ) -> Disposable? {
-        let result = super.fetch(query: query, completion: completion)
-        completion(.success(ContentPage<Character>.empty))
-        return result
+    override func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
+        _ = try await super.fetch(query: query)
+        return ContentPage<Character>.empty
     }
 }
 
 private class CharactersFetcherFailingStub: CharactersFetcherMock {
-    override func fetch(
-        query: FetchCharactersQuery,
-        completion: @escaping (FetchCharactersResult) -> Void
-    ) -> Disposable? {
-        let result = super.fetch(query: query, completion: completion)
-        completion(.failure(.unauthorized))
-        return result
-    }
-
     override func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
         _ = try await super.fetch(query: query)
         throw FetchComicsUseCaseError.unauthorized
