@@ -284,6 +284,12 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
         disposable = DisposableMock()
         return disposable
     }
+
+    func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
+        fetchCallCount += 1
+        mostRecentQuery = query
+        return ContentPage<Character>.empty
+    }
 }
 
 private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
@@ -297,6 +303,11 @@ private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
         let result = super.fetch(query: query, completion: completion)
         completion(.success(Self.contentPageStub))
         return result
+    }
+
+    override func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
+        _ = try await super.fetch(query: query)
+        return Self.contentPageStub
     }
 }
 
@@ -319,6 +330,11 @@ private class CharactersFetcherFailingStub: CharactersFetcherMock {
         let result = super.fetch(query: query, completion: completion)
         completion(.failure(.unauthorized))
         return result
+    }
+
+    override func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
+        _ = try await super.fetch(query: query)
+        throw FetchComicsUseCaseError.unauthorized
     }
 }
 

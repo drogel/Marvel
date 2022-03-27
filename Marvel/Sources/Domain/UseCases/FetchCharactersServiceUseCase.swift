@@ -8,6 +8,7 @@
 import Foundation
 
 protocol FetchCharactersUseCase {
+    func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character>
     func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Disposable?
 }
 
@@ -31,9 +32,13 @@ class FetchCharactersServiceUseCase: FetchCharactersUseCase {
         return nil
     }
 
+    func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
+        try await service.characters(from: query.offset)
+    }
+
     func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) async {
         do {
-            let charactersPage = try await service.characters(from: query.offset)
+            let charactersPage = try await fetch(query: query)
             completion(.success(charactersPage))
         } catch let error as CharactersServiceError {
             completion(.failure(error))
