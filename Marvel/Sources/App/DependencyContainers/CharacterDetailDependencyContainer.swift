@@ -80,6 +80,7 @@ private extension CharacterDetailDependencyContainer {
         ComicsClientService(
             networkService: dependencies.networkService,
             resultHandler: resultHandler,
+            dataHandler: ClientDataHandler(parser: parser),
             dataResultHandler: comicDataResultHandler
         )
     }

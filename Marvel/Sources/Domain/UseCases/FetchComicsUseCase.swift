@@ -12,6 +12,8 @@ protocol FetchComicsUseCase {
         query: FetchComicsQuery,
         completion: @escaping (FetchComicsResult) -> Void
     ) -> Disposable?
+
+    func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic>
 }
 
 struct FetchComicsQuery: Equatable {
@@ -34,6 +36,25 @@ class FetchComicsServiceUseCase: FetchComicsUseCase {
         query: FetchComicsQuery,
         completion: @escaping (FetchComicsResult) -> Void
     ) -> Disposable? {
-        service.comics(for: query.characterID, from: query.offset, completion: completion)
+        Task { await fetch(query: query, completion: completion) }
+        return nil
+    }
+
+    func fetch(
+        query: FetchComicsQuery,
+        completion: @escaping (FetchComicsResult) -> Void
+    ) async {
+        do {
+            let contentPage = try await fetch(query: query)
+            completion(.success(contentPage))
+        } catch let error as ComicsServiceError {
+            completion(.failure(error))
+        } catch {
+            completion(.failure(.emptyData))
+        }
+    }
+
+    func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic> {
+        try await service.comics(for: query.characterID, from: query.offset)
     }
 }

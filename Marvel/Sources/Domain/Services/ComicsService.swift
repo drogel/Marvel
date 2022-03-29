@@ -17,4 +17,5 @@ protocol ComicsService {
         from offset: Int,
         completion: @escaping (ComicsServiceResult) -> Void
     ) -> Disposable?
+    func comics(for characterID: Int, from offset: Int) async throws -> ContentPage<Comic>
 }

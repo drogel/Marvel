@@ -12,16 +12,19 @@ class ComicsClientService: ComicsService {
     private let comicsPath = MarvelAPIPaths.comics.rawValue
     private let resultHandler: NetworkResultHandler
     private let networkService: NetworkService
+    private let dataHandler: NetworkDataHandler
     private let dataResultHandler: ComicDataResultHandler
 
     init(
         networkService: NetworkService,
         resultHandler: NetworkResultHandler,
+        dataHandler: NetworkDataHandler,
         dataResultHandler: ComicDataResultHandler
     ) {
         self.resultHandler = resultHandler
         self.networkService = networkService
         self.dataResultHandler = dataResultHandler
+        self.dataHandler = dataHandler
     }
 
     func comics(
@@ -33,6 +36,12 @@ class ComicsClientService: ComicsService {
         return nil
     }
 
+    func comics(for characterID: Int, from offset: Int) async throws -> ContentPage<Comic> {
+        let data = try await networkService.request(endpoint: components(for: characterID, offset: offset))
+        let dataWrapper: DataWrapper<ComicData> = try dataHandler.handle(data)
+        return try dataResultHandler.handle(dataWrapper)
+    }
+
     // TODO: Remove this kind of workarounds for tests
     func comics(
         for characterID: Int,
@@ -40,8 +49,8 @@ class ComicsClientService: ComicsService {
         completion: @escaping (ComicsServiceResult) -> Void
     ) async {
         do {
-            let data = try await networkService.request(endpoint: components(for: characterID, offset: offset))
-            handle(.success(data), completion: completion)
+            let contentPage = try await comics(for: characterID, from: offset)
+            completion(.success(contentPage))
         } catch let error as NetworkError {
             handle(.failure(error), completion: completion)
         } catch {

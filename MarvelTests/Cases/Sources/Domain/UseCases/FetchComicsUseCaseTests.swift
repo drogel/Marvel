@@ -27,25 +27,20 @@ class FetchComicsUseCaseTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_whenFetching_returnsServiceDisposable() throws {
-        let disposable = try whenRetrievingDisposableFromFetchCharacter()
-        XCTAssertTrue(ComicsServiceMock.disposableStub === disposable)
-    }
-
-    func test_whenFetching_callsServiceFetch() throws {
-        whenFetchingCharacter()
+    func test_whenFetching_callsServiceFetch() async {
+        await whenFetchingComicsIgnoringResult()
         XCTAssertEqual(serviceMock.comicsCallCount, 1)
     }
 
-    func test_givenFailingService_whenFetching_completesWithFailure() {
+    func test_givenFailingService_whenFetching_completesWithFailure() async {
         givenSutWithFailureServiceStub()
-        let completionResult = whenRetrievingResultFromFetchingCharacter()
+        let completionResult = await whenRetrievingResultFromFetchingComics()
         assertIsFailure(completionResult)
     }
 
-    func test_givenSuccessfulService_whenFetching_completesWithPageData() {
+    func test_givenSuccessfulService_whenFetching_completesWithPageData() async {
         givenSutWithSuccessfulServiceStub(stubbingPage: ContentPage<Comic>.empty)
-        let completionResult = whenRetrievingResultFromFetchingCharacter()
+        let completionResult = await whenRetrievingResultFromFetchingComics()
         assertIsSuccess(completionResult) {
             XCTAssertEqual($0, ContentPage<Comic>.empty)
         }
@@ -64,6 +59,11 @@ private class ComicsServiceMock: ComicsService {
         comicsCallCount += 1
         return Self.disposableStub
     }
+
+    func comics(for _: Int, from _: Int) async throws -> ContentPage<Comic> {
+        comicsCallCount += 1
+        return ContentPage<Comic>.empty
+    }
 }
 
 private class ComicsServiceFailureStub: ComicsService {
@@ -74,6 +74,10 @@ private class ComicsServiceFailureStub: ComicsService {
     ) -> Disposable? {
         completion(.failure(.emptyData))
         return DisposableStub()
+    }
+
+    func comics(for _: Int, from _: Int) async throws -> ContentPage<Comic> {
+        throw ComicsServiceError.emptyData
     }
 }
 
@@ -88,20 +92,19 @@ private class ComicsServiceSuccessStub: ComicsService {
         completion(.success(pageStub))
         return DisposableStub()
     }
+
+    func comics(for _: Int, from _: Int) async throws -> ContentPage<Comic> {
+        pageStub
+    }
 }
 
 private extension FetchComicsUseCaseTests {
-    func whenRetrievingDisposableFromFetchCharacter(
-        completion: ((FetchComicsResult) -> Void)? = nil
-    ) throws -> DisposableStub {
-        let disposable = sut.fetch(query: query) { result in
-            completion?(result)
-        }
-        return try XCTUnwrap(disposable as? DisposableStub)
+    func whenFetchingComicsIgnoringResult() async {
+        await whenFetchingComics(completion: { _ in })
     }
 
-    func whenFetchingCharacter(completion: ((FetchComicsResult) -> Void)? = nil) {
-        _ = try? whenRetrievingDisposableFromFetchCharacter(completion: completion)
+    func whenFetchingComics(completion: @escaping (FetchComicsResult) -> Void) async {
+        await sut.fetch(query: query, completion: completion)
     }
 
     func givenSutWithFailureServiceStub() {
@@ -118,9 +121,9 @@ private extension FetchComicsUseCaseTests {
         sut = FetchComicsServiceUseCase(service: service)
     }
 
-    func whenRetrievingResultFromFetchingCharacter() -> FetchComicsResult {
+    func whenRetrievingResultFromFetchingComics() async -> FetchComicsResult {
         var completionResult: FetchComicsResult!
-        whenFetchingCharacter { result in
+        await whenFetchingComics { result in
             completionResult = result
         }
         return completionResult

@@ -180,6 +180,12 @@ private class ComicFetcherMock: FetchComicsUseCase {
         disposables.append(DisposableMock())
         return disposables.last
     }
+
+    func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic> {
+        fetchCallCount += 1
+        mostRecentQuery = query
+        return ContentPage<Comic>.empty
+    }
 }
 
 private class ComicFetcherSuccessfulStub: ComicFetcherMock {

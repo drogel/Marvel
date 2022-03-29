@@ -87,6 +87,10 @@ private class FetchComicsUseCaseStub: FetchComicsUseCase {
     func fetch(query _: FetchComicsQuery, completion _: @escaping (FetchComicsResult) -> Void) -> Disposable? {
         nil
     }
+
+    func fetch(query _: FetchComicsQuery) async throws -> ContentPage<Comic> {
+        ContentPage<Comic>.empty
+    }
 }
 
 private extension CharacterDetailCoordinatorTests {

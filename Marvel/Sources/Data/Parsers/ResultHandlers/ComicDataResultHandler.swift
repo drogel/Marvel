@@ -22,6 +22,7 @@ protocol ComicDataResultHandler {
         _ handlerResult: DataServiceResult<ComicData>,
         completion: @escaping (Result<ContentPage<Comic>, DataServiceError>) -> Void
     )
+    func handle(_ dataWrapper: DataWrapper<ComicData>) throws -> ContentPage<Comic>
 }
 
 class ComicDataServiceResultHandler: ComicDataResultHandler {
@@ -45,6 +46,13 @@ class ComicDataServiceResultHandler: ComicDataResultHandler {
         }
     }
 
+    func handle(_ dataWrapper: DataWrapper<ComicData>) throws -> ContentPage<Comic> {
+        guard let contentPage = mapToComicsPage(dataWrapper.data) else { throw DataServiceError.emptyData }
+        return contentPage
+    }
+}
+
+private extension ComicDataServiceResultHandler {
     func completeHandlerSuccess(
         dataWrapper: DataWrapper<ComicData>,
         completion: @escaping (ComicsServiceResult) -> Void

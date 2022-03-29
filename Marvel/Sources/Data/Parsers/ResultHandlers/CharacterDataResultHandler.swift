@@ -18,6 +18,7 @@ enum CharacterDataResultHandlerFactory {
 }
 
 protocol CharacterDataResultHandler {
+    // TODO: Remove this when we migrate to async await
     func completeWithServiceResult(
         _ handlerResult: DataServiceResult<CharacterData>,
         completion: @escaping (Result<ContentPage<Character>, DataServiceError>) -> Void
