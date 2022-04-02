@@ -13,4 +13,5 @@ typealias CharacterDetailServiceError = DataServiceError
 
 protocol CharacterDetailService {
     func character(with identifier: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable?
+    func character(with identifier: Int) async throws -> ContentPage<Character>
 }

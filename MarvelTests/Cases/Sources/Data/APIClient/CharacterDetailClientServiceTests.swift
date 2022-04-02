@@ -12,16 +12,22 @@ class CharacterDetailClientServiceTests: XCTestCase {
     private var sut: CharacterDetailClientService!
     private var jsonParserMock: JSONParserMock!
     private var networkServiceMock: NetworkServiceMock!
+    private var dataHandlerMock: NetworkDataHandlerMock!
+    private var errorHandlerMock: NetworkErrorHandlerMock!
     private var errorHandler: NetworkErrorHandler!
 
     override func setUp() {
         super.setUp()
         jsonParserMock = JSONParserMock()
+        dataHandlerMock = NetworkDataHandlerMock()
+        errorHandlerMock = NetworkErrorHandlerMock()
         errorHandler = DataServicesNetworkErrorHandler()
     }
 
     override func tearDown() {
         sut = nil
+        dataHandlerMock = nil
+        errorHandlerMock = nil
         jsonParserMock = nil
         networkServiceMock = nil
         errorHandler = nil
@@ -119,7 +125,9 @@ private extension CharacterDetailClientServiceTests {
         let resultHandler = ClientResultHandler(parser: jsonParserMock, errorHandler: errorHandler)
         sut = CharacterDetailClientService(
             networkService: networkService,
+            dataHandler: dataHandlerMock,
             networkResultHandler: resultHandler,
+            networkErrorHandler: errorHandlerMock,
             dataResultHandler: CharacterDataResultHandlerFactory.createWithDataMappers()
         )
     }
@@ -133,7 +141,7 @@ private extension CharacterDetailClientServiceTests {
     }
 
     func givenErrorHandlerMock() {
-        errorHandler = NetworkErroHandlerMock()
+        errorHandler = NetworkErrorHandlerMock()
     }
 
     func whenRetrievingCharacterIgnoringResult(with identifier: Int = 0) async {
@@ -175,7 +183,7 @@ private extension CharacterDetailClientServiceTests {
     }
 
     func assertErrorHandlerHandle(callCount: Int, line: UInt = #line) {
-        let errorHandlerMock = errorHandler as! NetworkErroHandlerMock
+        let errorHandlerMock = errorHandler as! NetworkErrorHandlerMock
         XCTAssertEqual(errorHandlerMock.handleCallCount, callCount, line: line)
     }
 }

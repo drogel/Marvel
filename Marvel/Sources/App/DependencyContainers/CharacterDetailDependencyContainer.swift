@@ -67,7 +67,9 @@ private extension CharacterDetailDependencyContainer {
     var characterDetailReleaseService: CharacterDetailService {
         CharacterDetailClientService(
             networkService: dependencies.networkService,
-            networkResultHandler: ClientResultHandler(parser: parser, errorHandler: DataServicesNetworkErrorHandler()),
+            dataHandler: dataHandler,
+            networkResultHandler: ClientResultHandler(parser: parser, errorHandler: errorHandler),
+            networkErrorHandler: errorHandler,
             dataResultHandler: characterDataResultHandler
         )
     }
@@ -79,9 +81,17 @@ private extension CharacterDetailDependencyContainer {
     var comicsReleaseService: ComicsService {
         ComicsClientService(
             networkService: dependencies.networkService,
-            dataHandler: ClientDataHandler(parser: parser),
+            dataHandler: dataHandler,
             dataResultHandler: comicDataResultHandler
         )
+    }
+
+    var dataHandler: NetworkDataHandler {
+        ClientDataHandler(parser: parser)
+    }
+
+    var errorHandler: NetworkErrorHandler {
+        DataServicesNetworkErrorHandler()
     }
 
     var jsonDataLoader: JsonDecoderDataLoader {

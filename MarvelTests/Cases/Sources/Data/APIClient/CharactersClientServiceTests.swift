@@ -122,7 +122,7 @@ private extension CharactersClientServiceTests {
     }
 
     func givenErrorHandlerMock() {
-        errorHandler = NetworkErroHandlerMock()
+        errorHandler = NetworkErrorHandlerMock()
     }
 
     func givenSutWithNetworkServiceCacherFake() {
@@ -157,7 +157,7 @@ private extension CharactersClientServiceTests {
     }
 
     func assertErrorHandlerHandle(callCount: Int, line: UInt = #line) {
-        let errorHandlerMock = errorHandler as! NetworkErroHandlerMock
+        let errorHandlerMock = errorHandler as! NetworkErrorHandlerMock
         XCTAssertEqual(errorHandlerMock.handleCallCount, callCount, line: line)
     }
 
