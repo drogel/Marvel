@@ -33,6 +33,22 @@ class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {
         query: FetchCharacterDetailQuery,
         completion: @escaping (FetchCharacterDetailResult) -> Void
     ) -> Disposable? {
-        service.character(with: query.characterID, completion: completion)
+        Task { await fetch(query: query, completion: completion) }
+        return nil
+    }
+
+    func fetch(
+        query: FetchCharacterDetailQuery,
+        completion: @escaping (FetchCharacterDetailResult) -> Void
+    ) async -> Disposable? {
+        do {
+            let characterPage = try await service.character(with: query.characterID)
+            completion(.success(characterPage))
+        } catch let error as CharacterDetailServiceError {
+            completion(.failure(error))
+        } catch {
+            completion(.failure(.emptyData))
+        }
+        return nil
     }
 }

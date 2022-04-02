@@ -36,12 +36,12 @@ class CharacterDetailClientService: CharacterDetailService {
 
     func character(with identifier: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) async {
         do {
-            let data = try await networkService.request(endpoint: components(for: identifier))
-            handle(.success(data), completion: completion)
-        } catch let error as NetworkError {
-            handle(.failure(error), completion: completion)
+            let data = try await character(with: identifier)
+            completion(.success(data))
+        } catch let error as CharacterDetailServiceError {
+            completion(.failure(error))
         } catch {
-            handle(.failure(.requestError(error)), completion: completion)
+            completion(.failure(.emptyData))
         }
     }
 

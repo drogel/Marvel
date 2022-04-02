@@ -50,8 +50,8 @@ class CharacterDetailClientServiceTests: XCTestCase {
         XCTAssertEqual(actualComponents.path, expectedComponentsPath)
     }
 
-    func test_givenASucessfulNetworkServiceAndFailingParser_whenRetrievingCharacters_resultIsFailure() async {
-        givenFailingParser()
+    func test_givenASucessfulNetworkServiceAndFailingDataHandler_whenRetrievingCharacters_resultIsFailure() async {
+        givenFailingDataHandler()
         givenSutWithSuccessfulNetworkService()
         let result = await whenRetrievingCharacter()
         assertIsFailure(result) {
@@ -118,6 +118,7 @@ private extension CharacterDetailClientServiceTests {
 
     func givenSutWithFailingNetworkService(providingError error: NetworkError) {
         networkServiceMock = NetworkServiceFailingStub(errorStub: error)
+        errorHandlerMock = NetworkErrorHandlerMock(errorStub: DataServicesNetworkErrorHandler().handle(error))
         givenSut(with: networkServiceMock)
     }
 
@@ -132,8 +133,8 @@ private extension CharacterDetailClientServiceTests {
         )
     }
 
-    func givenFailingParser() {
-        jsonParserMock = JSONParserFailingStub()
+    func givenFailingDataHandler() {
+        dataHandlerMock = NetworkDataHandlerFailingStub()
     }
 
     func givenSuccesfulParser() {
@@ -183,7 +184,6 @@ private extension CharacterDetailClientServiceTests {
     }
 
     func assertErrorHandlerHandle(callCount: Int, line: UInt = #line) {
-        let errorHandlerMock = errorHandler as! NetworkErrorHandlerMock
         XCTAssertEqual(errorHandlerMock.handleCallCount, callCount, line: line)
     }
 }
