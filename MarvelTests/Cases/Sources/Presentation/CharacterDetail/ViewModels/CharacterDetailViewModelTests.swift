@@ -58,9 +58,9 @@ class CharacterDetailViewModelTests: XCTestCase {
         assertComicsViewModelDispose(callCount: 1)
     }
 
-    func test_whenAboutToDisplayAComicCell_delegatesToComicsViewModel() {
+    func test_whenAboutToDisplayAComicCell_delegatesToComicsViewModel() async {
         assertComicsViewModelWillDisplayCell(callCount: 0)
-        whenAboutToDisplayAComicCell()
+        await whenAboutToDisplayAComicCell()
         assertComicsViewModelWillDisplayCell(callCount: 1)
     }
 
@@ -87,8 +87,8 @@ class CharacterDetailViewModelTests: XCTestCase {
 }
 
 private extension CharacterDetailViewModelTests {
-    func whenAboutToDisplayAComicCell() {
-        sut.willDisplayComicCell(at: IndexPath(row: 0, section: 0))
+    func whenAboutToDisplayAComicCell() async {
+        await sut.willDisplayComicCell(at: IndexPath(row: 0, section: 0))
     }
 
     func assertInfoViewModelStart(callCount: Int, line: UInt = #line) {

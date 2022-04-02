@@ -56,7 +56,7 @@ extension CharacterDetailViewController: UICollectionViewDelegate {
     func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
         case .comics:
-            return viewModel.willDisplayComicCell(at: indexPath)
+            Task { await viewModel.willDisplayComicCell(at: indexPath) }
         default:
             return
         }
