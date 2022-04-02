@@ -11,38 +11,19 @@ class CharacterDetailClientService: CharacterDetailService {
     private let charactersPath = MarvelAPIPaths.characters.rawValue
     private let networkService: NetworkService
     private let dataHandler: NetworkDataHandler
-    private let networkResultHandler: NetworkResultHandler
     private let dataResultHandler: CharacterDataResultHandler
     private let networkErrorHandler: NetworkErrorHandler
 
     init(
         networkService: NetworkService,
         dataHandler: NetworkDataHandler,
-        networkResultHandler: NetworkResultHandler,
         networkErrorHandler: NetworkErrorHandler,
         dataResultHandler: CharacterDataResultHandler
     ) {
         self.networkService = networkService
-        self.networkResultHandler = networkResultHandler
         self.dataResultHandler = dataResultHandler
         self.dataHandler = dataHandler
         self.networkErrorHandler = networkErrorHandler
-    }
-
-    func character(with identifier: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable? {
-        Task { @MainActor in await character(with: identifier, completion: completion) }
-        return nil
-    }
-
-    func character(with identifier: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) async {
-        do {
-            let data = try await character(with: identifier)
-            completion(.success(data))
-        } catch let error as CharacterDetailServiceError {
-            completion(.failure(error))
-        } catch {
-            completion(.failure(.emptyData))
-        }
     }
 
     func character(with identifier: Int) async throws -> ContentPage<Character> {
@@ -66,11 +47,5 @@ private extension CharacterDetailClientService {
         let data = try await networkService.request(endpoint: components(for: identifier))
         let dataWrapper: DataWrapper<CharacterData> = try dataHandler.handle(data)
         return try dataResultHandler.handle(dataWrapper)
-    }
-
-    func handle(_ result: Result<Data?, NetworkError>, completion: @escaping (CharacterDetailServiceResult) -> Void) {
-        networkResultHandler.handle(result: result) { [weak self] handlerResult in
-            self?.dataResultHandler.completeWithServiceResult(handlerResult, completion: completion)
-        }
     }
 }

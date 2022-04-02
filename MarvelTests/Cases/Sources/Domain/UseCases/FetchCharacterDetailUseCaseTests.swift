@@ -51,11 +51,6 @@ private class CharacterDetailServiceMock: CharacterDetailService {
     static let disposableStub = DisposableStub()
     var characterCallCount = 0
 
-    func character(with _: Int, completion _: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable? {
-        characterCallCount += 1
-        return Self.disposableStub
-    }
-
     func character(with _: Int) async throws -> ContentPage<Character> {
         characterCallCount += 1
         return ContentPage<Character>.empty
@@ -63,11 +58,6 @@ private class CharacterDetailServiceMock: CharacterDetailService {
 }
 
 private class CharacterDetailServiceFailureStub: CharacterDetailService {
-    func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable? {
-        completion(.failure(.emptyData))
-        return DisposableStub()
-    }
-
     func character(with _: Int) async throws -> ContentPage<Character> {
         throw CharacterDetailServiceError.emptyData
     }
@@ -78,11 +68,6 @@ private class CharacterDetailServiceSuccessStub: CharacterDetailService {
 
     init(pageStub: ContentPage<Character>) {
         self.pageStub = pageStub
-    }
-
-    func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable? {
-        completion(.success(pageStub))
-        return DisposableStub()
     }
 
     func character(with _: Int) async throws -> ContentPage<Character> {

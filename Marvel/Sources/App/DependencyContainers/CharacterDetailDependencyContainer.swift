@@ -68,7 +68,6 @@ private extension CharacterDetailDependencyContainer {
         CharacterDetailClientService(
             networkService: dependencies.networkService,
             dataHandler: dataHandler,
-            networkResultHandler: ClientResultHandler(parser: parser, errorHandler: errorHandler),
             networkErrorHandler: errorHandler,
             dataResultHandler: characterDataResultHandler
         )
