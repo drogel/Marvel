@@ -13,20 +13,17 @@ class ComicsClientServiceTests: XCTestCase {
     private var sut: ComicsClientService!
     private var networkServiceMock: NetworkServiceRequestCacheFake!
     private var networkDataHandlerMock: NetworkDataHandlerMock!
-    private var resultHandlerMock: ResultHandlerMock!
 
     override func setUp() {
         super.setUp()
         networkServiceMock = NetworkServiceRequestCacheFake()
         networkDataHandlerMock = NetworkDataHandlerMock()
-        resultHandlerMock = ResultHandlerMock()
         givenSut(with: networkServiceMock)
     }
 
     override func tearDown() {
         sut = nil
         networkServiceMock = nil
-        resultHandlerMock = nil
         networkDataHandlerMock = nil
         super.tearDown()
     }
@@ -62,7 +59,6 @@ private extension ComicsClientServiceTests {
     func givenSut(with networkService: NetworkService) {
         sut = ComicsClientService(
             networkService: networkService,
-            resultHandler: resultHandlerMock,
             dataHandler: networkDataHandlerMock,
             dataResultHandler: ComicDataResultHandlerFactory.createWithDataMappers()
         )
@@ -83,9 +79,5 @@ private extension ComicsClientServiceTests {
 
     func assertNetworkServiceRequest(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(networkServiceMock.requestCallCount, callCount, line: line)
-    }
-
-    func assertResultHandlerHandle(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(resultHandlerMock.handleCallCount, callCount, line: line)
     }
 }

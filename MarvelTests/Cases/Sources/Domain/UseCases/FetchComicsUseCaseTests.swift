@@ -51,15 +51,6 @@ private class ComicsServiceMock: ComicsService {
     static let disposableStub = DisposableStub()
     var comicsCallCount = 0
 
-    func comics(
-        for _: Int,
-        from _: Int,
-        completion _: @escaping (ComicsServiceResult) -> Void
-    ) -> Disposable? {
-        comicsCallCount += 1
-        return Self.disposableStub
-    }
-
     func comics(for _: Int, from _: Int) async throws -> ContentPage<Comic> {
         comicsCallCount += 1
         return ContentPage<Comic>.empty
@@ -67,15 +58,6 @@ private class ComicsServiceMock: ComicsService {
 }
 
 private class ComicsServiceFailureStub: ComicsService {
-    func comics(
-        for _: Int,
-        from _: Int,
-        completion: @escaping (ComicsServiceResult) -> Void
-    ) -> Disposable? {
-        completion(.failure(.emptyData))
-        return DisposableStub()
-    }
-
     func comics(for _: Int, from _: Int) async throws -> ContentPage<Comic> {
         throw ComicsServiceError.emptyData
     }
@@ -86,11 +68,6 @@ private class ComicsServiceSuccessStub: ComicsService {
 
     init(pageStub: ContentPage<Comic>) {
         self.pageStub = pageStub
-    }
-
-    func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Disposable? {
-        completion(.success(pageStub))
-        return DisposableStub()
     }
 
     func comics(for _: Int, from _: Int) async throws -> ContentPage<Comic> {
