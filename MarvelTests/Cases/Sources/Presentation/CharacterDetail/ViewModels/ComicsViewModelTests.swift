@@ -153,13 +153,6 @@ private class ComicFetcherMock: FetchComicsUseCase {
     var mostRecentQuery: FetchComicsQuery?
     var disposables: [DisposableMock] = []
 
-    func fetch(query: FetchComicsQuery, completion _: @escaping (FetchComicsResult) -> Void) -> Disposable? {
-        fetchCallCount += 1
-        mostRecentQuery = query
-        disposables.append(DisposableMock())
-        return disposables.last
-    }
-
     func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic> {
         fetchCallCount += 1
         mostRecentQuery = query
@@ -178,12 +171,6 @@ private class ComicFetcherSuccessfulStub: ComicFetcherMock {
         contents: [ComicFetcherSuccessfulStub.comicStub]
     )
 
-    override func fetch(query: FetchComicsQuery, completion: @escaping (FetchComicsResult) -> Void) -> Disposable? {
-        let diposable = super.fetch(query: query, completion: completion)
-        completion(.success(Self.contentPageStub))
-        return diposable
-    }
-
     override func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic> {
         _ = try await super.fetch(query: query)
         return Self.contentPageStub
@@ -191,12 +178,6 @@ private class ComicFetcherSuccessfulStub: ComicFetcherMock {
 }
 
 private class ComicFetcherFailureStub: ComicFetcherMock {
-    override func fetch(query: FetchComicsQuery, completion: @escaping (FetchComicsResult) -> Void) -> Disposable? {
-        let disposable = super.fetch(query: query, completion: completion)
-        completion(.failure(.emptyData))
-        return disposable
-    }
-
     override func fetch(query _: FetchComicsQuery) async throws -> ContentPage<Comic> {
         throw FetchComicsUseCaseError.emptyData
     }

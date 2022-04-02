@@ -27,23 +27,23 @@ class FetchComicsUseCaseTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_whenFetching_callsServiceFetch() async {
-        await whenFetchingComicsIgnoringResult()
+    func test_whenFetching_callsServiceFetch() async throws {
+        try await whenFetchingComicsIgnoringResult()
         XCTAssertEqual(serviceMock.comicsCallCount, 1)
     }
 
     func test_givenFailingService_whenFetching_completesWithFailure() async {
         givenSutWithFailureServiceStub()
-        let completionResult = await whenRetrievingResultFromFetchingComics()
-        assertIsFailure(completionResult)
+        await assertThrows {
+            try await whenFetchingComicsIgnoringResult()
+        }
     }
 
-    func test_givenSuccessfulService_whenFetching_completesWithPageData() async {
-        givenSutWithSuccessfulServiceStub(stubbingPage: ContentPage<Comic>.empty)
-        let completionResult = await whenRetrievingResultFromFetchingComics()
-        assertIsSuccess(completionResult) {
-            XCTAssertEqual($0, ContentPage<Comic>.empty)
-        }
+    func test_givenSuccessfulService_whenFetching_completesWithPageData() async throws {
+        let contentPageStub = ContentPage<Comic>.empty
+        givenSutWithSuccessfulServiceStub(stubbingPage: contentPageStub)
+        let actualContentPage = try await whenFetchingComics()
+        XCTAssertEqual(actualContentPage, contentPageStub)
     }
 }
 
@@ -76,12 +76,12 @@ private class ComicsServiceSuccessStub: ComicsService {
 }
 
 private extension FetchComicsUseCaseTests {
-    func whenFetchingComicsIgnoringResult() async {
-        await whenFetchingComics(completion: { _ in })
+    func whenFetchingComicsIgnoringResult() async throws {
+        _ = try await whenFetchingComics()
     }
 
-    func whenFetchingComics(completion: @escaping (FetchComicsResult) -> Void) async {
-        await sut.fetch(query: query, completion: completion)
+    func whenFetchingComics() async throws -> ContentPage<Comic> {
+        try await sut.fetch(query: query)
     }
 
     func givenSutWithFailureServiceStub() {
@@ -96,13 +96,5 @@ private extension FetchComicsUseCaseTests {
 
     func givenSut(with service: ComicsService) {
         sut = FetchComicsServiceUseCase(service: service)
-    }
-
-    func whenRetrievingResultFromFetchingComics() async -> FetchComicsResult {
-        var completionResult: FetchComicsResult!
-        await whenFetchingComics { result in
-            completionResult = result
-        }
-        return completionResult
     }
 }
