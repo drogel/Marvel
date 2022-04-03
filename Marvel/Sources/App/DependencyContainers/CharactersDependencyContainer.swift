@@ -49,7 +49,7 @@ private extension CharactersDependencyContainer {
         switch dependencies.scheme {
         case .debug:
             return charactersDebugService
-        case .release:
+        case .stage, .release:
             return charactersClientService
         }
     }

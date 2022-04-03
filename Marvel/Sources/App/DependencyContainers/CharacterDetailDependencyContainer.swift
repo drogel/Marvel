@@ -43,7 +43,7 @@ private extension CharacterDetailDependencyContainer {
         switch dependencies.scheme {
         case .debug:
             return characterDetailDebugService
-        case .release:
+        case .stage, .release:
             return characterDetailReleaseService
         }
     }
@@ -52,7 +52,7 @@ private extension CharacterDetailDependencyContainer {
         switch dependencies.scheme {
         case .debug:
             return comicsDebugService
-        case .release:
+        case .stage, .release:
             return comicsReleaseService
         }
     }
