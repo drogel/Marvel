@@ -49,15 +49,16 @@ private extension CharactersDependencyContainer {
         switch dependencies.scheme {
         case .debug:
             return charactersDebugService
-        case .release:
+        case .stage, .release:
             return charactersClientService
         }
     }
 
     var charactersClientService: CharactersService {
         CharactersClientService(
-            client: dependencies.networkService,
-            resultHandler: resultHandler,
+            networkService: dependencies.networkService,
+            dataHandler: ClientDataHandler(parser: parser),
+            networkErrorHandler: errorHandler,
             dataResultHandler: dataResultHandler
         )
     }
@@ -73,8 +74,8 @@ private extension CharactersDependencyContainer {
         JSONDecoderParser()
     }
 
-    var resultHandler: NetworkResultHandler {
-        ClientResultHandler(parser: parser, errorHandler: DataServicesNetworkErrorHandler())
+    var errorHandler: NetworkErrorHandler {
+        DataServicesNetworkErrorHandler()
     }
 
     var dataResultHandler: CharacterDataResultHandler {

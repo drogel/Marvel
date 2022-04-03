@@ -15,7 +15,6 @@ class CharacterDetailInfoViewModelMock: CharacterInfoViewModelProtocol {
     var infoStatePublisherCallCount = 0
     var loadingStatePublisherCallCount = 0
     var startCallCount = 0
-    var disposeCallCount = 0
 
     var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> {
         infoStatePublisherCallCount += 1
@@ -29,9 +28,5 @@ class CharacterDetailInfoViewModelMock: CharacterInfoViewModelProtocol {
 
     func start() {
         startCallCount += 1
-    }
-
-    func dispose() {
-        disposeCallCount += 1
     }
 }

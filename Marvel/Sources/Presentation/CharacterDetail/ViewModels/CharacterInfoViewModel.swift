@@ -52,7 +52,6 @@ class CharacterInfoViewModel: CharacterInfoViewModelProtocol {
     private let characterFetcher: FetchCharacterDetailUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let characterID: Int
-    private var characterDisposable: Disposable?
 
     init(
         characterFetcher: FetchCharacterDetailUseCase,
@@ -66,32 +65,23 @@ class CharacterInfoViewModel: CharacterInfoViewModelProtocol {
         loadingState = .idle
     }
 
-    func start() {
+    func start() async {
         loadingState = .loading
         let query = FetchCharacterDetailQuery(characterID: characterID)
-        loadCharacter(with: query)
-    }
-
-    func dispose() {
-        characterDisposable?.dispose()
+        await loadCharacter(with: query)
     }
 }
 
 private extension CharacterInfoViewModel {
-    func loadCharacter(with query: FetchCharacterDetailQuery) {
-        characterDisposable?.dispose()
-        characterDisposable = characterFetcher.fetch(query: query) { [weak self] result in
-            self?.handleFetchCharacterResult(result)
-        }
-    }
-
-    func handleFetchCharacterResult(_ result: FetchCharacterDetailResult) {
-        loadingState = .loaded
-        switch result {
-        case let .success(contentPage):
+    func loadCharacter(with query: FetchCharacterDetailQuery) async {
+        do {
+            defer { loadingState = .loaded }
+            let contentPage = try await characterFetcher.fetch(query: query)
             handleSuccess(with: contentPage)
-        case let .failure(error):
+        } catch let error as FetchCharacterDetailUseCaseError {
             handleFailure(with: error)
+        } catch {
+            handleFailure(with: .emptyData)
         }
     }
 

@@ -10,30 +10,24 @@ import Foundation
 class ComicsClientService: ComicsService {
     private let charactersPath = MarvelAPIPaths.characters.rawValue
     private let comicsPath = MarvelAPIPaths.comics.rawValue
-    private let resultHandler: NetworkResultHandler
     private let networkService: NetworkService
+    private let dataHandler: NetworkDataHandler
     private let dataResultHandler: ComicDataResultHandler
 
     init(
         networkService: NetworkService,
-        resultHandler: NetworkResultHandler,
+        dataHandler: NetworkDataHandler,
         dataResultHandler: ComicDataResultHandler
     ) {
-        self.resultHandler = resultHandler
         self.networkService = networkService
         self.dataResultHandler = dataResultHandler
+        self.dataHandler = dataHandler
     }
 
-    func comics(
-        for characterID: Int,
-        from offset: Int,
-        completion: @escaping (ComicsServiceResult) -> Void
-    ) -> Disposable? {
-        networkService.request(endpoint: components(for: characterID, offset: offset)) { [weak self] result in
-            self?.resultHandler.handle(result: result) { handlerResult in
-                self?.dataResultHandler.completeWithServiceResult(handlerResult, completion: completion)
-            }
-        }
+    func comics(for characterID: Int, from offset: Int) async throws -> ContentPage<Comic> {
+        let data = try await networkService.request(endpoint: components(for: characterID, offset: offset))
+        let dataWrapper: DataWrapper<ComicData> = try dataHandler.handle(data)
+        return try dataResultHandler.handle(dataWrapper)
     }
 }
 

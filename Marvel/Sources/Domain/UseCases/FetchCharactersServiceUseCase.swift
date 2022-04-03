@@ -8,7 +8,7 @@
 import Foundation
 
 protocol FetchCharactersUseCase {
-    func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Disposable?
+    func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character>
 }
 
 struct FetchCharactersQuery {
@@ -17,8 +17,6 @@ struct FetchCharactersQuery {
 
 typealias FetchCharactersUseCaseError = CharactersServiceError
 
-typealias FetchCharactersResult = Result<ContentPage<Character>, FetchCharactersUseCaseError>
-
 class FetchCharactersServiceUseCase: FetchCharactersUseCase {
     private let service: CharactersService
 
@@ -26,7 +24,7 @@ class FetchCharactersServiceUseCase: FetchCharactersUseCase {
         self.service = service
     }
 
-    func fetch(query: FetchCharactersQuery, completion: @escaping (FetchCharactersResult) -> Void) -> Disposable? {
-        service.characters(from: query.offset, completion: completion)
+    func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
+        try await service.characters(from: query.offset)
     }
 }

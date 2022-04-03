@@ -75,17 +75,14 @@ private class CharacterDetailContainerStub: CharacterDetailContainer {
 }
 
 private class FetchCharacterDetailUseCaseStub: FetchCharacterDetailUseCase {
-    func fetch(
-        query _: FetchCharacterDetailQuery,
-        completion _: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Disposable? {
-        nil
+    func fetch(query _: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
+        ContentPage<Character>.empty
     }
 }
 
 private class FetchComicsUseCaseStub: FetchComicsUseCase {
-    func fetch(query _: FetchComicsQuery, completion _: @escaping (FetchComicsResult) -> Void) -> Disposable? {
-        nil
+    func fetch(query _: FetchComicsQuery) async throws -> ContentPage<Comic> {
+        ContentPage<Comic>.empty
     }
 }
 

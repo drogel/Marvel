@@ -25,20 +25,16 @@ class ComicsDebugServiceTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is ComicsService)
     }
 
-    func test_whenRetrievingComics_returnsNil() {
-        XCTAssertNil(sut.comics(for: 1234, from: 1234, completion: { _ in }))
-    }
-
-    func test_givenSutWithEmptyDataLoader_whenRetrievingComics_completesWithFailure() {
+    func test_givenSutWithEmptyDataLoader_whenRetrievingComics_completesWithFailure() async throws {
         givenSutWithEmptyDataLoader()
-        let completionResult = whenRetrievingResult()
-        assertIsFailure(completionResult)
+        await assertThrows {
+            try await whenRetrievingResultIgnoringResult()
+        }
     }
 
-    func test_givenSutDataLoader_whenRetrievingComics_completesWithSuccess() {
+    func test_givenSutDataLoader_whenRetrievingComics_completesWithSuccess() async throws {
         givenSutWithDataLoader()
-        let completionResult = whenRetrievingResult()
-        assertIsSuccess(completionResult)
+        try await whenRetrievingResultIgnoringResult()
     }
 }
 
@@ -59,14 +55,7 @@ private extension ComicsDebugServiceTests {
         )
     }
 
-    func whenRetrievingResult() -> ComicsServiceResult {
-        var completionResult: ComicsServiceResult!
-        let expectation = expectation(description: "JSON file parsing completion")
-        _ = sut.comics(for: 0, from: 0) { result in
-            completionResult = result
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: 1)
-        return completionResult
+    func whenRetrievingResultIgnoringResult() async throws {
+        _ = try await sut.comics(for: 0, from: 0)
     }
 }

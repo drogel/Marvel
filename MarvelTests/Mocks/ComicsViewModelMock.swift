@@ -14,7 +14,6 @@ class ComicsViewModelMock: ComicsViewModelProtocol {
 
     var startCallCount = 0
     var comicCellModelsPublisherCallCount = 0
-    var disposeCallCount = 0
     var willDisplayComicCellCallCount = 0
 
     var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> {
@@ -28,9 +27,5 @@ class ComicsViewModelMock: ComicsViewModelProtocol {
 
     func willDisplayComicCell(at _: IndexPath) {
         willDisplayComicCellCallCount += 1
-    }
-
-    func dispose() {
-        disposeCallCount += 1
     }
 }

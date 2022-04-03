@@ -17,9 +17,8 @@ class ComicsDebugService: ComicsService {
         self.dataResultHandler = dataResultHandler
     }
 
-    func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Disposable? {
-        dataLoader.loadData { [weak self] result in
-            self?.dataResultHandler.completeWithServiceResult(result, completion: completion)
-        }
+    func comics(for _: Int, from _: Int) async throws -> ContentPage<Comic> {
+        let dataWrapper: DataWrapper<ComicData> = try dataLoader.loadData()
+        return try dataResultHandler.handle(dataWrapper)
     }
 }

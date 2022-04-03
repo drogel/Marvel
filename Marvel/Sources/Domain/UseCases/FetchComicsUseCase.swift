@@ -8,10 +8,7 @@
 import Foundation
 
 protocol FetchComicsUseCase {
-    func fetch(
-        query: FetchComicsQuery,
-        completion: @escaping (FetchComicsResult) -> Void
-    ) -> Disposable?
+    func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic>
 }
 
 struct FetchComicsQuery: Equatable {
@@ -21,8 +18,6 @@ struct FetchComicsQuery: Equatable {
 
 typealias FetchComicsUseCaseError = ComicsServiceError
 
-typealias FetchComicsResult = Result<ContentPage<Comic>, FetchComicsUseCaseError>
-
 class FetchComicsServiceUseCase: FetchComicsUseCase {
     private let service: ComicsService
 
@@ -30,10 +25,7 @@ class FetchComicsServiceUseCase: FetchComicsUseCase {
         self.service = service
     }
 
-    func fetch(
-        query: FetchComicsQuery,
-        completion: @escaping (FetchComicsResult) -> Void
-    ) -> Disposable? {
-        service.comics(for: query.characterID, from: query.offset, completion: completion)
+    func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic> {
+        try await service.comics(for: query.characterID, from: query.offset)
     }
 }

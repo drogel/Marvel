@@ -27,45 +27,36 @@ class FetchCharacterDetailUseCaseTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_whenFetching_returnsServiceDisposable() throws {
-        let disposable = try whenRetrievingDisposibleFromFetchCharacter()
-        XCTAssertTrue(CharacterDetailServiceMock.disposableStub === disposable)
-    }
-
-    func test_whenFetching_callsServiceFetch() throws {
-        whenFetchingCharacter()
+    func test_whenFetching_callsServiceFetch() async throws {
+        try await whenFetchingCharacterIgnoringResult()
         XCTAssertEqual(serviceMock.characterCallCount, 1)
     }
 
-    func test_givenFailingService_whenFetching_completesWithFailure() {
+    func test_givenFailingService_whenFetching_completesWithFailure() async throws {
         givenSutWithFailureServiceStub()
-        let completionResult = whenRetrievingResultFromFetchingCharacter()
-        assertIsFailure(completionResult)
+        await assertThrows {
+            try await whenFetchingCharacterIgnoringResult()
+        }
     }
 
-    func test_givenSuccessfulService_whenFetching_completesWithPageData() {
+    func test_givenSuccessfulService_whenFetching_completesWithPageData() async throws {
         givenSutWithSuccessfulServiceStub(stubbingPage: ContentPage<Character>.empty)
-        let completionResult = whenRetrievingResultFromFetchingCharacter()
-        assertIsSuccess(completionResult) {
-            XCTAssertEqual($0, ContentPage<Character>.empty)
-        }
+        try await whenFetchingCharacterIgnoringResult()
     }
 }
 
 private class CharacterDetailServiceMock: CharacterDetailService {
-    static let disposableStub = DisposableStub()
     var characterCallCount = 0
 
-    func character(with _: Int, completion _: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable? {
+    func character(with _: Int) async throws -> ContentPage<Character> {
         characterCallCount += 1
-        return Self.disposableStub
+        return ContentPage<Character>.empty
     }
 }
 
 private class CharacterDetailServiceFailureStub: CharacterDetailService {
-    func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable? {
-        completion(.failure(.emptyData))
-        return DisposableStub()
+    func character(with _: Int) async throws -> ContentPage<Character> {
+        throw CharacterDetailServiceError.emptyData
     }
 }
 
@@ -76,24 +67,14 @@ private class CharacterDetailServiceSuccessStub: CharacterDetailService {
         self.pageStub = pageStub
     }
 
-    func character(with _: Int, completion: @escaping (CharacterDetailServiceResult) -> Void) -> Disposable? {
-        completion(.success(pageStub))
-        return DisposableStub()
+    func character(with _: Int) async throws -> ContentPage<Character> {
+        pageStub
     }
 }
 
 private extension FetchCharacterDetailUseCaseTests {
-    func whenRetrievingDisposibleFromFetchCharacter(
-        completion: ((FetchCharacterDetailResult) -> Void)? = nil
-    ) throws -> DisposableStub {
-        let disposable = sut.fetch(query: query) { result in
-            completion?(result)
-        }
-        return try XCTUnwrap(disposable as? DisposableStub)
-    }
-
-    func whenFetchingCharacter(completion: ((FetchCharacterDetailResult) -> Void)? = nil) {
-        _ = try? whenRetrievingDisposibleFromFetchCharacter(completion: completion)
+    func whenFetchingCharacterIgnoringResult() async throws {
+        _ = try await whenRetrievingResultFromFetchingCharacter()
     }
 
     func givenSutWithFailureServiceStub() {
@@ -110,11 +91,7 @@ private extension FetchCharacterDetailUseCaseTests {
         sut = FetchCharacterDetailServiceUseCase(service: service)
     }
 
-    func whenRetrievingResultFromFetchingCharacter() -> FetchCharacterDetailResult {
-        var completionResult: FetchCharacterDetailResult!
-        whenFetchingCharacter { result in
-            completionResult = result
-        }
-        return completionResult
+    func whenRetrievingResultFromFetchingCharacter() async throws -> ContentPage<Character> {
+        try await sut.fetch(query: query)
     }
 }

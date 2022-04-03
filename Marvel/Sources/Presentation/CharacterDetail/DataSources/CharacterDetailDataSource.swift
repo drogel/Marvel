@@ -147,13 +147,33 @@ private extension CharacterDetailDataSource {
     }
 
     func createDetailSnapshot(with items: [CharacterDetailModel]) -> CharacterDetailDiffableDataSource.Snapshot {
-        var snapshot = CharacterDetailDiffableDataSource.Snapshot()
+        let emptySnapshot = CharacterDetailDiffableDataSource.Snapshot()
+        let detailInfoSnapshot = appendDetailInfo(from: items, to: emptySnapshot)
+        let finalSnapshot = appendComics(from: items, to: detailInfoSnapshot)
+        return finalSnapshot
+    }
+
+    func appendDetailInfo(
+        from items: [CharacterDetailModel],
+        to originalSnapshot: CharacterDetailDiffableDataSource.Snapshot
+    ) -> CharacterDetailDiffableDataSource.Snapshot {
+        var snapshot = originalSnapshot
         let images = items.compactMap(\.info?.image)
         let descriptions = items.compactMap(\.info?.description)
-        let comics = items.flatMap(\.comics)
-        snapshot.appendSections([.image, .info, .comics])
+        snapshot.appendSections([.image, .info])
         snapshot.appendItems(images, toSection: .image)
         snapshot.appendItems(descriptions, toSection: .info)
+        return snapshot
+    }
+
+    func appendComics(
+        from items: [CharacterDetailModel],
+        to originalSnapshot: CharacterDetailDiffableDataSource.Snapshot
+    ) -> CharacterDetailDiffableDataSource.Snapshot {
+        var snapshot = originalSnapshot
+        let comics = items.flatMap(\.comics)
+        guard comics.hasElements else { return snapshot }
+        snapshot.appendSections([.comics])
         snapshot.appendItems(comics, toSection: .comics)
         return snapshot
     }

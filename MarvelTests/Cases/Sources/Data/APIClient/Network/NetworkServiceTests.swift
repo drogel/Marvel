@@ -29,83 +29,93 @@ class NetworkServiceTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_givenASuccessfulRequest_whenRequesting_completesSuccessfully() {
+    func test_givenASuccessfulRequest_whenRequesting_completesSuccessfully() async throws {
         givenSutWithSuccessfulSession()
-        let result = whenRequesting()
-        assertIsSuccess(result)
+        let result = try await whenRequesting()
+        XCTAssertNotNil(result)
     }
 
-    func test_givenAFailingRequest_whenRequesting_completesWithFailure() {
+    func test_givenAFailingRequest_whenRequesting_completesWithFailure() async throws {
         givenSutWithFailingSession()
-        let result = whenRequesting()
-        assertIsFailure(result)
+        await assertRequestingThrows()
     }
 
-    func test_givenASuccessfulRequest_whenRequesting_tellsComposerToComposeURL() {
+    func test_givenASuccessfulRequest_whenRequesting_tellsComposerToComposeURL() async throws {
         givenSutWithSuccessfulSession()
         assertComposerCompose(callCount: 0)
-        _ = whenRequesting()
+        try await whenRequestingIgnoringResult()
         assertComposerCompose(callCount: 1)
     }
 
-    func test_givenAFailingRequest_whenRequesting_tellsComposerToComposeURL() {
-        givenSutWithFailingSession()
-        assertComposerCompose(callCount: 0)
-        _ = whenRequesting()
-        assertComposerCompose(callCount: 1)
-    }
-
-    func test_givenAnInvalidURLFromComposer_whenRequesting_failsWithInvalidURL() {
+    func test_givenAnInvalidURLFromComposer_whenRequesting_failsWithInvalidURL() async throws {
         givenInvalidURLComposer()
         givenSutWithSuccessfulSession()
-        let result = whenRequesting()
-        assertIsFailure(result) {
-            if case NetworkError.invalidURL = $0 { } else { failExpectingErrorMatching($0) }
+        await assertThrowsError {
+            try await whenRequestingIgnoringResult()
+        } didCatchErrorBlock: { error in
+            if case NetworkError.invalidURL = error { } else { failExpectingErrorMatching(error) }
         }
     }
 
-    func test_givenAnUnauthorizedHTTPResponse_whenRequesting_failsWithUnauthorized() {
+    func test_givenAnUnauthorizedHTTPResponse_whenRequesting_failsWithUnauthorized() async throws {
         givenSutWithHTTPResponseSesssion(responseStatusCode: 401)
-        let result = whenRequesting()
-        assertIsFailure(result) {
-            if case NetworkError.unauthorized = $0 { } else { failExpectingErrorMatching($0) }
+        await assertThrowsError {
+            try await whenRequestingIgnoringResult()
+        } didCatchErrorBlock: { error in
+            if case NetworkError.unauthorized = error { } else { failExpectingErrorMatching(error) }
         }
     }
 
-    func test_givenAnErrorHTTPResponse_whenRequesting_failsWithStatusCodeError() {
+    func test_givenAnErrorHTTPResponse_whenRequesting_failsWithStatusCodeError() async throws {
         let errorStatusCode = 500
         givenSutWithHTTPResponseSesssion(responseStatusCode: errorStatusCode)
-        let result = whenRequesting()
-        assertIsFailure(result) {
-            if case NetworkError.statusCodeError(statusCode: errorStatusCode) = $0 {
+        await assertThrowsError {
+            try await whenRequestingIgnoringResult()
+        } didCatchErrorBlock: { error in
+            if case NetworkError.statusCodeError(statusCode: errorStatusCode) = error {
             } else {
-                failExpectingErrorMatching($0)
+                failExpectingErrorMatching(error)
             }
         }
     }
 
-    func test_givenIsNotConnected_whenRequesting_failsWithNotConnected() {
-        givenSutWithFailingSession(errorStub: URLError(.notConnectedToInternet))
-        let result = whenRequesting()
-        assertIsFailure(result) {
-            if case NetworkError.notConnected = $0 { } else { failExpectingErrorMatching($0) }
-        }
+    func test_givenIsNotConnected_whenRequesting_failsWithNotConnected() async throws {
+        await assertRequestOnSessionFailing(
+            with: URLError(.notConnectedToInternet),
+            throwsWithCatchErrorBlock: { error in
+                if case NetworkError.notConnected = error { } else { failExpectingErrorMatching(error) }
+            }
+        )
     }
 
-    func test_givenRequestIsCancelled_whenRequesting_failsWithCancelled() {
-        givenSutWithFailingSession(errorStub: URLError(.cancelled))
-        let result = whenRequesting()
-        assertIsFailure(result) {
-            if case NetworkError.cancelled = $0 { } else { failExpectingErrorMatching($0) }
-        }
+    func test_givenRequestIsCancelled_whenRequesting_failsWithCancelled() async throws {
+        await assertRequestOnSessionFailing(
+            with: URLError(.cancelled),
+            throwsWithCatchErrorBlock: { error in
+                if case NetworkError.cancelled = error { } else { failExpectingErrorMatching(error) }
+            }
+        )
     }
 
-    func test_givenRequestFailsWithURLError_whenRequesting_failsWithRequestError() {
-        givenSutWithFailingSession(errorStub: URLError(.badURL))
-        let result = whenRequesting()
-        assertIsFailure(result) {
-            if case NetworkError.requestError = $0 { } else { failExpectingErrorMatching($0) }
-        }
+    func test_givenRequestFailsWithURLError_whenRequesting_failsWithRequestError() async throws {
+        await assertRequestOnSessionFailing(
+            with: URLError(.badURL),
+            throwsWithCatchErrorBlock: { error in
+                if case NetworkError.requestError = error { } else { failExpectingErrorMatching(error) }
+            }
+        )
+    }
+
+    func test_givenARequestError_whenRequesting_fails() async throws {
+        let error = NSError(domain: "", code: 0, userInfo: nil)
+        givenSutWithFailingSession(errorStub: NetworkError.requestError(error))
+        await assertRequestingThrows()
+    }
+
+    func test_givenAGenericError_whenRequesting_fails() async throws {
+        let error = NSError(domain: "", code: 0, userInfo: nil)
+        givenSutWithFailingSession(errorStub: error)
+        await assertRequestingThrows()
     }
 }
 
@@ -131,19 +141,33 @@ private extension NetworkServiceTests {
         composerMock = URLComposerInvalidStub()
     }
 
-    func whenRequesting() -> Result<Data?, NetworkError> {
-        var result: Result<Data?, NetworkError>!
-        let expectation = expectation(description: "Request completed")
-        _ = sut.request(endpoint: componentsStub) { requestResult in
-            result = requestResult
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: 0.1)
-        return result
+    func whenRequesting() async throws -> Data? {
+        try await sut.request(endpoint: componentsStub)
+    }
+
+    func whenRequestingIgnoringResult() async throws {
+        _ = try await whenRequesting()
+    }
+
+    func assertRequestingThrows() async {
+        await assertThrows { try await whenRequestingIgnoringResult() }
     }
 
     func assertComposerCompose(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(composerMock.composeCallCount, callCount, line: line)
+    }
+
+    func assertRequestOnSessionFailing(
+        with errorStub: Error,
+        throwsWithCatchErrorBlock didCatchErrorBlock: (Error) -> Void,
+        line: UInt = #line,
+        file: StaticString = #filePath
+    ) async {
+        givenSutWithFailingSession(errorStub: errorStub)
+        let whenRequestingBlock: () async throws -> Void = { [weak self] in
+            try await self?.whenRequestingIgnoringResult()
+        }
+        await assertThrowsError(whenRequestingBlock, didCatchErrorBlock: didCatchErrorBlock, line: line, file: file)
     }
 }
 
@@ -164,9 +188,11 @@ private class URLComposerInvalidStub: URLComposerMock {
 }
 
 private class NetworkSessionSuccessfulStub: NetworkSession {
-    func loadData(from request: URLRequest, completionHandler: @escaping NetworkCompletion) -> URLSessionDataTask {
-        completionHandler(Data(base64Encoded: "data"), URLResponse(), nil)
-        return URLSession(configuration: .default).dataTask(with: request)
+    private let dataStub = Data(base64Encoded: "data")!
+    private let responseStub = URLResponse()
+
+    func loadData(from _: URLRequest) async throws -> (data: Data, response: URLResponse) {
+        return (dataStub, responseStub)
     }
 }
 
@@ -177,13 +203,13 @@ private class NetworkSessionFailureStub: NetworkSession {
         self.errorStub = errorStub
     }
 
-    func loadData(from request: URLRequest, completionHandler: @escaping NetworkCompletion) -> URLSessionDataTask {
-        completionHandler(nil, nil, errorStub)
-        return URLSession(configuration: .default).dataTask(with: request)
+    func loadData(from _: URLRequest) async throws -> (data: Data, response: URLResponse) {
+        throw errorStub
     }
 }
 
 private class NetworkSessionHTTPResponseStub: NetworkSession {
+    private let dataStub = Data(base64Encoded: "data")!
     private let statusCodeStub: Int
 
     private var responseStub: HTTPURLResponse {
@@ -195,8 +221,7 @@ private class NetworkSessionHTTPResponseStub: NetworkSession {
         self.statusCodeStub = statusCodeStub
     }
 
-    func loadData(from request: URLRequest, completionHandler: @escaping NetworkCompletion) -> URLSessionDataTask {
-        completionHandler(nil, responseStub, nil)
-        return URLSession(configuration: .default).dataTask(with: request)
+    func loadData(from _: URLRequest) async throws -> (data: Data, response: URLResponse) {
+        (dataStub, responseStub)
     }
 }

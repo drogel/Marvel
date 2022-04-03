@@ -12,39 +12,40 @@ class CharactersClientServiceTests: XCTestCase {
     private var sut: CharactersClientService!
     private var networkServiceMock: NetworkServiceMock!
     private var jsonParserMock: JSONParserMock!
+    private var networkDataHandlerMock: NetworkDataHandlerMock!
     private var errorHandler: NetworkErrorHandler!
 
     override func setUp() {
         super.setUp()
         jsonParserMock = JSONParserMock()
+        networkDataHandlerMock = NetworkDataHandlerMock()
         errorHandler = DataServicesNetworkErrorHandler()
     }
 
     override func tearDown() {
         sut = nil
+        networkDataHandlerMock = nil
         networkServiceMock = nil
         jsonParserMock = nil
         errorHandler = nil
         super.tearDown()
     }
 
-    func test_givenANetworkServiceMock_whenRetrievingCharacters_callsRequest() {
+    func test_givenANetworkServiceMock_whenRetrievingCharacters_callsRequest() async throws {
         givenSutWithNetworkServiceMock()
         assertNetworkServiceRequest(callCount: 0)
-        whenRetrievingCharactersIgnoringResult()
+        try await whenRetrievingCharactersIgnoringResult()
         assertNetworkServiceRequest(callCount: 1)
     }
 
-    func test_givenASucessfulNetworkServiceAndFailingParser_whenRetrievingCharacters_resultIsFailure() {
-        givenFailingParser()
+    func test_givenASucessfulNetworkServiceAndFailingParser_whenRetrievingCharacters_resultIsFailure() async {
+        let expectedError = CharactersServiceError.emptyData
+        givenFailingDataHandler()
         givenSutWithSuccessfulNetworkService()
-        let result = whenRetrievingCharacters()
-        assertIsFailure(result) {
-            assert($0, isEqualTo: .emptyData)
-        }
+        await assertWhenRetrievingCharacters(returnsFailureWithError: expectedError)
     }
 
-    func test_givenACachingNetworkServiceFake_whenRetrievingCharacters_requestIsCalledWithExpectedComponents() {
+    func test_givenACachingNetworkServiceFake_whenRetrievingCharacters_requestHasExpectedComponents() async throws {
         let offsetStub = 40
         let charactersPath = MarvelAPIPaths.characters.rawValue
         let expectedComponentsPath = RequestComponents(
@@ -52,47 +53,45 @@ class CharactersClientServiceTests: XCTestCase {
             queryParameters: ["offset": String(offsetStub)]
         )
         givenSutWithNetworkServiceCacherFake()
-        whenRetrievingCharactersIgnoringResult(from: offsetStub)
+        try await whenRetrievingCharactersIgnoringResult(from: offsetStub)
         let actualComponents = whenGettingCachedComponentsFromNetworkService()
         XCTAssertEqual(actualComponents, expectedComponentsPath)
     }
 
-    func test_givenASucessfulNetworkServiceAndSuccessfulParser_whenRetrievingCharacters_resultIsSuccess() {
+    func test_givenASucessfulNetworkServiceAndSuccessfulParser_whenRetrievingCharacters_resultIsSuccess() async throws {
+        let expectedCharacters = ContentPage<Character>.empty
         givenSuccesfulParser()
         givenSutWithSuccessfulNetworkService()
-        let result = whenRetrievingCharacters()
-        assertIsSuccess(result) {
-            XCTAssertEqual($0, ContentPage<Character>.empty)
-        }
+        let actualCharacters = try await whenRetrievingCharacters()
+        XCTAssertEqual(actualCharacters, expectedCharacters)
     }
 
-    func test_givenNoConnection_whenRetrievingCharacters_resultIsFailureWithNoConnectionError() {
-        assertWhenRetrievingCharacters(
+    func test_givenNoConnection_whenRetrievingCharacters_resultIsFailureWithNoConnectionError() async {
+        await assertWhenRetrievingCharacters(
             returnsFailureWithError: .noConnection,
             whenNetworkErrorWas: .notConnected
         )
     }
 
-    func test_givenNoAuthentication_whenRetrievingCharacters_resultIsFailureWithUnauthorized() {
-        assertWhenRetrievingCharacters(
+    func test_givenNoAuthentication_whenRetrievingCharacters_resultIsFailureWithUnauthorized() async {
+        await assertWhenRetrievingCharacters(
             returnsFailureWithError: .unauthorized,
             whenNetworkErrorWas: .unauthorized
         )
     }
 
-    func test_givenGenericError_whenRetrievingCharacters_resultIsFailureWithEmptyData() {
-        assertWhenRetrievingCharacters(
+    func test_givenGenericError_whenRetrievingCharacters_resultIsFailureWithEmptyData() async {
+        await assertWhenRetrievingCharacters(
             returnsFailureWithError: .emptyData,
             whenNetworkErrorWas: .statusCodeError(statusCode: 500)
         )
     }
 
-    func test_givenFailingNetworkService_whenRetrievingCharacters_delegatesErrorToErrorHandler() {
-        givenErrorHandlerMock()
-        givenSutWithFailingNetworkService(providingError: .invalidURL)
-        assertErrorHandlerHandle(callCount: 0)
-        whenRetrievingCharactersIgnoringResult()
-        assertErrorHandlerHandle(callCount: 1)
+    func test_givenInvalidURL_whenRetrievingCharacters_resultIsFailureWithEmptyData() async {
+        await assertWhenRetrievingCharacters(
+            returnsFailureWithError: .emptyData,
+            whenNetworkErrorWas: .invalidURL
+        )
     }
 }
 
@@ -114,8 +113,8 @@ private extension CharactersClientServiceTests {
         givenSut(with: networkServiceMock)
     }
 
-    func givenFailingParser() {
-        jsonParserMock = JSONParserFailingStub()
+    func givenFailingDataHandler() {
+        networkDataHandlerMock = NetworkDataHandlerFailingStub()
     }
 
     func givenSuccesfulParser() {
@@ -123,7 +122,7 @@ private extension CharactersClientServiceTests {
     }
 
     func givenErrorHandlerMock() {
-        errorHandler = NetworkErroHandlerMock()
+        errorHandler = NetworkErrorHandlerMock()
     }
 
     func givenSutWithNetworkServiceCacherFake() {
@@ -132,24 +131,20 @@ private extension CharactersClientServiceTests {
     }
 
     func givenSut(with networkService: NetworkService) {
-        let resultHandler = ClientResultHandler(parser: jsonParserMock, errorHandler: errorHandler)
         sut = CharactersClientService(
-            client: networkService,
-            resultHandler: resultHandler,
+            networkService: networkService,
+            dataHandler: networkDataHandlerMock,
+            networkErrorHandler: errorHandler,
             dataResultHandler: CharacterDataResultHandlerFactory.createWithDataMappers()
         )
     }
 
-    func whenRetrievingCharactersIgnoringResult(from offset: Int = 0) {
-        _ = sut.characters(from: offset) { _ in }
+    func whenRetrievingCharactersIgnoringResult(from offset: Int = 0) async throws {
+        _ = try await whenRetrievingCharacters(from: offset)
     }
 
-    func whenRetrievingCharacters(from offset: Int = 0) -> CharactersServiceResult {
-        var charactersResult: CharactersServiceResult!
-        _ = sut.characters(from: offset) { result in
-            charactersResult = result
-        }
-        return charactersResult
+    func whenRetrievingCharacters(from offset: Int = 0) async throws -> ContentPage<Character> {
+        try await sut.characters(from: offset)
     }
 
     func whenGettingCachedComponentsFromNetworkService() -> RequestComponents {
@@ -162,21 +157,26 @@ private extension CharactersClientServiceTests {
     }
 
     func assertErrorHandlerHandle(callCount: Int, line: UInt = #line) {
-        let errorHandlerMock = errorHandler as! NetworkErroHandlerMock
+        let errorHandlerMock = errorHandler as! NetworkErrorHandlerMock
         XCTAssertEqual(errorHandlerMock.handleCallCount, callCount, line: line)
-    }
-
-    func assert(_ actualError: CharactersServiceError, isEqualTo expectedError: CharactersServiceError) {
-        if case actualError = expectedError { } else { failExpectingErrorMatching(actualError) }
     }
 
     func assertWhenRetrievingCharacters(
         returnsFailureWithError expectedError: CharactersServiceError,
         whenNetworkErrorWas networkError: NetworkError,
         line: UInt = #line
-    ) {
+    ) async {
         givenSutWithFailingNetworkService(providingError: networkError)
-        let result = whenRetrievingCharacters()
-        assertIsFailure(result, then: { assert($0, isEqualTo: expectedError) }, line: line)
+        await assertWhenRetrievingCharacters(returnsFailureWithError: expectedError, line: line)
+    }
+
+    func assertWhenRetrievingCharacters(
+        returnsFailureWithError expectedError: CharactersServiceError,
+        line: UInt = #line
+    ) async {
+        let retrievingCharactersBlock: () async throws -> Void = { [weak self] in
+            try await self?.whenRetrievingCharactersIgnoringResult()
+        }
+        await assertThrows(retrievingCharactersBlock, expectedError: expectedError, line: line)
     }
 }

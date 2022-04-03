@@ -43,7 +43,7 @@ private extension CharacterDetailDependencyContainer {
         switch dependencies.scheme {
         case .debug:
             return characterDetailDebugService
-        case .release:
+        case .stage, .release:
             return characterDetailReleaseService
         }
     }
@@ -52,7 +52,7 @@ private extension CharacterDetailDependencyContainer {
         switch dependencies.scheme {
         case .debug:
             return comicsDebugService
-        case .release:
+        case .stage, .release:
             return comicsReleaseService
         }
     }
@@ -66,8 +66,9 @@ private extension CharacterDetailDependencyContainer {
 
     var characterDetailReleaseService: CharacterDetailService {
         CharacterDetailClientService(
-            client: dependencies.networkService,
-            networkResultHandler: resultHandler,
+            networkService: dependencies.networkService,
+            dataHandler: dataHandler,
+            networkErrorHandler: errorHandler,
             dataResultHandler: characterDataResultHandler
         )
     }
@@ -79,9 +80,17 @@ private extension CharacterDetailDependencyContainer {
     var comicsReleaseService: ComicsService {
         ComicsClientService(
             networkService: dependencies.networkService,
-            resultHandler: resultHandler,
+            dataHandler: dataHandler,
             dataResultHandler: comicDataResultHandler
         )
+    }
+
+    var dataHandler: NetworkDataHandler {
+        ClientDataHandler(parser: parser)
+    }
+
+    var errorHandler: NetworkErrorHandler {
+        DataServicesNetworkErrorHandler()
     }
 
     var jsonDataLoader: JsonDecoderDataLoader {
@@ -90,10 +99,6 @@ private extension CharacterDetailDependencyContainer {
 
     var parser: JSONParser {
         JSONDecoderParser()
-    }
-
-    var resultHandler: NetworkResultHandler {
-        ClientResultHandler(parser: parser, errorHandler: DataServicesNetworkErrorHandler())
     }
 
     var characterDataResultHandler: CharacterDataResultHandler {

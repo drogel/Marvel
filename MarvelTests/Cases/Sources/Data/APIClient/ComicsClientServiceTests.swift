@@ -12,19 +12,19 @@ import XCTest
 class ComicsClientServiceTests: XCTestCase {
     private var sut: ComicsClientService!
     private var networkServiceMock: NetworkServiceRequestCacheFake!
-    private var resultHandlerMock: ResultHandlerMock!
+    private var networkDataHandlerMock: NetworkDataHandlerMock!
 
     override func setUp() {
         super.setUp()
         networkServiceMock = NetworkServiceRequestCacheFake()
-        resultHandlerMock = ResultHandlerMock()
+        networkDataHandlerMock = NetworkDataHandlerMock()
         givenSut(with: networkServiceMock)
     }
 
     override func tearDown() {
         sut = nil
         networkServiceMock = nil
-        resultHandlerMock = nil
+        networkDataHandlerMock = nil
         super.tearDown()
     }
 
@@ -32,26 +32,26 @@ class ComicsClientServiceTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is ComicsService)
     }
 
-    func test_whenRequestingComics_delegatesToNetworkService() {
+    func test_whenRequestingComics_delegatesToNetworkService() async throws {
         assertNetworkServiceRequest(callCount: 0)
-        whenRequestingComics()
+        try await whenRequestingComicsIgnoringResult()
         assertNetworkServiceRequest(callCount: 1)
     }
 
-    func test_whenRequestingComics_buildsExpectedRequestComponents() {
+    func test_whenRequestingComics_buildsExpectedRequestComponents() async throws {
         let expectedComponents = RequestComponents(
             path: "characters/0/comics",
             queryParameters: ["offset": "0"]
         )
-        whenRequestingComics()
+        try await whenRequestingComicsIgnoringResult()
         XCTAssertEqual(networkServiceMock.cachedComponents, expectedComponents)
     }
 
-    func test_whenComicsRequestCompletes_delegatesResultHandlingToHandler() {
+    func test_givenASucessfulNetworkService_whenRequestingComics_resultIsSuccess() async throws {
+        let expectedComics = ContentPage<Comic>.empty
         givenSutWithSuccessfulNetworkService()
-        assertResultHandlerHandle(callCount: 0)
-        whenRequestingComics()
-        assertResultHandlerHandle(callCount: 1)
+        let actualComics = try await whenRequestingComics()
+        XCTAssertEqual(actualComics, expectedComics)
     }
 }
 
@@ -59,7 +59,7 @@ private extension ComicsClientServiceTests {
     func givenSut(with networkService: NetworkService) {
         sut = ComicsClientService(
             networkService: networkService,
-            resultHandler: resultHandlerMock,
+            dataHandler: networkDataHandlerMock,
             dataResultHandler: ComicDataResultHandlerFactory.createWithDataMappers()
         )
     }
@@ -69,15 +69,15 @@ private extension ComicsClientServiceTests {
         givenSut(with: networkServiceStub)
     }
 
-    func whenRequestingComics() {
-        _ = sut.comics(for: 0, from: 0, completion: { _ in })
+    func whenRequestingComicsIgnoringResult() async throws {
+        _ = try await sut.comics(for: 0, from: 0)
+    }
+
+    func whenRequestingComics() async throws -> ContentPage<Comic> {
+        try await sut.comics(for: 0, from: 0)
     }
 
     func assertNetworkServiceRequest(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(networkServiceMock.requestCallCount, callCount, line: line)
-    }
-
-    func assertResultHandlerHandle(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(resultHandlerMock.handleCallCount, callCount, line: line)
     }
 }

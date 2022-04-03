@@ -42,36 +42,22 @@ class ComicsViewModelTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is ViewModel)
     }
 
-    func test_whenStarting_fetchesComics() {
+    func test_whenStarting_fetchesComics() async {
         assertComicFetcherFetch(callCount: 0)
-        sut.start()
+        await sut.start()
         assertComicFetcherFetch(callCount: 1)
     }
 
-    func test_whenStarting_fethcesWithStartingQuery() {
+    func test_whenStarting_fethcesWithStartingQuery() async {
         let expectedQuery = FetchComicsQuery(characterID: characterIDStub, offset: 0)
-        sut.start()
+        await sut.start()
         XCTAssertEqual(comicFetcherMock.mostRecentQuery, expectedQuery)
     }
 
-    func test_givenViewModelStarted_whenDisposing_disposesDisposable() {
-        sut.start()
-        assertComicFetcherFetchLastDisposableDidCancel(callCount: 0)
-        sut.dispose()
-        assertComicFetcherFetchLastDisposableDidCancel(callCount: 1)
-    }
-
-    func test_givenViewModelStarted_whenStartingAgain_disposesDisposable() {
-        sut.start()
-        assertComicFetcherFetchFirstDisposableDidCancel(callCount: 0)
-        sut.start()
-        assertComicFetcherFetchFirstDisposableDidCancel(callCount: 1)
-    }
-
-    func test_whenStartingFinishes_updatesPage() {
+    func test_whenStartingFinishes_updatesPage() async {
         givenSutWithSuccessfulFetcher()
         assertPagerUpdate(callCount: 0)
-        sut.start()
+        await sut.start()
         assertPagerUpdate(callCount: 1)
     }
 
@@ -80,89 +66,87 @@ class ComicsViewModelTests: XCTestCase {
         assertEmitsEmptyComicCellModels()
     }
 
-    func test_whenStartingFails_onlyEmptyComicCellModelsAreEmitted() {
+    func test_whenStartingFails_onlyEmptyComicCellModelsAreEmitted() async {
         givenSutWithFailingFetcher()
         assertEmitsEmptyComicCellModels()
-        sut.start()
+        await sut.start()
     }
 
     func test_givenDidNotStart_hasNoCellData() {
-        subscribeToModelsExpectingNoCellModels()
+        assertEmitsEmptyComicCellModels()
     }
 
-    func test_givenDidStartSuccessfully_hasCellExpectedModels() {
+    func test_givenDidStartSuccessfully_hasCellExpectedModels() async {
         givenSutWithSuccessfulFetcher()
         let hasCellModelsExpectation = expectation(description: "Has comics cell models")
         let expectedIssue = String(format: "issue_number %@".localized, String(1))
-        let expectedComicCellModel = ComicCellModel(title: "Test Title", issueNumber: expectedIssue, imageURL: nil)
+        let expectedComicCellModel = ComicCellModel(
+            identifier: "0",
+            title: "Test Title",
+            issueNumber: expectedIssue,
+            imageURL: nil
+        )
         let expectedComicCellModels = [expectedComicCellModel]
         sut.comicCellModelsPublisher
             .dropFirst()
             .assertOutput(matches: expectedComicCellModels, expectation: hasCellModelsExpectation)
             .store(in: &cancellables)
-        sut.start()
+        await sut.start()
         wait(for: [hasCellModelsExpectation], timeout: 0.1)
     }
 
-    func test_givenStartDidFail_hasNoCellData() {
+    func test_givenStartDidFail_hasNoCellData() async {
         givenSutWithFailingFetcher()
-        sut.start()
-        subscribeToModelsExpectingNoCellModels()
+        await sut.start()
+        assertEmitsEmptyComicCellModels()
     }
 
-    func test_givenDidStartSuccessfully_callsImageURLBuilderBuildWithVariant() {
+    func test_givenDidStartSuccessfully_callsImageURLBuilderBuildWithVariant() async {
         givenSutWithSuccessfulFetcher()
         assertImageURLBuilderBuildVariant(callCount: 0)
-        sut.start()
+        await sut.start()
         assertImageURLBuilderBuildVariant(callCount: 1)
     }
 
-    func test_givenDidStartSuccessfully_whenAboutToDisplayLastCell_fetchesComics() {
-        givenDidStartSuccessfully()
+    func test_givenDidStartSuccessfully_whenAboutToDisplayLastCell_fetchesComics() async {
+        await givenDidStartSuccessfully()
         assertComicFetcherFetch(callCount: 1)
-        whenAboutToDisplayACell()
+        await whenAboutToDisplayACell()
         assertComicFetcherFetch(callCount: 2)
     }
 
-    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_disposesDisposable() {
-        givenDidStartSuccessfully()
-        assertComicFetcherFetchFirstDisposableDidCancel(callCount: 0)
-        whenAboutToDisplayACell()
-        assertComicFetcherFetchFirstDisposableDidCancel(callCount: 1)
-    }
-
-    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_checksForMoreContent() {
-        givenDidStartSuccessfully()
+    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_checksForMoreContent() async {
+        await givenDidStartSuccessfully()
         assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: 0)
-        whenAboutToDisplayACell()
+        await whenAboutToDisplayACell()
         assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: 1)
     }
 
-    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_queryIsAtCurrentComicsOffset() {
-        givenDidStartSuccessfully()
-        whenAboutToDisplayACell()
+    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_queryIsAtCurrentComicsOffset() async {
+        await givenDidStartSuccessfully()
+        await whenAboutToDisplayACell()
         XCTAssertEqual(comicFetcherMock.mostRecentQuery?.offset, 1)
     }
 
-    func test_whenAboutToDisplayACell_onlyFetchesComicsIfCellIsLastInPage() {
+    func test_whenAboutToDisplayACell_onlyFetchesComicsIfCellIsLastInPage() async {
         assertComicFetcherFetch(callCount: 0)
-        whenAboutToDisplayACell()
+        await whenAboutToDisplayACell()
         assertComicFetcherFetch(callCount: 0)
     }
 
-    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_comicCellsAreAppended() {
-        givenDidStartSuccessfully()
+    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_comicCellsAreAppended() async {
+        await givenDidStartSuccessfully()
         let newValueExpectation = expectation(description: "Received a new value")
         sut.comicCellModelsPublisher
             .dropFirst()
             .assertReceivedValueNotNil(expectation: newValueExpectation)
             .store(in: &cancellables)
-        whenAboutToDisplayACell()
+        await whenAboutToDisplayACell()
         wait(for: [newValueExpectation], timeout: 0.1)
     }
 
-    func test_givenDidStartSuccessfully_whenRetrievingComicCells_imageURLBuiltExpectedVariant() throws {
-        givenDidStartSuccessfully()
+    func test_givenDidStartSuccessfully_whenRetrievingComicCells_imageURLBuiltExpectedVariant() async throws {
+        await givenDidStartSuccessfully()
         let expectedImageVariant: ImageVariant = .portraitLarge
         let actualUsedVariant = try XCTUnwrap(imageURLBuilderMock.mostRecentImageVariant)
         XCTAssertEqual(actualUsedVariant, expectedImageVariant)
@@ -172,13 +156,11 @@ class ComicsViewModelTests: XCTestCase {
 private class ComicFetcherMock: FetchComicsUseCase {
     var fetchCallCount = 0
     var mostRecentQuery: FetchComicsQuery?
-    var disposables: [DisposableMock] = []
 
-    func fetch(query: FetchComicsQuery, completion _: @escaping (FetchComicsResult) -> Void) -> Disposable? {
+    func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic> {
         fetchCallCount += 1
         mostRecentQuery = query
-        disposables.append(DisposableMock())
-        return disposables.last
+        return ContentPage<Comic>.empty
     }
 }
 
@@ -193,18 +175,15 @@ private class ComicFetcherSuccessfulStub: ComicFetcherMock {
         contents: [ComicFetcherSuccessfulStub.comicStub]
     )
 
-    override func fetch(query: FetchComicsQuery, completion: @escaping (FetchComicsResult) -> Void) -> Disposable? {
-        let diposable = super.fetch(query: query, completion: completion)
-        completion(.success(Self.contentPageStub))
-        return diposable
+    override func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic> {
+        _ = try await super.fetch(query: query)
+        return Self.contentPageStub
     }
 }
 
 private class ComicFetcherFailureStub: ComicFetcherMock {
-    override func fetch(query: FetchComicsQuery, completion: @escaping (FetchComicsResult) -> Void) -> Disposable? {
-        let disposable = super.fetch(query: query, completion: completion)
-        completion(.failure(.emptyData))
-        return disposable
+    override func fetch(query _: FetchComicsQuery) async throws -> ContentPage<Comic> {
+        throw FetchComicsUseCaseError.emptyData
     }
 }
 
@@ -232,9 +211,9 @@ private extension ComicsViewModelTests {
         )
     }
 
-    func givenDidStartSuccessfully() {
+    func givenDidStartSuccessfully() async {
         givenSutWithSuccessfulFetcher()
-        sut.start()
+        await sut.start()
     }
 
     func assertPagerUpdate(callCount: Int, line: UInt = #line) {
@@ -249,14 +228,6 @@ private extension ComicsViewModelTests {
         XCTAssertEqual(comicFetcherMock.fetchCallCount, callCount, line: line)
     }
 
-    func assertComicFetcherFetchLastDisposableDidCancel(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicFetcherMock.disposables.last?.didDisposeCallCount, callCount, line: line)
-    }
-
-    func assertComicFetcherFetchFirstDisposableDidCancel(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicFetcherMock.disposables.first?.didDisposeCallCount, callCount, line: line)
-    }
-
     func assertImageURLBuilderBuildVariant(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(imageURLBuilderMock.buildURLVariantCallCount, callCount, line: line)
     }
@@ -269,15 +240,7 @@ private extension ComicsViewModelTests {
         wait(for: [hasEmptyCellModelsExpectation], timeout: 0.1)
     }
 
-    func subscribeToModelsExpectingNoCellModels(line: UInt = #line) {
-        let hasCellModelsExpectation = expectation(description: "Has no comic cell models")
-        sut.comicCellModelsPublisher
-            .assertOutputIsEmptyArray(expectation: hasCellModelsExpectation, line: line)
-            .store(in: &cancellables)
-        wait(for: [hasCellModelsExpectation], timeout: 0.1)
-    }
-
-    func whenAboutToDisplayACell() {
-        sut.willDisplayComicCell(at: IndexPath(row: 0, section: 0))
+    func whenAboutToDisplayACell() async {
+        await sut.willDisplayComicCell(at: IndexPath(row: 0, section: 0))
     }
 }

@@ -18,10 +18,7 @@ enum ComicDataResultHandlerFactory {
 }
 
 protocol ComicDataResultHandler {
-    func completeWithServiceResult(
-        _ handlerResult: DataServiceResult<ComicData>,
-        completion: @escaping (Result<ContentPage<Comic>, DataServiceError>) -> Void
-    )
+    func handle(_ dataWrapper: DataWrapper<ComicData>) throws -> ContentPage<Comic>
 }
 
 class ComicDataServiceResultHandler: ComicDataResultHandler {
@@ -33,29 +30,13 @@ class ComicDataServiceResultHandler: ComicDataResultHandler {
         self.pageMapper = pageMapper
     }
 
-    func completeWithServiceResult(
-        _ handlerResult: DataServiceResult<ComicData>,
-        completion: @escaping (ComicsServiceResult) -> Void
-    ) {
-        switch handlerResult {
-        case let .success(dataWrapper):
-            completeHandlerSuccess(dataWrapper: dataWrapper, completion: completion)
-        case let .failure(error):
-            completion(.failure(error))
-        }
+    func handle(_ dataWrapper: DataWrapper<ComicData>) throws -> ContentPage<Comic> {
+        guard let contentPage = mapToComicsPage(dataWrapper.data) else { throw DataServiceError.emptyData }
+        return contentPage
     }
+}
 
-    func completeHandlerSuccess(
-        dataWrapper: DataWrapper<ComicData>,
-        completion: @escaping (ComicsServiceResult) -> Void
-    ) {
-        guard let contentPage = mapToComicsPage(dataWrapper.data) else {
-            completion(.failure(.emptyData))
-            return
-        }
-        completion(.success(contentPage))
-    }
-
+private extension ComicDataServiceResultHandler {
     func mapToComicsPage(_ pageData: PageData<ComicData>?) -> ContentPage<Comic>? {
         let comics = mapToComics(pageData?.results)
         guard let pageData = pageData,

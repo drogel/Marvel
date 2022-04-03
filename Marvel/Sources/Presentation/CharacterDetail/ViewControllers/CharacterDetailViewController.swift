@@ -18,7 +18,6 @@ class CharacterDetailViewController: ViewController {
     private var viewModel: ViewModelProtocol!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
-    private var collectionViewDelegate: UICollectionViewDelegate!
     private var layout: UICollectionViewCompositionalLayout!
     private var dataSourceFactory: CollectionViewDataSourceFactory!
     private var cancellables = Set<AnyCancellable>()
@@ -43,12 +42,7 @@ class CharacterDetailViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
-        viewModel.start()
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        viewModel.dispose()
+        start()
     }
 }
 
@@ -56,7 +50,7 @@ extension CharacterDetailViewController: UICollectionViewDelegate {
     func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
         case .comics:
-            return viewModel.willDisplayComicCell(at: indexPath)
+            Task { await viewModel.willDisplayComicCell(at: indexPath) }
         default:
             return
         }
@@ -78,6 +72,7 @@ private extension CharacterDetailViewController {
 
     func subscribeToDetail() {
         viewModel.detailStatePublisher
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: handleState)
             .store(in: &cancellables)
     }
@@ -87,7 +82,7 @@ private extension CharacterDetailViewController {
         case let .success(detailModel):
             dataSource.update(with: [detailModel])
         case let .failure(error):
-            showErrorAlert(message: error.localizedDescription, retryButtonAction: viewModel.start)
+            showErrorAlert(message: error.localizedDescription, retryButtonAction: start)
         }
     }
 
@@ -104,12 +99,16 @@ private extension CharacterDetailViewController {
 
     func configureDataSource(of collectionView: UICollectionView) {
         dataSource = dataSourceFactory.create(collectionView: collectionView)
-        collectionView.delegate = collectionViewDelegate
         dataSource.setDataSource(of: collectionView)
+        collectionView.delegate = self
     }
 
     func configureConstraints(of collectionView: UICollectionView) {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.fit(collectionView, in: view)
+    }
+
+    func start() {
+        Task { await viewModel.start() }
     }
 }

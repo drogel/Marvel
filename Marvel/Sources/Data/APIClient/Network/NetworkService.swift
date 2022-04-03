@@ -16,10 +16,8 @@ enum NetworkError: Error {
     case requestError(Error?)
 }
 
-typealias NetworkServiceCompletion = (Result<Data?, NetworkError>) -> Void
-
 protocol NetworkService {
-    func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Disposable?
+    func request(endpoint: RequestComponents) async throws -> Data?
 }
 
 class NetworkSessionService: NetworkService {
@@ -33,12 +31,9 @@ class NetworkSessionService: NetworkService {
         self.urlComposer = urlComposer
     }
 
-    func request(endpoint: RequestComponents, completion: @escaping NetworkServiceCompletion) -> Disposable? {
-        guard let urlRequest = buildURLRequest(from: endpoint) else {
-            completion(.failure(.invalidURL))
-            return nil
-        }
-        return request(request: urlRequest, completion: completion)
+    func request(endpoint: RequestComponents) async throws -> Data? {
+        guard let urlRequest = buildURLRequest(from: endpoint) else { throw NetworkError.invalidURL }
+        return try await loadDataHandlingErrors(from: urlRequest)
     }
 }
 
@@ -48,55 +43,47 @@ private extension NetworkSessionService {
         return URLRequest(url: url)
     }
 
-    func request(request: URLRequest, completion: @escaping NetworkServiceCompletion) -> Disposable {
-        let sessionDataTask = session.loadData(from: request) { [weak self] data, response, requestError in
-            DispatchQueue.main.async {
-                self?.handleDataLoaded(data, response: response, error: requestError, completion: completion)
-            }
-        }
-        sessionDataTask.resume()
-        return sessionDataTask
-    }
-
-    func handleDataLoaded(
-        _ data: Data?,
-        response: URLResponse?,
-        error: Error?,
-        completion: @escaping NetworkServiceCompletion
-    ) {
-        if let networkError = findNetworkError(in: response, with: error) {
-            handle(networkError, completion: completion)
-        } else {
-            handleSuccess(data, completion: completion)
+    func loadDataHandlingErrors(from urlRequest: URLRequest) async throws -> Data {
+        do {
+            return try await loadData(from: urlRequest)
+        } catch let error as NetworkError {
+            throw error
+        } catch {
+            guard let networkError = findNetworkError(in: error) else { throw NetworkError.requestError(error) }
+            throw networkError
         }
     }
 
-    func handleSuccess(_ data: Data?, completion: @escaping NetworkServiceCompletion) {
-        completion(.success(data))
+    func loadData(from urlRequest: URLRequest) async throws -> Data {
+        let responseWithData = try await session.loadData(from: urlRequest)
+        if let networkError = findNetworkError(in: responseWithData.response) { throw networkError }
+        return responseWithData.data
     }
 
-    func handle(_ networkError: NetworkError, completion: @escaping NetworkServiceCompletion) {
-        completion(.failure(networkError))
+    func findNetworkError(in response: URLResponse) -> NetworkError? {
+        let invalidResponseRange = (400 ..< 600)
+        guard let response = response as? HTTPURLResponse,
+              invalidResponseRange.contains(response.statusCode)
+        else { return nil }
+        return statusCodeBasedError(for: response.statusCode)
     }
 
-    func findNetworkError(in response: URLResponse?, with requestError: Error?) -> NetworkError? {
-        if let response = response as? HTTPURLResponse, (400 ..< 600).contains(response.statusCode) {
-            return statusCodeBasedError(for: response.statusCode)
-        } else if let urlError = requestError as? URLError {
+    func findNetworkError(in requestError: Error) -> NetworkError? {
+        switch requestError {
+        case let urlError as URLError:
             return parseToNetworkError(urlError)
-        } else if let error = requestError {
-            return .requestError(error)
-        } else {
+        default:
             return nil
         }
     }
 
     func parseToNetworkError(_ urlError: URLError) -> NetworkError {
-        if urlError.code == .notConnectedToInternet {
+        switch urlError.code {
+        case .notConnectedToInternet:
             return .notConnected
-        } else if urlError.code == .cancelled {
+        case .cancelled:
             return .cancelled
-        } else {
+        default:
             return .requestError(urlError)
         }
     }

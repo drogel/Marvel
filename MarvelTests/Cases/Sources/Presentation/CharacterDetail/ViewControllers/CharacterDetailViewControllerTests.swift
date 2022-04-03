@@ -34,15 +34,11 @@ class CharacterDetailViewControllerTests: XCTestCase {
     }
 
     func test_whenViewDidLoad_callsViewModelStart() {
+        let startDidCallExpectation = startDidCallExpectation(on: viewModelMock)
         viewModelMock.assertStart(callCount: 0)
         sut.loadViewIfNeeded()
+        wait(for: [startDidCallExpectation], timeout: 2)
         viewModelMock.assertStart(callCount: 1)
-    }
-
-    func test_whenViewDidDisappear_callsViewModelDispose() {
-        viewModelMock.assertDispose(callCount: 0)
-        sut.viewDidDisappear(false)
-        viewModelMock.assertDispose(callCount: 1)
     }
 
     func test_whenViewDidLoad_dataSourceIsSet() {

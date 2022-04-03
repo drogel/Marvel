@@ -42,25 +42,17 @@ class CharacterDetailViewModelTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is CharacterDetailViewModelProtocol)
     }
 
-    func test_whenStarting_callsStartOnAllSubViewModels() {
+    func test_whenStarting_callsStartOnAllSubViewModels() async {
         assertInfoViewModelStart(callCount: 0)
         assertComicsViewModelStart(callCount: 0)
-        sut.start()
+        await sut.start()
         assertInfoViewModelStart(callCount: 1)
         assertComicsViewModelStart(callCount: 1)
     }
 
-    func test_whenDisposing_callsDisposeOnAllSubViewModels() {
-        assertInfoViewModelDispose(callCount: 0)
-        assertComicsViewModelDispose(callCount: 0)
-        sut.dispose()
-        assertInfoViewModelDispose(callCount: 1)
-        assertComicsViewModelDispose(callCount: 1)
-    }
-
-    func test_whenAboutToDisplayAComicCell_delegatesToComicsViewModel() {
+    func test_whenAboutToDisplayAComicCell_delegatesToComicsViewModel() async {
         assertComicsViewModelWillDisplayCell(callCount: 0)
-        whenAboutToDisplayAComicCell()
+        await whenAboutToDisplayAComicCell()
         assertComicsViewModelWillDisplayCell(callCount: 1)
     }
 
@@ -87,8 +79,8 @@ class CharacterDetailViewModelTests: XCTestCase {
 }
 
 private extension CharacterDetailViewModelTests {
-    func whenAboutToDisplayAComicCell() {
-        sut.willDisplayComicCell(at: IndexPath(row: 0, section: 0))
+    func whenAboutToDisplayAComicCell() async {
+        await sut.willDisplayComicCell(at: IndexPath(row: 0, section: 0))
     }
 
     func assertInfoViewModelStart(callCount: Int, line: UInt = #line) {
@@ -97,14 +89,6 @@ private extension CharacterDetailViewModelTests {
 
     func assertComicsViewModelStart(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(comicsViewModelMock.startCallCount, callCount, line: line)
-    }
-
-    func assertInfoViewModelDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(infoViewModelMock.disposeCallCount, callCount, line: line)
-    }
-
-    func assertComicsViewModelDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicsViewModelMock.disposeCallCount, callCount, line: line)
     }
 
     func assertInfoViewModelInfoStatePublisher(callCount: Int, line: UInt = #line) {

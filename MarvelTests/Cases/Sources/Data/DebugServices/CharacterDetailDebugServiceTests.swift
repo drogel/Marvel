@@ -26,20 +26,16 @@ class CharacterDetailDebugServiceTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is CharacterDetailService)
     }
 
-    func test_whenRetrievingCharacterDetail_returnsNil() {
-        XCTAssertNil(sut.character(with: 123_456, completion: { _ in }))
-    }
-
-    func test_givenSutWithEmptyDataLoader_whenRetrievingCharacterDetail_completesWithFailure() {
+    func test_givenSutWithEmptyDataLoader_whenRetrievingCharacterDetail_completesWithFailure() async throws {
         givenSutWithEmptyDataLoader()
-        let completionResult = whenRetrievingResultFromCharacterDetail()
-        assertIsFailure(completionResult)
+        await assertThrows {
+            try await whenRetrievingCharacterDetailIgnoringResult()
+        }
     }
 
-    func test_givenSutDataLoader_whenRetrievingCharacterDetail_completesWithSuccess() {
+    func test_givenSutDataLoader_whenRetrievingCharacterDetail_completesWithSuccess() async throws {
         givenSutWithDataLoader()
-        let completionResult = whenRetrievingResultFromCharacterDetail()
-        assertIsSuccess(completionResult)
+        try await whenRetrievingCharacterDetailIgnoringResult()
     }
 }
 
@@ -61,14 +57,11 @@ private extension CharacterDetailDebugServiceTests {
         )
     }
 
-    func whenRetrievingResultFromCharacterDetail() -> CharacterDetailServiceResult {
-        var completionResult: CharacterDetailServiceResult!
-        let expectation = expectation(description: "JSON file parsing completion")
-        _ = sut.character(with: 123_456) { result in
-            completionResult = result
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: 1)
-        return completionResult
+    func whenRetrievingResultFromCharacterDetail() async throws -> ContentPage<Character> {
+        try await sut.character(with: 123_456)
+    }
+
+    func whenRetrievingCharacterDetailIgnoringResult() async throws {
+        _ = try await whenRetrievingResultFromCharacterDetail()
     }
 }
