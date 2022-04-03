@@ -38,7 +38,6 @@ class ComicsViewModel: ComicsViewModelProtocol {
 
     func willDisplayComicCell(at indexPath: IndexPath) async {
         guard shouldLoadMore(at: indexPath) else { return }
-        // TODO: Comic pagination seems broken
         await loadMore()
     }
 }

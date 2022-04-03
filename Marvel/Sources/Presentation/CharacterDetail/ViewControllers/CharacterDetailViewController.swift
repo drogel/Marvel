@@ -18,7 +18,6 @@ class CharacterDetailViewController: ViewController {
     private var viewModel: ViewModelProtocol!
     private var collectionView: UICollectionView!
     private var dataSource: CollectionViewDataSource!
-    private var collectionViewDelegate: UICollectionViewDelegate!
     private var layout: UICollectionViewCompositionalLayout!
     private var dataSourceFactory: CollectionViewDataSourceFactory!
     private var cancellables = Set<AnyCancellable>()
@@ -100,8 +99,8 @@ private extension CharacterDetailViewController {
 
     func configureDataSource(of collectionView: UICollectionView) {
         dataSource = dataSourceFactory.create(collectionView: collectionView)
-        collectionView.delegate = collectionViewDelegate
         dataSource.setDataSource(of: collectionView)
+        collectionView.delegate = self
     }
 
     func configureConstraints(of collectionView: UICollectionView) {
