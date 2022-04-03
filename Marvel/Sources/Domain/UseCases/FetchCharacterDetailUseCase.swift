@@ -12,6 +12,7 @@ protocol FetchCharacterDetailUseCase {
         query: FetchCharacterDetailQuery,
         completion: @escaping (FetchCharacterDetailResult) -> Void
     ) -> Disposable?
+    func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character>
 }
 
 struct FetchCharacterDetailQuery {
@@ -42,7 +43,7 @@ class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {
         completion: @escaping (FetchCharacterDetailResult) -> Void
     ) async -> Disposable? {
         do {
-            let characterPage = try await service.character(with: query.characterID)
+            let characterPage = try await fetch(query: query)
             completion(.success(characterPage))
         } catch let error as CharacterDetailServiceError {
             completion(.failure(error))
@@ -50,5 +51,9 @@ class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {
             completion(.failure(.emptyData))
         }
         return nil
+    }
+
+    func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
+        try await service.character(with: query.characterID)
     }
 }

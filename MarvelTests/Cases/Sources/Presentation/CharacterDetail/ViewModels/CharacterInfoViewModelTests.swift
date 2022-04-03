@@ -142,6 +142,12 @@ private class CharacterFetcherMock: FetchCharacterDetailUseCase {
         return disposable
     }
 
+    func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
+        fetchCallCount += 1
+        fetchCallCountsForID[query.characterID] = fetchCallCountsForID[query.characterID] ?? 0 + 1
+        return ContentPage<Character>.empty
+    }
+
     func fetchCallCount(withID identifier: Int) -> Int {
         guard let fetchCallCountForID = fetchCallCountsForID[identifier] else { return 0 }
         return fetchCallCountForID
@@ -160,6 +166,11 @@ private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
         completion(.success(Self.pageDataStub))
         return result
     }
+
+    override func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
+        _ = try await super.fetch(query: query)
+        return Self.pageDataStub
+    }
 }
 
 private class CharacterFetcherFailingStub: CharacterFetcherMock {
@@ -170,6 +181,10 @@ private class CharacterFetcherFailingStub: CharacterFetcherMock {
         let result = super.fetch(query: query, completion: completion)
         completion(.failure(.unauthorized))
         return result
+    }
+
+    override func fetch(query _: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
+        throw FetchCharacterDetailUseCaseError.unauthorized
     }
 }
 

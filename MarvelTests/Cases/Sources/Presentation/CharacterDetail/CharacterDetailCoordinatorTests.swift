@@ -81,6 +81,10 @@ private class FetchCharacterDetailUseCaseStub: FetchCharacterDetailUseCase {
     ) -> Disposable? {
         nil
     }
+
+    func fetch(query _: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
+        ContentPage<Character>.empty
+    }
 }
 
 private class FetchComicsUseCaseStub: FetchComicsUseCase {
