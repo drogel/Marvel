@@ -44,11 +44,6 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
     func willDisplayComicCell(at indexPath: IndexPath) async {
         await comicsViewModel.willDisplayComicCell(at: indexPath)
     }
-
-    func dispose() {
-        infoViewModel.dispose()
-        comicsViewModel.dispose()
-    }
 }
 
 private extension CharacterDetailViewModel {

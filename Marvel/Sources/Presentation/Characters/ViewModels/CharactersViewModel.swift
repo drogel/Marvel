@@ -84,10 +84,6 @@ class CharactersViewModel: CharactersViewModelProtocol {
         guard shouldLoadMore(at: indexPath) else { return }
         await loadMore()
     }
-
-    func dispose() {
-        // TODO: Remove
-    }
 }
 
 private extension CharactersViewModel {

@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol ViewModel: Disposable {
+protocol ViewModel {
     func start() async
 }

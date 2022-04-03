@@ -11,21 +11,12 @@ import XCTest
 
 class ViewModelMock: ViewModel {
     var startCallCount = 0
-    var disposeCallCount = 0
 
     func start() {
         startCallCount += 1
     }
 
-    func dispose() {
-        disposeCallCount += 1
-    }
-
     func assertStart(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(startCallCount, callCount, line: line)
-    }
-
-    func assertDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(disposeCallCount, callCount, line: line)
     }
 }

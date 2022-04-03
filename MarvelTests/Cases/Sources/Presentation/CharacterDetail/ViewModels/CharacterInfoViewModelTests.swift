@@ -114,7 +114,6 @@ class CharacterInfoViewModelTests: XCTestCase {
 private class CharacterFetcherMock: FetchCharacterDetailUseCase {
     var fetchCallCount = 0
     var fetchCallCountsForID: [Int: Int] = [:]
-    var disposable: DisposableMock?
 
     func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
         fetchCallCount += 1

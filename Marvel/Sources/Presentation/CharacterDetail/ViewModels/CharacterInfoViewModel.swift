@@ -52,7 +52,6 @@ class CharacterInfoViewModel: CharacterInfoViewModelProtocol {
     private let characterFetcher: FetchCharacterDetailUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let characterID: Int
-    private var characterDisposable: Disposable?
 
     init(
         characterFetcher: FetchCharacterDetailUseCase,
@@ -70,10 +69,6 @@ class CharacterInfoViewModel: CharacterInfoViewModelProtocol {
         loadingState = .loading
         let query = FetchCharacterDetailQuery(characterID: characterID)
         await loadCharacter(with: query)
-    }
-
-    func dispose() {
-        // TODO: Remove
     }
 }
 

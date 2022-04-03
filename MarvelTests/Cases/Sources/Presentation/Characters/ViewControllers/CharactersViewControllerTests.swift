@@ -42,12 +42,6 @@ class CharactersViewControllerTests: XCTestCase {
         assertViewModelStart(callCount: 1)
     }
 
-    func test_whenViewDidDisappear_callsViewModelDispose() {
-        assertViewModelDispose(callCount: 0)
-        sut.viewDidDisappear(false)
-        assertViewModelDispose(callCount: 1)
-    }
-
     func test_whenSelectingACell_notifiesViewModel() {
         assertViewModelSelect(callCount: 0)
         sut.collectionView(collectionViewStub, didSelectItemAt: indexPathStub)
@@ -82,10 +76,6 @@ private extension CharactersViewControllerTests {
 
     func assertViewModelStart(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(viewModelMock.startCallCount, callCount, line: line)
-    }
-
-    func assertViewModelDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.disposeCallCount, callCount, line: line)
     }
 
     func assertViewModelCellData(callCount: Int, line: UInt = #line) {

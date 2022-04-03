@@ -41,12 +41,6 @@ class CharacterDetailViewControllerTests: XCTestCase {
         viewModelMock.assertStart(callCount: 1)
     }
 
-    func test_whenViewDidDisappear_callsViewModelDispose() {
-        viewModelMock.assertDispose(callCount: 0)
-        sut.viewDidDisappear(false)
-        viewModelMock.assertDispose(callCount: 1)
-    }
-
     func test_whenViewDidLoad_dataSourceIsSet() {
         dataSourceMock.assertSetDataSource(callCount: 0)
         sut.loadViewIfNeeded()

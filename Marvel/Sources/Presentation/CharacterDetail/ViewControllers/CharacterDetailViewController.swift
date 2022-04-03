@@ -45,11 +45,6 @@ class CharacterDetailViewController: ViewController {
         setUp()
         start()
     }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        viewModel.dispose()
-    }
 }
 
 extension CharacterDetailViewController: UICollectionViewDelegate {

@@ -47,7 +47,6 @@ class FetchCharactersUseCaseTests: XCTestCase {
 }
 
 private class CharactersServiceMock: CharactersService {
-    static let disposableStub = DisposableStub()
     var charactersCallCount = 0
 
     func characters(from _: Int) async throws -> ContentPage<Character> {

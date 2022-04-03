@@ -48,11 +48,6 @@ class CharactersViewController: ViewController {
         super.viewDidAppear(animated)
         start()
     }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        viewModel.dispose()
-    }
 }
 
 extension CharactersViewController: UICollectionViewDelegate {

@@ -151,7 +151,6 @@ class ComicsViewModelTests: XCTestCase {
 private class ComicFetcherMock: FetchComicsUseCase {
     var fetchCallCount = 0
     var mostRecentQuery: FetchComicsQuery?
-    var disposables: [DisposableMock] = []
 
     func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic> {
         fetchCallCount += 1
@@ -222,14 +221,6 @@ private extension ComicsViewModelTests {
 
     func assertComicFetcherFetch(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(comicFetcherMock.fetchCallCount, callCount, line: line)
-    }
-
-    func assertComicFetcherFetchLastDisposableDidCancel(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicFetcherMock.disposables.last?.didDisposeCallCount, callCount, line: line)
-    }
-
-    func assertComicFetcherFetchFirstDisposableDidCancel(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicFetcherMock.disposables.first?.didDisposeCallCount, callCount, line: line)
     }
 
     func assertImageURLBuilderBuildVariant(callCount: Int, line: UInt = #line) {

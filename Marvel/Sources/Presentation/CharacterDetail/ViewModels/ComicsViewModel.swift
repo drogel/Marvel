@@ -41,10 +41,6 @@ class ComicsViewModel: ComicsViewModelProtocol {
         // TODO: Comic pagination seems broken
         await loadMore()
     }
-
-    func dispose() {
-        // TODO: Remove
-    }
 }
 
 private extension ComicsViewModel {

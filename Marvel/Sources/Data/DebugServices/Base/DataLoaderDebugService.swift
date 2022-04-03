@@ -8,7 +8,6 @@
 import Foundation
 
 protocol DataLoaderDebugService {
-    func loadData<T: DataObject>(completion: @escaping (DataServiceResult<T>) -> Void) -> Disposable?
     func loadData<T: DataObject>() throws -> DataWrapper<T>
 }
 
@@ -19,16 +18,6 @@ class JsonDataLoaderDebugService: DataLoaderDebugService {
     init(dataLoader: JsonDataLoader, fileName: DebugDataFileName) {
         self.dataLoader = dataLoader
         self.fileName = fileName
-    }
-
-    func loadData<T: DataObject>(
-        completion: @escaping (DataServiceResult<T>) -> Void
-    ) -> Disposable? {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.retrieveData(completion: completion)
-        }
-        return nil
     }
 
     func loadData<T: DataObject>() throws -> DataWrapper<T> {

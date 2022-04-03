@@ -20,20 +20,18 @@ protocol URLImage {
 }
 
 class FetchImageView: UIImageView, URLImage {
-    private var disposable: Disposable?
-
+    // TODO: Move this to async await
     func loadImage(from url: URL?, completion: URLImageCompletion? = nil) {
         guard let urlRequest = buildURLRequest(from: url) else { return }
         if let image = retrieveCachedImageIfAny(for: urlRequest) {
             self.image = image
         } else {
-            disposable = requestNetworkImage(urlRequest, completion: completion)
+            requestNetworkImage(urlRequest, completion: completion)
         }
     }
 
     func clear() {
         image = nil
-        disposable?.dispose()
     }
 }
 
@@ -48,7 +46,7 @@ private extension UIImageView {
         return UIImage(data: cachedData)
     }
 
-    func requestNetworkImage(_ urlRequest: URLRequest, completion: URLImageCompletion?) -> Disposable {
+    func requestNetworkImage(_ urlRequest: URLRequest, completion: URLImageCompletion?) {
         let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response, _ in
             guard let self = self else { return }
             guard let data = data, let response = response else {
@@ -59,7 +57,6 @@ private extension UIImageView {
             self.handleNetworkImage(response: response, data: data, completion: completion)
         }
         dataTask.resume()
-        return dataTask
     }
 
     func handleNetworkImage(response _: URLResponse, data: Data, completion: URLImageCompletion?) {

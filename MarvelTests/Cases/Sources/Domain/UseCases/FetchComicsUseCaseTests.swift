@@ -48,7 +48,6 @@ class FetchComicsUseCaseTests: XCTestCase {
 }
 
 private class ComicsServiceMock: ComicsService {
-    static let disposableStub = DisposableStub()
     var comicsCallCount = 0
 
     func comics(for _: Int, from _: Int) async throws -> ContentPage<Comic> {

@@ -50,14 +50,6 @@ class CharacterDetailViewModelTests: XCTestCase {
         assertComicsViewModelStart(callCount: 1)
     }
 
-    func test_whenDisposing_callsDisposeOnAllSubViewModels() {
-        assertInfoViewModelDispose(callCount: 0)
-        assertComicsViewModelDispose(callCount: 0)
-        sut.dispose()
-        assertInfoViewModelDispose(callCount: 1)
-        assertComicsViewModelDispose(callCount: 1)
-    }
-
     func test_whenAboutToDisplayAComicCell_delegatesToComicsViewModel() async {
         assertComicsViewModelWillDisplayCell(callCount: 0)
         await whenAboutToDisplayAComicCell()
@@ -97,14 +89,6 @@ private extension CharacterDetailViewModelTests {
 
     func assertComicsViewModelStart(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(comicsViewModelMock.startCallCount, callCount, line: line)
-    }
-
-    func assertInfoViewModelDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(infoViewModelMock.disposeCallCount, callCount, line: line)
-    }
-
-    func assertComicsViewModelDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(comicsViewModelMock.disposeCallCount, callCount, line: line)
     }
 
     func assertInfoViewModelInfoStatePublisher(callCount: Int, line: UInt = #line) {
