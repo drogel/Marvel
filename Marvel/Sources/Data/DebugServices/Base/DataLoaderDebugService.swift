@@ -27,13 +27,3 @@ class JsonDataLoaderDebugService: DataLoaderDebugService {
         return data
     }
 }
-
-private extension JsonDataLoaderDebugService {
-    func retrieveData<T: DataObject>(completion: @escaping (DataServiceResult<T>) -> Void) {
-        guard let data: DataWrapper<T> = dataLoader.load(fromFileNamed: fileName.rawValue) else {
-            completion(.failure(.emptyData))
-            return
-        }
-        completion(.success(data))
-    }
-}

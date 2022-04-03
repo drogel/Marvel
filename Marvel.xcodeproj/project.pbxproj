@@ -58,7 +58,6 @@
 		0545946A279899EF00A634AD /* CharactersDebugService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05459469279899EF00A634AD /* CharactersDebugService.swift */; };
 		0545946E27989A1A00A634AD /* CharactersDebugServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545946D27989A1A00A634AD /* CharactersDebugServiceTests.swift */; };
 		0545947227989DC500A634AD /* JsonDecoderDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545947127989DC500A634AD /* JsonDecoderDataLoader.swift */; };
-		054594752798A11000A634AD /* XCTestCase+ResultAssertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054594742798A11000A634AD /* XCTestCase+ResultAssertions.swift */; };
 		054594772798A7E000A634AD /* JsonDataLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054594762798A7E000A634AD /* JsonDataLoaderTests.swift */; };
 		054594792798A8E700A634AD /* CharactersResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 054594782798A8E700A634AD /* CharactersResponse.json */; };
 		0545947B2798A94100A634AD /* DebugDataFileName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545947A2798A94100A634AD /* DebugDataFileName.swift */; };
@@ -86,8 +85,6 @@
 		05484629279E1B0D00C6EC66 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05484628279E1B0D00C6EC66 /* AlertPresenter.swift */; };
 		054D95A127B18D15007B54DA /* ComicsClientService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054D95A027B18D15007B54DA /* ComicsClientService.swift */; };
 		054D95A327B18D71007B54DA /* ComicsClientServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054D95A227B18D71007B54DA /* ComicsClientServiceTests.swift */; };
-		054D95A527B18DF8007B54DA /* ResultHandlerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054D95A427B18DF8007B54DA /* ResultHandlerMock.swift */; };
-		054ED2BD27A716C3000358A3 /* NetworkResultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054ED2BC27A716C3000358A3 /* NetworkResultHandler.swift */; };
 		0550B83327DCEF7B000729B5 /* LoadingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0550B83227DCEF7B000729B5 /* LoadingState.swift */; };
 		0559261027A85EB500026919 /* XCTestCase+FailureMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */; };
 		0559261427A868BA00026919 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0559261627A868BA00026919 /* Localizable.strings */; };
@@ -263,7 +260,6 @@
 		05459469279899EF00A634AD /* CharactersDebugService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersDebugService.swift; sourceTree = "<group>"; };
 		0545946D27989A1A00A634AD /* CharactersDebugServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersDebugServiceTests.swift; sourceTree = "<group>"; };
 		0545947127989DC500A634AD /* JsonDecoderDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDecoderDataLoader.swift; sourceTree = "<group>"; };
-		054594742798A11000A634AD /* XCTestCase+ResultAssertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+ResultAssertions.swift"; sourceTree = "<group>"; };
 		054594762798A7E000A634AD /* JsonDataLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDataLoaderTests.swift; sourceTree = "<group>"; };
 		054594782798A8E700A634AD /* CharactersResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CharactersResponse.json; sourceTree = "<group>"; };
 		0545947A2798A94100A634AD /* DebugDataFileName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugDataFileName.swift; sourceTree = "<group>"; };
@@ -291,8 +287,6 @@
 		05484628279E1B0D00C6EC66 /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
 		054D95A027B18D15007B54DA /* ComicsClientService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsClientService.swift; sourceTree = "<group>"; };
 		054D95A227B18D71007B54DA /* ComicsClientServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicsClientServiceTests.swift; sourceTree = "<group>"; };
-		054D95A427B18DF8007B54DA /* ResultHandlerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultHandlerMock.swift; sourceTree = "<group>"; };
-		054ED2BC27A716C3000358A3 /* NetworkResultHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkResultHandler.swift; sourceTree = "<group>"; };
 		0550B83227DCEF7B000729B5 /* LoadingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingState.swift; sourceTree = "<group>"; };
 		0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FailureMessage.swift"; sourceTree = "<group>"; };
 		0559261527A868BA00026919 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -476,7 +470,6 @@
 			children = (
 				05484621279DE69300C6EC66 /* MarvelAPIPaths.swift */,
 				0571306F27A5C1D30009383E /* NetworkErrorHandler.swift */,
-				054ED2BC27A716C3000358A3 /* NetworkResultHandler.swift */,
 				055D2B8827EA4D5400986FEF /* NetworkDataHandler.swift */,
 				0548461A279DC6E400C6EC66 /* Authentication */,
 				056B1FC827B93E51000EBC83 /* Mappers */,
@@ -609,7 +602,6 @@
 			isa = PBXGroup;
 			children = (
 				05DE20CE27DA626500BB2F47 /* Publisher+Assertions.swift */,
-				054594742798A11000A634AD /* XCTestCase+ResultAssertions.swift */,
 				0559260F27A85EB500026919 /* XCTestCase+FailureMessage.swift */,
 				058B8B8227E787B7000E5F9A /* XCTestCase+AsyncAssertions.swift */,
 				0576A40527F0810E00702D1D /* XCTestCase+ViewModelMockExpectations.swift */,
@@ -702,7 +694,6 @@
 				0571307327A5C53E0009383E /* NetworkErrorHandlerMock.swift */,
 				0571306627A55B3A0009383E /* NetworkServiceMock.swift */,
 				0535F55927B2E55B006F8AC4 /* OffsetPagerPartialMock.swift */,
-				054D95A427B18DF8007B54DA /* ResultHandlerMock.swift */,
 				0513D25027AEF9790040DF58 /* ViewModelMock.swift */,
 			);
 			path = Mocks;
@@ -1536,7 +1527,6 @@
 				0548461C279DC6F600C6EC66 /* CharacterDetailClientService.swift in Sources */,
 				056B1FD327B95ADF000EBC83 /* PageMapper.swift in Sources */,
 				05932C49279B19A700549D7D /* NetworkService.swift in Sources */,
-				054ED2BD27A716C3000358A3 /* NetworkResultHandler.swift in Sources */,
 				0585AF9D27975DDB00586ABD /* DataWrapper.swift in Sources */,
 				05B0856127AC5CB000A74DD0 /* CharacterInfoLayoutSection.swift in Sources */,
 				05459464279898A700A634AD /* CharactersService.swift in Sources */,
@@ -1574,7 +1564,6 @@
 				05BD40AD27A9B5C400F2E513 /* CharactersCoordinatorTests.swift in Sources */,
 				053BBD8227AD86840033640A /* ComicDataTests.swift in Sources */,
 				05416F8A27D29CD20051C82B /* CharactersViewModelMock.swift in Sources */,
-				054D95A527B18DF8007B54DA /* ResultHandlerMock.swift in Sources */,
 				0535F55827B2DD44006F8AC4 /* OffsetPagerTests.swift in Sources */,
 				05932C57279B540900549D7D /* NetworkServiceTests.swift in Sources */,
 				05484607279D697000C6EC66 /* FetchCharacterDetailUseCaseTests.swift in Sources */,
@@ -1621,7 +1610,6 @@
 				054845FD279D667200C6EC66 /* CharacterDetailDebugServiceTests.swift in Sources */,
 				0513D24D27AEEB840040DF58 /* ComicsViewModelMock.swift in Sources */,
 				0545947E2798B21200A634AD /* FetchCharactersUseCaseTests.swift in Sources */,
-				054594752798A11000A634AD /* XCTestCase+ResultAssertions.swift in Sources */,
 				054594832798B94400A634AD /* PageData+Stubs.swift in Sources */,
 				056B1FD927B97240000EBC83 /* ComicDataMapperTests.swift in Sources */,
 				05BD40AA27A9B4AC00F2E513 /* CoordinatorDelegateMock.swift in Sources */,

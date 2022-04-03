@@ -16,8 +16,6 @@ enum NetworkError: Error {
     case requestError(Error?)
 }
 
-typealias NetworkServiceCompletion = (Result<Data?, NetworkError>) -> Void
-
 protocol NetworkService {
     func request(endpoint: RequestComponents) async throws -> Data?
 }

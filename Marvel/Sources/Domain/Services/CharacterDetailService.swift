@@ -7,8 +7,6 @@
 
 import Foundation
 
-typealias CharacterDetailServiceResult = CharactersServiceResult
-
 typealias CharacterDetailServiceError = DataServiceError
 
 protocol CharacterDetailService {

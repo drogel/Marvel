@@ -18,8 +18,6 @@ struct FetchComicsQuery: Equatable {
 
 typealias FetchComicsUseCaseError = ComicsServiceError
 
-typealias FetchComicsResult = Result<ContentPage<Comic>, FetchComicsUseCaseError>
-
 class FetchComicsServiceUseCase: FetchComicsUseCase {
     private let service: ComicsService
 
