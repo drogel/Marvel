@@ -28,22 +28,20 @@ class FetchCharacterDetailUseCaseTests: XCTestCase {
     }
 
     func test_whenFetching_callsServiceFetch() async throws {
-        await whenFetchingCharacter()
+        try await whenFetchingCharacterIgnoringResult()
         XCTAssertEqual(serviceMock.characterCallCount, 1)
     }
 
-    func test_givenFailingService_whenFetching_completesWithFailure() async {
+    func test_givenFailingService_whenFetching_completesWithFailure() async throws {
         givenSutWithFailureServiceStub()
-        let completionResult = await whenRetrievingResultFromFetchingCharacter()
-        assertIsFailure(completionResult)
+        await assertThrows {
+            try await whenFetchingCharacterIgnoringResult()
+        }
     }
 
-    func test_givenSuccessfulService_whenFetching_completesWithPageData() async {
+    func test_givenSuccessfulService_whenFetching_completesWithPageData() async throws {
         givenSutWithSuccessfulServiceStub(stubbingPage: ContentPage<Character>.empty)
-        let completionResult = await whenRetrievingResultFromFetchingCharacter()
-        assertIsSuccess(completionResult) {
-            XCTAssertEqual($0, ContentPage<Character>.empty)
-        }
+        try await whenFetchingCharacterIgnoringResult()
     }
 }
 
@@ -76,10 +74,8 @@ private class CharacterDetailServiceSuccessStub: CharacterDetailService {
 }
 
 private extension FetchCharacterDetailUseCaseTests {
-    func whenFetchingCharacter(completion: ((FetchCharacterDetailResult) -> Void)? = nil) async {
-        _ = await sut.fetch(query: query) { result in
-            completion?(result)
-        }
+    func whenFetchingCharacterIgnoringResult() async throws {
+        _ = try await whenRetrievingResultFromFetchingCharacter()
     }
 
     func givenSutWithFailureServiceStub() {
@@ -96,11 +92,7 @@ private extension FetchCharacterDetailUseCaseTests {
         sut = FetchCharacterDetailServiceUseCase(service: service)
     }
 
-    func whenRetrievingResultFromFetchingCharacter() async -> FetchCharacterDetailResult {
-        var completionResult: FetchCharacterDetailResult!
-        await whenFetchingCharacter { result in
-            completionResult = result
-        }
-        return completionResult
+    func whenRetrievingResultFromFetchingCharacter() async throws -> ContentPage<Character> {
+        try await sut.fetch(query: query)
     }
 }

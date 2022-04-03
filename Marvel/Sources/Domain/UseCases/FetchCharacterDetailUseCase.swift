@@ -8,10 +8,6 @@
 import Foundation
 
 protocol FetchCharacterDetailUseCase {
-    func fetch(
-        query: FetchCharacterDetailQuery,
-        completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Disposable?
     func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character>
 }
 
@@ -29,29 +25,6 @@ class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {
 
     init(service: CharacterDetailService) {
         self.service = service
-    }
-
-    func fetch(
-        query: FetchCharacterDetailQuery,
-        completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Disposable? {
-        Task { await fetch(query: query, completion: completion) }
-        return nil
-    }
-
-    func fetch(
-        query: FetchCharacterDetailQuery,
-        completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) async -> Disposable? {
-        do {
-            let characterPage = try await fetch(query: query)
-            completion(.success(characterPage))
-        } catch let error as CharacterDetailServiceError {
-            completion(.failure(error))
-        } catch {
-            completion(.failure(.emptyData))
-        }
-        return nil
     }
 
     func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {

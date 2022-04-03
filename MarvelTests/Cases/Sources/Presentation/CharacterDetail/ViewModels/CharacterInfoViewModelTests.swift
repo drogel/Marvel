@@ -116,16 +116,6 @@ private class CharacterFetcherMock: FetchCharacterDetailUseCase {
     var fetchCallCountsForID: [Int: Int] = [:]
     var disposable: DisposableMock?
 
-    func fetch(
-        query: FetchCharacterDetailQuery,
-        completion _: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Disposable? {
-        fetchCallCount += 1
-        fetchCallCountsForID[query.characterID] = fetchCallCountsForID[query.characterID] ?? 0 + 1
-        disposable = DisposableMock()
-        return disposable
-    }
-
     func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
         fetchCallCount += 1
         fetchCallCountsForID[query.characterID] = fetchCallCountsForID[query.characterID] ?? 0 + 1
@@ -142,15 +132,6 @@ private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
     static let resultsStub = [Character.aginar]
     static let pageDataStub = ContentPage<Character>.zeroWith(contents: resultsStub)
 
-    override func fetch(
-        query: FetchCharacterDetailQuery,
-        completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Disposable? {
-        let result = super.fetch(query: query, completion: completion)
-        completion(.success(Self.pageDataStub))
-        return result
-    }
-
     override func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
         _ = try await super.fetch(query: query)
         return Self.pageDataStub
@@ -158,15 +139,6 @@ private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
 }
 
 private class CharacterFetcherFailingStub: CharacterFetcherMock {
-    override func fetch(
-        query: FetchCharacterDetailQuery,
-        completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Disposable? {
-        let result = super.fetch(query: query, completion: completion)
-        completion(.failure(.unauthorized))
-        return result
-    }
-
     override func fetch(query _: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
         throw FetchCharacterDetailUseCaseError.unauthorized
     }
