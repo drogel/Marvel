@@ -13,7 +13,7 @@ class ComicCellModelTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        sut = ComicCellModel(title: "TestTitle", issueNumber: "Issue 0", imageURL: nil)
+        sut = ComicCellModel(identifier: "", title: "TestTitle", issueNumber: "Issue 0", imageURL: nil)
     }
 
     override func tearDown() {
@@ -22,12 +22,27 @@ class ComicCellModelTests: XCTestCase {
     }
 
     func test_givenOther_areEqualIfTitleAndIssueNumberAreEqual() {
-        let other = ComicCellModel(title: "TestTitle", issueNumber: "Issue 0", imageURL: nil)
+        let other = ComicCellModel(
+            identifier: sut.identifier,
+            title: sut.title,
+            issueNumber: sut.issueNumber,
+            imageURL: sut.imageURL
+        )
         XCTAssertEqual(other, sut)
     }
 
+    func test_givenOther_areNotEqualIfIdentifiersAreNotEqual() {
+        let other = ComicCellModel(
+            identifier: sut.identifier + "TestingIdentifier",
+            title: sut.title,
+            issueNumber: sut.issueNumber,
+            imageURL: sut.imageURL
+        )
+        XCTAssertNotEqual(other, sut)
+    }
+
     func test_givenOther_areNotEqualIfTitleAndIssueNumberAreNotEqual() {
-        let other = ComicCellModel(title: "OtherTitle", issueNumber: "Issue 1", imageURL: nil)
+        let other = ComicCellModel(identifier: "Test", title: "OtherTitle", issueNumber: "Issue 1", imageURL: nil)
         XCTAssertNotEqual(other, sut)
     }
 }

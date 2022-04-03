@@ -80,7 +80,12 @@ class ComicsViewModelTests: XCTestCase {
         givenSutWithSuccessfulFetcher()
         let hasCellModelsExpectation = expectation(description: "Has comics cell models")
         let expectedIssue = String(format: "issue_number %@".localized, String(1))
-        let expectedComicCellModel = ComicCellModel(title: "Test Title", issueNumber: expectedIssue, imageURL: nil)
+        let expectedComicCellModel = ComicCellModel(
+            identifier: "0",
+            title: "Test Title",
+            issueNumber: expectedIssue,
+            imageURL: nil
+        )
         let expectedComicCellModels = [expectedComicCellModel]
         sut.comicCellModelsPublisher
             .dropFirst()

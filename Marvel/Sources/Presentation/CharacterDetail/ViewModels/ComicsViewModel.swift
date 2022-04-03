@@ -83,7 +83,8 @@ private extension ComicsViewModel {
         let imageURL = buildImageURL(from: comic)
         let title = buildTitle(from: comic.title)
         let issueNumber = buildIssueNumber(from: comic.issueNumber)
-        return ComicCellModel(title: title, issueNumber: issueNumber, imageURL: imageURL)
+        let identifier = String(comic.identifier)
+        return ComicCellModel(identifier: identifier, title: title, issueNumber: issueNumber, imageURL: imageURL)
     }
 
     func buildTitle(from title: String) -> String {
