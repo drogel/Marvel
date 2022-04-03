@@ -9,25 +9,30 @@ import Foundation
 
 class CharactersClientService: CharactersService {
     private let charactersPath = MarvelAPIPaths.characters.rawValue
-    private let client: NetworkService
-    private let resultHandler: NetworkResultHandler
+    private let networkService: NetworkService
+    private let dataHandler: NetworkDataHandler
     private let dataResultHandler: CharacterDataResultHandler
+    private let networkErrorHandler: NetworkErrorHandler
 
     init(
-        client: NetworkService,
-        resultHandler: NetworkResultHandler,
+        networkService: NetworkService,
+        dataHandler: NetworkDataHandler,
+        networkErrorHandler: NetworkErrorHandler,
         dataResultHandler: CharacterDataResultHandler
     ) {
-        self.client = client
-        self.resultHandler = resultHandler
+        self.networkService = networkService
+        self.networkErrorHandler = networkErrorHandler
+        self.dataHandler = dataHandler
         self.dataResultHandler = dataResultHandler
     }
 
-    func characters(from offset: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
-        client.request(endpoint: components(for: offset)) { [weak self] result in
-            self?.resultHandler.handle(result: result) { handlerResult in
-                self?.dataResultHandler.completeWithServiceResult(handlerResult, completion: completion)
-            }
+    func characters(from offset: Int) async throws -> ContentPage<Character> {
+        do {
+            return try await requestCharacters(from: offset)
+        } catch let networkError as NetworkError {
+            throw networkErrorHandler.handle(networkError)
+        } catch {
+            throw CharactersServiceError.emptyData
         }
     }
 }
@@ -35,5 +40,11 @@ class CharactersClientService: CharactersService {
 private extension CharactersClientService {
     func components(for offset: Int) -> RequestComponents {
         RequestComponents(path: charactersPath).withOffsetQuery(offset)
+    }
+
+    func requestCharacters(from offset: Int) async throws -> ContentPage<Character> {
+        let data = try await networkService.request(endpoint: components(for: offset))
+        let dataWrapper: DataWrapper<CharacterData> = try dataHandler.handle(data)
+        return try dataResultHandler.handle(dataWrapper)
     }
 }

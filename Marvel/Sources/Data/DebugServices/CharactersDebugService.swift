@@ -11,18 +11,17 @@ class CharactersDebugService: CharactersService {
     private let charactersFileName: DebugDataFileName = .charactersFileName
     private let dataLoader: DataLoaderDebugService
     private let dataResultHandler: CharacterDataResultHandler
-    private var didTryLoadingData = false
+    private var didLoadCharacters = false
 
     init(dataLoader: JsonDataLoader, dataResultHandler: CharacterDataResultHandler) {
         self.dataLoader = JsonDataLoaderDebugService(dataLoader: dataLoader, fileName: charactersFileName)
         self.dataResultHandler = dataResultHandler
     }
 
-    func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
-        guard !didTryLoadingData else { return nil }
-        didTryLoadingData = true
-        return dataLoader.loadData { [weak self] result in
-            self?.dataResultHandler.completeWithServiceResult(result, completion: completion)
-        }
+    func characters(from _: Int) async throws -> ContentPage<Character> {
+        guard !didLoadCharacters else { throw CharactersServiceError.emptyData }
+        let data: DataWrapper<CharacterData> = try dataLoader.loadData()
+        didLoadCharacters = true
+        return try dataResultHandler.handle(data)
     }
 }

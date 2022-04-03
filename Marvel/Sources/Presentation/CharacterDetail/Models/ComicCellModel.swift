@@ -8,6 +8,7 @@
 import Foundation
 
 struct ComicCellModel: Hashable {
+    let identifier: String
     let title: String
     let issueNumber: String
     let imageURL: URL?

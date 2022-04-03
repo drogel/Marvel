@@ -36,7 +36,8 @@ It also has an App layer - that takes care of wiring up app-level dependencies a
 
 The app has two configurations: Debug and Release. Each configuration maps to an Xcode project scheme. The main difference between these configurations is in the way they wire up the data layer:
 - **In the Debug configuration** the Marvel character data is retrieved from local, static JSONs. No network calls needed, no networking dependencies involved.
-- **In the Release configuration** the app needs to connect to the Marvel API to retrieve character data. This configuration relies on real network calls for the app to work.
+- **The Stage configuration** is a duplicate of the Debug configuration, except that in this configuration the information is retrieved dynamically from the Marvel API. This configuration is useful for debugging the app while connected to the Marvel servers. This configuration relies on real network calls for the app to work.
+- **In the Release configuration** just like with the Stage configuration, the app needs to connect to the Marvel API to retrieve character data. This configuration relies on real network calls for the app to work.
 
 ### Tests
 

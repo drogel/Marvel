@@ -8,10 +8,7 @@
 import Foundation
 
 protocol FetchCharacterDetailUseCase {
-    func fetch(
-        query: FetchCharacterDetailQuery,
-        completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Disposable?
+    func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character>
 }
 
 struct FetchCharacterDetailQuery {
@@ -20,8 +17,6 @@ struct FetchCharacterDetailQuery {
 
 typealias FetchCharacterDetailUseCaseError = CharacterDetailServiceError
 
-typealias FetchCharacterDetailResult = Result<ContentPage<Character>, FetchCharacterDetailUseCaseError>
-
 class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {
     private let service: CharacterDetailService
 
@@ -29,10 +24,7 @@ class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {
         self.service = service
     }
 
-    func fetch(
-        query: FetchCharacterDetailQuery,
-        completion: @escaping (FetchCharacterDetailResult) -> Void
-    ) -> Disposable? {
-        service.character(with: query.characterID, completion: completion)
+    func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
+        try await service.character(with: query.characterID)
     }
 }

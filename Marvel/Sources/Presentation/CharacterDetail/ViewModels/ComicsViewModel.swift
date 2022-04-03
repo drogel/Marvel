@@ -10,7 +10,7 @@ import Foundation
 
 protocol ComicsViewModelProtocol: ViewModel {
     var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> { get }
-    func willDisplayComicCell(at indexPath: IndexPath)
+    func willDisplayComicCell(at indexPath: IndexPath) async
 }
 
 class ComicsViewModel: ComicsViewModelProtocol {
@@ -23,7 +23,6 @@ class ComicsViewModel: ComicsViewModelProtocol {
     private let characterID: Int
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
-    private var disposable: Disposable?
 
     init(comicsFetcher: FetchComicsUseCase, characterID: Int, imageURLBuilder: ImageURLBuilder, pager: Pager) {
         self.comicsFetcher = comicsFetcher
@@ -33,17 +32,13 @@ class ComicsViewModel: ComicsViewModelProtocol {
         publishedComicCellModels = []
     }
 
-    func start() {
-        loadComics(with: startingQuery)
+    func start() async {
+        await loadComics(with: startingQuery)
     }
 
-    func willDisplayComicCell(at indexPath: IndexPath) {
+    func willDisplayComicCell(at indexPath: IndexPath) async {
         guard shouldLoadMore(at: indexPath) else { return }
-        loadMore()
-    }
-
-    func dispose() {
-        disposable?.dispose()
+        await loadMore()
     }
 }
 
@@ -60,22 +55,15 @@ private extension ComicsViewModel {
         FetchComicsQuery(characterID: characterID, offset: offset)
     }
 
-    func loadMore() {
-        loadComics(with: query(atOffset: publishedComicCellModels.count))
+    func loadMore() async {
+        await loadComics(with: query(atOffset: publishedComicCellModels.count))
     }
 
-    func loadComics(with query: FetchComicsQuery) {
-        disposable?.dispose()
-        disposable = comicsFetcher.fetch(query: query) { [weak self] result in
-            self?.handle(result)
-        }
-    }
-
-    func handle(_ result: FetchComicsResult) {
-        switch result {
-        case let .success(contentPage):
+    func loadComics(with query: FetchComicsQuery) async {
+        do {
+            let contentPage = try await comicsFetcher.fetch(query: query)
             handleSuccess(with: contentPage)
-        case .failure:
+        } catch {
             return
         }
     }
@@ -94,7 +82,8 @@ private extension ComicsViewModel {
         let imageURL = buildImageURL(from: comic)
         let title = buildTitle(from: comic.title)
         let issueNumber = buildIssueNumber(from: comic.issueNumber)
-        return ComicCellModel(title: title, issueNumber: issueNumber, imageURL: imageURL)
+        let identifier = String(comic.identifier)
+        return ComicCellModel(identifier: identifier, title: title, issueNumber: issueNumber, imageURL: imageURL)
     }
 
     func buildTitle(from title: String) -> String {

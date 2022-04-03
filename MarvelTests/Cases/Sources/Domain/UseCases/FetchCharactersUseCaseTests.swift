@@ -27,45 +27,37 @@ class FetchCharactersUseCaseTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_whenFetching_returnsServiceDisposable() throws {
-        let disposable = try whenRetrievingDisposableFromFetchCharacters()
-        XCTAssertTrue(CharactersServiceMock.disposableStub === disposable)
-    }
-
-    func test_whenFetching_callsServiceFetch() throws {
-        whenFetchingCharacters()
+    func test_whenFetching_callsServiceFetch() async throws {
+        try await whenFetchingCharactersIgnoringResult()
         XCTAssertEqual(serviceMock.charactersCallCount, 1)
     }
 
-    func test_givenFailingService_whenFetching_completesWithFailure() {
+    func test_givenFailingService_whenFetching_throwsError() async throws {
         givenSutWithFailureServiceStub()
-        let completionResult = whenRetrievingResultFromFetchingCharacters()
-        assertIsFailure(completionResult)
+        await assertThrows {
+            try await whenFetchingCharactersIgnoringResult()
+        }
     }
 
-    func test_givenSuccessfulService_whenFetching_completesWithPageData() {
+    func test_givenSuccessfulService_whenFetching_returnsPageData() async throws {
         givenSutWithSuccessfulServiceStub(stubbingContentPage: ContentPage<Character>.empty)
-        let completionResult = whenRetrievingResultFromFetchingCharacters()
-        assertIsSuccess(completionResult) {
-            XCTAssertEqual($0, ContentPage<Character>.empty)
-        }
+        let contentPage = try await whenFetchingCharacters()
+        XCTAssertEqual(contentPage, ContentPage<Character>.empty)
     }
 }
 
 private class CharactersServiceMock: CharactersService {
-    static let disposableStub = DisposableStub()
     var charactersCallCount = 0
 
-    func characters(from _: Int, completion _: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
+    func characters(from _: Int) async throws -> ContentPage<Character> {
         charactersCallCount += 1
-        return Self.disposableStub
+        return ContentPage<Character>.empty
     }
 }
 
 private class CharactersServiceFailureStub: CharactersService {
-    func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
-        completion(.failure(.emptyData))
-        return DisposableStub()
+    func characters(from _: Int) async throws -> ContentPage<Character> {
+        throw CharactersServiceError.emptyData
     }
 }
 
@@ -76,26 +68,12 @@ private class CharactersServiceSuccessStub: CharactersService {
         contentPage = contentPageStub
     }
 
-    func characters(from _: Int, completion: @escaping (CharactersServiceResult) -> Void) -> Disposable? {
-        completion(.success(contentPage))
-        return DisposableStub()
+    func characters(from _: Int) async throws -> ContentPage<Character> {
+        contentPage
     }
 }
 
 private extension FetchCharactersUseCaseTests {
-    func whenRetrievingDisposableFromFetchCharacters(
-        completion: ((FetchCharactersResult) -> Void)? = nil
-    ) throws -> DisposableStub {
-        let disposable = sut.fetch(query: query) { result in
-            completion?(result)
-        }
-        return try XCTUnwrap(disposable as? DisposableStub)
-    }
-
-    func whenFetchingCharacters(completion: ((FetchCharactersResult) -> Void)? = nil) {
-        _ = try? whenRetrievingDisposableFromFetchCharacters(completion: completion)
-    }
-
     func givenSutWithFailureServiceStub() {
         let service = CharactersServiceFailureStub()
         givenSut(with: service)
@@ -110,11 +88,11 @@ private extension FetchCharactersUseCaseTests {
         sut = FetchCharactersServiceUseCase(service: service)
     }
 
-    func whenRetrievingResultFromFetchingCharacters() -> FetchCharactersResult {
-        var completionResult: FetchCharactersResult!
-        whenFetchingCharacters { result in
-            completionResult = result
-        }
-        return completionResult
+    func whenFetchingCharacters() async throws -> ContentPage<Character> {
+        try await sut.fetch(query: query)
+    }
+
+    func whenFetchingCharactersIgnoringResult() async throws {
+        _ = try await sut.fetch(query: query)
     }
 }

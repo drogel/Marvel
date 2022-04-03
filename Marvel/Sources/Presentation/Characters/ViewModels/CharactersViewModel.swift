@@ -13,7 +13,7 @@ typealias CharactersViewModelState = Result<[CharacterCellModel], CharactersView
 protocol CharactersViewModelProtocol: ViewModel {
     var statePublisher: AnyPublisher<CharactersViewModelState, Never> { get }
     var loadingStatePublisher: AnyPublisher<LoadingState, Never> { get }
-    func willDisplayCell(at indexPath: IndexPath)
+    func willDisplayCell(at indexPath: IndexPath) async
     func select(at indexPath: IndexPath)
 }
 
@@ -60,7 +60,6 @@ class CharactersViewModel: CharactersViewModelProtocol {
     private let charactersFetcher: FetchCharactersUseCase
     private let imageURLBuilder: ImageURLBuilder
     private let pager: Pager
-    private var charactersDisposable: Disposable?
 
     init(charactersFetcher: FetchCharactersUseCase, imageURLBuilder: ImageURLBuilder, pager: Pager) {
         self.charactersFetcher = charactersFetcher
@@ -71,9 +70,9 @@ class CharactersViewModel: CharactersViewModelProtocol {
         loadingState = .idle
     }
 
-    func start() {
+    func start() async {
         loadingState = .loading
-        loadCharacters(with: startingQuery)
+        await loadCharacters(with: startingQuery)
     }
 
     func select(at indexPath: IndexPath) {
@@ -81,13 +80,9 @@ class CharactersViewModel: CharactersViewModelProtocol {
         coordinatorDelegate?.model(self, didSelectCharacterWith: data.identifier)
     }
 
-    func willDisplayCell(at indexPath: IndexPath) {
+    func willDisplayCell(at indexPath: IndexPath) async {
         guard shouldLoadMore(at: indexPath) else { return }
-        loadMore()
-    }
-
-    func dispose() {
-        charactersDisposable?.dispose()
+        await loadMore()
     }
 }
 
@@ -100,10 +95,10 @@ private extension CharactersViewModel {
         pager.isAtEndOfCurrentPageWithMoreContent(indexPath.row)
     }
 
-    func loadMore() {
-        guard cellModels.hasElements else { return start() }
+    func loadMore() async {
+        guard cellModels.hasElements else { return await start() }
         let query = FetchCharactersQuery(offset: cellModels.count)
-        loadCharacters(with: query)
+        await loadCharacters(with: query)
     }
 
     func cellModel(at indexPath: IndexPath) -> CharacterCellModel? {
@@ -112,20 +107,15 @@ private extension CharactersViewModel {
         return cellModels[row]
     }
 
-    func loadCharacters(with query: FetchCharactersQuery) {
-        charactersDisposable?.dispose()
-        charactersDisposable = charactersFetcher.fetch(query: query) { [weak self] result in
-            self?.handleFetchCharactersResult(result)
-        }
-    }
-
-    func handleFetchCharactersResult(_ result: FetchCharactersResult) {
-        loadingState = .loaded
-        switch result {
-        case let .success(contentPage):
+    func loadCharacters(with query: FetchCharactersQuery) async {
+        do {
+            defer { loadingState = .loaded }
+            let contentPage = try await charactersFetcher.fetch(query: query)
             handleSuccess(with: contentPage)
-        case let .failure(error):
+        } catch let error as FetchCharactersUseCaseError {
             handleFailure(with: error)
+        } catch {
+            handleFailure(with: .emptyData)
         }
     }
 

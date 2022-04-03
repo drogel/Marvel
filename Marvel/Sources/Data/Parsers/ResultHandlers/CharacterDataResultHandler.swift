@@ -18,10 +18,7 @@ enum CharacterDataResultHandlerFactory {
 }
 
 protocol CharacterDataResultHandler {
-    func completeWithServiceResult(
-        _ handlerResult: DataServiceResult<CharacterData>,
-        completion: @escaping (Result<ContentPage<Character>, DataServiceError>) -> Void
-    )
+    func handle(_ dataWrapper: DataWrapper<CharacterData>) throws -> ContentPage<Character>
 }
 
 class CharacterDataServiceResultHandler: CharacterDataResultHandler {
@@ -33,31 +30,13 @@ class CharacterDataServiceResultHandler: CharacterDataResultHandler {
         self.pageMapper = pageMapper
     }
 
-    func completeWithServiceResult(
-        _ handlerResult: DataServiceResult<CharacterData>,
-        completion: @escaping (Result<ContentPage<Character>, CharactersServiceError>) -> Void
-    ) {
-        switch handlerResult {
-        case let .success(dataWrapper):
-            completeHandlerSuccess(dataWrapper: dataWrapper, completion: completion)
-        case let .failure(error):
-            completion(.failure(error))
-        }
+    func handle(_ dataWrapper: DataWrapper<CharacterData>) throws -> ContentPage<Character> {
+        guard let contentPage = mapToCharactersPage(dataWrapper.data) else { throw DataServiceError.emptyData }
+        return contentPage
     }
 }
 
 private extension CharacterDataServiceResultHandler {
-    func completeHandlerSuccess(
-        dataWrapper: DataWrapper<CharacterData>,
-        completion: @escaping (CharacterDetailServiceResult) -> Void
-    ) {
-        guard let contentPage = mapToCharactersPage(dataWrapper.data) else {
-            completion(.failure(.emptyData))
-            return
-        }
-        completion(.success(contentPage))
-    }
-
     func mapToCharactersPage(_ pageData: PageData<CharacterData>?) -> ContentPage<Character>? {
         let characters = mapToCharacters(pageData?.results)
         guard let pageData = pageData,

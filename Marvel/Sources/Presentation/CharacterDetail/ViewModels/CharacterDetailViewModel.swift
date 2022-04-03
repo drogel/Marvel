@@ -10,7 +10,7 @@ import Foundation
 
 protocol CharacterDetailViewModelProtocol: ViewModel {
     var detailStatePublisher: AnyPublisher<CharacterDetailViewModelState, Never> { get }
-    func willDisplayComicCell(at indexPath: IndexPath)
+    func willDisplayComicCell(at indexPath: IndexPath) async
 }
 
 typealias CharacterDetailViewModelError = CharacterInfoViewModelError
@@ -36,18 +36,13 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
         self.comicsViewModel = comicsViewModel
     }
 
-    func start() {
-        infoViewModel.start()
-        comicsViewModel.start()
+    func start() async {
+        await infoViewModel.start()
+        await comicsViewModel.start()
     }
 
-    func willDisplayComicCell(at indexPath: IndexPath) {
-        comicsViewModel.willDisplayComicCell(at: indexPath)
-    }
-
-    func dispose() {
-        infoViewModel.dispose()
-        comicsViewModel.dispose()
+    func willDisplayComicCell(at indexPath: IndexPath) async {
+        await comicsViewModel.willDisplayComicCell(at: indexPath)
     }
 }
 

@@ -9,5 +9,6 @@ import Foundation
 
 enum AppScheme: String {
     case debug = "DEBUG"
+    case stage = "STAGE"
     case release = "RELEASE"
 }

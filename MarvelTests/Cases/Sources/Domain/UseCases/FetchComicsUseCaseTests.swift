@@ -27,53 +27,38 @@ class FetchComicsUseCaseTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_whenFetching_returnsServiceDisposable() throws {
-        let disposable = try whenRetrievingDisposableFromFetchCharacter()
-        XCTAssertTrue(ComicsServiceMock.disposableStub === disposable)
-    }
-
-    func test_whenFetching_callsServiceFetch() throws {
-        whenFetchingCharacter()
+    func test_whenFetching_callsServiceFetch() async throws {
+        try await whenFetchingComicsIgnoringResult()
         XCTAssertEqual(serviceMock.comicsCallCount, 1)
     }
 
-    func test_givenFailingService_whenFetching_completesWithFailure() {
+    func test_givenFailingService_whenFetching_completesWithFailure() async {
         givenSutWithFailureServiceStub()
-        let completionResult = whenRetrievingResultFromFetchingCharacter()
-        assertIsFailure(completionResult)
+        await assertThrows {
+            try await whenFetchingComicsIgnoringResult()
+        }
     }
 
-    func test_givenSuccessfulService_whenFetching_completesWithPageData() {
-        givenSutWithSuccessfulServiceStub(stubbingPage: ContentPage<Comic>.empty)
-        let completionResult = whenRetrievingResultFromFetchingCharacter()
-        assertIsSuccess(completionResult) {
-            XCTAssertEqual($0, ContentPage<Comic>.empty)
-        }
+    func test_givenSuccessfulService_whenFetching_completesWithPageData() async throws {
+        let contentPageStub = ContentPage<Comic>.empty
+        givenSutWithSuccessfulServiceStub(stubbingPage: contentPageStub)
+        let actualContentPage = try await whenFetchingComics()
+        XCTAssertEqual(actualContentPage, contentPageStub)
     }
 }
 
 private class ComicsServiceMock: ComicsService {
-    static let disposableStub = DisposableStub()
     var comicsCallCount = 0
 
-    func comics(
-        for _: Int,
-        from _: Int,
-        completion _: @escaping (ComicsServiceResult) -> Void
-    ) -> Disposable? {
+    func comics(for _: Int, from _: Int) async throws -> ContentPage<Comic> {
         comicsCallCount += 1
-        return Self.disposableStub
+        return ContentPage<Comic>.empty
     }
 }
 
 private class ComicsServiceFailureStub: ComicsService {
-    func comics(
-        for _: Int,
-        from _: Int,
-        completion: @escaping (ComicsServiceResult) -> Void
-    ) -> Disposable? {
-        completion(.failure(.emptyData))
-        return DisposableStub()
+    func comics(for _: Int, from _: Int) async throws -> ContentPage<Comic> {
+        throw ComicsServiceError.emptyData
     }
 }
 
@@ -84,24 +69,18 @@ private class ComicsServiceSuccessStub: ComicsService {
         self.pageStub = pageStub
     }
 
-    func comics(for _: Int, from _: Int, completion: @escaping (ComicsServiceResult) -> Void) -> Disposable? {
-        completion(.success(pageStub))
-        return DisposableStub()
+    func comics(for _: Int, from _: Int) async throws -> ContentPage<Comic> {
+        pageStub
     }
 }
 
 private extension FetchComicsUseCaseTests {
-    func whenRetrievingDisposableFromFetchCharacter(
-        completion: ((FetchComicsResult) -> Void)? = nil
-    ) throws -> DisposableStub {
-        let disposable = sut.fetch(query: query) { result in
-            completion?(result)
-        }
-        return try XCTUnwrap(disposable as? DisposableStub)
+    func whenFetchingComicsIgnoringResult() async throws {
+        _ = try await whenFetchingComics()
     }
 
-    func whenFetchingCharacter(completion: ((FetchComicsResult) -> Void)? = nil) {
-        _ = try? whenRetrievingDisposableFromFetchCharacter(completion: completion)
+    func whenFetchingComics() async throws -> ContentPage<Comic> {
+        try await sut.fetch(query: query)
     }
 
     func givenSutWithFailureServiceStub() {
@@ -116,13 +95,5 @@ private extension FetchComicsUseCaseTests {
 
     func givenSut(with service: ComicsService) {
         sut = FetchComicsServiceUseCase(service: service)
-    }
-
-    func whenRetrievingResultFromFetchingCharacter() -> FetchComicsResult {
-        var completionResult: FetchComicsResult!
-        whenFetchingCharacter { result in
-            completionResult = result
-        }
-        return completionResult
     }
 }

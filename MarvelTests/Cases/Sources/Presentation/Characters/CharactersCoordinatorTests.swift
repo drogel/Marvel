@@ -77,8 +77,6 @@ private class CharactersViewModelStub: CharactersViewModelProtocol {
     }
 
     func start() {}
-
-    func dispose() {}
 }
 
 private extension CharactersCoordinatorTests {

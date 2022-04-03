@@ -9,14 +9,12 @@ import Combine
 import Foundation
 @testable import Marvel_Debug
 
-class CharactersViewModelMock: CharactersViewModelProtocol {
+class CharactersViewModelMock: ViewModelMock, CharactersViewModelProtocol {
     var numberOfItemsCallCount = 0
     var cellModelsPublisherCallCount = 0
     var willDisplayCellCallCount = 0
     var selectCallCount = 0
     var cellDataCallCount = 0
-    var startCallCount = 0
-    var disposeCallCount = 0
     var loadingStatePublisherCallCount = 0
 
     var numberOfItems: Int {
@@ -47,13 +45,5 @@ class CharactersViewModelMock: CharactersViewModelProtocol {
     func cellModel(at _: IndexPath) -> CharacterCellModel? {
         cellDataCallCount += 1
         return nil
-    }
-
-    func start() {
-        startCallCount += 1
-    }
-
-    func dispose() {
-        disposeCallCount += 1
     }
 }

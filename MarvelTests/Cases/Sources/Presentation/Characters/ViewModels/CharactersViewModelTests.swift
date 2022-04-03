@@ -47,15 +47,15 @@ class CharactersViewModelTests: XCTestCase {
         XCTAssertTrue((sut as AnyObject) is CharactersViewModelProtocol)
     }
 
-    func test_givenDidStartSuccessfullyAndACoordinatorDelegate_whenSelecting_notifiesDelegate() {
-        givenDidStartSuccessfully()
+    func test_givenDidStartSuccessfullyAndACoordinatorDelegate_whenSelecting_notifiesDelegate() async {
+        await givenDidStartSuccessfully()
         givenCoordinatorDelegate()
         sut.select(at: IndexPath(row: 0, section: 0))
         XCTAssertEqual(coordinatorDelegateMock.didSelectCallCount, 1)
     }
 
-    func test_givenCharactersFetcher_whenStrating_fetchesCharacters() {
-        sut.start()
+    func test_givenCharactersFetcher_whenStrating_fetchesCharacters() async {
+        await sut.start()
         XCTAssertEqual(charactersFetcherMock.fetchCallCount, 1)
     }
 
@@ -67,24 +67,24 @@ class CharactersViewModelTests: XCTestCase {
         wait(for: [receivedIdleExpectation], timeout: 0.1)
     }
 
-    func test_whenStarting_notifiesLoading() {
+    func test_whenStarting_notifiesLoadingStates() async {
         let receivedLoadingExpectation = expectation(description: "Receives loading state")
+        let expectedStates: [LoadingState] = [.idle, .loading, .loaded]
         sut.loadingStatePublisher
-            .dropFirst()
-            .assertOutput(matches: .loading, expectation: receivedLoadingExpectation)
+            .assertOutput(matches: expectedStates, expectation: receivedLoadingExpectation)
             .store(in: &cancellables)
-        sut.start()
+        await sut.start()
         wait(for: [receivedLoadingExpectation], timeout: 0.1)
     }
 
-    func test_whenStartingCompletesSuccessfully_notifiesFinishedLoading() {
+    func test_whenStartingCompletesSuccessfully_notifiesFinishedLoading() async {
         givenSutWithSuccessfulFetcher()
         let receivedLoadedExpectation = expectation(description: "Receives loaded state")
         sut.loadingStatePublisher
             .dropFirst(2)
             .assertOutput(matches: .loaded, expectation: receivedLoadedExpectation)
             .store(in: &cancellables)
-        sut.start()
+        await sut.start()
         wait(for: [receivedLoadedExpectation], timeout: 0.1)
     }
 
@@ -97,7 +97,7 @@ class CharactersViewModelTests: XCTestCase {
         wait(for: [receivedValueExpectation], timeout: 0.1)
     }
 
-    func test_givenSutWithSuccessfulFetcher_whenStarting_publishesSingleDataAfterDroppingInitial() throws {
+    func test_givenSutWithSuccessfulFetcher_whenStarting_publishesSingleDataAfterDroppingInitial() async throws {
         givenSutWithSuccessfulFetcher()
         let receivedValueExpectation = expectation(description: "Publishes single value")
         let expectedModels = buildExpectedCellModels(from: CharactersFetcherSuccessfulStub.charactersStub)
@@ -106,67 +106,56 @@ class CharactersViewModelTests: XCTestCase {
             .dropFirst()
             .assertOutput(matches: expectedState, expectation: receivedValueExpectation)
             .store(in: &cancellables)
-        sut.start()
+        await sut.start()
         wait(for: [receivedValueExpectation], timeout: 0.1)
     }
 
-    func test_whenWillDisplayCellFromIndexZero_doesNotFetch() {
-        whenWillDisplayCellIgnoringQuery(atIndex: 0)
+    func test_whenWillDisplayCellFromIndexZero_doesNotFetch() async {
+        await whenWillDisplayCellIgnoringQuery(atIndex: 0)
         XCTAssertNil(charactersFetcherMock.mostRecentQuery)
         XCTAssertEqual(charactersFetcherMock.fetchCallCount, 0)
     }
 
-    func test_givenDidStartSuccessfully_whenWillDisplayCell_fetchesCharactersFromLoadedCharactersCountOffset() {
-        givenDidStartSuccessfully()
-        let mostRecentQuery = whenWillDisplayCell(atIndex: CharactersFetcherSuccessfulStub.charactersStub.count - 1)
+    func test_givenDidStartSuccessfully_whenWillDisplayCell_fetchesCharactersFromLoadedCharactersCountOffset() async {
+        await givenDidStartSuccessfully()
+        let givenIndex = CharactersFetcherSuccessfulStub.charactersStub.count - 1
+        let mostRecentQuery = await whenWillDisplayCell(atIndex: givenIndex)
         XCTAssertEqual(mostRecentQuery.offset, CharactersFetcherSuccessfulStub.charactersStub.count)
     }
 
-    func test_givenStartFailed_whenWillDisplayCell_doesNotFetch() {
-        givenStartFailed()
-        let mostRecentQuery = whenWillDisplayCell(atIndex: 0)
+    func test_givenStartFailed_whenWillDisplayCell_doesNotFetch() async {
+        await givenStartFailed()
+        let mostRecentQuery = await whenWillDisplayCell(atIndex: 0)
         XCTAssertEqual(mostRecentQuery.offset, 0)
     }
 
-    func test_givenDidStartSuccessfully_whenDisposing_cancellsRequests() {
-        givenDidStartSuccessfully()
-        sut.dispose()
-        assertCancelledRequests()
-    }
-
-    func test_givenStartFailed_whenDisposing_cancellsRequests() {
-        givenStartFailed()
-        sut.dispose()
-        assertCancelledRequests()
-    }
-
-    func test_whenStartingFinishes_updatesPage() {
+    func test_whenStartingFinishes_updatesPage() async {
         givenSutWithSuccessfulFetcher()
         assertPagerUpdate(callCount: 0)
-        sut.start()
+        await sut.start()
         assertPagerUpdate(callCount: 1)
     }
 
-    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_checksForMoreContent() {
-        givenDidStartSuccessfully()
+    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_checksForMoreContent() async {
+        await givenDidStartSuccessfully()
         assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: 0)
-        whenWillDisplayCellIgnoringQuery(atIndex: 0)
+        await whenWillDisplayCellIgnoringQuery(atIndex: 0)
         assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: 1)
     }
 
-    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_updateNotificationsAreCalledInOrder() {
+    func test_givenDidStartSuccessfully_whenAboutToDisplayACell_updateNotificationsAreCalledInOrder() async {
         let expectedCalls: [ViewDelegatePagerCallRecorder.Method] = [
             .isAtEndOfCurrentPageWithMoreContent,
             .update,
         ]
         givenSuccessfulCharactersFetcher()
         givenSutWithCallRecorder()
-        whenWillDisplayCellIgnoringQuery(atIndex: 0)
+        await whenWillDisplayCellIgnoringQuery(atIndex: 0)
         XCTAssertEqual(methodCallRecorder.methodsCalled, expectedCalls)
     }
 
-    func test_givenDidStartSuccessfully_whenRetrievingCharacters_imageURLBuiltExpectedVariant() throws {
-        givenDidStartSuccessfully()
+    func test_givenDidStartSuccessfully_whenRetrievingCharacters_imageURLBuiltExpectedVariant() async throws {
+        await givenDidStartSuccessfully()
         let expectedImageVariant: ImageVariant = .detail
         let actualUsedVariant = try XCTUnwrap(imageURLBuilderMock.mostRecentImageVariant)
         XCTAssertEqual(actualUsedVariant, expectedImageVariant)
@@ -214,33 +203,24 @@ private extension CharactersViewModelTests {
         sut.coordinatorDelegate = coordinatorDelegateMock
     }
 
-    func givenDidStartSuccessfully() {
+    func givenDidStartSuccessfully() async {
         givenSutWithSuccessfulFetcher()
-        sut.start()
+        await sut.start()
     }
 
-    func givenStartFailed() {
+    func givenStartFailed() async {
         givenSutWithFailingFetcher()
-        sut.start()
+        await sut.start()
     }
 
-    func whenWillDisplayCell(atIndex index: Int) -> FetchCharactersQuery {
-        whenWillDisplayCellIgnoringQuery(atIndex: index)
+    func whenWillDisplayCell(atIndex index: Int) async -> FetchCharactersQuery {
+        await whenWillDisplayCellIgnoringQuery(atIndex: index)
         let mostRecentQuery = try! XCTUnwrap(charactersFetcherMock.mostRecentQuery)
         return mostRecentQuery
     }
 
-    func retrieveFetcherMockDisposableMock() -> DisposableMock {
-        try! XCTUnwrap(charactersFetcherMock.disposable)
-    }
-
-    func whenWillDisplayCellIgnoringQuery(atIndex index: Int) {
-        sut.willDisplayCell(at: IndexPath(row: index, section: 0))
-    }
-
-    func assertCancelledRequests(line: UInt = #line) {
-        let disposableMock = retrieveFetcherMockDisposableMock()
-        XCTAssertEqual(disposableMock.didDisposeCallCount, 1, line: line)
+    func whenWillDisplayCellIgnoringQuery(atIndex index: Int) async {
+        await sut.willDisplayCell(at: IndexPath(row: index, section: 0))
     }
 
     func assertPagerIsAtEndOfCurrentPageWithMoreContent(callCount: Int, line: UInt = #line) {
@@ -276,13 +256,10 @@ private class CharactersFetcherMock: FetchCharactersUseCase {
     var fetchCallCount = 0
     var mostRecentQuery: FetchCharactersQuery?
 
-    var disposable: DisposableMock?
-
-    func fetch(query: FetchCharactersQuery, completion _: @escaping (FetchCharactersResult) -> Void) -> Disposable? {
+    func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
         fetchCallCount += 1
         mostRecentQuery = query
-        disposable = DisposableMock()
-        return disposable
+        return ContentPage<Character>.empty
     }
 }
 
@@ -290,35 +267,23 @@ private class CharactersFetcherSuccessfulStub: CharactersFetcherMock {
     static let charactersStub = [Character.aginar]
     static let contentPageStub = ContentPage<Character>.atFirstPageOfTwoTotal(contents: charactersStub)
 
-    override func fetch(
-        query: FetchCharactersQuery,
-        completion: @escaping (FetchCharactersResult) -> Void
-    ) -> Disposable? {
-        let result = super.fetch(query: query, completion: completion)
-        completion(.success(Self.contentPageStub))
-        return result
+    override func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
+        _ = try await super.fetch(query: query)
+        return Self.contentPageStub
     }
 }
 
 private class CharactersFetcherSuccessfulEmptyStub: CharactersFetcherMock {
-    override func fetch(
-        query: FetchCharactersQuery,
-        completion: @escaping (FetchCharactersResult) -> Void
-    ) -> Disposable? {
-        let result = super.fetch(query: query, completion: completion)
-        completion(.success(ContentPage<Character>.empty))
-        return result
+    override func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
+        _ = try await super.fetch(query: query)
+        return ContentPage<Character>.empty
     }
 }
 
 private class CharactersFetcherFailingStub: CharactersFetcherMock {
-    override func fetch(
-        query: FetchCharactersQuery,
-        completion: @escaping (FetchCharactersResult) -> Void
-    ) -> Disposable? {
-        let result = super.fetch(query: query, completion: completion)
-        completion(.failure(.unauthorized))
-        return result
+    override func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character> {
+        _ = try await super.fetch(query: query)
+        throw FetchComicsUseCaseError.unauthorized
     }
 }
 

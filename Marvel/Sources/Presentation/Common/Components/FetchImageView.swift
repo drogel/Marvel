@@ -8,36 +8,38 @@
 import Foundation
 import UIKit
 
-typealias URLImageCompletion = (Result<UIImage, Error>) -> Void
-
 enum URLImageError: Error {
     case loadingFailed
 }
 
 protocol URLImage {
-    func loadImage(from url: URL?, completion: URLImageCompletion?)
+    func loadImage(from url: URL?)
     func clear()
 }
 
 class FetchImageView: UIImageView, URLImage {
-    private var disposable: Disposable?
+    private var imageTask: Task<Void, Never>?
 
-    func loadImage(from url: URL?, completion: URLImageCompletion? = nil) {
-        guard let urlRequest = buildURLRequest(from: url) else { return }
-        if let image = retrieveCachedImageIfAny(for: urlRequest) {
-            self.image = image
-        } else {
-            disposable = requestNetworkImage(urlRequest, completion: completion)
-        }
+    func loadImage(from url: URL?) {
+        imageTask = Task { await loadImage(from: url) }
     }
 
     func clear() {
         image = nil
-        disposable?.dispose()
+        imageTask?.cancel()
     }
 }
 
 private extension UIImageView {
+    func loadImage(from url: URL?) async {
+        guard let urlRequest = buildURLRequest(from: url) else { return }
+        if let image = retrieveCachedImageIfAny(for: urlRequest) {
+            setImage(image)
+        } else {
+            await requestNetworkImage(urlRequest)
+        }
+    }
+
     func buildURLRequest(from url: URL?) -> URLRequest? {
         guard let url = url else { return nil }
         return URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 20)
@@ -48,28 +50,23 @@ private extension UIImageView {
         return UIImage(data: cachedData)
     }
 
-    func requestNetworkImage(_ urlRequest: URLRequest, completion: URLImageCompletion?) -> Disposable {
-        let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response, _ in
-            guard let self = self else { return }
-            guard let data = data, let response = response else {
-                completion?(.failure(URLImageError.loadingFailed))
-                return
-            }
-            self.cacheResponse(from: urlRequest, data: data, response: response)
-            self.handleNetworkImage(response: response, data: data, completion: completion)
-        }
-        dataTask.resume()
-        return dataTask
+    func requestNetworkImage(_ urlRequest: URLRequest) async {
+        guard let requestResult = try? await URLSession.shared.data(for: urlRequest, delegate: nil) else { return }
+        let data = requestResult.0
+        let response = requestResult.1
+        cacheResponse(from: urlRequest, data: data, response: response)
+        handleRequestResult(data: data)
     }
 
-    func handleNetworkImage(response _: URLResponse, data: Data, completion: URLImageCompletion?) {
-        DispatchQueue.main.async {
-            guard let image = UIImage(data: data) else {
-                completion?(.failure(URLImageError.loadingFailed))
-                return
-            }
+    func handleRequestResult(data: Data) {
+        guard let image = UIImage(data: data) else { return }
+        setImage(image)
+    }
+
+    func setImage(_ image: UIImage) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
             self.image = image
-            completion?(.success(image))
         }
     }
 

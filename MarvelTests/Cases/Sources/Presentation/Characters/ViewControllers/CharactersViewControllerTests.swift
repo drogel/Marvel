@@ -35,15 +35,11 @@ class CharactersViewControllerTests: XCTestCase {
     }
 
     func test_whenViewDidAppear_callsViewModelStart() {
+        let startDidCallExpectation = startDidCallExpectation(on: viewModelMock)
         assertViewModelStart(callCount: 0)
         sut.viewDidAppear(false)
+        wait(for: [startDidCallExpectation], timeout: 2)
         assertViewModelStart(callCount: 1)
-    }
-
-    func test_whenViewDidDisappear_callsViewModelDispose() {
-        assertViewModelDispose(callCount: 0)
-        sut.viewDidDisappear(false)
-        assertViewModelDispose(callCount: 1)
     }
 
     func test_whenSelectingACell_notifiesViewModel() {
@@ -80,10 +76,6 @@ private extension CharactersViewControllerTests {
 
     func assertViewModelStart(callCount: Int, line: UInt = #line) {
         XCTAssertEqual(viewModelMock.startCallCount, callCount, line: line)
-    }
-
-    func assertViewModelDispose(callCount: Int, line: UInt = #line) {
-        XCTAssertEqual(viewModelMock.disposeCallCount, callCount, line: line)
     }
 
     func assertViewModelCellData(callCount: Int, line: UInt = #line) {
