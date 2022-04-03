@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: Remove this when we migrate to async await
 protocol Disposable {
     func dispose()
 }

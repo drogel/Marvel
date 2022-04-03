@@ -21,6 +21,7 @@ struct FetchCharacterDetailQuery {
 
 typealias FetchCharacterDetailUseCaseError = CharacterDetailServiceError
 
+// TODO: Remove all kinds of results when we migrate to async await
 typealias FetchCharacterDetailResult = Result<ContentPage<Character>, FetchCharacterDetailUseCaseError>
 
 class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {

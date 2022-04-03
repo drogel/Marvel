@@ -46,27 +46,17 @@ class CharacterInfoViewModelTests: XCTestCase {
         wait(for: [idleStateReceivedExpectation], timeout: 0.1)
     }
 
-    func test_whenStarting_emitsLoadingState() {
-        let loadingStateReceivedExpectation = expectation(description: "Received loading state")
-        sut.loadingStatePublisher
-            .dropFirst()
-            .assertOutput(matches: .loading, expectation: loadingStateReceivedExpectation)
-            .store(in: &cancellables)
-        sut.start()
-        wait(for: [loadingStateReceivedExpectation], timeout: 0.1)
-    }
-
     func test_infoModelIsNilInitially() {
         assertInfoModelIsNil()
     }
 
-    func test_givenCharacterFetcher_whenStrating_fetchesCharacter() {
-        sut.start()
+    func test_givenCharacterFetcher_whenStrating_fetchesCharacter() async {
+        await sut.start()
         XCTAssertEqual(characterFetcherMock.fetchCallCount, 1)
     }
 
-    func test_givenCharacterFetcher_whenStrating_fetchesCharacterWithProvidedID() {
-        sut.start()
+    func test_givenCharacterFetcher_whenStrating_fetchesCharacterWithProvidedID() async {
+        await sut.start()
         XCTAssertEqual(characterFetcherMock.fetchCallCount(withID: characterIDStub), 1)
     }
 
@@ -79,7 +69,7 @@ class CharacterInfoViewModelTests: XCTestCase {
         wait(for: [receivedResultExpectation], timeout: 0.1)
     }
 
-    func test_givenSuccessfulCharacterFetcher_whenStarting_receivesExpectedInfoModel() {
+    func test_givenSuccessfulCharacterFetcher_whenStarting_receivesExpectedInfoModel() async {
         givenSutWithSuccessfulFetcher()
         let receivedResultExpectation = expectation(description: "Received a result")
         let expectedInfoModel = buildExpectedInfoModel(from: CharacterFetcherSuccessfulStub.resultsStub)
@@ -88,28 +78,22 @@ class CharacterInfoViewModelTests: XCTestCase {
             .dropFirst()
             .assertOutput(matches: expectedState, expectation: receivedResultExpectation)
             .store(in: &cancellables)
-        sut.start()
+        await sut.start()
         wait(for: [receivedResultExpectation], timeout: 0.1)
     }
 
-    func test_givenSucessfulFetcher_whenStartingFinished_emitsLoadedState() {
+    func test_givenSucessfulFetcher_whenStartingFinished_emitsLoadedState() async {
         givenSutWithSuccessfulFetcher()
         let loadedStateReceivedExpectation = expectation(description: "Received loaded state")
+        let expectedStates: [LoadingState] = [.idle, .loading, .loaded]
         sut.loadingStatePublisher
-            .dropFirst(2)
-            .assertOutput(matches: .loaded, expectation: loadedStateReceivedExpectation)
+            .assertOutput(matches: expectedStates, expectation: loadedStateReceivedExpectation)
             .store(in: &cancellables)
-        sut.start()
+        await sut.start()
         wait(for: [loadedStateReceivedExpectation], timeout: 0.1)
     }
 
-    func test_givenDidStartSuccessfully_whenDisposing_cancellsRequests() {
-        givenStartCompletedSuccessfully()
-        sut.dispose()
-        assertCancelledRequests()
-    }
-
-    func test_givenSutWithFailingFetcher_whenStarting_emitsFailureState() {
+    func test_givenSutWithFailingFetcher_whenStarting_emitsFailureState() async {
         givenSutWithFailingFetcher()
         let receivedResultExpectation = expectation(description: "Received a result")
         let expectedState = CharacterInfoViewModelState.failure(.noAuthorization)
@@ -117,12 +101,12 @@ class CharacterInfoViewModelTests: XCTestCase {
             .dropFirst()
             .assertOutput(matches: expectedState, expectation: receivedResultExpectation)
             .store(in: &cancellables)
-        sut.start()
+        await sut.start()
         wait(for: [receivedResultExpectation], timeout: 0.1)
     }
 
-    func test_givenDidStartSuccessfully_whenRetrievingCharacterImage_imageURLBuiltExpectedVariant() {
-        givenStartCompletedSuccessfully()
+    func test_givenDidStartSuccessfully_whenRetrievingCharacterImage_imageURLBuiltExpectedVariant() async {
+        await givenStartCompletedSuccessfully()
         XCTAssertNil(imageURLBuilderMock.mostRecentImageVariant)
     }
 }
@@ -207,18 +191,9 @@ private extension CharacterInfoViewModelTests {
         givenSut(with: characterFetcherMock)
     }
 
-    func givenStartCompletedSuccessfully() {
+    func givenStartCompletedSuccessfully() async {
         givenSutWithSuccessfulFetcher()
-        sut.start()
-    }
-
-    func retrieveFetcherMockDisposableMock() -> DisposableMock {
-        try! XCTUnwrap(characterFetcherMock.disposable)
-    }
-
-    func assertCancelledRequests(line _: UInt = #line) {
-        let disposableMock = retrieveFetcherMockDisposableMock()
-        XCTAssertEqual(disposableMock.didDisposeCallCount, 1)
+        await sut.start()
     }
 
     func assertInfoModelIsNil(line: UInt = #line) {
