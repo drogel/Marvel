@@ -36,6 +36,14 @@ class CharactersDebugServiceTests: XCTestCase {
         givenSutWithDataLoader()
         try await whenRetrievingCharactersIgnoringResult()
     }
+
+    func test_givenSutDataLoader_whenRetrievingCharactersForTheSecondTime_throwsError() async throws {
+        givenSutWithDataLoader()
+        try await whenRetrievingCharactersIgnoringResult()
+        await assertThrows {
+            try await whenRetrievingCharactersIgnoringResult()
+        }
+    }
 }
 
 private extension CharactersDebugServiceTests {
