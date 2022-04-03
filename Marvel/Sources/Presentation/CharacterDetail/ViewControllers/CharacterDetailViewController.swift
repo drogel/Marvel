@@ -72,7 +72,6 @@ private extension CharacterDetailViewController {
     }
 
     func subscribeToDetail() {
-        // TODO: Fix comics section title weird animations
         viewModel.detailStatePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: handleState)
