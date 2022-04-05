@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import Domain
 
 protocol CharacterInfoViewModelProtocol: ViewModel {
     var infoStatePublisher: AnyPublisher<CharacterInfoViewModelState, Never> { get }

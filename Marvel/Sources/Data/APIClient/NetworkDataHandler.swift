@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 protocol NetworkDataHandler {
     func handle<T: DataObject>(_ data: Data?) throws -> DataWrapper<T>

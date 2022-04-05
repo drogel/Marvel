@@ -7,16 +7,28 @@
 
 import Foundation
 
-protocol FetchComicsUseCase {
+public protocol FetchComicsUseCase {
     func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic>
 }
 
-struct FetchComicsQuery: Equatable {
+public struct FetchComicsQuery: Equatable {
     let characterID: Int
     let offset: Int
+
+    public init(characterID: Int, offset: Int) {
+        self.characterID = characterID
+        self.offset = offset
+    }
 }
 
 typealias FetchComicsUseCaseError = ComicsServiceError
+
+public enum FetchComicsUseCaseFactory {
+    // TODO: Test this
+    public static func create(service: ComicsService) -> FetchComicsUseCase {
+        FetchComicsServiceUseCase(service: service)
+    }
+}
 
 class FetchComicsServiceUseCase: FetchComicsUseCase {
     private let service: ComicsService

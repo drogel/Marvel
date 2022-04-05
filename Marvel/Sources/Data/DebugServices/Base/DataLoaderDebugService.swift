@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 protocol DataLoaderDebugService {
     func loadData<T: DataObject>() throws -> DataWrapper<T>

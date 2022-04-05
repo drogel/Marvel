@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 protocol ImageMapper {
     func mapToImage(_ data: ImageData?) -> Image?

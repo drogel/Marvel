@@ -5,7 +5,7 @@
 //  Created by Diego Rogel on 8/2/22.
 //
 
-@testable import Marvel_Debug
+@testable import Domain
 import XCTest
 
 class OffsetPagerTests: XCTestCase {

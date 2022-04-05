@@ -5,7 +5,7 @@
 //  Created by Diego Rogel on 12/2/22.
 //
 
-@testable import Marvel_Debug
+@testable import Domain
 import XCTest
 
 class ImageURLBuilderTests: XCTestCase {
@@ -31,8 +31,8 @@ class ImageURLBuilderTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_whenBuildingURL_returnsHTTPSImagePathWithAppendedExtension() {
-        let actualURL = whenBuildingURLFromImageStub()
+    func test_whenBuildingURL_returnsHTTPSImagePathWithAppendedExtension() throws {
+        let actualURL = try whenBuildingURLFromImageStub()
         let expectedURLScheme = "https://"
         let expectedURL = expectedURLScheme + imageDomainStub + imagePathStub + "." + imageExtensionStub
         XCTAssertEqual(actualURL.absoluteString, expectedURL)
@@ -44,19 +44,20 @@ class ImageURLBuilderTests: XCTestCase {
         XCTAssertNil(actualURL)
     }
 
-    func test_givenAVariant_whenBuildingURL_returnsURLWithAppendedVariant() {
-        let actualURL = whenBuildingURL(withVariant: .landscapeLarge)
+    func test_givenAVariant_whenBuildingURL_returnsURLWithAppendedVariant() throws {
+        let actualURL = try whenBuildingURL(withVariant: .landscapeLarge)
         let expectedPath = imagePathStub + "/" + ImageVariant.landscapeLarge.rawValue + "." + imageExtensionStub
         XCTAssertEqual(actualURL.path, expectedPath)
     }
 }
 
 private extension ImageURLBuilderTests {
-    func whenBuildingURLFromImageStub() -> URL {
-        try! XCTUnwrap(sut.buildURL(from: imageStub))
+    func whenBuildingURLFromImageStub(from image: Image? = nil) throws -> URL {
+        let imageStub = try XCTUnwrap(image ?? self.imageStub)
+        return try XCTUnwrap(sut.buildURL(from: imageStub))
     }
 
-    func whenBuildingURL(withVariant variant: ImageVariant) -> URL {
-        try! XCTUnwrap(sut.buildURL(from: imageStub, variant: variant))
+    func whenBuildingURL(withVariant variant: ImageVariant) throws -> URL {
+        try XCTUnwrap(sut.buildURL(from: imageStub, variant: variant))
     }
 }

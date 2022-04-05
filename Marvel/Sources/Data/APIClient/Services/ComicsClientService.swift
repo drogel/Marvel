@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 class ComicsClientService: ComicsService {
     private let charactersPath = MarvelAPIPaths.characters.rawValue

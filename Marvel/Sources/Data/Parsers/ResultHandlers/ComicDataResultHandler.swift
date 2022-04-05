@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 enum ComicDataResultHandlerFactory {
     static func createWithDataMappers() -> ComicDataResultHandler {

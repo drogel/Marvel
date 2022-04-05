@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum DataServiceError: Error {
+public enum DataServiceError: Error {
     case emptyData
     case unauthorized
     case noConnection

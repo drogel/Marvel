@@ -7,15 +7,25 @@
 
 import Foundation
 
-protocol FetchCharactersUseCase {
+public protocol FetchCharactersUseCase {
     func fetch(query: FetchCharactersQuery) async throws -> ContentPage<Character>
 }
 
-struct FetchCharactersQuery {
+public struct FetchCharactersQuery {
     let offset: Int
+
+    public init(offset: Int) {
+        self.offset = offset
+    }
 }
 
-typealias FetchCharactersUseCaseError = CharactersServiceError
+public typealias FetchCharactersUseCaseError = CharactersServiceError
+
+public enum FetchCharactersUseCaseFactory {
+    public static func create(service: CharactersService) -> FetchCharactersUseCase {
+        FetchCharactersServiceUseCase(service: service)
+    }
+}
 
 class FetchCharactersServiceUseCase: FetchCharactersUseCase {
     private let service: CharactersService

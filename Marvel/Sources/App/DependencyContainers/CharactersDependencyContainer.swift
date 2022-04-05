@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 protocol CharactersDependencies {
     var networkService: NetworkService { get }
@@ -35,13 +36,9 @@ class CharactersDependencyContainer: CharactersContainer {
         self.dependencies = dependencies
     }
 
-    lazy var fetchCharactersUseCase: FetchCharactersUseCase = {
-        FetchCharactersServiceUseCase(service: charactersService)
-    }()
-
-    lazy var imageURLBuilder: ImageURLBuilder = SecureImageURLBuilder()
-
-    lazy var pager: Pager = OffsetPager()
+    lazy var fetchCharactersUseCase = FetchCharactersUseCaseFactory.create(service: charactersService)
+    lazy var imageURLBuilder = ImageURLBuilderFactory.create()
+    lazy var pager = PagerFactory.create()
 }
 
 private extension CharactersDependencyContainer {

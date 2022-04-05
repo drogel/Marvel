@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 protocol CharacterDetailContainer {
     var characterID: Int { get }
@@ -25,17 +26,10 @@ class CharacterDetailDependencyContainer: CharacterDetailContainer {
         self.characterID = characterID
     }
 
-    lazy var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase = {
-        FetchCharacterDetailServiceUseCase(service: characterDetailService)
-    }()
-
-    lazy var fetchComicsUseCase: FetchComicsUseCase = {
-        FetchComicsServiceUseCase(service: comicsDetailService)
-    }()
-
-    lazy var imageURLBuilder: ImageURLBuilder = SecureImageURLBuilder()
-
-    lazy var pager: Pager = OffsetPager()
+    lazy var fetchCharacterDetailUseCase = FetchCharacterDetailUseCaseFactory.create(service: characterDetailService)
+    lazy var fetchComicsUseCase = FetchComicsUseCaseFactory.create(service: comicsDetailService)
+    lazy var imageURLBuilder: ImageURLBuilder = ImageURLBuilderFactory.create()
+    lazy var pager: Pager = PagerFactory.create()
 }
 
 private extension CharacterDetailDependencyContainer {

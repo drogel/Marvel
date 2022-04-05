@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@testable import Marvel_Debug
+@testable import Domain
 
 extension ContentPage {
     static var empty: ContentPage<Content> {

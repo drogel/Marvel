@@ -5,7 +5,7 @@
 //  Created by Diego Rogel on 23/1/22.
 //
 
-@testable import Marvel_Debug
+@testable import Domain
 import XCTest
 
 class FetchCharacterDetailUseCaseTests: XCTestCase {

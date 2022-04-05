@@ -7,8 +7,8 @@
 
 import Foundation
 
-typealias CharacterDetailServiceError = DataServiceError
+public typealias CharacterDetailServiceError = DataServiceError
 
-protocol CharacterDetailService {
+public protocol CharacterDetailService {
     func character(with identifier: Int) async throws -> ContentPage<Character>
 }

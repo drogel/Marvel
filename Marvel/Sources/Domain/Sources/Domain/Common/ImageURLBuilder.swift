@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ImageVariant: String {
+public enum ImageVariant: String {
     case fullSize = ""
     case detail
     case portraitSmall = "portrait_small"
@@ -21,9 +21,16 @@ enum ImageVariant: String {
     case landscapeLarge = "landscape_incredible"
 }
 
-protocol ImageURLBuilder {
+public protocol ImageURLBuilder {
     func buildURL(from imageData: Image, variant: ImageVariant) -> URL?
     func buildURL(from imageData: Image) -> URL?
+}
+
+public enum ImageURLBuilderFactory {
+    // TODO: Test this
+    public static func create() -> ImageURLBuilder {
+        SecureImageURLBuilder()
+    }
 }
 
 class SecureImageURLBuilder: ImageURLBuilder {

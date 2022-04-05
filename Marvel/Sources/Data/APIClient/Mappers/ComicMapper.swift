@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 protocol ComicMapper {
     func mapToComic(_ data: ComicData) -> Comic?

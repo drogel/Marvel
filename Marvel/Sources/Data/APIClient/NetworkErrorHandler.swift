@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 protocol NetworkErrorHandler {
     func handle(_ networkError: NetworkError) -> DataServiceError

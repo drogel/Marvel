@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 protocol PageMapper {
     func mapToPageInfo(_ data: Pageable) -> PageInfo?

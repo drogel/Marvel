@@ -7,15 +7,26 @@
 
 import Foundation
 
-protocol FetchCharacterDetailUseCase {
+public protocol FetchCharacterDetailUseCase {
     func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character>
 }
 
-struct FetchCharacterDetailQuery {
+public struct FetchCharacterDetailQuery {
     let characterID: Int
+
+    public init(characterID: Int) {
+        self.characterID = characterID
+    }
 }
 
-typealias FetchCharacterDetailUseCaseError = CharacterDetailServiceError
+public typealias FetchCharacterDetailUseCaseError = CharacterDetailServiceError
+
+public enum FetchCharacterDetailUseCaseFactory {
+    // TODO: Test this
+    public static func create(service: CharacterDetailService) -> FetchCharacterDetailUseCase {
+        FetchCharacterDetailServiceUseCase(service: service)
+    }
+}
 
 class FetchCharacterDetailServiceUseCase: FetchCharacterDetailUseCase {
     private let service: CharacterDetailService

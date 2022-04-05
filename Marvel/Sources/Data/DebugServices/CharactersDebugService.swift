@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 class CharactersDebugService: CharactersService {
     private let charactersFileName: DebugDataFileName = .charactersFileName

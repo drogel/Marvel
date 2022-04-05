@@ -7,11 +7,18 @@
 
 import Foundation
 
-protocol Pager {
+public protocol Pager {
     func isThereMoreContent(at offset: Int) -> Bool
     func isAtEndOfCurrentPage(_ offset: Int) -> Bool
     func isAtEndOfCurrentPageWithMoreContent(_ offset: Int) -> Bool
     func update(currentPage: Page)
+}
+
+public enum PagerFactory {
+    // TODO: Test this
+    public static func create() -> Pager {
+        OffsetPager()
+    }
 }
 
 class OffsetPager: Pager {

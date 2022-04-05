@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 class ComicsDebugService: ComicsService {
     private let comicsFileName: DebugDataFileName = .comicsFileName
