@@ -7,6 +7,7 @@
 
 import Foundation
 @testable import Marvel_Debug
+import Domain
 
 class PagerStub: Pager {
     func isAtEndOfCurrentPageWithMoreContent(_: Int) -> Bool {

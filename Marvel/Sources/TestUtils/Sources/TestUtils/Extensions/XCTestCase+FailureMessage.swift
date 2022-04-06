@@ -8,7 +8,7 @@
 import Foundation
 import XCTest
 
-extension XCTestCase {
+public extension XCTestCase {
     func failExpectingErrorMatching(_ actualError: Error, file: StaticString = #filePath, line: UInt = #line) {
         XCTFail("Did not expect failure with error \(actualError)", file: file, line: line)
     }

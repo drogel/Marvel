@@ -12,7 +12,7 @@ public protocol FetchCharactersUseCase {
 }
 
 public struct FetchCharactersQuery {
-    let offset: Int
+    public let offset: Int
 
     public init(offset: Int) {
         self.offset = offset

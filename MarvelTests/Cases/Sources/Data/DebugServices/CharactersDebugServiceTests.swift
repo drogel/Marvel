@@ -7,6 +7,7 @@
 
 @testable import Marvel_Debug
 import XCTest
+import Domain
 
 class CharactersDebugServiceTests: XCTestCase {
     private var sut: CharactersDebugService!

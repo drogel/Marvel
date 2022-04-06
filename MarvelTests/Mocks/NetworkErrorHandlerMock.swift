@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 @testable import Marvel_Debug
 
 class NetworkErrorHandlerMock: NetworkErrorHandler {

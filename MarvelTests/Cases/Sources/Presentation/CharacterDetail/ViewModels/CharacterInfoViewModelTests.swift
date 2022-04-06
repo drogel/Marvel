@@ -8,6 +8,8 @@
 import Combine
 @testable import Marvel_Debug
 import XCTest
+import Domain
+import DomainTestUtils
 
 class CharacterInfoViewModelTests: XCTestCase {
     private var sut: CharacterInfoViewModel!

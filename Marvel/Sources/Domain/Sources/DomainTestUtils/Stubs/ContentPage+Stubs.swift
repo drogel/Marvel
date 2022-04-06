@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@testable import Domain
+import Domain
 
-extension ContentPage {
+public extension ContentPage {
     static var empty: ContentPage<Content> {
         ContentPage<Content>.zeroWith(contents: [])
     }

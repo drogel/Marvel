@@ -12,8 +12,8 @@ public protocol FetchComicsUseCase {
 }
 
 public struct FetchComicsQuery: Equatable {
-    let characterID: Int
-    let offset: Int
+    public let characterID: Int
+    public let offset: Int
 
     public init(characterID: Int, offset: Int) {
         self.characterID = characterID
@@ -21,7 +21,7 @@ public struct FetchComicsQuery: Equatable {
     }
 }
 
-typealias FetchComicsUseCaseError = ComicsServiceError
+public typealias FetchComicsUseCaseError = ComicsServiceError
 
 public enum FetchComicsUseCaseFactory {
     // TODO: Test this

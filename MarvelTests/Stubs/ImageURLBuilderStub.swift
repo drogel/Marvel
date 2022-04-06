@@ -7,6 +7,7 @@
 
 import Foundation
 @testable import Marvel_Debug
+import Domain
 
 class ImageURLBuilderStub: ImageURLBuilder {
     let urlStub = URL(string: "https://example.com")!

@@ -12,7 +12,7 @@ public protocol FetchCharacterDetailUseCase {
 }
 
 public struct FetchCharacterDetailQuery {
-    let characterID: Int
+    public let characterID: Int
 
     public init(characterID: Int) {
         self.characterID = characterID

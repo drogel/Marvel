@@ -7,6 +7,7 @@
 
 import Foundation
 @testable import Marvel_Debug
+import Domain
 
 class ImageURLBuilderMock: ImageURLBuilder {
     var buildURLCallCount = 0

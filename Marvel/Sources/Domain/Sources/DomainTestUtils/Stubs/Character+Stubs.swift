@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@testable import Marvel_Debug
+import Domain
 
-extension Character {
+public extension Character {
     static let aginar = Character(
         identifier: 1_011_175,
         name: "Aginar",

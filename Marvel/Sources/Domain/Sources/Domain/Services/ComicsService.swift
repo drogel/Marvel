@@ -7,7 +7,7 @@
 
 import Foundation
 
-typealias ComicsServiceError = DataServiceError
+public typealias ComicsServiceError = DataServiceError
 
 public protocol ComicsService {
     func comics(for characterID: Int, from offset: Int) async throws -> ContentPage<Comic>
