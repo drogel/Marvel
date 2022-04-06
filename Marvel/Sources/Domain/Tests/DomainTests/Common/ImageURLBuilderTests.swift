@@ -49,6 +49,11 @@ class ImageURLBuilderTests: XCTestCase {
         let expectedPath = imagePathStub + "/" + ImageVariant.landscapeLarge.rawValue + "." + imageExtensionStub
         XCTAssertEqual(actualURL.path, expectedPath)
     }
+
+    func test_factoryReturnsExpectedImplementation() {
+        let createdBuilder = ImageURLBuilderFactory.create()
+        XCTAssertTrue((createdBuilder as AnyObject) is SecureImageURLBuilder)
+    }
 }
 
 private extension ImageURLBuilderTests {

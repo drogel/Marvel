@@ -6,10 +6,10 @@
 //
 
 import Combine
-@testable import Marvel_Debug
-import XCTest
 import Domain
 import DomainTestUtils
+@testable import Marvel_Debug
+import XCTest
 
 class CharactersViewModelTests: XCTestCase {
     private var sut: CharactersViewModel!

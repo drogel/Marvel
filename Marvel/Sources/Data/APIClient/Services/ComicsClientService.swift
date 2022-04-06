@@ -5,8 +5,8 @@
 //  Created by Diego Rogel on 7/2/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 
 class ComicsClientService: ComicsService {
     private let charactersPath = MarvelAPIPaths.characters.rawValue

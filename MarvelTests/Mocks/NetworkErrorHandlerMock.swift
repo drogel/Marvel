@@ -5,8 +5,8 @@
 //  Created by Diego Rogel on 29/1/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 @testable import Marvel_Debug
 
 class NetworkErrorHandlerMock: NetworkErrorHandler {

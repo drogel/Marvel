@@ -9,11 +9,13 @@ let package = Package(
     products: [
         .library(
             name: "TestUtils",
-            targets: ["TestUtils"]),
+            targets: ["TestUtils"]
+        ),
     ],
     targets: [
         .target(
             name: "TestUtils",
-            dependencies: []),
+            dependencies: []
+        ),
     ]
 )

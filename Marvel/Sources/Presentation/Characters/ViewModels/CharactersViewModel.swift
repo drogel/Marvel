@@ -6,8 +6,8 @@
 //
 
 import Combine
-import Foundation
 import Domain
+import Foundation
 
 typealias CharactersViewModelState = Result<[CharacterCellModel], CharactersViewModelError>
 

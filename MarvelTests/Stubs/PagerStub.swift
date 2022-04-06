@@ -5,9 +5,9 @@
 //  Created by Diego Rogel on 8/2/22.
 //
 
+import Domain
 import Foundation
 @testable import Marvel_Debug
-import Domain
 
 class PagerStub: Pager {
     func isAtEndOfCurrentPageWithMoreContent(_: Int) -> Bool {

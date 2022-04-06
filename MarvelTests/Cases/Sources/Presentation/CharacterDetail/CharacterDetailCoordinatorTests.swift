@@ -5,9 +5,9 @@
 //  Created by Diego Rogel on 1/2/22.
 //
 
+import Domain
 @testable import Marvel_Debug
 import XCTest
-import Domain
 
 class CharacterDetailCoordinatorTests: XCTestCase {
     private var sut: CharacterDetailCoordinator!

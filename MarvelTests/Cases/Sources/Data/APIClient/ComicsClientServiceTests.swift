@@ -6,9 +6,9 @@
 //
 
 import CryptoKit
+import Domain
 @testable import Marvel_Debug
 import XCTest
-import Domain
 
 class ComicsClientServiceTests: XCTestCase {
     private var sut: ComicsClientService!

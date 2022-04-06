@@ -5,9 +5,9 @@
 //  Created by Diego Rogel on 5/2/22.
 //
 
+import Domain
 import Foundation
 @testable import Marvel_Debug
-import Domain
 
 class ImageURLBuilderStub: ImageURLBuilder {
     let urlStub = URL(string: "https://example.com")!

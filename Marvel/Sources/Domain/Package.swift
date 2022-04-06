@@ -8,20 +8,23 @@ let package = Package(
     platforms: [.iOS(.v15), .macOS(.v11)],
     products: [
         .library(name: "Domain", targets: ["Domain"]),
-        .library(name: "DomainTestUtils", targets: ["DomainTestUtils"])
+        .library(name: "DomainTestUtils", targets: ["DomainTestUtils"]),
     ],
     dependencies: [
-        .package(name: "TestUtils", path: "MarvelTests/TestUtils")
+        .package(name: "TestUtils", path: "MarvelTests/TestUtils"),
     ],
     targets: [
         .target(
             name: "Domain",
-            dependencies: []),
+            dependencies: []
+        ),
         .target(
             name: "DomainTestUtils",
-            dependencies: ["Domain"]),
+            dependencies: ["Domain"]
+        ),
         .testTarget(
             name: "DomainTests",
-            dependencies: ["Domain", "TestUtils", "DomainTestUtils"]),
+            dependencies: ["Domain", "TestUtils", "DomainTestUtils"]
+        ),
     ]
 )

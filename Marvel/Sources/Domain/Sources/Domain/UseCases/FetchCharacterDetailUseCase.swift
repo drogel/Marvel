@@ -22,7 +22,6 @@ public struct FetchCharacterDetailQuery {
 public typealias FetchCharacterDetailUseCaseError = CharacterDetailServiceError
 
 public enum FetchCharacterDetailUseCaseFactory {
-    // TODO: Test this
     public static func create(service: CharacterDetailService) -> FetchCharacterDetailUseCase {
         FetchCharacterDetailServiceUseCase(service: service)
     }

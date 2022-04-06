@@ -5,8 +5,8 @@
 //  Created by Diego Rogel on 21/1/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 
 class CharactersClientService: CharactersService {
     private let charactersPath = MarvelAPIPaths.characters.rawValue

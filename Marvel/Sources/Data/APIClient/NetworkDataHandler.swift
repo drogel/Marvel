@@ -5,8 +5,8 @@
 //  Created by Diego Rogel on 22/3/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 
 protocol NetworkDataHandler {
     func handle<T: DataObject>(_ data: Data?) throws -> DataWrapper<T>

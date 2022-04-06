@@ -5,8 +5,8 @@
 //  Created by Diego Rogel on 19/1/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 
 class CharactersDebugService: CharactersService {
     private let charactersFileName: DebugDataFileName = .charactersFileName

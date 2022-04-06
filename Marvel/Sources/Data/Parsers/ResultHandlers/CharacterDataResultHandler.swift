@@ -5,8 +5,8 @@
 //  Created by Diego Rogel on 16/2/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 
 enum CharacterDataResultHandlerFactory {
     static func createWithDataMappers() -> CharacterDataResultHandler {

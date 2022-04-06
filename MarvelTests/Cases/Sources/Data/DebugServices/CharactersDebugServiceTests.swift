@@ -5,9 +5,9 @@
 //  Created by Diego Rogel on 19/1/22.
 //
 
+import Domain
 @testable import Marvel_Debug
 import XCTest
-import Domain
 
 class CharactersDebugServiceTests: XCTestCase {
     private var sut: CharactersDebugService!

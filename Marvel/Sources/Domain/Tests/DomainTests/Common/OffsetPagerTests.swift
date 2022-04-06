@@ -81,6 +81,10 @@ class OffsetPagerTests: XCTestCase {
         XCTAssertFalse(sut.isAtEndOfCurrentPageWithMoreContent(40))
         XCTAssertFalse(sut.isAtEndOfCurrentPageWithMoreContent(50))
     }
+
+    func test_pagerFactory_createsOffsetPager() {
+        XCTAssertTrue((PagerFactory.create() as AnyObject) is OffsetPager)
+    }
 }
 
 private extension OffsetPagerTests {

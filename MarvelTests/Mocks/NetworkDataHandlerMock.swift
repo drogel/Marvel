@@ -5,10 +5,10 @@
 //  Created by Diego Rogel on 26/3/22.
 //
 
+import Domain
 import Foundation
 @testable import Marvel_Debug
 import XCTest
-import Domain
 
 class NetworkDataHandlerMock: NetworkDataHandler {
     private var handleCallCount = 0

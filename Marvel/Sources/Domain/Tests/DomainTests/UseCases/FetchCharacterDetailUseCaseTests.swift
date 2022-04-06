@@ -43,6 +43,11 @@ class FetchCharacterDetailUseCaseTests: XCTestCase {
         givenSutWithSuccessfulServiceStub(stubbingPage: ContentPage<Character>.empty)
         try await whenFetchingCharacterIgnoringResult()
     }
+
+    func test_factoryReturnsExpectedImplementation() {
+        let createdUseCase = FetchCharacterDetailUseCaseFactory.create(service: serviceMock)
+        XCTAssertTrue((createdUseCase as AnyObject) is FetchCharacterDetailServiceUseCase)
+    }
 }
 
 private class CharacterDetailServiceMock: CharacterDetailService {

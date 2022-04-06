@@ -5,8 +5,8 @@
 //  Created by Diego Rogel on 22/1/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 
 protocol CharactersDependencies {
     var networkService: NetworkService { get }

@@ -27,7 +27,6 @@ public protocol ImageURLBuilder {
 }
 
 public enum ImageURLBuilderFactory {
-    // TODO: Test this
     public static func create() -> ImageURLBuilder {
         SecureImageURLBuilder()
     }

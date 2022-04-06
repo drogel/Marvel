@@ -5,8 +5,8 @@
 //  Created by Diego Rogel on 4/2/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 
 class ComicsDebugService: ComicsService {
     private let comicsFileName: DebugDataFileName = .comicsFileName

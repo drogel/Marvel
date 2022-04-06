@@ -5,9 +5,9 @@
 //  Created by Diego Rogel on 5/2/22.
 //
 
+import Domain
 import Foundation
 @testable import Marvel_Debug
-import Domain
 
 class ImageURLBuilderMock: ImageURLBuilder {
     var buildURLCallCount = 0

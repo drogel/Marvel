@@ -5,8 +5,8 @@
 //  Created by Diego Rogel on 13/2/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 
 protocol PageMapper {
     func mapToPageInfo(_ data: Pageable) -> PageInfo?

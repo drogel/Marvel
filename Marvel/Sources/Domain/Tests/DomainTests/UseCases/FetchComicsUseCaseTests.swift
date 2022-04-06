@@ -6,8 +6,8 @@
 //
 
 @testable import Domain
-import XCTest
 import TestUtils
+import XCTest
 
 class FetchComicsUseCaseTests: XCTestCase {
     private var sut: FetchComicsServiceUseCase!
@@ -45,6 +45,11 @@ class FetchComicsUseCaseTests: XCTestCase {
         givenSutWithSuccessfulServiceStub(stubbingPage: contentPageStub)
         let actualContentPage = try await whenFetchingComics()
         XCTAssertEqual(actualContentPage, contentPageStub)
+    }
+
+    func test_factoryReturnsExpectedImplementation() {
+        let createdUseCase = FetchComicsUseCaseFactory.create(service: serviceMock)
+        XCTAssertTrue((createdUseCase as AnyObject) is FetchComicsServiceUseCase)
     }
 }
 

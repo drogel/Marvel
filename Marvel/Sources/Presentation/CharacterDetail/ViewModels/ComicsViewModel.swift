@@ -6,8 +6,8 @@
 //
 
 import Combine
-import Foundation
 import Domain
+import Foundation
 
 protocol ComicsViewModelProtocol: ViewModel {
     var comicCellModelsPublisher: AnyPublisher<[ComicCellModel], Never> { get }

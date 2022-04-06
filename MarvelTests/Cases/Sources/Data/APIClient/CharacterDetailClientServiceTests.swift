@@ -5,10 +5,10 @@
 //  Created by Diego Rogel on 29/1/22.
 //
 
-@testable import Marvel_Debug
-import XCTest
-import TestUtils
 import Domain
+@testable import Marvel_Debug
+import TestUtils
+import XCTest
 
 class CharacterDetailClientServiceTests: XCTestCase {
     private var sut: CharacterDetailClientService!

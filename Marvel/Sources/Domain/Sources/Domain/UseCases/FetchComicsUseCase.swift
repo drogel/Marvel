@@ -24,7 +24,6 @@ public struct FetchComicsQuery: Equatable {
 public typealias FetchComicsUseCaseError = ComicsServiceError
 
 public enum FetchComicsUseCaseFactory {
-    // TODO: Test this
     public static func create(service: ComicsService) -> FetchComicsUseCase {
         FetchComicsServiceUseCase(service: service)
     }

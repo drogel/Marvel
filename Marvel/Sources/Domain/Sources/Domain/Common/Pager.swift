@@ -15,7 +15,6 @@ public protocol Pager {
 }
 
 public enum PagerFactory {
-    // TODO: Test this
     public static func create() -> Pager {
         OffsetPager()
     }

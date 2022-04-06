@@ -6,8 +6,8 @@
 //
 
 @testable import Domain
-import XCTest
 import DomainTestUtils
+import XCTest
 
 class FetchCharactersUseCaseTests: XCTestCase {
     private var sut: FetchCharactersServiceUseCase!

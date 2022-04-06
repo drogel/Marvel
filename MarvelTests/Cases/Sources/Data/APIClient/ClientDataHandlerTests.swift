@@ -5,9 +5,9 @@
 //  Created by Diego Rogel on 22/3/22.
 //
 
+import Domain
 @testable import Marvel_Debug
 import XCTest
-import Domain
 
 class ClientDataHandlerTests: XCTestCase {
     private var sut: ClientDataHandler!

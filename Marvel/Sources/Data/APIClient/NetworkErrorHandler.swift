@@ -5,8 +5,8 @@
 //  Created by Diego Rogel on 29/1/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 
 protocol NetworkErrorHandler {
     func handle(_ networkError: NetworkError) -> DataServiceError

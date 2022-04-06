@@ -5,8 +5,8 @@
 //  Created by Diego Rogel on 8/2/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 
 public class OffsetPagerPartialMock: Pager {
     private let pager: Pager

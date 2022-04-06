@@ -5,9 +5,9 @@
 //  Created by Diego Rogel on 13/2/22.
 //
 
+import Domain
 @testable import Marvel_Debug
 import XCTest
-import Domain
 
 class ComicDataMapperTests: XCTestCase {
     private var sut: ComicDataMapper!

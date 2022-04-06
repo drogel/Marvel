@@ -5,9 +5,9 @@
 //  Created by Diego Rogel on 13/2/22.
 //
 
+import Domain
 @testable import Marvel_Debug
 import XCTest
-import Domain
 
 class PageDataMapperTests: XCTestCase {
     private var sut: PageDataMapper!
