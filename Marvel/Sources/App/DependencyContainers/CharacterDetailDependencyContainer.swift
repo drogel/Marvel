@@ -37,9 +37,9 @@ private extension CharacterDetailDependencyContainer {
     var characterDetailService: CharacterDetailService {
         switch dependencies.scheme {
         case .debug:
-            return characterDetailDebugService
+            return CharacterDetailServiceFactory.createDebug()
         case .stage, .release:
-            return characterDetailReleaseService
+            return CharacterDetailServiceFactory.create(with: dependencies.networkService)
         }
     }
 
@@ -50,22 +50,6 @@ private extension CharacterDetailDependencyContainer {
         case .stage, .release:
             return comicsReleaseService
         }
-    }
-
-    var characterDetailDebugService: CharacterDetailService {
-        CharacterDetailDebugService(
-            dataLoader: jsonDataLoader,
-            dataResultHandler: characterDataResultHandler
-        )
-    }
-
-    var characterDetailReleaseService: CharacterDetailService {
-        CharacterDetailClientService(
-            networkService: dependencies.networkService,
-            dataHandler: dataHandler,
-            networkErrorHandler: errorHandler,
-            dataResultHandler: characterDataResultHandler
-        )
     }
 
     var comicsDebugService: ComicsService {

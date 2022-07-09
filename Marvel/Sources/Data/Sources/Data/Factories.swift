@@ -54,3 +54,43 @@ private extension CharactersServiceFactory {
         CharacterDataResultHandlerFactory.createWithDataMappers()
     }
 }
+
+public enum CharacterDetailServiceFactory {
+    public static func create(with networkService: NetworkService) -> CharacterDetailService {
+        CharacterDetailClientService(
+            networkService: networkService,
+            dataHandler: dataHandler,
+            networkErrorHandler: errorHandler,
+            dataResultHandler: characterDataResultHandler
+        )
+    }
+
+    public static func createDebug() -> CharacterDetailService {
+        CharacterDetailDebugService(
+            dataLoader: jsonDataLoader,
+            dataResultHandler: characterDataResultHandler
+        )
+    }
+}
+
+private extension CharacterDetailServiceFactory {
+    static var dataHandler: NetworkDataHandler {
+        ClientDataHandler(parser: parser)
+    }
+
+    static var errorHandler: NetworkErrorHandler {
+        DataServicesNetworkErrorHandler()
+    }
+
+    static var jsonDataLoader: JsonDecoderDataLoader {
+        JsonDecoderDataLoader(parser: parser)
+    }
+
+    static var parser: JSONParser {
+        JSONDecoderParser()
+    }
+
+    static var characterDataResultHandler: CharacterDataResultHandler {
+        CharacterDataResultHandlerFactory.createWithDataMappers()
+    }
+}
