@@ -8,8 +8,8 @@
 import Domain
 import Foundation
 
-public enum CharacterDataResultHandlerFactory {
-    public static func createWithDataMappers() -> CharacterDataResultHandler {
+enum CharacterDataResultHandlerFactory {
+    static func createWithDataMappers() -> CharacterDataResultHandler {
         CharacterDataServiceResultHandler(characterMapper: characterMapper, pageMapper: PageDataMapper())
     }
 
@@ -18,7 +18,7 @@ public enum CharacterDataResultHandlerFactory {
     }
 }
 
-public protocol CharacterDataResultHandler {
+protocol CharacterDataResultHandler {
     func handle(_ dataWrapper: DataWrapper<CharacterData>) throws -> ContentPage<Character>
 }
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol Pageable {
+protocol Pageable {
     var offset: Int? { get }
     var limit: Int? { get }
     var total: Int? { get }

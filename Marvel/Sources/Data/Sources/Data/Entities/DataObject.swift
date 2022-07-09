@@ -7,4 +7,4 @@
 
 import Foundation
 
-public typealias DataObject = Codable & Equatable
+typealias DataObject = Codable & Equatable

@@ -8,14 +8,14 @@
 import Domain
 import Foundation
 
-public protocol ImageMapper {
+protocol ImageMapper {
     func mapToImage(_ data: ImageData?) -> Image?
 }
 
-public class ImageDataMapper: ImageMapper {
-    public init() {}
+class ImageDataMapper: ImageMapper {
+    init() {}
 
-    public func mapToImage(_ data: ImageData?) -> Image? {
+    func mapToImage(_ data: ImageData?) -> Image? {
         guard let data = data, let path = data.path, let imageExtension = data.imageExtension else { return nil }
         return Image(path: path, imageExtension: imageExtension)
     }

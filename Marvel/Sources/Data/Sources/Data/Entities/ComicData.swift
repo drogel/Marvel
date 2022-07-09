@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ComicData: DataObject {
+struct ComicData: DataObject {
     let identifier: Int?
     let title: String?
     let issueNumber: Int?

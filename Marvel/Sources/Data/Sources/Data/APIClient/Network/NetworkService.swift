@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum NetworkError: Error {
+enum NetworkError: Error {
     case statusCodeError(statusCode: Int)
     case invalidURL
     case notConnected
@@ -16,6 +16,7 @@ public enum NetworkError: Error {
     case requestError(Error?)
 }
 
+// TODO: This too could be interal
 public protocol NetworkService {
     func request(endpoint: RequestComponents) async throws -> Data?
 }

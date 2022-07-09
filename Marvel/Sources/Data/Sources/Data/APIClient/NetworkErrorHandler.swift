@@ -8,14 +8,12 @@
 import Domain
 import Foundation
 
-public protocol NetworkErrorHandler {
+protocol NetworkErrorHandler {
     func handle(_ networkError: NetworkError) -> DataServiceError
 }
 
-public class DataServicesNetworkErrorHandler: NetworkErrorHandler {
-    public init() {}
-
-    public func handle(_ networkError: NetworkError) -> DataServiceError {
+class DataServicesNetworkErrorHandler: NetworkErrorHandler {
+    func handle(_ networkError: NetworkError) -> DataServiceError {
         switch networkError {
         case .notConnected:
             return .noConnection

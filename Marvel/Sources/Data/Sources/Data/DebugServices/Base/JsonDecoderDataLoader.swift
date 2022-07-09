@@ -7,18 +7,18 @@
 
 import Foundation
 
-public protocol JsonDataLoader {
+protocol JsonDataLoader {
     func load<T: DataObject>(fromFileNamed fileName: String) -> T?
 }
 
-public class JsonDecoderDataLoader: JsonDataLoader {
+class JsonDecoderDataLoader: JsonDataLoader {
     let parser: JSONParser
 
-    public init(parser: JSONParser) {
+    init(parser: JSONParser) {
         self.parser = parser
     }
 
-    public func load<T: DataObject>(fromFileNamed fileName: String) -> T? {
+    func load<T: DataObject>(fromFileNamed fileName: String) -> T? {
         guard let url = url(for: fileName), let data: T = decode(fromJsonAt: url) else { return nil }
         return data
     }

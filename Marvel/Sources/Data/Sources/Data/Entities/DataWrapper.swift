@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct DataWrapper<ContentType: DataObject>: DataObject {
+struct DataWrapper<ContentType: DataObject>: DataObject {
     let code: Int?
     let status: String?
     let copyright: String?

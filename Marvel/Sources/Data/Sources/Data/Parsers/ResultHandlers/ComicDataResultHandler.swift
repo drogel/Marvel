@@ -8,8 +8,8 @@
 import Domain
 import Foundation
 
-public enum ComicDataResultHandlerFactory {
-    public static func createWithDataMappers() -> ComicDataResultHandler {
+enum ComicDataResultHandlerFactory {
+    static func createWithDataMappers() -> ComicDataResultHandler {
         ComicDataServiceResultHandler(comicMapper: comicMapper, pageMapper: PageDataMapper())
     }
 
@@ -18,20 +18,20 @@ public enum ComicDataResultHandlerFactory {
     }
 }
 
-public protocol ComicDataResultHandler {
+protocol ComicDataResultHandler {
     func handle(_ dataWrapper: DataWrapper<ComicData>) throws -> ContentPage<Comic>
 }
 
-public class ComicDataServiceResultHandler: ComicDataResultHandler {
+class ComicDataServiceResultHandler: ComicDataResultHandler {
     private let comicMapper: ComicMapper
     private let pageMapper: PageMapper
 
-    public init(comicMapper: ComicMapper, pageMapper: PageMapper) {
+    init(comicMapper: ComicMapper, pageMapper: PageMapper) {
         self.comicMapper = comicMapper
         self.pageMapper = pageMapper
     }
 
-    public func handle(_ dataWrapper: DataWrapper<ComicData>) throws -> ContentPage<Comic> {
+    func handle(_ dataWrapper: DataWrapper<ComicData>) throws -> ContentPage<Comic> {
         guard let contentPage = mapToComicsPage(dataWrapper.data) else { throw DataServiceError.emptyData }
         return contentPage
     }

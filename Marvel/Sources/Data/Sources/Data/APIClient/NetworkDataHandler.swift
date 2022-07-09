@@ -8,18 +8,18 @@
 import Domain
 import Foundation
 
-public protocol NetworkDataHandler {
+protocol NetworkDataHandler {
     func handle<T: DataObject>(_ data: Data?) throws -> DataWrapper<T>
 }
 
-public class ClientDataHandler: NetworkDataHandler {
+class ClientDataHandler: NetworkDataHandler {
     private let parser: JSONParser
 
-    public init(parser: JSONParser) {
+    init(parser: JSONParser) {
         self.parser = parser
     }
 
-    public func handle<T: DataObject>(_ data: Data?) throws -> DataWrapper<T> {
+    func handle<T: DataObject>(_ data: Data?) throws -> DataWrapper<T> {
         guard let data = data, let dataWrapper: DataWrapper<T> = parser.parse(data: data) else {
             throw DataServiceError.emptyData
         }

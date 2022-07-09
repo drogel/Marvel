@@ -7,6 +7,6 @@
 
 import Foundation
 
-public protocol NetworkSession {
+protocol NetworkSession {
     func loadData(from request: URLRequest) async throws -> (data: Data, response: URLResponse)
 }

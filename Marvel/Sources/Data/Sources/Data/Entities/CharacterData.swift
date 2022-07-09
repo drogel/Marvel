@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct CharacterData: DataObject {
+struct CharacterData: DataObject {
     let identifier: Int?
     let name: String?
     let description: String?

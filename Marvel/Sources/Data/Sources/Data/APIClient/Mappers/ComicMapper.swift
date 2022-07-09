@@ -8,18 +8,18 @@
 import Domain
 import Foundation
 
-public protocol ComicMapper {
+protocol ComicMapper {
     func mapToComic(_ data: ComicData) -> Comic?
 }
 
-public class ComicDataMapper: ComicMapper {
+class ComicDataMapper: ComicMapper {
     private let imageMapper: ImageMapper
 
-    public init(imageMapper: ImageMapper) {
+    init(imageMapper: ImageMapper) {
         self.imageMapper = imageMapper
     }
 
-    public func mapToComic(_ data: ComicData) -> Comic? {
+    func mapToComic(_ data: ComicData) -> Comic? {
         guard let identifier = data.identifier,
               let title = data.title,
               let issueNumber = data.issueNumber,

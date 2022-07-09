@@ -13,7 +13,7 @@ public struct RequestComponents: Equatable {
 
     static var empty = RequestComponents()
 
-    public init(path: String = "", queryParameters: [String: String?] = [:]) {
+    init(path: String = "", queryParameters: [String: String?] = [:]) {
         self.path = path
         self.queryParameters = queryParameters
     }

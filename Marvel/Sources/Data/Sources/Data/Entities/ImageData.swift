@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ImageData: DataObject {
+struct ImageData: DataObject {
     let path: String?
     let imageExtension: String?
 
