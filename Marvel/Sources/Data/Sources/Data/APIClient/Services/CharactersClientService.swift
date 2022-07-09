@@ -8,14 +8,14 @@
 import Domain
 import Foundation
 
-public class CharactersClientService: CharactersService {
+class CharactersClientService: CharactersService {
     private let charactersPath = MarvelAPIPaths.characters.rawValue
     private let networkService: NetworkService
     private let dataHandler: NetworkDataHandler
     private let dataResultHandler: CharacterDataResultHandler
     private let networkErrorHandler: NetworkErrorHandler
 
-    public init(
+    init(
         networkService: NetworkService,
         dataHandler: NetworkDataHandler,
         networkErrorHandler: NetworkErrorHandler,
@@ -27,7 +27,7 @@ public class CharactersClientService: CharactersService {
         self.dataResultHandler = dataResultHandler
     }
 
-    public func characters(from offset: Int) async throws -> ContentPage<Character> {
+    func characters(from offset: Int) async throws -> ContentPage<Character> {
         do {
             return try await requestCharacters(from: offset)
         } catch let networkError as NetworkError {

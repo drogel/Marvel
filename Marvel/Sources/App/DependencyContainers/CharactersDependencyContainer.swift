@@ -46,37 +46,9 @@ private extension CharactersDependencyContainer {
     var charactersService: CharactersService {
         switch dependencies.scheme {
         case .debug:
-            return charactersDebugService
+            return CharactersServiceFactory.createDebug()
         case .stage, .release:
-            return charactersClientService
+            return CharactersServiceFactory.create(with: dependencies.networkService)
         }
-    }
-
-    var charactersClientService: CharactersService {
-        CharactersClientService(
-            networkService: dependencies.networkService,
-            dataHandler: ClientDataHandler(parser: parser),
-            networkErrorHandler: errorHandler,
-            dataResultHandler: dataResultHandler
-        )
-    }
-
-    var charactersDebugService: CharactersService {
-        CharactersDebugService(
-            dataLoader: JsonDecoderDataLoader(parser: parser),
-            dataResultHandler: dataResultHandler
-        )
-    }
-
-    var parser: JSONParser {
-        JSONDecoderParser()
-    }
-
-    var errorHandler: NetworkErrorHandler {
-        DataServicesNetworkErrorHandler()
-    }
-
-    var dataResultHandler: CharacterDataResultHandler {
-        CharacterDataResultHandlerFactory.createWithDataMappers()
     }
 }
