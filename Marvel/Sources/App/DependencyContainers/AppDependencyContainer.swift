@@ -20,10 +20,7 @@ class MarvelDependencyContainer: AppDependencyContainer {
         self.configuration = configuration
     }
 
-    lazy var networkService: NetworkService = AuthenticatedNetworkService(
-        networkService: baseNetworkService,
-        authenticator: authenticator
-    )
+    lazy var networkService: NetworkService = NetworkServiceFactory.create(baseApiURL: baseURL)
 
     lazy var scheme: AppScheme = configuration.scheme
 }
@@ -34,17 +31,5 @@ private extension MarvelDependencyContainer {
             fatalError("Expected a valid API base URL.")
         }
         return url
-    }
-
-    var baseNetworkService: NetworkService {
-        NetworkSessionService(
-            session: URLSession.shared,
-            baseURL: baseURL,
-            urlComposer: URLComponentsBuilder()
-        )
-    }
-
-    var authenticator: MD5Authenticator {
-        MD5Authenticator(secrets: EnvironmentVariablesRetriever())
     }
 }

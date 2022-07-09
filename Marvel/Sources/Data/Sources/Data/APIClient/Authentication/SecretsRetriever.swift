@@ -7,19 +7,17 @@
 
 import Foundation
 
-public protocol SecretsRetriever {
+protocol SecretsRetriever {
     var publicKey: String? { get }
     var privateKey: String? { get }
 }
 
-public class EnvironmentVariablesRetriever: SecretsRetriever {
-    public init() {}
-
-    public var publicKey: String? {
+class EnvironmentVariablesRetriever: SecretsRetriever {
+    var publicKey: String? {
         ProcessInfo.processInfo.environment["PUBLIC_KEY"]
     }
 
-    public var privateKey: String? {
+    var privateKey: String? {
         ProcessInfo.processInfo.environment["PRIVATE_KEY"]
     }
 }

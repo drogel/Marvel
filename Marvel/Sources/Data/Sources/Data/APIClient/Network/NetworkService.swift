@@ -20,18 +20,18 @@ public protocol NetworkService {
     func request(endpoint: RequestComponents) async throws -> Data?
 }
 
-public class NetworkSessionService: NetworkService {
+class NetworkSessionService: NetworkService {
     private let session: NetworkSession
     private let baseURL: URL
     private let urlComposer: URLComposer
 
-    public init(session: NetworkSession, baseURL: URL, urlComposer: URLComposer) {
+    init(session: NetworkSession, baseURL: URL, urlComposer: URLComposer) {
         self.session = session
         self.baseURL = baseURL
         self.urlComposer = urlComposer
     }
 
-    public func request(endpoint: RequestComponents) async throws -> Data? {
+    func request(endpoint: RequestComponents) async throws -> Data? {
         guard let urlRequest = buildURLRequest(from: endpoint) else { throw NetworkError.invalidURL }
         return try await loadDataHandlingErrors(from: urlRequest)
     }

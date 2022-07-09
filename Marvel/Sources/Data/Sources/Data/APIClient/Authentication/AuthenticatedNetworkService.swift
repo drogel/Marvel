@@ -7,16 +7,16 @@
 
 import Foundation
 
-public class AuthenticatedNetworkService: NetworkService {
+class AuthenticatedNetworkService: NetworkService {
     private let networkService: NetworkService
     private let authenticator: Authenticator
 
-    public init(networkService: NetworkService, authenticator: Authenticator) {
+    init(networkService: NetworkService, authenticator: Authenticator) {
         self.networkService = networkService
         self.authenticator = authenticator
     }
 
-    public func request(endpoint: RequestComponents) async throws -> Data? {
+    func request(endpoint: RequestComponents) async throws -> Data? {
         guard let authenticatedComponents = addAuthentication(to: endpoint) else { throw NetworkError.unauthorized }
         return try await networkService.request(endpoint: authenticatedComponents)
     }

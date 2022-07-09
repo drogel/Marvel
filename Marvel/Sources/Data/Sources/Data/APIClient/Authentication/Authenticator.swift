@@ -8,18 +8,18 @@
 import CryptoKit
 import Foundation
 
-public protocol Authenticator {
+protocol Authenticator {
     func authenticate(with timestamp: TimeInterval) -> [String: String]?
 }
 
-public class MD5Authenticator: Authenticator {
+class MD5Authenticator: Authenticator {
     private let secrets: SecretsRetriever
 
-    public init(secrets: SecretsRetriever) {
+    init(secrets: SecretsRetriever) {
         self.secrets = secrets
     }
 
-    public func authenticate(with timestamp: TimeInterval) -> [String: String]? {
+    func authenticate(with timestamp: TimeInterval) -> [String: String]? {
         guard let authenticationValues = authentication(from: timestamp) else { return nil }
         return ["hash": authenticationValues.hash, "apikey": authenticationValues.publicKey, "ts": format(timestamp)]
     }
