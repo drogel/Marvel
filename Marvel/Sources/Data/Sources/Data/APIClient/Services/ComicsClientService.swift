@@ -8,14 +8,14 @@
 import Domain
 import Foundation
 
-public class ComicsClientService: ComicsService {
+class ComicsClientService: ComicsService {
     private let charactersPath = MarvelAPIPaths.characters.rawValue
     private let comicsPath = MarvelAPIPaths.comics.rawValue
     private let networkService: NetworkService
     private let dataHandler: NetworkDataHandler
     private let dataResultHandler: ComicDataResultHandler
 
-    public init(
+    init(
         networkService: NetworkService,
         dataHandler: NetworkDataHandler,
         dataResultHandler: ComicDataResultHandler
@@ -25,7 +25,7 @@ public class ComicsClientService: ComicsService {
         self.dataHandler = dataHandler
     }
 
-    public func comics(for characterID: Int, from offset: Int) async throws -> ContentPage<Comic> {
+    func comics(for characterID: Int, from offset: Int) async throws -> ContentPage<Comic> {
         let data = try await networkService.request(endpoint: components(for: characterID, offset: offset))
         let dataWrapper: DataWrapper<ComicData> = try dataHandler.handle(data)
         return try dataResultHandler.handle(dataWrapper)

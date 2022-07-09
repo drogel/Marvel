@@ -42,4 +42,13 @@ class FactoriesTests: XCTestCase {
     func test_givenACharacterDetailServiceFactory_WhenCreatingDebugService_ReturnsExpectedServiceType() {
         XCTAssertTrue(CharacterDetailServiceFactory.createDebug() is CharacterDetailDebugService)
     }
+
+    func test_givenAComicsServiceFactory_WhenCreatingService_ReturnsExpectedServiceType() {
+        let actualService = ComicsServiceFactory.create(with: networkServiceMock)
+        XCTAssertTrue(actualService is ComicsClientService)
+    }
+
+    func test_givenAComicsServiceFactory_WhenCreatingDebugService_ReturnsExpectedServiceType() {
+        XCTAssertTrue(ComicsServiceFactory.createDebug() is ComicsDebugService)
+    }
 }

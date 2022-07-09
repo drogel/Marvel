@@ -46,45 +46,9 @@ private extension CharacterDetailDependencyContainer {
     var comicsDetailService: ComicsService {
         switch dependencies.scheme {
         case .debug:
-            return comicsDebugService
+            return ComicsServiceFactory.createDebug()
         case .stage, .release:
-            return comicsReleaseService
+            return ComicsServiceFactory.create(with: dependencies.networkService)
         }
-    }
-
-    var comicsDebugService: ComicsService {
-        ComicsDebugService(dataLoader: jsonDataLoader, dataResultHandler: comicDataResultHandler)
-    }
-
-    var comicsReleaseService: ComicsService {
-        ComicsClientService(
-            networkService: dependencies.networkService,
-            dataHandler: dataHandler,
-            dataResultHandler: comicDataResultHandler
-        )
-    }
-
-    var dataHandler: NetworkDataHandler {
-        ClientDataHandler(parser: parser)
-    }
-
-    var errorHandler: NetworkErrorHandler {
-        DataServicesNetworkErrorHandler()
-    }
-
-    var jsonDataLoader: JsonDecoderDataLoader {
-        JsonDecoderDataLoader(parser: parser)
-    }
-
-    var parser: JSONParser {
-        JSONDecoderParser()
-    }
-
-    var characterDataResultHandler: CharacterDataResultHandler {
-        CharacterDataResultHandlerFactory.createWithDataMappers()
-    }
-
-    var comicDataResultHandler: ComicDataResultHandler {
-        ComicDataResultHandlerFactory.createWithDataMappers()
     }
 }

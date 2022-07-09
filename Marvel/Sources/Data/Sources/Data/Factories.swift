@@ -94,3 +94,35 @@ private extension CharacterDetailServiceFactory {
         CharacterDataResultHandlerFactory.createWithDataMappers()
     }
 }
+
+public enum ComicsServiceFactory {
+    public static func create(with networkService: NetworkService) -> ComicsService {
+        ComicsClientService(
+            networkService: networkService,
+            dataHandler: dataHandler,
+            dataResultHandler: comicDataResultHandler
+        )
+    }
+
+    public static func createDebug() -> ComicsService {
+        ComicsDebugService(dataLoader: jsonDataLoader, dataResultHandler: comicDataResultHandler)
+    }
+}
+
+private extension ComicsServiceFactory {
+    static var dataHandler: NetworkDataHandler {
+        ClientDataHandler(parser: parser)
+    }
+
+    static var jsonDataLoader: JsonDecoderDataLoader {
+        JsonDecoderDataLoader(parser: parser)
+    }
+
+    static var parser: JSONParser {
+        JSONDecoderParser()
+    }
+
+    static var comicDataResultHandler: ComicDataResultHandler {
+        ComicDataResultHandlerFactory.createWithDataMappers()
+    }
+}
