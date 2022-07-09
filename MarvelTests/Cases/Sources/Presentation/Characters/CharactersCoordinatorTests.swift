@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Data
 @testable import Marvel_Debug
 import XCTest
 
@@ -50,6 +51,12 @@ private class CharactersDependenciesStub: CharactersDependencies {
 
     var scheme: AppScheme {
         .debug
+    }
+}
+
+private class NetworkServiceSuccessfulStub: NetworkService {
+    func request(endpoint _: RequestComponents) async throws -> Data? {
+        Data()
     }
 }
 

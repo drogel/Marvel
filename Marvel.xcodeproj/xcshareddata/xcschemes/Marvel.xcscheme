@@ -39,6 +39,26 @@
                ReferencedContainer = "container:Marvel.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DomainTests"
+               BuildableName = "DomainTests"
+               BlueprintName = "DomainTests"
+               ReferencedContainer = "container:Marvel/Sources/Domain">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DataTests"
+               BuildableName = "DataTests"
+               BlueprintName = "DataTests"
+               ReferencedContainer = "container:Marvel/Sources/Data">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

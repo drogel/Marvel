@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 22/1/22.
 //
 
+import Data
 import Foundation
 
 protocol AppDependencyContainer {
@@ -19,16 +20,12 @@ class MarvelDependencyContainer: AppDependencyContainer {
         self.configuration = configuration
     }
 
-    lazy var networkService: NetworkService = {
-        AuthenticatedNetworkService(
-            networkService: baseNetworkService,
-            authenticator: authenticator
-        )
-    }()
+    lazy var networkService: NetworkService = AuthenticatedNetworkService(
+        networkService: baseNetworkService,
+        authenticator: authenticator
+    )
 
-    lazy var scheme: AppScheme = {
-        configuration.scheme
-    }()
+    lazy var scheme: AppScheme = configuration.scheme
 }
 
 private extension MarvelDependencyContainer {
