@@ -8,6 +8,7 @@
 import Data
 import Domain
 import Foundation
+import Presentation
 
 protocol CharactersDependencies {
     var baseApiURL: URL { get }
@@ -22,12 +23,6 @@ class CharactersDependenciesAdapter: CharactersDependencies {
         self.baseApiURL = baseApiURL
         self.scheme = scheme
     }
-}
-
-protocol CharactersContainer {
-    var fetchCharactersUseCase: FetchCharactersUseCase { get }
-    var imageURLBuilder: ImageURLBuilder { get }
-    var pager: Pager { get }
 }
 
 class CharactersDependencyContainer: CharactersContainer {

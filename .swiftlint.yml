@@ -6,6 +6,11 @@ line_length:
   warning: 120
   error: 120
 
+type_name: 
+  max_length:
+    warning: 50
+    error: 50
+
 file_length:
   warning: 300
   error: 300
