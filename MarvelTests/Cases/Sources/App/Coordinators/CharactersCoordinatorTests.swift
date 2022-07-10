@@ -7,6 +7,7 @@
 
 import Combine
 @testable import Marvel_Debug
+import Presentation
 import XCTest
 
 class CharactersCoordinatorTests: XCTestCase {
@@ -38,7 +39,7 @@ class CharactersCoordinatorTests: XCTestCase {
     }
 
     func test_whenCharacterSelected_presentsCharacterDetailViewController() {
-        sut.model(CharactersViewModelStub(), didSelectCharacterWith: 0)
+        sut.model(didSelectCharacterWith: 0)
         XCTAssertTrue(navigationController.mostRecentPresentedViewController is CharacterDetailViewController)
     }
 }
@@ -51,32 +52,6 @@ private class CharactersDependenciesStub: CharactersDependencies {
     var scheme: AppScheme {
         .debug
     }
-}
-
-private class CharactersViewModelStub: CharactersViewModelProtocol {
-    var numberOfItems: Int {
-        0
-    }
-
-    var cellModelsStub = CurrentValueSubject<CharactersViewModelState, Never>(.success([]))
-
-    var loadingStatePublisher: AnyPublisher<LoadingState, Never> {
-        Just(LoadingState.loading).eraseToAnyPublisher()
-    }
-
-    var statePublisher: AnyPublisher<CharactersViewModelState, Never> {
-        cellModelsStub.eraseToAnyPublisher()
-    }
-
-    func willDisplayCell(at _: IndexPath) {}
-
-    func select(at _: IndexPath) {}
-
-    func cellModel(at _: IndexPath) -> CharacterCellModel? {
-        nil
-    }
-
-    func start() {}
 }
 
 private extension CharactersCoordinatorTests {

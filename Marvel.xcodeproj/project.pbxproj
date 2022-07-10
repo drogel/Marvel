@@ -196,13 +196,6 @@
 			path = DependencyContainers;
 			sourceTree = "<group>";
 		};
-		05C14929279C85FB00927467 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		05DAC2EF2797258A0062CC6F = {
 			isa = PBXGroup;
 			children = (
@@ -251,7 +244,6 @@
 				4CCBBF102879CBC7001DF9CD /* Data */,
 				0502C85B27FCB218005D1CA8 /* Domain */,
 				05DAC32E2797398E0062CC6F /* App */,
-				05DAC33327973A020062CC6F /* Common */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -277,14 +269,6 @@
 				05C14928279C75AA00927467 /* DependencyContainers */,
 			);
 			path = App;
-			sourceTree = "<group>";
-		};
-		05DAC33327973A020062CC6F /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				05C14929279C85FB00927467 /* Extensions */,
-			);
-			path = Common;
 			sourceTree = "<group>";
 		};
 		05DAC34427974AE00062CC6F /* Coordinators */ = {

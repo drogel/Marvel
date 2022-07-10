@@ -1,14 +1,14 @@
 //
 //  CharacterDetailFactoriesTests.swift
-//  
+//
 //
 //  Created by Diego Rogel on 10/7/22.
 //
 
-import XCTest
-@testable import Presentation
 import Domain
 import DomainTestUtils
+@testable import Presentation
+import XCTest
 
 class CharacterDetailFactoriesTests: XCTestCase {
     func test_givenAViewControllerFactory_whenCreating_thenReturnsExpectedViewController() {
@@ -21,19 +21,19 @@ private class CharacterDetailContainerStub: CharacterDetailContainer {
     var characterID: Int {
         0
     }
-    
+
     var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase {
         FetchCharacterDetailUseCaseMock()
     }
-    
+
     var fetchComicsUseCase: FetchComicsUseCase {
         FetchComicsUseCaseMock()
     }
-    
+
     var imageURLBuilder: ImageURLBuilder {
         ImageURLBuilderMock()
     }
-    
+
     var pager: Pager {
         OffsetPagerPartialMock()
     }

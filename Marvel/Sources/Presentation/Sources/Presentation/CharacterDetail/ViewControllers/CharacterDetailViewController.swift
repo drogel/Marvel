@@ -8,7 +8,7 @@
 import Combine
 import UIKit
 
-class CharacterDetailViewController: ViewController {
+public class CharacterDetailViewController: ViewController, AlertPresenter {
     typealias ViewModelProtocol = CharacterDetailViewModelProtocol
 
     private enum Constants {
@@ -33,21 +33,27 @@ class CharacterDetailViewController: ViewController {
         return viewController
     }
 
-    static func instantiate(viewModel: ViewModelProtocol) -> Self {
-        let viewController = Self()
-        viewController.viewModel = viewModel
-        return viewController
-    }
-
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         setUp()
         start()
     }
 }
 
+extension CharacterDetailViewController: ViewModelInstantiable {
+    static func instantiate(viewModel: ViewModelProtocol) -> Self {
+        let viewController = Self()
+        viewController.viewModel = viewModel
+        return viewController
+    }
+}
+
 extension CharacterDetailViewController: UICollectionViewDelegate {
-    func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    public func collectionView(
+        _: UICollectionView,
+        willDisplay _: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
         switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
         case .comics:
             let task = Task { await viewModel.willDisplayComicCell(at: indexPath) }

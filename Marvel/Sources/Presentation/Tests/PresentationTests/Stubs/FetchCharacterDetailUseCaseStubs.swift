@@ -1,12 +1,12 @@
 //
 //  FetchCharacterDetailUseCaseStubs.swift
-//  
+//
 //
 //  Created by Diego Rogel on 10/7/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 
 class FetchCharacterDetailUseCaseMock: FetchCharacterDetailUseCase {
     var fetchCallCount = 0
@@ -39,4 +39,3 @@ class FetchCharacterDetailUseCaseFailingStub: FetchCharacterDetailUseCaseMock {
         throw FetchCharacterDetailUseCaseError.unauthorized
     }
 }
-

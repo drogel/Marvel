@@ -8,7 +8,7 @@
 import Combine
 import UIKit
 
-class CharactersViewController: ViewController {
+public class CharactersViewController: ViewController, AlertPresenter {
     typealias ViewModelProtocol = CharactersViewModelProtocol
 
     private enum Constants {
@@ -33,30 +33,37 @@ class CharactersViewController: ViewController {
         return viewController
     }
 
-    static func instantiate(viewModel: ViewModelProtocol) -> Self {
-        let viewController = Self()
-        viewController.viewModel = viewModel
-        return viewController
-    }
-
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         setUp()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
+    override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         start()
     }
 }
 
+extension CharactersViewController: ViewModelInstantiable {
+    static func instantiate(viewModel: ViewModelProtocol) -> Self {
+        let viewController = Self()
+        viewController.viewModel = viewModel
+        return viewController
+    }
+}
+
 extension CharactersViewController: UICollectionViewDelegate {
-    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewModel.select(at: indexPath)
     }
 
-    func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        Task { await viewModel.willDisplayCell(at: indexPath) }
+    public func collectionView(
+        _: UICollectionView,
+        willDisplay _: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
+        let task = Task { await viewModel.willDisplayCell(at: indexPath) }
+        tasks.insert(task)
     }
 }
 

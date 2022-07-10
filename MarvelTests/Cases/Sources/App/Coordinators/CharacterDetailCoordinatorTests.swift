@@ -6,7 +6,9 @@
 //
 
 import Domain
+import DomainTestUtils
 @testable import Marvel_Debug
+import Presentation
 import XCTest
 
 class CharacterDetailCoordinatorTests: XCTestCase {
@@ -72,6 +74,18 @@ private class CharacterDetailContainerStub: CharacterDetailContainer {
 
     var pager: Pager {
         PagerStub()
+    }
+}
+
+private class ImageURLBuilderStub: ImageURLBuilder {
+    let urlStub = URL(string: "https://example.com")!
+
+    func buildURL(from _: Image, variant _: ImageVariant) -> URL? {
+        urlStub
+    }
+
+    func buildURL(from _: Image) -> URL? {
+        urlStub
     }
 }
 

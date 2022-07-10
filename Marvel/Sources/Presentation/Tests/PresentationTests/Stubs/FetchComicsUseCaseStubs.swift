@@ -1,12 +1,12 @@
 //
 //  FetchComicsUseCaseStubs.swift
-//  
+//
 //
 //  Created by Diego Rogel on 10/7/22.
 //
 
-import Foundation
 import Domain
+import Foundation
 
 class FetchComicsUseCaseMock: FetchComicsUseCase {
     var fetchCallCount = 0

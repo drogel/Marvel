@@ -7,10 +7,10 @@
 
 import UIKit
 
-class TaskHandlingViewController: UIViewController {
+public class TaskHandlingViewController: UIViewController {
     var tasks: Set<Task<Void, Never>> = .init()
 
-    override func viewDidDisappear(_ animated: Bool) {
+    override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         cancelTasks()
     }
