@@ -1,5 +1,5 @@
 //
-//  FactoriesTests.swift
+//  CharactersFactoriesTests.swift
 //
 //
 //  Created by Diego Rogel on 10/7/22.
@@ -10,7 +10,7 @@ import DomainTestUtils
 @testable import Presentation
 import XCTest
 
-class FactoriesTests: XCTestCase {
+class CharactersFactoriesTests: XCTestCase {
     func test_givenACharactersViewControllerFactory_whenCreating_thenReturnsExpectedViewControllerType() {
         let viewController = CharactersViewControllerFactory.create(
             using: CharactersContainerStub(),

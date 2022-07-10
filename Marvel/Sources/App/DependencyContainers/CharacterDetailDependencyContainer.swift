@@ -8,14 +8,7 @@
 import Data
 import Domain
 import Foundation
-
-protocol CharacterDetailContainer {
-    var characterID: Int { get }
-    var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase { get }
-    var fetchComicsUseCase: FetchComicsUseCase { get }
-    var imageURLBuilder: ImageURLBuilder { get }
-    var pager: Pager { get }
-}
+import Presentation
 
 class CharacterDetailDependencyContainer: CharacterDetailContainer {
     let characterID: Int

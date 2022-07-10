@@ -14,14 +14,14 @@ import XCTest
 
 class CharacterInfoViewModelTests: XCTestCase {
     private var sut: CharacterInfoViewModel!
-    private var characterFetcherMock: CharacterFetcherMock!
+    private var characterFetcherMock: FetchCharacterDetailUseCaseMock!
     private var characterIDStub: Int!
     private var imageURLBuilderMock: ImageURLBuilderMock!
     private var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
         super.setUp()
-        characterFetcherMock = CharacterFetcherMock()
+        characterFetcherMock = FetchCharacterDetailUseCaseMock()
         cancellables = Set<AnyCancellable>()
         characterIDStub = 123_456
         imageURLBuilderMock = ImageURLBuilderMock()
@@ -75,7 +75,7 @@ class CharacterInfoViewModelTests: XCTestCase {
     func test_givenSuccessfulCharacterFetcher_whenStarting_receivesExpectedInfoModel() async {
         givenSutWithSuccessfulFetcher()
         let receivedResultExpectation = expectation(description: "Received a result")
-        let expectedInfoModel = buildExpectedInfoModel(from: CharacterFetcherSuccessfulStub.resultsStub)
+        let expectedInfoModel = buildExpectedInfoModel(from: FetchCharacterDetailUseCaseSuccessfulStub.resultsStub)
         let expectedState = CharacterInfoViewModelState.success(expectedInfoModel)
         sut.infoStatePublisher
             .dropFirst()
@@ -114,45 +114,13 @@ class CharacterInfoViewModelTests: XCTestCase {
     }
 }
 
-private class CharacterFetcherMock: FetchCharacterDetailUseCase {
-    var fetchCallCount = 0
-    var fetchCallCountsForID: [Int: Int] = [:]
-
-    func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
-        fetchCallCount += 1
-        fetchCallCountsForID[query.characterID] = fetchCallCountsForID[query.characterID] ?? 0 + 1
-        return ContentPage<Character>.empty
-    }
-
-    func fetchCallCount(withID identifier: Int) -> Int {
-        guard let fetchCallCountForID = fetchCallCountsForID[identifier] else { return 0 }
-        return fetchCallCountForID
-    }
-}
-
-private class CharacterFetcherSuccessfulStub: CharacterFetcherMock {
-    static let resultsStub = [Character.aginar]
-    static let pageDataStub = ContentPage<Character>.zeroWith(contents: resultsStub)
-
-    override func fetch(query: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
-        _ = try await super.fetch(query: query)
-        return Self.pageDataStub
-    }
-}
-
-private class CharacterFetcherFailingStub: CharacterFetcherMock {
-    override func fetch(query _: FetchCharacterDetailQuery) async throws -> ContentPage<Character> {
-        throw FetchCharacterDetailUseCaseError.unauthorized
-    }
-}
-
 private extension CharacterInfoViewModelTests {
     func givenSutWithSuccessfulFetcher() {
-        characterFetcherMock = CharacterFetcherSuccessfulStub()
+        characterFetcherMock = FetchCharacterDetailUseCaseSuccessfulStub()
         givenSut(with: characterFetcherMock)
     }
 
-    func givenSut(with characterFetcherMock: CharacterFetcherMock) {
+    func givenSut(with characterFetcherMock: FetchCharacterDetailUseCaseMock) {
         sut = CharacterInfoViewModel(
             characterFetcher: characterFetcherMock,
             characterID: characterIDStub,
@@ -161,7 +129,7 @@ private extension CharacterInfoViewModelTests {
     }
 
     func givenSutWithFailingFetcher() {
-        characterFetcherMock = CharacterFetcherFailingStub()
+        characterFetcherMock = FetchCharacterDetailUseCaseFailingStub()
         givenSut(with: characterFetcherMock)
     }
 

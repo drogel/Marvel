@@ -1,5 +1,5 @@
 //
-//  Factories.swift
+//  CharactersFactories.swift
 //
 //
 //  Created by Diego Rogel on 10/7/22.

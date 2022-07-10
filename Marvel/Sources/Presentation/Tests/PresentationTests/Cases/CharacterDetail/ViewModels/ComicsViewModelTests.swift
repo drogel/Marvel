@@ -13,7 +13,7 @@ import XCTest
 
 class ComicsViewModelTests: XCTestCase {
     private var sut: ComicsViewModel!
-    private var comicFetcherMock: ComicFetcherMock!
+    private var comicFetcherMock: FetchComicsUseCaseMock!
     private var imageURLBuilderMock: ImageURLBuilderMock!
     private var offsetPagerMock: OffsetPagerPartialMock!
     private var cancellables: Set<AnyCancellable>!
@@ -21,7 +21,7 @@ class ComicsViewModelTests: XCTestCase {
     override func setUp() {
         super.setUp()
         cancellables = Set<AnyCancellable>()
-        comicFetcherMock = ComicFetcherMock()
+        comicFetcherMock = FetchComicsUseCaseMock()
         imageURLBuilderMock = ImageURLBuilderMock()
         offsetPagerMock = OffsetPagerPartialMock()
         givenSut(with: comicFetcherMock)
@@ -155,56 +155,22 @@ class ComicsViewModelTests: XCTestCase {
     }
 }
 
-private class ComicFetcherMock: FetchComicsUseCase {
-    var fetchCallCount = 0
-    var mostRecentQuery: FetchComicsQuery?
-
-    func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic> {
-        fetchCallCount += 1
-        mostRecentQuery = query
-        return ContentPage<Comic>.empty
-    }
-}
-
-private class ComicFetcherSuccessfulStub: ComicFetcherMock {
-    static let comicStub = Comic(
-        identifier: 0,
-        title: "Test #1 Title #1123",
-        issueNumber: 1,
-        image: Image(path: "", imageExtension: "")
-    )
-    static let contentPageStub = ContentPage<Comic>.atFirstPageOfTwoTotal(
-        contents: [ComicFetcherSuccessfulStub.comicStub]
-    )
-
-    override func fetch(query: FetchComicsQuery) async throws -> ContentPage<Comic> {
-        _ = try await super.fetch(query: query)
-        return Self.contentPageStub
-    }
-}
-
-private class ComicFetcherFailureStub: ComicFetcherMock {
-    override func fetch(query _: FetchComicsQuery) async throws -> ContentPage<Comic> {
-        throw FetchComicsUseCaseError.emptyData
-    }
-}
-
 private extension ComicsViewModelTests {
     var characterIDStub: Int {
         12345
     }
 
     func givenSutWithSuccessfulFetcher() {
-        comicFetcherMock = ComicFetcherSuccessfulStub()
+        comicFetcherMock = FetchComicsUseCaseSuccessfulStub()
         givenSut(with: comicFetcherMock)
     }
 
     func givenSutWithFailingFetcher() {
-        comicFetcherMock = ComicFetcherFailureStub()
+        comicFetcherMock = FetchComicsUseCaseFailureStub()
         givenSut(with: comicFetcherMock)
     }
 
-    func givenSut(with comicsFetcher: ComicFetcherMock) {
+    func givenSut(with comicsFetcher: FetchComicsUseCaseMock) {
         sut = ComicsViewModel(
             comicsFetcher: comicsFetcher,
             characterID: characterIDStub,

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Presentation
 import UIKit
 
 class CharacterDetailCoordinator: NSObject, Coordinator {
@@ -41,26 +42,7 @@ private extension CharacterDetailCoordinator {
     }
 
     func createCharacterDetailViewController() -> UIViewController {
-        let infoViewModel = CharacterInfoViewModel(
-            characterFetcher: container.fetchCharacterDetailUseCase,
-            characterID: container.characterID,
-            imageURLBuilder: container.imageURLBuilder
-        )
-        let comicsViewModel = ComicsViewModel(
-            comicsFetcher: container.fetchComicsUseCase,
-            characterID: container.characterID,
-            imageURLBuilder: container.imageURLBuilder,
-            pager: container.pager
-        )
-        let viewModel = CharacterDetailViewModel(
-            infoViewModel: infoViewModel,
-            comicsViewModel: comicsViewModel
-        )
-        let viewController = CharacterDetailViewController.instantiate(
-            viewModel: viewModel,
-            layout: CharacterDetailLayout(),
-            dataSourceFactory: CharacterDetailDataSourceFactory(viewModel: viewModel)
-        )
+        let viewController = CharacterDetailViewControllerFactory.create(with: container)
         viewController.transitioningDelegate = self
         return viewController
     }
