@@ -23,40 +23,30 @@ public enum NetworkServiceFactory {
     }
 }
 
-public enum CharactersServiceFactory {
-    public static func create(with networkService: NetworkService) -> CharactersService {
+public enum CharactersServiceFactory: ServiceFactory {
+    public typealias Service = CharactersService
+
+    public static func create(with networkService: NetworkService) -> Service {
         CharactersClientService(
             networkService: networkService,
             dataHandler: ClientDataHandler(parser: parser),
             networkErrorHandler: errorHandler,
-            dataResultHandler: dataResultHandler
+            dataResultHandler: characterDataResultHandler
         )
     }
 
-    public static func createDebug() -> CharactersService {
+    public static func createDebug() -> Service {
         CharactersDebugService(
             dataLoader: JsonDecoderDataLoader(parser: parser),
-            dataResultHandler: dataResultHandler
+            dataResultHandler: characterDataResultHandler
         )
     }
 }
 
-private extension CharactersServiceFactory {
-    static var parser: JSONParser {
-        JSONDecoderParser()
-    }
+public enum CharacterDetailServiceFactory: ServiceFactory {
+    public typealias Service = CharacterDetailService
 
-    static var errorHandler: NetworkErrorHandler {
-        DataServicesNetworkErrorHandler()
-    }
-
-    static var dataResultHandler: CharacterDataResultHandler {
-        CharacterDataResultHandlerFactory.createWithDataMappers()
-    }
-}
-
-public enum CharacterDetailServiceFactory {
-    public static func create(with networkService: NetworkService) -> CharacterDetailService {
+    public static func create(with networkService: NetworkService) -> Service {
         CharacterDetailClientService(
             networkService: networkService,
             dataHandler: dataHandler,
@@ -65,7 +55,7 @@ public enum CharacterDetailServiceFactory {
         )
     }
 
-    public static func createDebug() -> CharacterDetailService {
+    public static func createDebug() -> Service {
         CharacterDetailDebugService(
             dataLoader: jsonDataLoader,
             dataResultHandler: characterDataResultHandler
@@ -73,30 +63,10 @@ public enum CharacterDetailServiceFactory {
     }
 }
 
-private extension CharacterDetailServiceFactory {
-    static var dataHandler: NetworkDataHandler {
-        ClientDataHandler(parser: parser)
-    }
+public enum ComicsServiceFactory: ServiceFactory {
+    public typealias Service = ComicsService
 
-    static var errorHandler: NetworkErrorHandler {
-        DataServicesNetworkErrorHandler()
-    }
-
-    static var jsonDataLoader: JsonDecoderDataLoader {
-        JsonDecoderDataLoader(parser: parser)
-    }
-
-    static var parser: JSONParser {
-        JSONDecoderParser()
-    }
-
-    static var characterDataResultHandler: CharacterDataResultHandler {
-        CharacterDataResultHandlerFactory.createWithDataMappers()
-    }
-}
-
-public enum ComicsServiceFactory {
-    public static func create(with networkService: NetworkService) -> ComicsService {
+    public static func create(with networkService: NetworkService) -> Service {
         ComicsClientService(
             networkService: networkService,
             dataHandler: dataHandler,
@@ -104,12 +74,18 @@ public enum ComicsServiceFactory {
         )
     }
 
-    public static func createDebug() -> ComicsService {
+    public static func createDebug() -> Service {
         ComicsDebugService(dataLoader: jsonDataLoader, dataResultHandler: comicDataResultHandler)
     }
 }
 
-private extension ComicsServiceFactory {
+private protocol ServiceFactory {
+    associatedtype Service
+    static func create(with networkService: NetworkService) -> Service
+    static func createDebug() -> Service
+}
+
+extension ServiceFactory {
     static var dataHandler: NetworkDataHandler {
         ClientDataHandler(parser: parser)
     }
@@ -120,6 +96,14 @@ private extension ComicsServiceFactory {
 
     static var parser: JSONParser {
         JSONDecoderParser()
+    }
+
+    static var errorHandler: NetworkErrorHandler {
+        DataServicesNetworkErrorHandler()
+    }
+
+    static var characterDataResultHandler: CharacterDataResultHandler {
+        CharacterDataResultHandlerFactory.createWithDataMappers()
     }
 
     static var comicDataResultHandler: ComicDataResultHandler {
