@@ -50,7 +50,8 @@ extension CharacterDetailViewController: UICollectionViewDelegate {
     func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         switch CharacterDetailSection.fromSectionIndex(indexPath.section) {
         case .comics:
-            Task { await viewModel.willDisplayComicCell(at: indexPath) }
+            let task = Task { await viewModel.willDisplayComicCell(at: indexPath) }
+            tasks.insert(task)
         default:
             return
         }
@@ -109,6 +110,7 @@ private extension CharacterDetailViewController {
     }
 
     func start() {
-        Task { await viewModel.start() }
+        let task = Task { await viewModel.start() }
+        tasks.insert(task)
     }
 }

@@ -5,7 +5,6 @@
 //  Created by Diego Rogel on 22/1/22.
 //
 
-import Data
 import Foundation
 
 protocol AppDependencyContainer {

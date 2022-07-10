@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class LoadingViewController: UIViewController {
+class LoadingViewController: TaskHandlingViewController {
     enum Constants {
         static let animationDuration = 0.35
     }

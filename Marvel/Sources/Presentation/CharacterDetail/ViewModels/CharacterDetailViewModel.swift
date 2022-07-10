@@ -53,9 +53,9 @@ private extension CharacterDetailViewModel {
         switch combination.characterInfoState {
         case let .success(infoModel):
             let detailModel = CharacterDetailModel(info: infoModel, comics: combination.comicCellModels)
-            return CharacterDetailViewModelState.success(detailModel)
+            return .success(detailModel)
         case let .failure(error):
-            return CharacterDetailViewModelState.failure(error)
+            return .failure(error)
         }
     }
 }

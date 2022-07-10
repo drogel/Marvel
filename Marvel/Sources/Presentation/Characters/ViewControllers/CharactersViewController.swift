@@ -135,6 +135,7 @@ private extension CharactersViewController {
     }
 
     func start() {
-        Task { await viewModel.start() }
+        let task = Task { await viewModel.start() }
+        tasks.insert(task)
     }
 }

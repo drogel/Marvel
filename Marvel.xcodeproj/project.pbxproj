@@ -99,6 +99,7 @@
 		05DAC34C27974CE30062CC6F /* CharacterDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34B27974CE30062CC6F /* CharacterDetailViewController.swift */; };
 		05DAC35027974D8D0062CC6F /* CharactersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DAC34F27974D8D0062CC6F /* CharactersViewModel.swift */; };
 		05DE20CF27DA626500BB2F47 /* Publisher+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DE20CE27DA626500BB2F47 /* Publisher+Assertions.swift */; };
+		4C764570287B0E6E006F2C83 /* TaskHandlingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C76456F287B0E6E006F2C83 /* TaskHandlingViewController.swift */; };
 		4C9E7BCA2879D8F70049420F /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 4C9E7BC92879D8F70049420F /* Data */; };
 		4CCBBF112879CBC7001DF9CD /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBBF102879CBC7001DF9CD /* Data */; };
 /* End PBXBuildFile section */
@@ -212,6 +213,7 @@
 		05DAC34B27974CE30062CC6F /* CharacterDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailViewController.swift; sourceTree = "<group>"; };
 		05DAC34F27974D8D0062CC6F /* CharactersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersViewModel.swift; sourceTree = "<group>"; };
 		05DE20CE27DA626500BB2F47 /* Publisher+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+Assertions.swift"; sourceTree = "<group>"; };
+		4C76456F287B0E6E006F2C83 /* TaskHandlingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskHandlingViewController.swift; sourceTree = "<group>"; };
 		4CCBBF102879CBC7001DF9CD /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Data; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -564,6 +566,7 @@
 			isa = PBXGroup;
 			children = (
 				05C1492E279CA6FE00927467 /* LoadingViewController.swift */,
+				4C76456F287B0E6E006F2C83 /* TaskHandlingViewController.swift */,
 				05C1492C279CA5E100927467 /* SpinnerViewController.swift */,
 				05C14919279C1C3B00927467 /* FetchImageView.swift */,
 				05484626279E035600C6EC66 /* FillImageView.swift */,
@@ -940,6 +943,7 @@
 				05B0855F27AC5C6700A74DD0 /* CharacterImageLayoutSection.swift in Sources */,
 				05DAC34827974C690062CC6F /* MainCoordinator.swift in Sources */,
 				05484617279D865800C6EC66 /* Instantiable.swift in Sources */,
+				4C764570287B0E6E006F2C83 /* TaskHandlingViewController.swift in Sources */,
 				05484620279DC98800C6EC66 /* CharacterDetailCoordinator.swift in Sources */,
 				05B0855B27AC594300A74DD0 /* CharacterDetailLayout.swift in Sources */,
 				0548461E279DC89C00C6EC66 /* CharacterDetailDependencyContainer.swift in Sources */,
