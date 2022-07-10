@@ -10,16 +10,16 @@ import Domain
 import Foundation
 
 protocol CharactersDependencies {
-    var networkService: NetworkService { get }
+    var baseApiURL: URL { get }
     var scheme: AppScheme { get }
 }
 
 class CharactersDependenciesAdapter: CharactersDependencies {
-    let networkService: NetworkService
+    let baseApiURL: URL
     let scheme: AppScheme
 
-    init(networkService: NetworkService, scheme: AppScheme) {
-        self.networkService = networkService
+    init(baseApiURL: URL, scheme: AppScheme) {
+        self.baseApiURL = baseApiURL
         self.scheme = scheme
     }
 }
@@ -48,7 +48,7 @@ private extension CharactersDependencyContainer {
         case .debug:
             return CharactersServiceFactory.createDebug()
         case .stage, .release:
-            return CharactersServiceFactory.create(with: dependencies.networkService)
+            return CharactersServiceFactory.create(with: dependencies.baseApiURL)
         }
     }
 }

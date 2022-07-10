@@ -9,7 +9,7 @@ import Data
 import Foundation
 
 protocol AppDependencyContainer {
-    var networkService: NetworkService { get }
+    var baseApiURL: URL { get }
     var scheme: AppScheme { get }
 }
 
@@ -20,7 +20,7 @@ class MarvelDependencyContainer: AppDependencyContainer {
         self.configuration = configuration
     }
 
-    lazy var networkService: NetworkService = NetworkServiceFactory.create(baseApiURL: baseURL)
+    lazy var baseApiURL: URL = baseURL
 
     lazy var scheme: AppScheme = configuration.scheme
 }

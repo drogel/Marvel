@@ -28,7 +28,7 @@ class MainCoordinator: Coordinator {
 private extension MainCoordinator {
     func showCharacters() {
         let charactersDependencies = CharactersDependenciesAdapter(
-            networkService: dependencyContainer.networkService,
+            baseApiURL: dependencyContainer.baseApiURL,
             scheme: dependencyContainer.scheme
         )
         let charactersCoordinator = CharactersCoordinator(

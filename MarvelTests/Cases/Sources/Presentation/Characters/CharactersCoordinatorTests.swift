@@ -45,18 +45,12 @@ class CharactersCoordinatorTests: XCTestCase {
 }
 
 private class CharactersDependenciesStub: CharactersDependencies {
-    var networkService: NetworkService {
-        NetworkServiceSuccessfulStub()
+    var baseApiURL: URL {
+        URL(string: "http://example.com")!
     }
 
     var scheme: AppScheme {
         .debug
-    }
-}
-
-private class NetworkServiceSuccessfulStub: NetworkService {
-    func request(endpoint _: RequestComponents) async throws -> Data? {
-        Data()
     }
 }
 

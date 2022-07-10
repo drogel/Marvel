@@ -9,25 +9,20 @@
 import XCTest
 
 class FactoriesTests: XCTestCase {
-    private var networkServiceMock: NetworkService!
+    private var urlStub: URL!
 
     override func setUp() {
         super.setUp()
-        networkServiceMock = NetworkServiceMock()
+        urlStub = URL(string: "http://example.com")
     }
 
     override func tearDown() {
-        networkServiceMock = nil
+        urlStub = nil
         super.tearDown()
     }
 
-    func test_givenANetworkServiceFactory_WhenCreatingNetworkService_ReturnsExpectedNetworkServiceType() {
-        let urlStub = URL(string: "http://example.com")!
-        XCTAssertTrue(NetworkServiceFactory.create(baseApiURL: urlStub) is AuthenticatedNetworkService)
-    }
-
     func test_givenACharactersServiceFactory_WhenCreatingService_ReturnsExpectedServiceType() {
-        XCTAssertTrue(CharactersServiceFactory.create(with: networkServiceMock) is CharactersClientService)
+        XCTAssertTrue(CharactersServiceFactory.create(with: urlStub) is CharactersClientService)
     }
 
     func test_givenACharactersServiceFactory_WhenCreatingDebugService_ReturnsExpectedServiceType() {
@@ -35,7 +30,7 @@ class FactoriesTests: XCTestCase {
     }
 
     func test_givenACharacterDetailServiceFactory_WhenCreatingService_ReturnsExpectedServiceType() {
-        let actualService = CharacterDetailServiceFactory.create(with: networkServiceMock)
+        let actualService = CharacterDetailServiceFactory.create(with: urlStub)
         XCTAssertTrue(actualService is CharacterDetailClientService)
     }
 
@@ -44,7 +39,7 @@ class FactoriesTests: XCTestCase {
     }
 
     func test_givenAComicsServiceFactory_WhenCreatingService_ReturnsExpectedServiceType() {
-        let actualService = ComicsServiceFactory.create(with: networkServiceMock)
+        let actualService = ComicsServiceFactory.create(with: urlStub)
         XCTAssertTrue(actualService is ComicsClientService)
     }
 

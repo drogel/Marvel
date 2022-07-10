@@ -16,8 +16,7 @@ enum NetworkError: Error {
     case requestError(Error?)
 }
 
-// TODO: This too could be interal
-public protocol NetworkService {
+protocol NetworkService {
     func request(endpoint: RequestComponents) async throws -> Data?
 }
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct RequestComponents: Equatable {
+struct RequestComponents: Equatable {
     let path: String
     let queryParameters: [String: String?]
 

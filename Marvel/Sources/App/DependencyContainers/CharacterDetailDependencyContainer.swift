@@ -39,7 +39,7 @@ private extension CharacterDetailDependencyContainer {
         case .debug:
             return CharacterDetailServiceFactory.createDebug()
         case .stage, .release:
-            return CharacterDetailServiceFactory.create(with: dependencies.networkService)
+            return CharacterDetailServiceFactory.create(with: dependencies.baseApiURL)
         }
     }
 
@@ -48,7 +48,7 @@ private extension CharacterDetailDependencyContainer {
         case .debug:
             return ComicsServiceFactory.createDebug()
         case .stage, .release:
-            return ComicsServiceFactory.create(with: dependencies.networkService)
+            return ComicsServiceFactory.create(with: dependencies.baseApiURL)
         }
     }
 }

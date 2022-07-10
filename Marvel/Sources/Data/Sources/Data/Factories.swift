@@ -8,27 +8,12 @@
 import Domain
 import Foundation
 
-public enum NetworkServiceFactory {
-    public static func create(baseApiURL: URL) -> NetworkService {
-        AuthenticatedNetworkService(
-            networkService: NetworkSessionService(
-                session: URLSession.shared,
-                baseURL: baseApiURL,
-                urlComposer: URLComponentsBuilder()
-            ),
-            authenticator: MD5Authenticator(
-                secrets: EnvironmentVariablesRetriever()
-            )
-        )
-    }
-}
-
 public enum CharactersServiceFactory: ServiceFactory {
     public typealias Service = CharactersService
 
-    public static func create(with networkService: NetworkService) -> Service {
+    public static func create(with baseApiURL: URL) -> Service {
         CharactersClientService(
-            networkService: networkService,
+            networkService: networkService(baseApiURL: baseApiURL),
             dataHandler: ClientDataHandler(parser: parser),
             networkErrorHandler: errorHandler,
             dataResultHandler: characterDataResultHandler
@@ -46,9 +31,9 @@ public enum CharactersServiceFactory: ServiceFactory {
 public enum CharacterDetailServiceFactory: ServiceFactory {
     public typealias Service = CharacterDetailService
 
-    public static func create(with networkService: NetworkService) -> Service {
+    public static func create(with baseApiURL: URL) -> Service {
         CharacterDetailClientService(
-            networkService: networkService,
+            networkService: networkService(baseApiURL: baseApiURL),
             dataHandler: dataHandler,
             networkErrorHandler: errorHandler,
             dataResultHandler: characterDataResultHandler
@@ -66,9 +51,9 @@ public enum CharacterDetailServiceFactory: ServiceFactory {
 public enum ComicsServiceFactory: ServiceFactory {
     public typealias Service = ComicsService
 
-    public static func create(with networkService: NetworkService) -> Service {
+    public static func create(with baseApiURL: URL) -> Service {
         ComicsClientService(
-            networkService: networkService,
+            networkService: networkService(baseApiURL: baseApiURL),
             dataHandler: dataHandler,
             dataResultHandler: comicDataResultHandler
         )
@@ -81,11 +66,24 @@ public enum ComicsServiceFactory: ServiceFactory {
 
 private protocol ServiceFactory {
     associatedtype Service
-    static func create(with networkService: NetworkService) -> Service
+    static func create(with baseApiURL: URL) -> Service
     static func createDebug() -> Service
 }
 
 extension ServiceFactory {
+    static func networkService(baseApiURL: URL) -> NetworkService {
+        AuthenticatedNetworkService(
+            networkService: NetworkSessionService(
+                session: URLSession.shared,
+                baseURL: baseApiURL,
+                urlComposer: URLComponentsBuilder()
+            ),
+            authenticator: MD5Authenticator(
+                secrets: EnvironmentVariablesRetriever()
+            )
+        )
+    }
+
     static var dataHandler: NetworkDataHandler {
         ClientDataHandler(parser: parser)
     }
