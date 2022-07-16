@@ -39,12 +39,12 @@ public extension XCTestCase {
     func assertThrowsError(
         _ asyncBlock: () async throws -> Void,
         didCatchErrorBlock: (Error) -> Void,
-        line _: UInt = #line,
-        file _: StaticString = #filePath
+        line: UInt = #line,
+        file: StaticString = #filePath
     ) async {
         do {
             try await asyncBlock()
-            XCTFail("Expected an error, but no error was thrown from the provided asnyc block.")
+            XCTFail("Expected an error, but no error was thrown from the provided asnyc block.", file: file, line: line)
         } catch {
             didCatchErrorBlock(error)
         }
