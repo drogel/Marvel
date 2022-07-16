@@ -10,7 +10,7 @@ let package = Package(
         .library(name: "Domain", targets: ["Domain"]),
     ],
     dependencies: [
-        .package(name: "TestUtils", path: "MarvelTests/TestUtils"),
+        .package(name: "TestUtils", path: "TestUtils/TestUtils"),
     ],
     targets: [
         .target(

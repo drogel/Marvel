@@ -1,8 +1,0 @@
-disabled_rules:
-  - force_try
-  - force_cast
-  - weak_delegate
-
-file_length:
-  warning: 1000
-  error: 1000
