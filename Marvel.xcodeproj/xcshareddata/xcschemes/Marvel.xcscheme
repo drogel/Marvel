@@ -33,10 +33,40 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "05DAC30D2797258C0062CC6F"
-               BuildableName = "MarvelTests.xctest"
-               BlueprintName = "MarvelTests"
-               ReferencedContainer = "container:Marvel.xcodeproj">
+               BlueprintIdentifier = "DomainTests"
+               BuildableName = "DomainTests"
+               BlueprintName = "DomainTests"
+               ReferencedContainer = "container:Marvel/Sources/Domain">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DataTests"
+               BuildableName = "DataTests"
+               BlueprintName = "DataTests"
+               ReferencedContainer = "container:Marvel/Sources/Data">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PresentationTests"
+               BuildableName = "PresentationTests"
+               BlueprintName = "PresentationTests"
+               ReferencedContainer = "container:Marvel/Sources/Presentation">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AppTests"
+               BuildableName = "AppTests"
+               BlueprintName = "AppTests"
+               ReferencedContainer = "container:Marvel/Sources/App">
             </BuildableReference>
          </TestableReference>
       </Testables>
