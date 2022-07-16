@@ -5,8 +5,8 @@
 //  Created by Diego Rogel on 1/2/22.
 //
 
+@testable import App
 import Combine
-@testable import Marvel_Debug
 import Presentation
 import XCTest
 

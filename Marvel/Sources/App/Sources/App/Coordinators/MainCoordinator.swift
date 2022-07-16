@@ -5,16 +5,23 @@
 //  Created by Diego Rogel on 18/1/22.
 //
 
-import UIKit
+import Foundation
+
+public enum MainStartableFactory {
+    public static func create(with navigationController: NavigationController) -> Startable {
+        let appDependencyContainer = MarvelDependencyContainer(configuration: MarvelConfigurationValues())
+        return MainCoordinator(navigationController: navigationController, dependencyContainer: appDependencyContainer)
+    }
+}
 
 class MainCoordinator: Coordinator {
     weak var delegate: CoordinatorDelegate?
     var children: [Coordinator]
 
-    private let navigationController: UINavigationController
+    private let navigationController: NavigationController
     private let dependencyContainer: AppDependencyContainer
 
-    init(navigationController: UINavigationController, dependencyContainer: AppDependencyContainer) {
+    init(navigationController: NavigationController, dependencyContainer: AppDependencyContainer) {
         self.navigationController = navigationController
         children = []
         self.dependencyContainer = dependencyContainer

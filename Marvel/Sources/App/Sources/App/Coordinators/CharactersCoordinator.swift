@@ -13,10 +13,10 @@ class CharactersCoordinator: Coordinator {
     weak var delegate: CoordinatorDelegate?
     var children: [Coordinator]
 
-    private let navigationController: UINavigationController
+    private let navigationController: NavigationController
     private let dependencies: CharactersDependencies
 
-    init(navigationController: UINavigationController, dependencies: CharactersDependencies) {
+    init(navigationController: NavigationController, dependencies: CharactersDependencies) {
         self.navigationController = navigationController
         self.dependencies = dependencies
         children = []

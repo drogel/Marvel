@@ -5,7 +5,7 @@
 //  Created by Diego Rogel on 1/2/22.
 //
 
-@testable import Marvel_Debug
+@testable import App
 import XCTest
 
 class CoordinatorTests: XCTestCase {

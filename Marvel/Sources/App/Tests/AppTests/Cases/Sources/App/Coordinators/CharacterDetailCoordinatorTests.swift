@@ -5,9 +5,9 @@
 //  Created by Diego Rogel on 1/2/22.
 //
 
+@testable import App
 import Domain
 import DomainTestUtils
-@testable import Marvel_Debug
 import Presentation
 import XCTest
 
