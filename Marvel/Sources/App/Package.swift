@@ -16,6 +16,7 @@ let package = Package(
         .package(name: "Data", path: "Marvel/Sources/Data"),
         .package(name: "Domain", path: "Marvel/Sources/Domain"),
         .package(name: "Presentation", path: "Marvel/Sources/Presentation"),
+        .package(name: "DomainTestUtils", path: "MarvelTests/DomainTestUtils"),
     ],
     targets: [
         .target(
@@ -25,7 +26,7 @@ let package = Package(
         .testTarget(
             name: "AppTests",
             dependencies: [
-                .product(name: "DomainTestUtils", package: "Domain"),
+                "DomainTestUtils",
                 "App",
             ]
         ),

@@ -6,7 +6,6 @@
 //
 
 @testable import Domain
-import DomainTestUtils
 import XCTest
 
 class FetchCharactersUseCaseTests: XCTestCase {

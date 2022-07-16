@@ -48,6 +48,7 @@
 		05DAC30E2797258C0062CC6F /* MarvelTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarvelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C764571287B114D006F2C83 /* Presentation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Presentation; sourceTree = "<group>"; };
 		4C795A252882E4D700DB4C0E /* App */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = App; sourceTree = "<group>"; };
+		4CAF283628830B3500D88D80 /* DomainTestUtils */ = {isa = PBXFileReference; lastKnownFileType = text; name = DomainTestUtils; path = Marvel/Sources/DomainTestUtils; sourceTree = SOURCE_ROOT; };
 		4CCBBF102879CBC7001DF9CD /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Data; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,6 +134,7 @@
 		05DAC3112797258C0062CC6F /* MarvelTests */ = {
 			isa = PBXGroup;
 			children = (
+				4CAF283628830B3500D88D80 /* DomainTestUtils */,
 				05D1993727FD8AC6007144FE /* TestUtils */,
 			);
 			path = MarvelTests;
