@@ -33,16 +33,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "05DAC30D2797258C0062CC6F"
-               BuildableName = "MarvelTests.xctest"
-               BlueprintName = "MarvelTests"
-               ReferencedContainer = "container:Marvel.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "DomainTests"
                BuildableName = "DomainTests"
                BlueprintName = "DomainTests"
@@ -67,6 +57,16 @@
                BuildableName = "PresentationTests"
                BlueprintName = "PresentationTests"
                ReferencedContainer = "container:Marvel/Sources/Presentation">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AppTests"
+               BuildableName = "AppTests"
+               BlueprintName = "AppTests"
+               ReferencedContainer = "container:Marvel/Sources/App">
             </BuildableReference>
          </TestableReference>
       </Testables>
