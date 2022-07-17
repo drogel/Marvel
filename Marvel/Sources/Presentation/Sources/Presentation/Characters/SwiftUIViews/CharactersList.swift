@@ -27,8 +27,8 @@ struct CharactersList: View {
                 List {
                     ForEach($cellModels, id: \.identifier) { model in
                         CharacterCellView(model: model)
-                            .frame(width: nil, height: 300, alignment: .center)
                             .listRowSeparator(.hidden)
+                            .padding(.bottom)
                     }
                 }
                 .listStyle(.plain)
