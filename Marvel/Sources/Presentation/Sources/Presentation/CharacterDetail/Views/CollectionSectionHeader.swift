@@ -21,7 +21,6 @@ class CollectionSectionHeader: ConfigurableReusableView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: Constants.Title.fontSize)
         label.numberOfLines = Constants.Title.maxLines
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 

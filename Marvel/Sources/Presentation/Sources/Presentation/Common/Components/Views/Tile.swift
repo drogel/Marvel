@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  Tile.swift
 //
 //
 //  Created by Diego Rogel on 23/7/22.

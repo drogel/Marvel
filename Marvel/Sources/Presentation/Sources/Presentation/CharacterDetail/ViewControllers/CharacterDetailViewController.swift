@@ -111,7 +111,6 @@ private extension CharacterDetailViewController {
     }
 
     func configureConstraints(of collectionView: UICollectionView) {
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.fit(collectionView, in: view)
     }
 

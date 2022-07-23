@@ -16,15 +16,10 @@ class CharacterInfoCell: ConfigurableCell {
         static let inset: CGFloat = 20
     }
 
-    private lazy var infoBackgroundView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private lazy var infoBackgroundView = UIView()
 
     private lazy var infoStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.spacing = Constants.spacing
         stackView.axis = .vertical
         return stackView

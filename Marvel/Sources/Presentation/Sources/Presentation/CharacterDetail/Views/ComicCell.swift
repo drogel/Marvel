@@ -38,7 +38,6 @@ class ComicCell: ConfigurableCell {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
 

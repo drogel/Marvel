@@ -26,7 +26,7 @@ public enum CharactersViewControllerFactory {
             imageURLBuilder: container.imageURLBuilder,
             pager: container.pager
         )
-        let viewController = UIHostingController(rootView: CharactersView(viewModel: viewModel))
+        let viewController = CharactersViewController(viewModel: viewModel)
         viewModel.coordinatorDelegate = delegate
         return viewController
     }

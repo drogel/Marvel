@@ -23,18 +23,16 @@ struct CharactersList: View {
     }
 
     var body: some View {
-        List {
-            ForEach($cellModels, id: \.identifier) { model in
-                CharacterCellView(model: model)
-                    .listRowSeparator(.hidden)
-                    .padding(.bottom)
-                    .onTapGesture {
-                        didTapCell(with: model.wrappedValue)
-                    }
-                    .task {
-                        await cellDidAppear(with: model.wrappedValue)
-                    }
-            }
+        List($cellModels, id: \.identifier) { model in
+            CharacterCellView(model: model)
+                .listRowSeparator(.hidden)
+                .padding(.bottom)
+                .onTapGesture {
+                    didTapCell(with: model.wrappedValue)
+                }
+                .task {
+                    await cellDidAppear(with: model.wrappedValue)
+                }
         }
         .listStyle(.plain)
     }

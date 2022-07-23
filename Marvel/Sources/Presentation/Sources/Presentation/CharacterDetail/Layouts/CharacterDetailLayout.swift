@@ -27,6 +27,6 @@ class CharacterDetailLayout: UICollectionViewCompositionalLayout {
 
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
-        fatalError("Initialization of \(String(describing: CharactersLayout.self)) through coder not supported")
+        fatalError("Initialization of \(String(describing: CharacterDetailLayout.self)) through coder not supported")
     }
 }

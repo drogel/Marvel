@@ -35,8 +35,8 @@ struct CharactersView: View {
             .navigationBarTitle("characters".localized, displayMode: .large)
         }
         .navigationViewStyle(StackNavigationViewStyle())
-        .onReceive(viewModel.loadingStatePublisher, perform: handle(loadingState:))
-        .onReceive(viewModel.statePublisher, perform: handle(viewModelState:))
+        .onReceive(viewModel.loadingStatePublisher.receive(on: RunLoop.main), perform: handle(loadingState:))
+        .onReceive(viewModel.statePublisher.receive(on: RunLoop.main), perform: handle(viewModelState:))
         .errorRetryAlert(message: errorMessage, isPresented: $shouldShowAlert, retryAction: restart)
         .task(start)
         .onDisappear(perform: cancelTasks)

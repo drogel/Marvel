@@ -71,7 +71,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
         loadingState = .idle
     }
 
-    @MainActor func start() async {
+    func start() async {
         loadingState = .loading
         await loadCharacters(with: startingQuery)
     }
@@ -81,7 +81,7 @@ class CharactersViewModel: CharactersViewModelProtocol {
         coordinatorDelegate?.model(didSelectCharacterWith: data.identifier)
     }
 
-    @MainActor func willDisplayCell(at indexPath: IndexPath) async {
+    func willDisplayCell(at indexPath: IndexPath) async {
         guard shouldLoadMore(at: indexPath) else { return }
         await loadMore()
     }

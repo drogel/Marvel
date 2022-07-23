@@ -10,6 +10,7 @@ import UIKit
 
 extension NSLayoutConstraint {
     static func fit(_ innerView: UIView, in outerView: UIView, inset: CGFloat = 0) {
+        innerView.translatesAutoresizingMaskIntoConstraints = false
         activate([
             innerView.leadingAnchor.constraint(equalTo: outerView.leadingAnchor, constant: inset),
             innerView.topAnchor.constraint(equalTo: outerView.topAnchor, constant: inset),
