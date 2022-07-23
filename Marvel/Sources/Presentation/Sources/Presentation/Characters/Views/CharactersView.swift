@@ -11,9 +11,9 @@ import SwiftUI
 struct CharactersView: View {
     private let viewModel: CharactersViewModelProtocol
 
+    @State var tasks = Set<Task<Void, Never>>()
     @State private var isLoading: Bool = false
     @State private var cellModels: [CharacterCellModel] = []
-    @State private var tasks = Set<Task<Void, Never>>()
     @State private var shouldShowAlert: Bool = false
     @State private var errorMessage: String? {
         didSet {
@@ -43,6 +43,19 @@ struct CharactersView: View {
     }
 }
 
+extension CharactersView: RestartableTaskHandler {
+    @Sendable func start() async {
+        await viewModel.start()
+    }
+
+    func restart() {
+        let task = Task {
+            await start()
+        }
+        tasks.insert(task)
+    }
+}
+
 private extension CharactersView {
     func handle(loadingState: LoadingState) {
         isLoading = loadingState != .loaded
@@ -63,20 +76,5 @@ private extension CharactersView {
 
     func cellDidAppear(at indexPath: IndexPath) async {
         await viewModel.willDisplayCell(at: indexPath)
-    }
-
-    func restart() {
-        let task = Task {
-            await start()
-        }
-        tasks.insert(task)
-    }
-
-    func cancelTasks() {
-        tasks.forEach { $0.cancel() }
-    }
-
-    @Sendable func start() async {
-        await viewModel.start()
     }
 }
