@@ -24,11 +24,15 @@ struct CharacterDetailView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack {
-                AsyncImage(url: model?.info?.image.imageURL, scale: 1.6)
-                    .frame(height: 450, alignment: .center)
+        VStack {
+            AsyncImage(url: model?.info?.image.imageURL, scale: 1.6)
+            VStack(alignment: .leading, spacing: -24) {
+                Text(model?.info?.description.name ?? "")
+                    .textStyle(.title)
+                Text(model?.info?.description.description ?? "")
+                    .textStyle(.subtitle)
             }
+            Spacer()
         }
         .onReceive(viewModel.detailStatePublisher.receive(on: RunLoop.main), perform: handle(state:))
         .errorRetryAlert(message: errorMessage, isPresented: $shouldShowError, retryAction: restart)

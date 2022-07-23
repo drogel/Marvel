@@ -41,7 +41,6 @@ struct SubtitleStyle: TextModifier {
             .multilineTextAlignment(.leading)
             .font(.caption)
             .foregroundColor(.gray)
-            .lineLimit(2)
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
     }

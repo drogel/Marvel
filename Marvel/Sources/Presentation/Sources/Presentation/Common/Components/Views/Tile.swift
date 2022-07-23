@@ -23,7 +23,7 @@ struct Tile: View {
     }
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             Rectangle()
                 .foregroundColor(.white)
                 .opacity(0.93)
@@ -33,6 +33,7 @@ struct Tile: View {
                 if !shouldHideSubtitle {
                     subtitleViewBuilder()
                         .textStyle(.subtitle)
+                        .lineLimit(2)
                 }
             }
         }

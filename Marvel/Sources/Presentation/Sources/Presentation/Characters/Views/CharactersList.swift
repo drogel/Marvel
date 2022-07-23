@@ -23,15 +23,16 @@ struct CharactersList: View {
     }
 
     var body: some View {
-        List($cellModels, id: \.identifier) { model in
-            CharacterCellView(model: model)
+        List($cellModels, id: \.identifier) { modelBinding in
+            let model = modelBinding.wrappedValue
+            CharacterCell(model: model)
                 .listRowSeparator(.hidden)
                 .padding(.bottom)
                 .onTapGesture {
-                    didTapCell(with: model.wrappedValue)
+                    didTapCell(with: model)
                 }
                 .task {
-                    await cellDidAppear(with: model.wrappedValue)
+                    await cellDidAppear(with: model)
                 }
         }
         .listStyle(.plain)

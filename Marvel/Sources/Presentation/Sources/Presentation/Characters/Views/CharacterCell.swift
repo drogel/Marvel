@@ -1,5 +1,5 @@
 //
-//  CharacterCellView.swift
+//  CharacterCell.swift
 //
 //
 //  Created by Diego Rogel on 16/7/22.
@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct CharacterCellView: View {
-    @Binding private var model: CharacterCellModel
+struct CharacterCell: View {
+    private let model: CharacterCellModel
 
-    init(model: Binding<CharacterCellModel>) {
-        _model = model
+    init(model: CharacterCellModel) {
+        self.model = model
     }
 
     var body: some View {
