@@ -28,17 +28,15 @@ class CharacterDetailViewModel: CharacterDetailViewModelProtocol {
     private let infoViewModel: CharacterInfoViewModelProtocol
     private let comicsViewModel: ComicsViewModelProtocol
 
-    init(
-        infoViewModel: CharacterInfoViewModelProtocol,
-        comicsViewModel: ComicsViewModelProtocol
-    ) {
+    init(infoViewModel: CharacterInfoViewModelProtocol, comicsViewModel: ComicsViewModelProtocol) {
         self.infoViewModel = infoViewModel
         self.comicsViewModel = comicsViewModel
     }
 
     func start() async {
-        await infoViewModel.start()
-        await comicsViewModel.start()
+        async let startInfo: Void = infoViewModel.start()
+        async let startComics: Void = comicsViewModel.start()
+        _ = await [startInfo, startComics]
     }
 
     func willDisplayComicCell(at indexPath: IndexPath) async {

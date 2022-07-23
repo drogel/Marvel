@@ -34,11 +34,7 @@ public enum CharacterDetailViewControllerFactory {
             infoViewModel: infoViewModel,
             comicsViewModel: comicsViewModel
         )
-        let viewController = CharacterDetailViewController.instantiate(
-            viewModel: viewModel,
-            layout: CharacterDetailLayout(),
-            dataSourceFactory: CharacterDetailDataSourceFactory(viewModel: viewModel)
-        )
+        let viewController = CharacterDetailViewController(viewModel: viewModel)
         return viewController
     }
 }

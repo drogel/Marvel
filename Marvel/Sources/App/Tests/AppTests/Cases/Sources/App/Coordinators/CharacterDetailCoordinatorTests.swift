@@ -44,7 +44,7 @@ class CharacterDetailCoordinatorTests: XCTestCase {
 
     func test_whenDismissingCharacterDetailViewController_callsCoordinatorDidFinish() {
         assertCoordinatorDelegateDidFinish(callCount: 0)
-        _ = sut.animationController(forDismissed: CharacterDetailViewController())
+        _ = sut.animationController(forDismissed: CharacterDetailViewControllerFactory.create(with: container))
         assertCoordinatorDelegateDidFinish(callCount: 1)
     }
 
