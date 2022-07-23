@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  CharacterCellView.swift
 //
 //
 //  Created by Diego Rogel on 16/7/22.

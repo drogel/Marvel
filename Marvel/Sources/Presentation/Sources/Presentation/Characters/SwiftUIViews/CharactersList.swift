@@ -2,58 +2,26 @@
 //  CharactersList.swift
 //
 //
-//  Created by Diego Rogel on 16/7/22.
+//  Created by Diego Rogel on 23/7/22.
 //
 
-import Combine
 import SwiftUI
 
 struct CharactersList: View {
-    private let viewModel: CharactersViewModelProtocol
+    @Binding private var cellModels: [CharacterCellModel]
 
-    @State private var isLoading: Bool = false
-    @State private var cellModels: [CharacterCellModel] = []
-
-    init(viewModel: CharactersViewModelProtocol) {
-        self.viewModel = viewModel
+    init(cellModels: Binding<[CharacterCellModel]>) {
+        _cellModels = cellModels
     }
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                if isLoading {
-                    ProgressView()
-                }
-                List {
-                    ForEach($cellModels, id: \.identifier) { model in
-                        CharacterCellView(model: model)
-                            .listRowSeparator(.hidden)
-                            .padding(.bottom)
-                    }
-                }
-                .listStyle(.plain)
+        List {
+            ForEach($cellModels, id: \.identifier) { model in
+                CharacterCellView(model: model)
+                    .listRowSeparator(.hidden)
+                    .padding(.bottom)
             }
-            .onReceive(viewModel.loadingStatePublisher, perform: handle(loadingState:))
-            .onReceive(viewModel.statePublisher, perform: handle(viewModelState:))
-            .task {
-                await viewModel.start()
-            }
-            .navigationBarTitle("characters".localized, displayMode: .large)
         }
-    }
-}
-
-private extension CharactersList {
-    func handle(loadingState: LoadingState) {
-        isLoading = loadingState != .loaded
-    }
-
-    func handle(viewModelState state: CharactersViewModelState) {
-        switch state {
-        case let .success(models):
-            cellModels = models
-        case .failure:
-            return
-        }
+        .listStyle(.plain)
     }
 }
