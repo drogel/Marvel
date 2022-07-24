@@ -27,7 +27,7 @@ struct CharactersList: View {
             let model = modelBinding.wrappedValue
             CharacterCell(model: model)
                 .listRowSeparator(.hidden)
-                .padding(.bottom)
+                .padding(.vertical)
                 .onTapGesture {
                     didTapCell(with: model)
                 }

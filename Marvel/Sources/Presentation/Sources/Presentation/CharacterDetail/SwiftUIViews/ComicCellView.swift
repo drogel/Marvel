@@ -15,11 +15,19 @@ struct ComicCellView: View {
     }
 
     var body: some View {
-        VStack {
-            AsyncImage(url: model.imageURL)
-            Text(model.title)
-            Text(model.issueNumber)
+        VStack(spacing: 8) {
+            AsyncImage(url: model.imageURL, scale: 2)
+                .fixedSize()
+                .frame(width: 210 / 1.544, height: 210, alignment: .center)
+                .cellStyle(.small)
+            VStack(spacing: 2) {
+                Text(model.title)
+                    .textStyle(.footnote)
+                    .lineLimit(2)
+                Text(model.issueNumber)
+                    .textStyle(.caption)
+            }
         }
-        .cellStyle(.small)
+        .frame(width: 210 / 1.544, alignment: .center)
     }
 }

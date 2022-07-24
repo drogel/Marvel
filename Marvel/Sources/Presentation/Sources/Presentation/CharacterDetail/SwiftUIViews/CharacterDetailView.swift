@@ -24,15 +24,34 @@ struct CharacterDetailView: View {
     }
 
     var body: some View {
-        VStack {
-            AsyncImage(url: model?.info?.image.imageURL, scale: 1.6)
-            VStack(alignment: .leading, spacing: -24) {
-                Text(model?.info?.description.name ?? "")
-                    .textStyle(.title)
-                Text(model?.info?.description.description ?? "")
-                    .textStyle(.subtitle)
+        GeometryReader { geometry in
+            ScrollView {
+                VStack {
+                    AsyncImage(url: model?.info?.image.imageURL, scale: 1.6)
+                        .frame(width: geometry.size.width, alignment: .center)
+                    VStack(alignment: .leading, spacing: -24) {
+                        Text(model?.info?.description.name ?? "")
+                            .textStyle(.header)
+                        Text(model?.info?.description.description ?? "")
+                            .textStyle(.subtitle)
+                        if let model = model {
+                            VStack(spacing: 2) {
+                                Text("comics".localized)
+                                    .textStyle(.title)
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    LazyHStack(spacing: 16) {
+                                        ForEach(model.comics, id: \.identifier) { comic in
+                                            ComicCellView(model: comic)
+                                        }
+                                    }
+                                    .padding(.horizontal)
+                                }
+                            }
+                            .padding(.vertical)
+                        }
+                    }
+                }
             }
-            Spacer()
         }
         .onReceive(viewModel.detailStatePublisher.receive(on: RunLoop.main), perform: handle(state:))
         .errorRetryAlert(message: errorMessage, isPresented: $shouldShowError, retryAction: restart)
