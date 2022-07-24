@@ -29,5 +29,7 @@ struct CharacterCell: View {
             }
         }
         .cellStyle(.big)
+        .listRowSeparator(.hidden)
+        .padding(.vertical)
     }
 }

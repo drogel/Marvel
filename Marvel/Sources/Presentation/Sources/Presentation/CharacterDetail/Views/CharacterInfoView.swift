@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct CharacterInfoView: View {
+    private enum Constants {
+        static let verticalSpacing: CGFloat = -24
+    }
+
     private var model: CharacterDescriptionModel
 
     init(model: CharacterDescriptionModel) {
@@ -15,7 +19,7 @@ struct CharacterInfoView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: -24) {
+        VStack(alignment: .leading, spacing: Constants.verticalSpacing) {
             Text(model.name)
                 .textStyle(.header)
             if !model.description.isEmpty {

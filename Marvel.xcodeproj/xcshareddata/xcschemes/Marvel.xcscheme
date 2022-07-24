@@ -93,12 +93,12 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "PRIVATE_KEY"
+            key = "PUBLIC_KEY"
             value = ""
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "PUBLIC_KEY"
+            key = "PRIVATE_KEY"
             value = ""
             isEnabled = "YES">
          </EnvironmentVariable>

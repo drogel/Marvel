@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct ComicsCarousel: View {
+    private enum Constants {
+        static let verticalSpacing: CGFloat = 2
+        static let comicSpacing: CGFloat = 16
+    }
+
     private let cellModels: [ComicCellModel]
     private let cellDidAppear: ((IndexPath) async -> Void)?
 
@@ -17,10 +22,10 @@ struct ComicsCarousel: View {
     }
 
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: Constants.verticalSpacing) {
             Text("comics".localized)
                 .textStyle(.title)
-            HorizontalList(cellModels, id: \.identifier, spacing: 16) { comic in
+            HorizontalList(cellModels, id: \.identifier, alignment: .top, spacing: Constants.comicSpacing) { comic in
                 ComicCell(model: comic)
                     .task {
                         await cellDidAppear(with: comic)
