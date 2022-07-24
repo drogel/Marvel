@@ -11,8 +11,14 @@ struct CharacterDetailView: View {
     private let viewModel: CharacterDetailViewModelProtocol
 
     @State var tasks = Set<Task<Void, Never>>()
-    @State private var model: CharacterDetailModel?
     @State private var shouldShowError = false
+    @State private var isLoading = true
+    @State private var model: CharacterDetailModel? {
+        didSet {
+            isLoading = model == nil
+        }
+    }
+
     @State private var errorMessage: String? {
         didSet {
             shouldShowError = errorMessage != nil
@@ -27,27 +33,17 @@ struct CharacterDetailView: View {
         GeometryReader { geometry in
             ScrollView {
                 VStack {
-                    AsyncImage(url: model?.info?.image.imageURL, scale: 1.6)
-                        .frame(width: geometry.size.width, alignment: .center)
+                    FillAsyncImage(url: model?.info?.image.imageURL)
+                        .frame(width: geometry.size.width, height: 450, alignment: .bottom)
                     VStack(alignment: .leading, spacing: -24) {
                         Text(model?.info?.description.name ?? "")
                             .textStyle(.header)
-                        Text(model?.info?.description.description ?? "")
-                            .textStyle(.subtitle)
+                        if let description = model?.info?.description.description {
+                            Text(description)
+                                .textStyle(.subtitle)
+                        }
                         if let model = model {
-                            VStack(spacing: 2) {
-                                Text("comics".localized)
-                                    .textStyle(.title)
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    LazyHStack(spacing: 16) {
-                                        ForEach(model.comics, id: \.identifier) { comic in
-                                            ComicCellView(model: comic)
-                                        }
-                                    }
-                                    .padding(.horizontal)
-                                }
-                            }
-                            .padding(.vertical)
+                            ComicsCarousel(cellModels: model.comics, cellDidAppear: comicDidAppear)
                         }
                     }
                 }
@@ -81,5 +77,9 @@ private extension CharacterDetailView {
         case let .failure(error):
             errorMessage = error.localizedDescription
         }
+    }
+
+    func comicDidAppear(at indexPath: IndexPath) async {
+        await viewModel.willDisplayComicCell(at: indexPath)
     }
 }

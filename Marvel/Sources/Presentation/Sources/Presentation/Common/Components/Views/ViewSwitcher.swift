@@ -10,7 +10,7 @@ import SwiftUI
 struct ViewSwitcher<FirstView: View, SecondView: View>: View {
     private enum Constants {
         static var defaultTransition: AnyTransition {
-            .opacity.animation(.easeInOut(duration: 0.25))
+            .opacity.animation(.easeInOut(duration: 0.35))
         }
     }
 

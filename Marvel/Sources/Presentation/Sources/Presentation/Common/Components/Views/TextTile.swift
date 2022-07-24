@@ -1,5 +1,5 @@
 //
-//  Tile.swift
+//  TextTile.swift
 //
 //
 //  Created by Diego Rogel on 23/7/22.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Tile: View {
+struct TextTile: View {
     private let shouldHideSubtitle: Bool
     private let titleViewBuilder: () -> Text
     private let subtitleViewBuilder: () -> Text
@@ -37,5 +37,6 @@ struct Tile: View {
                 }
             }
         }
+        .fixedSize(horizontal: false, vertical: true)
     }
 }

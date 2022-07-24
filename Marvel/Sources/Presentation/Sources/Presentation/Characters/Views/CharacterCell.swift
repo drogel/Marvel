@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct CharacterCell: View {
+    private enum Constants {
+        static let cellHeight: CGFloat = 310
+    }
+
     private let model: CharacterCellModel
 
     init(model: CharacterCellModel) {
@@ -16,14 +20,13 @@ struct CharacterCell: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            AsyncImage(url: model.imageURL, scale: 1.2)
-                .frame(width: 0, height: 310, alignment: .center)
-            Tile(shouldHideSubtitle: model.description.isEmpty) {
+            FillAsyncImage(url: model.imageURL)
+                .frame(height: Constants.cellHeight, alignment: .center)
+            TextTile(shouldHideSubtitle: model.description.isEmpty) {
                 Text(model.name)
             } subtitleViewBuilder: {
                 Text(model.description)
             }
-            .fixedSize(horizontal: false, vertical: true)
         }
         .cellStyle(.big)
     }
