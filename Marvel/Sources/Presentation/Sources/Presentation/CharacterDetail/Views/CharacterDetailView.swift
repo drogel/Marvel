@@ -8,17 +8,15 @@
 import SwiftUI
 
 struct CharacterDetailView: View {
+    private enum Constants {
+        static let characterImageHeight: CGFloat = 450
+    }
+
     private let viewModel: CharacterDetailViewModelProtocol
 
     @State var tasks = Set<Task<Void, Never>>()
     @State private var shouldShowError = false
-    @State private var isLoading = true
-    @State private var model: CharacterDetailModel? {
-        didSet {
-            isLoading = model == nil
-        }
-    }
-
+    @State private var model: CharacterDetailModel?
     @State private var errorMessage: String? {
         didSet {
             shouldShowError = errorMessage != nil
@@ -34,17 +32,12 @@ struct CharacterDetailView: View {
             ScrollView {
                 VStack {
                     FillAsyncImage(url: model?.info?.image.imageURL)
-                        .frame(width: geometry.size.width, height: 450, alignment: .bottom)
-                    VStack(alignment: .leading, spacing: -24) {
-                        Text(model?.info?.description.name ?? "")
-                            .textStyle(.header)
-                        if let description = model?.info?.description.description {
-                            Text(description)
-                                .textStyle(.subtitle)
-                        }
-                        if let model = model {
-                            ComicsCarousel(cellModels: model.comics, cellDidAppear: comicDidAppear)
-                        }
+                        .frame(width: geometry.size.width, height: Constants.characterImageHeight, alignment: .bottom)
+                    if let descriptionModel = model?.info?.description {
+                        CharacterInfoView(model: descriptionModel)
+                    }
+                    if let model = model {
+                        ComicsCarousel(cellModels: model.comics, cellDidAppear: comicDidAppear)
                     }
                 }
             }

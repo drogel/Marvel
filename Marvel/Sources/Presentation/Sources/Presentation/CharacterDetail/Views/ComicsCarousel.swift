@@ -20,19 +20,13 @@ struct ComicsCarousel: View {
         VStack(spacing: 2) {
             Text("comics".localized)
                 .textStyle(.title)
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(alignment: .top, spacing: 16) {
-                    ForEach(cellModels, id: \.identifier) { comic in
-                        ComicCell(model: comic)
-                            .task {
-                                await cellDidAppear(with: comic)
-                            }
+            HorizontalList(cellModels, id: \.identifier, spacing: 16) { comic in
+                ComicCell(model: comic)
+                    .task {
+                        await cellDidAppear(with: comic)
                     }
-                }
-                .padding(.horizontal)
             }
         }
-        .padding(.vertical)
     }
 }
 
