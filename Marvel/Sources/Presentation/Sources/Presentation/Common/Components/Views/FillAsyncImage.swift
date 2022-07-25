@@ -13,7 +13,7 @@ struct FillAsyncImage: View {
             .opacity.animation(.easeInOut(duration: 0.25))
         }
 
-        static let placeholderColor = Color(.displayP3, white: 0.96, opacity: 1)
+        static let placeholderColor = Color(UIColor.systemGroupedBackground)
     }
 
     private let url: URL?

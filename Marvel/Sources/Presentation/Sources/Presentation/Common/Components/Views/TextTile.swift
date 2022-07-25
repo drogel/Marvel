@@ -25,7 +25,7 @@ struct TextTile: View {
     var body: some View {
         ZStack(alignment: .top) {
             Rectangle()
-                .foregroundColor(.white)
+                .foregroundColor(Color(UIColor.systemBackground))
                 .opacity(0.93)
             VStack(alignment: .leading, spacing: -24) {
                 titleViewBuilder()

@@ -61,7 +61,7 @@ struct SubtitleStyle: TextModifier {
         content
             .multilineTextAlignment(.leading)
             .font(.system(size: 14, design: .rounded))
-            .foregroundColor(.gray)
+            .foregroundColor(Color(UIColor.systemGray))
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
     }
