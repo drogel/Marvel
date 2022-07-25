@@ -7,6 +7,7 @@
 
 import Domain
 import Foundation
+import SwiftUI
 import UIKit
 
 public protocol CharactersContainer {
@@ -25,11 +26,7 @@ public enum CharactersViewControllerFactory {
             imageURLBuilder: container.imageURLBuilder,
             pager: container.pager
         )
-        let viewController = CharactersViewController.instantiate(
-            viewModel: viewModel,
-            layout: CharactersLayout(),
-            dataSourceFactory: CharactersDataSourceFactory()
-        )
+        let viewController = CharactersViewController(viewModel: viewModel)
         viewModel.coordinatorDelegate = delegate
         return viewController
     }

@@ -5,11 +5,11 @@
 
 ## About
 
-The purpose of this project is to develop a non-trivial app using MVP+C, and including a bunch of unit tests.
+The purpose of this project is to develop a non-trivial app using MVVM+C.
 
 The app leverages the [Marvel API](https://developer.marvel.com/) to display descriptions and images of the 1000+ characters in the Marvel universe.
 
-This project has been built using UIKit and no third party dependencies.
+This project was originally built using UIKit, but its views have been migrated to SwiftUI. The routing logic is still based on UIKit hosting controllers and Coordinators. This app has no third party dependencies.
 
 ## Features
 
@@ -25,16 +25,16 @@ This project has been built using UIKit and no third party dependencies.
 
 ### Architecture
 
-This app has been developed using an MVVM+C architectural pattern, which is a combination of the Model-View-ViewModel architecture, plus the Coordinator pattern. In this implementation, the binding between the Views and the ViewModels is done with Combine. The app has three major layers:
-- The **Presentation** layer, which contains the views and other UIKit-related units.
+This app has been developed using an MVVM+C architectural pattern, which is a combination of the Model-View-ViewModel architecture, plus the Coordinator pattern. In this implementation, the binding between the Views and the ViewModels is done with Combine publishers. The app has three major layers:
+- The **Presentation** layer, which contains the views, the view models, and other SwiftUI-related units.
 - The **Domain** layer, which contains the entities and use cases.
 - The **Data** layer, which contains the networking and local data handling, as well as the models and authentication logic needed to connect to the Marvel API.
 
-It also has an App layer - that takes care of wiring up app-level dependencies and managing app lifecycle and navigations. Every layer has its corresponding folder in the project file structure. There is an additional folder - Common - that contains general-purpose extensions and protocols.
+It also has an App layer - that takes care of wiring up app-level dependencies and managing app lifecycle and navigations. Every layer has been implemented in its corresponding package.
 
 ### Configuration and schemes
 
-The app has two configurations: Debug and Release. Each configuration maps to an Xcode project scheme. The main difference between these configurations is in the way they wire up the data layer:
+The app has three configurations: Debug, Stage and Release. Each configuration maps to an Xcode project scheme. The main difference between these configurations is in the way they wire up the data layer:
 - **In the Debug configuration** the Marvel character data is retrieved from local, static JSONs. No network calls needed, no networking dependencies involved.
 - **The Stage configuration** is a duplicate of the Debug configuration, except that in this configuration the information is retrieved dynamically from the Marvel API. This configuration is useful for debugging the app while connected to the Marvel servers. This configuration relies on real network calls for the app to work.
 - **In the Release configuration** just like with the Stage configuration, the app needs to connect to the Marvel API to retrieve character data. This configuration relies on real network calls for the app to work.
