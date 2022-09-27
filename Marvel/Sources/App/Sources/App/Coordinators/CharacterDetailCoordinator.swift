@@ -14,11 +14,11 @@ class CharacterDetailCoordinator: NSObject, Coordinator {
     var children: [Coordinator]
 
     private let navigationController: NavigationController
-    private let container: CharacterDetailContainer
+    private let container: CharacterDetailDependencies
 
-    init(navigationController: NavigationController, container: CharacterDetailContainer) {
+    init(navigationController: NavigationController, characterID: Int) {
         self.navigationController = navigationController
-        self.container = container
+        container = CharacterDetailContainer.characterDetailContainer(characterID)
         children = []
     }
 

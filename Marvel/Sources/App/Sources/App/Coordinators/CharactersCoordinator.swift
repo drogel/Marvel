@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 22/1/22.
 //
 
+import Factory
 import Foundation
 import Presentation
 import UIKit
@@ -14,11 +15,10 @@ class CharactersCoordinator: Coordinator {
     var children: [Coordinator]
 
     private let navigationController: NavigationController
-    private let dependencies: CharactersDependencies
+    @Injected(CharactersContainer.charactersContainer) private var container: CharactersDependencies
 
-    init(navigationController: NavigationController, dependencies: CharactersDependencies) {
+    init(navigationController: NavigationController) {
         self.navigationController = navigationController
-        self.dependencies = dependencies
         children = []
     }
 
@@ -29,13 +29,9 @@ class CharactersCoordinator: Coordinator {
 
 extension CharactersCoordinator: CharactersViewModelCoordinatorDelegate {
     func model(didSelectCharacterWith characterID: Int) {
-        let characterDetailContainer = CharacterDetailDependencyContainer(
-            dependencies: dependencies,
-            characterID: characterID
-        )
         let characterDetailCoordinator = CharacterDetailCoordinator(
             navigationController: navigationController,
-            container: characterDetailContainer
+            characterID: characterID
         )
         characterDetailCoordinator.delegate = self
         characterDetailCoordinator.start()
@@ -50,7 +46,6 @@ private extension CharactersCoordinator {
     }
 
     func createCharactersViewController() -> UIViewController {
-        let charactersContainer = CharactersDependencyContainer(dependencies: dependencies)
-        return CharactersViewControllerFactory.create(using: charactersContainer, delegate: self)
+        CharactersViewControllerFactory.create(using: container, delegate: self)
     }
 }

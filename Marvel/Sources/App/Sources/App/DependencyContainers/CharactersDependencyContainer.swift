@@ -7,38 +7,29 @@
 
 import Data
 import Domain
+import Factory
 import Foundation
 import Presentation
 
-protocol CharactersDependencies {
-    var baseApiURL: URL { get }
-    var scheme: AppScheme { get }
+struct CharactersDependenciesAdapter: CharactersDependencies {
+    let fetchCharactersUseCase: FetchCharactersUseCase
+    let imageURLBuilder: ImageURLBuilder
+    let pager: Pager
 }
 
-class CharactersDependenciesAdapter: CharactersDependencies {
-    let baseApiURL: URL
-    let scheme: AppScheme
-
-    init(baseApiURL: URL, scheme: AppScheme) {
-        self.baseApiURL = baseApiURL
-        self.scheme = scheme
+final class CharactersContainer: MarvelDepencyContainer {
+    static let charactersContainer = Factory<CharactersDependencies> {
+        CharactersDependenciesAdapter(
+            fetchCharactersUseCase: FetchCharactersUseCaseFactory.create(service: charactersService()),
+            imageURLBuilder: ImageURLBuilderFactory.create(),
+            pager: PagerFactory.create()
+        )
     }
 }
 
-class CharactersDependencyContainer: CharactersContainer {
-    private let dependencies: CharactersDependencies
-
-    init(dependencies: CharactersDependencies) {
-        self.dependencies = dependencies
-    }
-
-    lazy var fetchCharactersUseCase = FetchCharactersUseCaseFactory.create(service: charactersService)
-    lazy var imageURLBuilder = ImageURLBuilderFactory.create()
-    lazy var pager = PagerFactory.create()
-}
-
-private extension CharactersDependencyContainer {
-    var charactersService: CharactersService {
+private extension CharactersContainer {
+    static let charactersService = Factory<CharactersService> {
+        let dependencies = appDependencyContainer()
         switch dependencies.scheme {
         case .debug:
             return CharactersServiceFactory.createDebug()

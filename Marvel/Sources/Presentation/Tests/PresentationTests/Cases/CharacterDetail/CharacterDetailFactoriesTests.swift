@@ -17,7 +17,7 @@ class CharacterDetailFactoriesTests: XCTestCase {
     }
 }
 
-private class CharacterDetailContainerStub: CharacterDetailContainer {
+private class CharacterDetailContainerStub: CharacterDetailDependencies {
     var characterID: Int {
         0
     }

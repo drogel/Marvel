@@ -9,7 +9,7 @@ import Domain
 import Foundation
 import UIKit
 
-public protocol CharactersContainer {
+public protocol CharactersDependencies {
     var fetchCharactersUseCase: FetchCharactersUseCase { get }
     var imageURLBuilder: ImageURLBuilder { get }
     var pager: Pager { get }
@@ -17,7 +17,7 @@ public protocol CharactersContainer {
 
 public enum CharactersViewControllerFactory {
     public static func create(
-        using container: CharactersContainer,
+        using container: CharactersDependencies,
         delegate: CharactersViewModelCoordinatorDelegate
     ) -> UIViewController {
         let viewModel = CharactersViewModel(

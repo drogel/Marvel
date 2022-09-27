@@ -20,7 +20,7 @@ class CharactersFactoriesTests: XCTestCase {
     }
 }
 
-private class CharactersContainerStub: CharactersContainer {
+private class CharactersContainerStub: CharactersDependencies {
     var fetchCharactersUseCase: FetchCharactersUseCase {
         FetchCharactersUseCaseMock()
     }

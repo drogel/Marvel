@@ -9,10 +9,7 @@ import Foundation
 
 public enum MainStartableFactory {
     public static func create(with navigationController: NavigationController) -> Startable {
-        MainCoordinator(
-            navigationController: navigationController,
-            dependencyContainer: MarvelDepencyContainer.appDependencyContainer()
-        )
+        MainCoordinator(navigationController: navigationController)
     }
 }
 
@@ -21,12 +18,10 @@ class MainCoordinator: Coordinator {
     var children: [Coordinator]
 
     private let navigationController: NavigationController
-    private let dependencyContainer: AppDependencyContainer
 
-    init(navigationController: NavigationController, dependencyContainer: AppDependencyContainer) {
+    init(navigationController: NavigationController) {
         self.navigationController = navigationController
         children = []
-        self.dependencyContainer = dependencyContainer
     }
 
     func start() {
@@ -36,14 +31,7 @@ class MainCoordinator: Coordinator {
 
 private extension MainCoordinator {
     func showCharacters() {
-        let charactersDependencies = CharactersDependenciesAdapter(
-            baseApiURL: dependencyContainer.baseApiURL,
-            scheme: dependencyContainer.scheme
-        )
-        let charactersCoordinator = CharactersCoordinator(
-            navigationController: navigationController,
-            dependencies: charactersDependencies
-        )
+        let charactersCoordinator = CharactersCoordinator(navigationController: navigationController)
         charactersCoordinator.start()
         children.append(charactersCoordinator)
     }

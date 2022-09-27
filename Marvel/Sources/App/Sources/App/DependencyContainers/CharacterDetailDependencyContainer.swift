@@ -7,27 +7,33 @@
 
 import Data
 import Domain
+import Factory
 import Foundation
 import Presentation
 
-class CharacterDetailDependencyContainer: CharacterDetailContainer {
+struct CharacterDetailDependenciesAdapter: CharacterDetailDependencies {
     let characterID: Int
-
-    private let dependencies: CharactersDependencies
-
-    init(dependencies: CharactersDependencies, characterID: Int) {
-        self.dependencies = dependencies
-        self.characterID = characterID
-    }
-
-    lazy var fetchCharacterDetailUseCase = FetchCharacterDetailUseCaseFactory.create(service: characterDetailService)
-    lazy var fetchComicsUseCase = FetchComicsUseCaseFactory.create(service: comicsDetailService)
-    lazy var imageURLBuilder: ImageURLBuilder = ImageURLBuilderFactory.create()
-    lazy var pager: Pager = PagerFactory.create()
+    let fetchCharacterDetailUseCase: FetchCharacterDetailUseCase
+    let fetchComicsUseCase: FetchComicsUseCase
+    let imageURLBuilder: ImageURLBuilder
+    let pager: Pager
 }
 
-private extension CharacterDetailDependencyContainer {
-    var characterDetailService: CharacterDetailService {
+final class CharacterDetailContainer: MarvelDepencyContainer {
+    static let characterDetailContainer = ParameterFactory<Int, CharacterDetailDependencies> { characterId in
+        CharacterDetailDependenciesAdapter(
+            characterID: characterId,
+            fetchCharacterDetailUseCase: FetchCharacterDetailUseCaseFactory.create(service: characterDetailService()),
+            fetchComicsUseCase: FetchComicsUseCaseFactory.create(service: comicsDetailService()),
+            imageURLBuilder: ImageURLBuilderFactory.create(),
+            pager: PagerFactory.create()
+        )
+    }
+}
+
+private extension CharacterDetailContainer {
+    static let characterDetailService = Factory<CharacterDetailService> {
+        let dependencies = appDependencyContainer()
         switch dependencies.scheme {
         case .debug:
             return CharacterDetailServiceFactory.createDebug()
@@ -36,7 +42,8 @@ private extension CharacterDetailDependencyContainer {
         }
     }
 
-    var comicsDetailService: ComicsService {
+    static let comicsDetailService = Factory<ComicsService> {
+        let dependencies = appDependencyContainer()
         switch dependencies.scheme {
         case .debug:
             return ComicsServiceFactory.createDebug()

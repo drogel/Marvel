@@ -9,7 +9,7 @@ import Domain
 import Foundation
 import UIKit
 
-public protocol CharacterDetailContainer {
+public protocol CharacterDetailDependencies {
     var characterID: Int { get }
     var fetchCharacterDetailUseCase: FetchCharacterDetailUseCase { get }
     var fetchComicsUseCase: FetchComicsUseCase { get }
@@ -18,7 +18,7 @@ public protocol CharacterDetailContainer {
 }
 
 public enum CharacterDetailViewControllerFactory {
-    public static func create(with container: CharacterDetailContainer) -> UIViewController {
+    public static func create(with container: CharacterDetailDependencies) -> UIViewController {
         let infoViewModel = CharacterInfoViewModel(
             characterFetcher: container.fetchCharacterDetailUseCase,
             characterID: container.characterID,
