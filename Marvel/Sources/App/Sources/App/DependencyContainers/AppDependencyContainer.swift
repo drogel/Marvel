@@ -5,6 +5,7 @@
 //  Created by Diego Rogel on 22/1/22.
 //
 
+import Factory
 import Foundation
 
 protocol AppDependencyContainer {
@@ -12,23 +13,20 @@ protocol AppDependencyContainer {
     var scheme: AppScheme { get }
 }
 
-class MarvelDependencyContainer: AppDependencyContainer {
-    private let configuration: AppConfigurationValues
-
-    init(configuration: AppConfigurationValues) {
-        self.configuration = configuration
-    }
-
-    lazy var baseApiURL: URL = baseURL
-
-    lazy var scheme: AppScheme = configuration.scheme
+struct AppDependencyAdapter: AppDependencyContainer {
+    let baseApiURL: URL
+    let scheme: AppScheme
 }
 
-private extension MarvelDependencyContainer {
-    var baseURL: URL {
-        guard let url = URL(string: "https://" + configuration.apiBaseURLString) else {
+extension SharedContainer {
+    static let configuration = Factory<AppConfigurationValues>(scope: .singleton) { MarvelConfigurationValues() }
+}
+
+final class MarvelDepencyContainer: SharedContainer {
+    static let appDependencyContainer = Factory<AppDependencyContainer> {
+        guard let url = URL(string: "https://" + configuration().apiBaseURLString) else {
             fatalError("Expected a valid API base URL.")
         }
-        return url
+        return AppDependencyAdapter(baseApiURL: url, scheme: configuration().scheme)
     }
 }

@@ -9,8 +9,10 @@ import Foundation
 
 public enum MainStartableFactory {
     public static func create(with navigationController: NavigationController) -> Startable {
-        let appDependencyContainer = MarvelDependencyContainer(configuration: MarvelConfigurationValues())
-        return MainCoordinator(navigationController: navigationController, dependencyContainer: appDependencyContainer)
+        MainCoordinator(
+            navigationController: navigationController,
+            dependencyContainer: MarvelDepencyContainer.appDependencyContainer()
+        )
     }
 }
 

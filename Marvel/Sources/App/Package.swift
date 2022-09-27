@@ -17,11 +17,12 @@ let package = Package(
         .package(name: "Domain", path: "Marvel/Sources/Domain"),
         .package(name: "Presentation", path: "Marvel/Sources/Presentation"),
         .package(name: "DomainTestUtils", path: "TestUtils/DomainTestUtils"),
+        .package(url: "https://github.com/hmlongco/Factory", from: Version(1, 2, 8)),
     ],
     targets: [
         .target(
             name: "App",
-            dependencies: ["Data", "Domain", "Presentation"]
+            dependencies: ["Data", "Domain", "Presentation", "Factory"]
         ),
         .testTarget(
             name: "AppTests",
