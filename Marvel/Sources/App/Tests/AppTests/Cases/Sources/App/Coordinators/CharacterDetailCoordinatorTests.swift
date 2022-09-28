@@ -15,17 +15,14 @@ class CharacterDetailCoordinatorTests: XCTestCase {
     private var sut: CharacterDetailCoordinator!
     private var navigationController: UINavigationControllerMock!
     private var delegateMock: CoordinatorDelegateMock!
-    private var container: CharacterDetailContainerStub!
 
     override func setUp() {
         super.setUp()
         navigationController = UINavigationControllerMock()
         delegateMock = CoordinatorDelegateMock()
-        container = CharacterDetailContainerStub()
-        sut = CharacterDetailCoordinator(
-            navigationController: navigationController,
-            container: container
-        )
+        CharacterDetailContainer.characterDetailContainer.register { _ in CharacterDetailContainerStub() }
+        CharacterDetailContainer.Registrations.push()
+        sut = CharacterDetailCoordinator(navigationController: navigationController, characterID: 0)
         sut.delegate = delegateMock
     }
 
@@ -33,7 +30,7 @@ class CharacterDetailCoordinatorTests: XCTestCase {
         sut = nil
         navigationController = nil
         delegateMock = nil
-        container = nil
+        CharacterDetailContainer.Registrations.pop()
         super.tearDown()
     }
 
@@ -74,18 +71,6 @@ private class CharacterDetailContainerStub: CharacterDetailDependencies {
 
     var pager: Pager {
         PagerStub()
-    }
-}
-
-private class ImageURLBuilderStub: ImageURLBuilder {
-    let urlStub = URL(string: "https://example.com")!
-
-    func buildURL(from _: Image, variant _: ImageVariant) -> URL? {
-        urlStub
-    }
-
-    func buildURL(from _: Image) -> URL? {
-        urlStub
     }
 }
 
