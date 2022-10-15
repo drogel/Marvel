@@ -1,5 +1,4 @@
 // swift-tools-version: 5.6
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
@@ -13,24 +12,19 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "TestUtils", path: "TestUtils/TestUtils"),
-        .package(name: "Domain", path: "Marvel/Sources/Domain/Domain"),
-        .package(name: "Presentation.Common", path: "Marvel/Sources/Presentation/Presentation.Common"),
-        .package(name: "Presentation.Characters", path: "Marvel/Sources/Presentation/Presentation.Characters"),
-        .package(name: "DomainTestUtils", path: "TestUtils/DomainTestUtils"),
+        .package(
+            name: "Presentation.Characters",
+            path: "Marvel/Sources/Presentation/Presentation.Characters"
+        ),
+        .package(
+            name: "Presentation.CharacterDetail",
+            path: "Marvel/Sources/Presentation/Presentation.CharacterDetail"
+        ),
     ],
     targets: [
         .target(
             name: "Presentation",
-            dependencies: ["Domain", "Presentation.Common", "Presentation.Characters"]
-        ),
-        .testTarget(
-            name: "PresentationTests",
-            dependencies: [
-                "DomainTestUtils",
-                "Presentation",
-                "TestUtils",
-            ]
+            dependencies: ["Presentation.Characters", "Presentation.CharacterDetail"]
         ),
     ]
 )

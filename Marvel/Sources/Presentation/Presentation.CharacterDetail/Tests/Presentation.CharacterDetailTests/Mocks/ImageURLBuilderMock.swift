@@ -7,7 +7,7 @@
 
 import Domain
 import Foundation
-@testable import Presentation_Characters
+@testable import Presentation_CharacterDetail
 
 class ImageURLBuilderMock: ImageURLBuilder {
     var buildURLCallCount = 0

@@ -5,7 +5,7 @@
 //  Created by Diego Rogel on 5/2/22.
 //
 
-@testable import Presentation
+@testable import Presentation_CharacterDetail
 import XCTest
 
 class ComicCellModelTests: XCTestCase {

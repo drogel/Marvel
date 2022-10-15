@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@testable import Presentation
+@testable import Presentation_CharacterDetail
 import XCTest
 
 class CharacterInfoModelTests: XCTestCase {

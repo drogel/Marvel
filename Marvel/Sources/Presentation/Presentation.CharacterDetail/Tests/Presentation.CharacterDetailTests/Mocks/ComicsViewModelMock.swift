@@ -7,7 +7,7 @@
 
 import Combine
 import Foundation
-@testable import Presentation
+@testable import Presentation_CharacterDetail
 
 class ComicsViewModelMock: ComicsViewModelProtocol {
     static let emittedComicCellModels: [ComicCellModel] = []

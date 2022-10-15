@@ -7,7 +7,7 @@
 
 import Domain
 import DomainTestUtils
-@testable import Presentation
+@testable import Presentation_CharacterDetail
 import XCTest
 
 class CharacterDetailFactoriesTests: XCTestCase {

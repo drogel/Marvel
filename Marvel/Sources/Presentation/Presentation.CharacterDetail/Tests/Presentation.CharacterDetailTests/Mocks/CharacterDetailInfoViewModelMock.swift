@@ -7,7 +7,7 @@
 
 import Combine
 import Foundation
-@testable import Presentation
+@testable import Presentation_CharacterDetail
 import Presentation_Common
 
 class CharacterDetailInfoViewModelMock: CharacterInfoViewModelProtocol {

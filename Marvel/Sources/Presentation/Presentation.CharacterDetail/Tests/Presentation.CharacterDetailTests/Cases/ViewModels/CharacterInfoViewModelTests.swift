@@ -8,7 +8,7 @@
 import Combine
 import Domain
 import DomainTestUtils
-@testable import Presentation
+@testable import Presentation_CharacterDetail
 import Presentation_Common
 import TestUtils
 import XCTest

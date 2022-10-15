@@ -7,7 +7,7 @@
 
 import Domain
 import Foundation
-@testable import Presentation
+@testable import Presentation_CharacterDetail
 
 class ImageURLBuilderStub: ImageURLBuilder {
     let urlStub = URL(string: "https://example.com")!

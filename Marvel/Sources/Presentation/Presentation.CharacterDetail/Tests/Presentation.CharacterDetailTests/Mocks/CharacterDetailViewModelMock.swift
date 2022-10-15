@@ -7,7 +7,7 @@
 
 import Combine
 import Foundation
-@testable import Presentation
+@testable import Presentation_CharacterDetail
 
 class CharacterDetailViewModelMock: ViewModelMock, CharacterDetailViewModelProtocol {
     var detailStatePublisher: AnyPublisher<CharacterDetailViewModelState, Never> {

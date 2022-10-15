@@ -37,6 +37,7 @@
 		4C0CAAD2288311CB0035444A /* TestUtils.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestUtils.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C0CAADA288311EC0035444A /* DomainTestUtils */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DomainTestUtils; sourceTree = "<group>"; };
 		4C0CAADB288311EC0035444A /* TestUtils */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TestUtils; sourceTree = "<group>"; };
+		4C47468C28FB50CF007C38C1 /* Presentation.CharacterDetail */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Presentation.CharacterDetail; sourceTree = "<group>"; };
 		4C764571287B114D006F2C83 /* Presentation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Presentation; sourceTree = "<group>"; };
 		4C795A252882E4D700DB4C0E /* App */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = App; sourceTree = "<group>"; };
 		4C8D50F228FB4BF400063969 /* Presentation.Characters */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Presentation.Characters; sourceTree = "<group>"; };
@@ -156,6 +157,7 @@
 		4C3487D628FB204F00B589E6 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				4C47468C28FB50CF007C38C1 /* Presentation.CharacterDetail */,
 				4C8D50F228FB4BF400063969 /* Presentation.Characters */,
 				4CD161EC28FB4AFD00A55CF8 /* Presentation.Common */,
 				4C764571287B114D006F2C83 /* Presentation */,

@@ -6,7 +6,7 @@
 //
 
 import Combine
-@testable import Presentation
+@testable import Presentation_CharacterDetail
 import Presentation_Common
 import XCTest
 

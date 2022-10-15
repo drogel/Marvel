@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@testable import Presentation_Characters
+@testable import Presentation_CharacterDetail
 import Presentation_Common
 import XCTest
 
