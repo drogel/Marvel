@@ -40,6 +40,7 @@
 		4C764571287B114D006F2C83 /* Presentation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Presentation; sourceTree = "<group>"; };
 		4C795A252882E4D700DB4C0E /* App */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = App; sourceTree = "<group>"; };
 		4CCBBF102879CBC7001DF9CD /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Data; sourceTree = "<group>"; };
+		4CD161EC28FB4AFD00A55CF8 /* Presentation.Common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Presentation.Common; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,10 +125,10 @@
 			children = (
 				05DAC2FB2797258A0062CC6F /* AppDelegate.swift */,
 				05DAC2FD2797258A0062CC6F /* SceneDelegate.swift */,
-				4C795A252882E4D700DB4C0E /* App */,
-				4C764571287B114D006F2C83 /* Presentation */,
-				4CCBBF102879CBC7001DF9CD /* Data */,
-				0502C85B27FCB218005D1CA8 /* Domain */,
+				4C997BD028FB25B8006B3BF3 /* App */,
+				4C997BD128FB25C3006B3BF3 /* Data */,
+				4C997BD228FB25D0006B3BF3 /* Domain */,
+				4C3487D628FB204F00B589E6 /* Presentation */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -149,6 +150,39 @@
 				4C0CAADB288311EC0035444A /* TestUtils */,
 			);
 			path = TestUtils;
+			sourceTree = "<group>";
+		};
+		4C3487D628FB204F00B589E6 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				4CD161EC28FB4AFD00A55CF8 /* Presentation.Common */,
+				4C764571287B114D006F2C83 /* Presentation */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		4C997BD028FB25B8006B3BF3 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				4C795A252882E4D700DB4C0E /* App */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		4C997BD128FB25C3006B3BF3 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				4CCBBF102879CBC7001DF9CD /* Data */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		4C997BD228FB25D0006B3BF3 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				0502C85B27FCB218005D1CA8 /* Domain */,
+			);
+			path = Domain;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,6 +294,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		0559260E27A8586E00026919 /* Run SwiftLint Integration Script */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -278,6 +313,7 @@
 		};
 		4C9670AB2879F49100207B72 /* Run SwiftFormat */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
