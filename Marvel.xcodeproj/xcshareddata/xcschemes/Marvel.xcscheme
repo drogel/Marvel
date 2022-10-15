@@ -109,6 +109,16 @@
                ReferencedContainer = "container:Marvel/Sources/Domain/Domain">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "Presentation.CharactersTests"
+               BuildableName = "Presentation.CharactersTests"
+               BlueprintName = "Presentation.CharactersTests"
+               ReferencedContainer = "container:Marvel/Sources/Presentation/Presentation.Characters">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

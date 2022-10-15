@@ -14,7 +14,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "TestUtils", path: "TestUtils/TestUtils"),
-        .package(name: "Domain", path: "Marvel/Sources/Domain"),
+        .package(name: "Domain", path: "Marvel/Sources/Domain/Domain"),
         .package(name: "DomainTestUtils", path: "TestUtils/DomainTestUtils"),
     ],
     targets: [

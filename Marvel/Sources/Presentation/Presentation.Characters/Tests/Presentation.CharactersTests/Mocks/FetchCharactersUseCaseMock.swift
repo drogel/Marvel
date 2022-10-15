@@ -7,7 +7,7 @@
 
 import Domain
 import Foundation
-@testable import Presentation
+@testable import Presentation_Characters
 
 class FetchCharactersUseCaseMock: FetchCharactersUseCase {
     var fetchCallCount = 0

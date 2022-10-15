@@ -14,14 +14,15 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "TestUtils", path: "TestUtils/TestUtils"),
-        .package(name: "Domain", path: "Marvel/Sources/Domain"),
+        .package(name: "Domain", path: "Marvel/Sources/Domain/Domain"),
         .package(name: "Presentation.Common", path: "Marvel/Sources/Presentation/Presentation.Common"),
+        .package(name: "Presentation.Characters", path: "Marvel/Sources/Presentation/Presentation.Characters"),
         .package(name: "DomainTestUtils", path: "TestUtils/DomainTestUtils"),
     ],
     targets: [
         .target(
             name: "Presentation",
-            dependencies: ["Domain", "Presentation.Common"]
+            dependencies: ["Domain", "Presentation.Common", "Presentation.Characters"]
         ),
         .testTarget(
             name: "PresentationTests",

@@ -5,7 +5,7 @@
 //  Created by Diego Rogel on 20/1/22.
 //
 
-@testable import Presentation
+@testable import Presentation_Characters
 import XCTest
 
 class CharacterCellModelTests: XCTestCase {

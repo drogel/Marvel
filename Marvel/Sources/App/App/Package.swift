@@ -13,8 +13,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "Data", path: "Marvel/Sources/Data"),
-        .package(name: "Domain", path: "Marvel/Sources/Domain"),
+        .package(name: "Data", path: "Marvel/Sources/Data/Data"),
+        .package(name: "Domain", path: "Marvel/Sources/Domain/Domain"),
         .package(name: "Presentation", path: "Marvel/Sources/Presentation/Presentation"),
         .package(name: "DomainTestUtils", path: "TestUtils/DomainTestUtils"),
     ],

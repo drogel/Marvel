@@ -8,7 +8,7 @@
 import Domain
 import DomainTestUtils
 import Foundation
-@testable import Presentation
+@testable import Presentation_Characters
 
 class FetchCharactersUseCaseSuccessfulStub: FetchCharactersUseCaseMock {
     static let charactersStub = [Character.aginar]
